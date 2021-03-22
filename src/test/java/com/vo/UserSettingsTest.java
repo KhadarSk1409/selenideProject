@@ -5,6 +5,8 @@ import com.codeborne.selenide.*;
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Condition.*;
