@@ -61,7 +61,7 @@ public class CreateFormTest extends BaseTest {
         $("#wizard-formHelp").should(exist).setValue("xyz1"); //Enter text in description field
       //  $("#wizard-formUrl").should(exist).setValue("https://fireo.net/Dashboard/"); //Enter Direct link in Dashboard field
 
-        $("#wizard-formTitle-helper-text").should(appear); //Verify the Error shown below Title field - "Please insert the form title"
+        $("#wizard-formTitle-helper-text").should(appear).shouldHave(text("Please insert the form title")); //Verify the Error shown below Title field - "Please insert the form title"
 
         $("#wizard-createFormButton").shouldBe(disabled); //Create Form button should be disabled since Title field is blank
 
