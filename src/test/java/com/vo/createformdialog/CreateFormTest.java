@@ -101,7 +101,6 @@ public class CreateFormTest extends BaseTest {
 
     }
 
-
     @Test
     @DisplayName("Verify the character limit for Title field is 80 characters and for Description field is 150 characters")
     @Order(6)
@@ -118,14 +117,25 @@ public class CreateFormTest extends BaseTest {
         $("#wizard-formTitle").shouldNotHave(exactValue(newString)); //New string with 81st character should not be present
         $("#wizard-formTitle").shouldHave(exactValue(string80characters)); //Only the string with 80 characters should be there
 
-       String string150characters = RandomStringUtils.randomAlphanumeric(150);
-       newString = string150characters + "s";
+        String string150characters = RandomStringUtils.randomAlphanumeric(150);
+        newString = string150characters + "s";
 
         $("#wizard-formHelp").doubleClick().sendKeys(Keys.BACK_SPACE); //Clear the Description field
-       $("#wizard-formHelp").setValue(newString); //Try to set 151 characters in the Description field
+        $("#wizard-formHelp").setValue(newString); //Try to set 151 characters in the Description field
         $("#wizard-formHelp").shouldNotHave(exactValue(newString)); //New string with 151st character should not be present
         $("#wizard-formHelp").shouldHave(exactValue(string150characters)); //Only the string with 150 characters should be there
 
+    }
+
+    @Test
+    @DisplayName("Verify Form Creation from Create Form Wizard")
+    @Order(7)
+    public void validateCreateFormFunctionality()
+    {
+        $("#wizard-createFormButton").should(exist).click(); //Click on create form btn in Wizard
+       String formUrl =  $("#formtree_card").should(exist).getWrappedDriver().getCurrentUrl();
+       System.out.println("The url for Create form is: "+formUrl);
+       assertTrue(formUrl.contains("visualorbit.fireo.net/designer/")); //Verify that user has navigated to the form creation page
     }
 
     //Qn: Is there any character limit for the ID field ?
