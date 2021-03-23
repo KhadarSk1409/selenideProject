@@ -20,7 +20,7 @@ import java.util.Set;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Verify New Form Creation Functionality")
-public class TestCreateForm extends BaseTest {
+public class CreateFormTest extends BaseTest {
 
     @Test
     @DisplayName("Verify the presence of Create New Form Btn")
