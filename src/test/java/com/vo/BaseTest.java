@@ -27,10 +27,13 @@ import java.util.Optional;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Selectors.byText;
+import static com.codeborne.selenide.Selectors.withText;
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import utils.SelenideLogReport;
+
 
 
 @Execution(ExecutionMode.SAME_THREAD)
@@ -68,7 +71,7 @@ public abstract class BaseTest {
             TEST_BASE_URL = System.getenv("TEST_BASE_URL");
             Configuration.baseUrl = Optional.ofNullable(TEST_BASE_URL).orElse("https://fireo.net");
             //Configuration.baseUrl = "http://localhost:3000";
-            Configuration.timeout = 20000;
+            Configuration.timeout = 30000;
             //Configuration.clickViaJs = true;
             //Configuration.headless = true;
 
@@ -142,8 +145,18 @@ public abstract class BaseTest {
 
             //stay signed in?
             $(".button.primary").shouldBe(visible).click();
+            $("#loginHeader").shouldBe(visible);
 
-            assertEquals(title(), "VisualOrbit App");
+            boolean presenceOfPickAnAccount = $("#loginHeader").exists();
+
+            if(presenceOfPickAnAccount)
+            {
+              // String valueToBeClicked = "//small[contains(text(),"+"'"+TEST_USER_EMAIL+"')]";
+                $(byText(TEST_USER_EMAIL)).shouldBe(visible).click();
+            }
+
+          //  assertEquals(title(), "VisualOrbit App");
+            assertEquals(title(), "VisualOrbit OriginOne");
             ALREADY_LOGGED_IN.set(Boolean.TRUE);
         }
     }

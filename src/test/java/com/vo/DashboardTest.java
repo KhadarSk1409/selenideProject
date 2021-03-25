@@ -3,6 +3,7 @@ package com.vo;
 import com.codeborne.selenide.*;
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.support.Color;
 
 import static com.codeborne.selenide.Selenide.*;
@@ -38,7 +39,6 @@ public class DashboardTest extends BaseTest {
     public void clickOnEditFormShouldOpenDesigner() {
         $("#btnCreateForm").should(appear)
                                       .click();
-
 
         $("#wizardFormDlg").should(appear);
     }
