@@ -65,15 +65,19 @@ public class UserSettingsTest extends BaseTest {
             $("#defaultLocaleSelectMenu").should(appear);
             $$("#defaultLocaleSelectMenu li").shouldHave(texts("German - Germany", "English - Great Britain"));
             $$("#defaultLocaleSelectMenu li").findBy(text("German - Germany")).click();
+            $("#btnSave").shouldBe(visible).click(); //Save the changes
+            $("#btnSave").shouldHave(text("Save"));
 
         } else if (existingAppLanguage.contains("German")) {
             $("#defaultLocale").click();
             $("#defaultLocaleSelectMenu").should(appear);
             $$("#defaultLocaleSelectMenu li").shouldHave(texts("German - Germany", "English - Great Britain"));
             $$("#defaultLocaleSelectMenu li").findBy(text("English - Great Britain")).click();
+            $("#btnSave").shouldBe(visible).click(); //Save the changes
+            $("#btnSave").shouldHave(text("Speichern"));
         }
 
-        $("#btnSave").shouldBe(visible).click(); //Save the changes
+
 
     }
 }
