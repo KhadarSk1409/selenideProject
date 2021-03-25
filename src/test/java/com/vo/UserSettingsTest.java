@@ -8,6 +8,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Condition.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,20 +41,39 @@ public class UserSettingsTest extends BaseTest {
         boolean darkIsChecked = $("#ckbDarkTheme input").is(checked);
         $("#ckbDarkTheme").shouldBe(visible).click();
 
-        if(darkIsChecked) {
+        if (darkIsChecked) {
             $("#appearanceThemeSwitch input").shouldBe(not(checked));
         } else {
             $("#appearanceThemeSwitch input").shouldBe(checked);
         }
+    }
 
-        body.should(new Condition("change back- and foreground color") {
-            @Override
-            public boolean apply(Driver driver, WebElement webElement) {
-                String backGroundColorAfter = webElement.getCssValue("background-color");
-                String colorAfter = webElement.getCssValue("color");
+    @Test
+    @Order(2)
+    @DisplayName("Should change users default language")
+    public void shouldChangeUsersDefaultLanguage() {
 
-                return backGroundColorAfter != backGroundColorBefore && colorAfter != colorBefore;
-            }
-        });
+        $("#user").waitUntil(visible, 5000).click(); //Wait until the 'User' element is visible on Dashboard and click on it
+        $("#myPreferences").click(); //Click on preferences
+
+        $("#account_settings.MuiListItem-button").shouldBe(visible).click(); //Account Settings
+
+        String existingAppLanguage = $("#defaultLocale").should(exist).getText(); //Check the existing value of Language selected
+
+        if (existingAppLanguage.contains("English")) {
+            $("#defaultLocale").click();
+            $("#defaultLocaleSelectMenu").should(appear);
+            $$("#defaultLocaleSelectMenu li").shouldHave(texts("German - Germany", "English - Great Britain"));
+            $$("#defaultLocaleSelectMenu li").findBy(text("German - Germany")).click();
+
+        } else if (existingAppLanguage.contains("German")) {
+            $("#defaultLocale").click();
+            $("#defaultLocaleSelectMenu").should(appear);
+            $$("#defaultLocaleSelectMenu li").shouldHave(texts("German - Germany", "English - Great Britain"));
+            $$("#defaultLocaleSelectMenu li").findBy(text("English - Great Britain")).click();
+        }
+
+        $("#btnSave").shouldBe(visible).click(); //Save the changes
+
     }
 }
