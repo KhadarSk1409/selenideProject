@@ -25,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
+import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
@@ -45,7 +46,7 @@ public abstract class BaseTest {
     protected static String TEST_USER_PASSWORD = null;
     public static String SAUCE_USERNAME = null;
     public static String SAUCE_ACCESS_KEY = null;
-    public static ThreadLocal<String> BROWSER_CONFIG = ThreadLocal.withInitial( () -> "local");
+    public static ThreadLocal<String> BROWSER_CONFIG = ThreadLocal.withInitial(() -> "local");
     public static ThreadLocal<String> SAUCE_SESSION_ID = new ThreadLocal<>();
     public static ThreadLocal<RemoteWebDriver> WEB_DRIVER = new ThreadLocal<>();
     public static ThreadLocal<Boolean> ALREADY_LOGGED_IN = ThreadLocal.withInitial(() -> Boolean.FALSE);
@@ -53,13 +54,13 @@ public abstract class BaseTest {
 
     @BeforeAll
     public static void setup() {
-        if(IGNORE_BEFORE_AND_AFTER_LIFECYCLE.get()) {
+        if (IGNORE_BEFORE_AND_AFTER_LIFECYCLE.get()) {
             System.out.println(Thread.currentThread().getName() + " ignoring junit lifecycle setup");
             return;
         }
         try {
             String browserConfig = BROWSER_CONFIG.get();
-            System.out.println("init webdriver with browserConfig " + browserConfig );
+            System.out.println("init webdriver with browserConfig " + browserConfig);
 
             TEST_USER_EMAIL = System.getenv("TEST_USER_EMAIL");
             TEST_USER_PASSWORD = System.getenv("TEST_USER_PASSWORD");
@@ -71,18 +72,18 @@ public abstract class BaseTest {
             TEST_BASE_URL = System.getenv("TEST_BASE_URL");
             Configuration.baseUrl = Optional.ofNullable(TEST_BASE_URL).orElse("https://fireo.net");
             //Configuration.baseUrl = "http://localhost:3000";
-            Configuration.timeout = 30000;
+            Configuration.timeout = 20000;
             //Configuration.clickViaJs = true;
             //Configuration.headless = true;
 
-            if("sauce".equals(target) && WEB_DRIVER.get() == null ) {
+            if ("sauce".equals(target) && WEB_DRIVER.get() == null) {
                 String platform = Optional.of(configOptions[1]).orElse("Windows 10");
                 String browser = Optional.of(configOptions[2]).orElse("chrome");
                 String version = Optional.of(configOptions[3]).orElse("");
 
                 SAUCE_USERNAME = System.getenv("SAUCE_USERNAME");
                 SAUCE_ACCESS_KEY = System.getenv("SAUCE_ACCESS_KEY");
-                String SAUCE_URL = "https://"+SAUCE_USERNAME+":"+SAUCE_ACCESS_KEY+"@ondemand.eu-central-1.saucelabs.com:443/wd/hub";
+                String SAUCE_URL = "https://" + SAUCE_USERNAME + ":" + SAUCE_ACCESS_KEY + "@ondemand.eu-central-1.saucelabs.com:443/wd/hub";
 
                 System.out.println("using sauce labs url: " + SAUCE_URL);
 
@@ -99,7 +100,7 @@ public abstract class BaseTest {
                     put("name", browserConfig);
                     put("maxDuration", 3600);
                     put("idleTimeout", 1000);
-                }} );
+                }});
 
                 RemoteWebDriver driver = new RemoteWebDriver(new URL(SAUCE_URL), caps);
                 WebDriverRunner.setWebDriver(driver);
@@ -107,6 +108,7 @@ public abstract class BaseTest {
             }
 
             shouldLogin();
+            setAppLanguageToEnglish(); //Newly added
         } catch (Throwable t) {
             System.out.println("error on test setup: ");
             t.printStackTrace();
@@ -116,7 +118,7 @@ public abstract class BaseTest {
     // we close browser manually
     @AfterAll
     public static void tearDown() {
-        if(IGNORE_BEFORE_AND_AFTER_LIFECYCLE.get()) {
+        if (IGNORE_BEFORE_AND_AFTER_LIFECYCLE.get()) {
             System.out.println(Thread.currentThread().getName() + " ignoring junit lifecycle tearDown");
             return;
         }
@@ -133,7 +135,7 @@ public abstract class BaseTest {
     }
 
     public static void shouldLogin() {
-        if(Boolean.FALSE.equals(ALREADY_LOGGED_IN.get())) {
+        if (Boolean.FALSE.equals(ALREADY_LOGGED_IN.get())) {
             open("");
             setSauceJobId();
             $(By.name("loginfmt")).should(appear).setValue(TEST_USER_EMAIL);
@@ -149,17 +151,39 @@ public abstract class BaseTest {
 
             boolean presenceOfPickAnAccount = $("#loginHeader").exists();
 
-            if(presenceOfPickAnAccount)
-            {
-              // String valueToBeClicked = "//small[contains(text(),"+"'"+TEST_USER_EMAIL+"')]";
+            if (presenceOfPickAnAccount) {
+                // String valueToBeClicked = "//small[contains(text(),"+"'"+TEST_USER_EMAIL+"')]";
                 $(byText(TEST_USER_EMAIL)).shouldBe(visible).click();
             }
 
-          //  assertEquals(title(), "VisualOrbit App");
+            //  assertEquals(title(), "VisualOrbit App");
             assertEquals(title(), "VisualOrbit OriginOne");
             ALREADY_LOGGED_IN.set(Boolean.TRUE);
         }
+
     }
+
+
+    public static void setAppLanguageToEnglish() {
+            $("#user").should(exist).click(); //Wait until the 'User' element is visible on Dashboard and click on it
+            $("#myPreferences").click(); //Click on preferences
+            $("#account_settings.MuiListItem-button").shouldBe(visible).click(); //Account Settings
+            String existingAppLanguage = $("#defaultLocale").should(exist).getText(); //Check the existing value of Language selected
+
+            if (existingAppLanguage.contains("German")) {
+                $("#defaultLocale").click();
+                $("#defaultLocaleSelectMenu").should(appear);
+                $$("#defaultLocaleSelectMenu li").shouldHave(texts("German - Germany", "English - Great Britain"));
+                $$("#defaultLocaleSelectMenu li").findBy(text("English - Great Britain")).click();
+                $("#btnSave").shouldBe(visible).click(); //Save the changes
+
+                $("#toDashboard").click(); //Click on Home button
+                $("#btnCreateForm").should(exist).click(); //Verify that user is on Dashboard page and click on Create form
+            }
+        $("#user").should(exist).click(); //Click on Use icon and close the menu preferences
+        $("#toDashboard").should(exist).click(); //Click on Launchpad
+        }
+
 
     private static void setSauceJobId() {
         WebDriver webDriver = WebDriverRunner.getWebDriver();

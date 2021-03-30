@@ -26,9 +26,10 @@ import java.util.Set;
 public class CreateFormTest extends BaseTest {
 
     @Test
-    @DisplayName("Verify the presence of Create New Form Btn")
+    @DisplayName("Verify the presence of Create New Form Btn on Dashboard")
     @Order(1)
     public void createNewFormBtnFunctionality() {
+        setAppLanguageToEnglish(); //New
         $("#btnCreateForm").should(exist);
     }
 
@@ -57,33 +58,34 @@ public class CreateFormTest extends BaseTest {
     }
 
     @Test
-    @DisplayName("Verify that Title and ID fields are mandatory in Create form wizard")
+    @DisplayName("Verify Cancel functionality on Create Form Wizard")
     @Order(4)
-    public void verifyMandatoryFieldsInFormWizard()  {
-
-        //Cancel the form creation wizard
-        $("#wizard-cancelButton").shouldBe(enabled).click(); //Cancel button in Create Form Wizard
+    public void verifyCancelButtonInCreateForm()
+    {
+        $("#wizard-cancelButton").shouldBe(enabled).click(); //Cancel button
 
         $("#confirmation-dialog-title").should(exist);
-        $("#btnConfirm").shouldBe(enabled).click();  //Confirm the Cancellation
-        $("#btnCreateForm").shouldBe(enabled); //User is on Dashboard page
-        $("#user").waitUntil(visible, 5000).click(); //Wait until the 'User' element is visible on Dashboard and click on it
-        $("#myPreferences").click(); //Click on preferences
+        $("#btnCancel").shouldBe(enabled).click(); //Cancel the Cancel button on Confirmation
 
-        $("#account_settings.MuiListItem-button").shouldBe(visible).click(); //Account Settings
+        $("#wizard-cancelButton").shouldBe(enabled).click(); //Cancel button
+        $("#confirmation-dialog-title").should(exist);
+        $("#btnConfirm").shouldBe(enabled).click(); //Confirm the cancellation
+        $("#btnCreateForm").shouldBe(enabled);  //Verify user is on dashboard page where Create Form button is visible
 
-        String existingAppLanguage = $("#defaultLocale").should(exist).getText(); //Fetch the existing value in Language dropddown
+    }
 
+    @Test
+    @DisplayName("Verify that Title and ID fields are mandatory in Create form wizard")
+    @Order(5)
+    public void verifyMandatoryFieldsInFormWizard()  {
 
-        $("#toDashboard").click(); //Click on Home button
-        $("#btnCreateForm").should(exist).click(); //Verify that user is on Dashboard page and click on Create form
+        $("#btnCreateForm").should(exist).click(); //Click on Create form button on Dashboard page
         $("#wizard-formHelp").should(exist).setValue("xyz1"); //Enter text in description field
         //  $("#wizard-formUrl").should(exist).setValue("https://fireo.net/Dashboard/"); //Enter Direct link in Dashboard field
 
-        if (existingAppLanguage.contains("English"))
             $("#wizard-formTitle-helper-text").should(appear).shouldHave(text("Please insert the form title")); //Verify the Error shown below Title field - "Please insert the form title"
-        else
-            $("#wizard-formTitle-helper-text").should(appear).shouldHave(text("Bitte geben Sie den Titel des Formulars ein")); //Verify the Error shown below Title field in German
+
+           // $("#wizard-formTitle-helper-text").should(appear).shouldHave(text("Bitte geben Sie den Titel des Formulars ein")); //Verify the Error shown below Title field in German
         $("#wizard-createFormButton").shouldBe(disabled); //Create Form button should be disabled since Title field is blank
 
         $("#wizard-formHelp").should(exist).doubleClick().sendKeys(Keys.BACK_SPACE); //Clear text in description field
@@ -91,7 +93,12 @@ public class CreateFormTest extends BaseTest {
         $("#wizard-formTitle").should(exist).click();
         $("#wizard-formTitle").setValue("This is the form Title"); //Enter value in Title field
 
-        $("#wizard-formId").should(exist).doubleClick().sendKeys(Keys.BACK_SPACE); //Clearing the value in ID field
+        $("#wizard-formId").should(exist).doubleClick();
+        $("#wizard-formId").sendKeys(Keys.BACK_SPACE); //Clearing the value in ID field
+
+        $("#wizard-formId").should(exist).doubleClick();
+        $("#wizard-formId").sendKeys(Keys.BACK_SPACE); //Clearing the value in ID field
+
         $("#wizard-formId").should(exist).shouldHave(exactValue(""));
 
         $("#wizard-createFormButton").shouldBe(disabled); //Create Form button should be disabled
@@ -103,36 +110,28 @@ public class CreateFormTest extends BaseTest {
 
     }
 
-    @Test
-    @DisplayName("Verify Cancel functionality on Create Form Wizard")
-    @Order(5)
-    public void verifyCancelButtonInCreateForm()
-    {
-        $("#wizard-cancelButton").shouldBe(enabled).click(); //Cancel button
 
-        $("#confirmation-dialog-title").should(exist);
-        $("#btnCancel").shouldBe(enabled).click(); //Cancel the Cancel button on Confirmation
-        $("#wizard-createFormButton").shouldBe(enabled); //User is on Create form Wizard
-
-        $("#wizard-cancelButton").shouldBe(enabled).click(); //Cancel button
-        $("#confirmation-dialog-title").should(exist);
-        $("#btnConfirm").shouldBe(enabled).click(); //Confirm the cancellation
-        $("#btnCreateForm").should(exist); //Verify user is on dashboard page where Create Form button is visible
-
-    }
 
     @Test
     @DisplayName("Verify the character limit for Title field is 80 characters and for Description field is 150 characters")
     @Order(6)
     public void verifyTitleFieldCharacterLimit()
     {
-        $("#btnCreateForm").should(exist).click(); //Create Form button is visible on Dashboard and click it
+
+//        $("#wizard-formTitle").should(exist).doubleClick();
+//        $("#wizard-formTitle").sendKeys(Keys.BACK_SPACE); //Clear the Title field
+//        $("#wizard-formTitle").should(exist).shouldHave(exactValue("")); -- This is not clearing the field
+
+        $("#wizard-cancelButton").shouldBe(enabled).click(); //Cancel button
+        $("#confirmation-dialog-title").should(exist);
+        $("#btnConfirm").shouldBe(enabled).click(); //Confirm the cancellation
+        $("#btnCreateForm").shouldBe(enabled).click();  //Verify user is on dashboard page where Create Form button is visible
+
         $("#wizardFormDlg").should(appear); //Create form wizard should exist
 
         String string80characters = RandomStringUtils.randomAlphanumeric(80);
         String newString = string80characters + "s";
 
-        $("#wizard-formTitle").doubleClick().sendKeys(Keys.BACK_SPACE); //Clear the Title field
         $("#wizard-formTitle").setValue(newString); //Try to set the new string with 81 characters in Title field
         $("#wizard-formTitle").shouldNotHave(exactValue(newString)); //New string with 81st character should not be present
         $("#wizard-formTitle").shouldHave(exactValue(string80characters)); //Only the string with 80 characters should be there
