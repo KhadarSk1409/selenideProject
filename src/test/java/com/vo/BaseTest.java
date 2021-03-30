@@ -147,10 +147,8 @@ public abstract class BaseTest {
 
             //stay signed in?
             $(".button.primary").shouldBe(visible).click();
-            $("#loginHeader").shouldBe(visible);
 
-            boolean presenceOfPickAnAccount = $("#loginHeader").exists();
-
+            boolean presenceOfPickAnAccount = $("#loginHeader").is(exist);
             if (presenceOfPickAnAccount) {
                 // String valueToBeClicked = "//small[contains(text(),"+"'"+TEST_USER_EMAIL+"')]";
                 $(byText(TEST_USER_EMAIL)).shouldBe(visible).click();
