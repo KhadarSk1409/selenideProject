@@ -180,7 +180,7 @@ public abstract class BaseTest {
             }
         $("#user").should(exist).click(); //Click on Use icon and close the menu preferences
         $("#toDashboard").should(exist).click(); //Click on Launchpad
-        }
+    }
 
 
     private static void setSauceJobId() {

@@ -88,7 +88,7 @@ public class UserSettingsTest extends BaseTest {
   @DisplayName("As a User, I should be able to switch my Date & Time Format")
   public void verifySwitchDateTimeFormat()
    {
-       $(" #appearance").should(exist).click(); //Click on Appearance
+       $("#appearance").should(exist).click(); //Click on Appearance
        $("#dateTimeFormat").should(exist).click(); //Click on Date & Time format
 
        List <SelenideElement> listDateTimeFormat = $$("#dateTimeFormatSelectMenu li"); //Store all the elements in list

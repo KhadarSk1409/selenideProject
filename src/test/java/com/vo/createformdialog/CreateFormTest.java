@@ -9,6 +9,8 @@ import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.openqa.selenium.Keys.*;
+
 import org.apache.commons.lang3.RandomStringUtils;
 
 import org.openqa.selenium.By;
@@ -18,6 +20,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.Set;
 
@@ -81,36 +84,21 @@ public class CreateFormTest extends BaseTest {
 
         $("#btnCreateForm").should(exist).click(); //Click on Create form button on Dashboard page
         $("#wizard-formHelp").should(exist).setValue("xyz1"); //Enter text in description field
-        //  $("#wizard-formUrl").should(exist).setValue("https://fireo.net/Dashboard/"); //Enter Direct link in Dashboard field
-
-            $("#wizard-formTitle-helper-text").should(appear).shouldHave(text("Please insert the form title")); //Verify the Error shown below Title field - "Please insert the form title"
-
-           // $("#wizard-formTitle-helper-text").should(appear).shouldHave(text("Bitte geben Sie den Titel des Formulars ein")); //Verify the Error shown below Title field in German
+        $("#wizard-formTitle-helper-text").should(appear).shouldHave(text("Please insert the form title")); //Verify the Error shown below Title field - "Please insert the form title"
         $("#wizard-createFormButton").shouldBe(disabled); //Create Form button should be disabled since Title field is blank
-
         $("#wizard-formHelp").should(exist).doubleClick().sendKeys(Keys.BACK_SPACE); //Clear text in description field
-
         $("#wizard-formTitle").should(exist).click();
         $("#wizard-formTitle").setValue("This is the form Title"); //Enter value in Title field
-
         $("#wizard-formId").should(exist).doubleClick();
         $("#wizard-formId").sendKeys(Keys.BACK_SPACE); //Clearing the value in ID field
-
         $("#wizard-formId").should(exist).doubleClick();
         $("#wizard-formId").sendKeys(Keys.BACK_SPACE); //Clearing the value in ID field
-
         $("#wizard-formId").should(exist).shouldHave(exactValue(""));
-
         $("#wizard-createFormButton").shouldBe(disabled); //Create Form button should be disabled
-
         $("#wizard-formId").should(exist).click();
         $("#wizard-formId").setValue("UniqueId1"); //Enter value in ID field
-
         $("#wizard-createFormButton").shouldBe(enabled); //Create Form button should be enabled
-
     }
-
-
 
     @Test
     @DisplayName("Verify the character limit for Title field is 80 characters and for Description field is 150 characters")
@@ -118,21 +106,22 @@ public class CreateFormTest extends BaseTest {
     public void verifyTitleFieldCharacterLimit()
     {
 
-//        $("#wizard-formTitle").should(exist).doubleClick();
-//        $("#wizard-formTitle").sendKeys(Keys.BACK_SPACE); //Clear the Title field
-//        $("#wizard-formTitle").should(exist).shouldHave(exactValue("")); -- This is not clearing the field
-
-        $("#wizard-cancelButton").shouldBe(enabled).click(); //Cancel button
-        $("#confirmation-dialog-title").should(exist);
-        $("#btnConfirm").shouldBe(enabled).click(); //Confirm the cancellation
-        $("#btnCreateForm").shouldBe(enabled).click();  //Verify user is on dashboard page where Create Form button is visible
-
-        $("#wizardFormDlg").should(appear); //Create form wizard should exist
+//        $("#wizard-cancelButton").shouldBe(enabled).click(); //Cancel button
+//        $("#confirmation-dialog-title").should(exist);
+//        $("#btnConfirm").shouldBe(enabled).click(); //Confirm the cancellation
+//        $("#btnCreateForm").shouldBe(enabled).click();  //Verify user is on dashboard page where Create Form button is visible
 
         String string80characters = RandomStringUtils.randomAlphanumeric(80);
         String newString = string80characters + "s";
 
-        $("#wizard-formTitle").setValue(newString); //Try to set the new string with 81 characters in Title field
+        String titleText = $("#wizard-formTitle").getValue();
+
+        if (!(titleText.equals(""))) {
+            $("#wizard-formTitle").should(exist).setValue("");
+            $("#wizard-formTitle").shouldBe(empty).pressTab();
+        }
+
+        $("#wizard-formTitle").should(exist).setValue(newString); //Try to set the new string with 81 characters in Title field
         $("#wizard-formTitle").shouldNotHave(exactValue(newString)); //New string with 81st character should not be present
         $("#wizard-formTitle").shouldHave(exactValue(string80characters)); //Only the string with 80 characters should be there
 
