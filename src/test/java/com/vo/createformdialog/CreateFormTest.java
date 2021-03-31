@@ -86,16 +86,10 @@ public class CreateFormTest extends BaseTest {
         $("#wizard-formHelp").should(exist).setValue("xyz1"); //Enter text in description field
         $("#wizard-formTitle-helper-text").should(appear).shouldHave(text("Please insert the form title")); //Verify the Error shown below Title field - "Please insert the form title"
         $("#wizard-createFormButton").shouldBe(disabled); //Create Form button should be disabled since Title field is blank
-        $("#wizard-formHelp").should(exist).doubleClick().sendKeys(Keys.BACK_SPACE); //Clear text in description field
-        $("#wizard-formTitle").should(exist).click();
-        $("#wizard-formTitle").setValue("This is the form Title"); //Enter value in Title field
-        $("#wizard-formId").should(exist).doubleClick();
-        $("#wizard-formId").sendKeys(Keys.BACK_SPACE); //Clearing the value in ID field
-        $("#wizard-formId").should(exist).doubleClick();
-        $("#wizard-formId").sendKeys(Keys.BACK_SPACE); //Clearing the value in ID field
-        $("#wizard-formId").should(exist).shouldHave(exactValue(""));
+        selectAndClear("#wizard-formHelp");
+        selectAndClear("#wizard-formTitle").setValue("This is the form Title"); //Enter value in Title field
+        selectAndClear("#wizard-formId").should(exist).shouldBe(empty);
         $("#wizard-createFormButton").shouldBe(disabled); //Create Form button should be disabled
-        $("#wizard-formId").should(exist).click();
         $("#wizard-formId").setValue("UniqueId1"); //Enter value in ID field
         $("#wizard-createFormButton").shouldBe(enabled); //Create Form button should be enabled
     }
@@ -114,22 +108,15 @@ public class CreateFormTest extends BaseTest {
         String string80characters = RandomStringUtils.randomAlphanumeric(80);
         String newString = string80characters + "s";
 
-        String titleText = $("#wizard-formTitle").getValue();
 
-        if (!(titleText.equals(""))) {
-            $("#wizard-formTitle").should(exist).setValue("");
-            $("#wizard-formTitle").shouldBe(empty).pressTab();
-        }
-
-        $("#wizard-formTitle").should(exist).setValue(newString); //Try to set the new string with 81 characters in Title field
+        selectAndClear("#wizard-formTitle").setValue(newString); //Try to set the new string with 81 characters in Title field
         $("#wizard-formTitle").shouldNotHave(exactValue(newString)); //New string with 81st character should not be present
         $("#wizard-formTitle").shouldHave(exactValue(string80characters)); //Only the string with 80 characters should be there
 
         String string150characters = RandomStringUtils.randomAlphanumeric(150);
         newString = string150characters + "s";
 
-        $("#wizard-formHelp").doubleClick().sendKeys(Keys.BACK_SPACE); //Clear the Description field
-        $("#wizard-formHelp").should(exist).setValue(newString); //Try to set 151 characters in the Description field
+        selectAndClear("#wizard-formHelp").setValue(newString); //Try to set 151 characters in the Description field
         $("#wizard-formHelp").shouldNotHave(exactValue(newString)); //New string with 151st character should not be present
         $("#wizard-formHelp").shouldHave(exactValue(string150characters)); //Only the string with 150 characters should be there
 

@@ -73,6 +73,7 @@ public abstract class BaseTest {
             Configuration.baseUrl = Optional.ofNullable(TEST_BASE_URL).orElse("https://fireo.net");
             //Configuration.baseUrl = "http://localhost:3000";
             Configuration.timeout = 20000;
+            //Configuration.fastSetValue = true;
             //Configuration.clickViaJs = true;
             //Configuration.headless = true;
 
@@ -191,13 +192,22 @@ public abstract class BaseTest {
         }
     }
 
+
+    protected static SelenideElement selectAndClear(String cssSelector) {
+        return selectAndClear(By.cssSelector(cssSelector));
+    }
+
     protected static SelenideElement selectAndClear(By selector) {
+        /*
         SelenideElement se = $(selector);
         String currentValue = se.getValue();
         if(currentValue != null && currentValue.length() > 0) {
             Arrays.asList(currentValue.split("")).forEach(s -> se.sendKeys(Keys.BACK_SPACE));
         }
-        //return new selected element back
+        */
+        //alternative faster way to delete values with Ctrl + a and delete
+        $(selector).sendKeys(Keys.chord(Keys.CONTROL, Keys.COMMAND,"a"));
+        $(selector).sendKeys(Keys.chord(Keys.DELETE));
         return $(selector).shouldBe(empty);
     }
 }
