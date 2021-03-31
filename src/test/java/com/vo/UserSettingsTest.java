@@ -106,15 +106,15 @@ public class UserSettingsTest extends BaseTest {
            String[] dateTimeFormatArr = dateTimeFormat.split(" "); //Create String array for Date & Time format split
 
            if (!(dateTimeFormatArr.length > 2)) {
-               String resultDateTime = $("#dateTimeFormatResultExample").getAttribute("value");
+               String resultDateTime = $("#dateTimeFormatResultExample").getAttribute("value"); //Get the date time populated in Result Date & Time
                String[] resultDateTimeArr = resultDateTime.split(" ");
 
+              //Verify that the Date format selected in D&T format field is populated in Result D&T field
                assertTrue((dateTimeFormatArr[0].equals(resultDateTimeArr[0])), "The date in Date & Time Format Dropdown is " + dateTimeFormatArr[0] + " and in Result Date & Time is: " + resultDateTimeArr[0]);
            }
            $("#dateTimeFormat").should(exist).click(); //Click on Date & Time format
 
        }
-
 
     }
 
