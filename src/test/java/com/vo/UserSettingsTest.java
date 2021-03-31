@@ -6,10 +6,13 @@ import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Selenide.*;
@@ -20,33 +23,6 @@ import static com.codeborne.selenide.Selectors.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("User Settings Tests")
 public class UserSettingsTest extends BaseTest {
-
-
-//    @BeforeAll
-//    public static void setAppLanguageToEnglishSettings() {
-//        $("#user").waitUntil(visible, 5000).click(); //Wait until the 'User' element is visible on Dashboard and click on it
-//        $("#myPreferences").click(); //Click on preferences
-//        $("#account_settings.MuiListItem-button").shouldBe(visible).click(); //Account Settings
-//        String existingAppLanguage = $("#defaultLocale").should(exist).getText(); //Check the existing value of Language selected
-//
-//        if (existingAppLanguage.contains("German")) {
-//            $("#defaultLocale").click();
-//            $("#defaultLocaleSelectMenu").should(appear);
-//            $$("#defaultLocaleSelectMenu li").shouldHave(texts("German - Germany", "English - Great Britain"));
-//            $$("#defaultLocaleSelectMenu li").findBy(text("English - Great Britain")).click();
-//            $("#btnSave").shouldBe(visible).click(); //Save the changes
-//
-//            $("#toDashboard").click(); //Click on Home button
-//            $("#btnCreateForm").should(exist).click(); //Verify that user is on Dashboard page and click on Create form
-//        }
-//    }
-
-//    @BeforeEach
-//    public void openDashboard() {
-////        open("/userSettings");
-////        $("#userSettingsView").should(appear);
-//
-//    }
 
     @Test
     @Order(1)
@@ -108,33 +84,36 @@ public class UserSettingsTest extends BaseTest {
     }
 
    @Test
-   @Disabled
    @Order(3)
   @DisplayName("As a User, I should be able to switch my Date & Time Format")
-  public void switchDataTimeFormat()
+  public void verifySwitchDateTimeFormat()
    {
        $(" #appearance").should(exist).click(); //Click on Appearance
        $("#dateTimeFormat").should(exist).click(); //Click on Date & Time format
 
-       //Verify Appearance Date & Time Format dropdown menu is shown . Issue: id not found, dropdown menu collection need to be brought in for dynamic date time
-       //Post that:
-       //Create collection for dropdown menu items
-       //For each menu item : Select menu item from Dd collection, get text from Dd, get text from result date & time,
-       // split based on " " and verify that the value on left side is same.
-       //Do this for all the menu items.
+       List <SelenideElement> listDateTimeFormat = $$("#dateTimeFormatSelectMenu li"); //Store all the elements in list
 
+       int dateTimtFormDdCount =  listDateTimeFormat.size();
 
-       String dateTimeFormat = $("#dateTimeFormat").should(exist).getText(); //Result Date & Time field value
-       String [] dateTimeFormatArr = dateTimeFormat.split(" "); //Create String array for resultDateTime split
-
-       if(!(dateTimeFormatArr.length > 2))
+       for(int i = 0; i < dateTimtFormDdCount; i++)
        {
-            String resultDateTime = $("#dateTimeFormatResultExample").should(exist).getText();
-           String [] resultDateTimeArr = resultDateTime.split(" ");
+           SelenideElement selenideElement = listDateTimeFormat.get(i); //Fetch i th element from Selenide elements list
 
-           assertTrue((dateTimeFormatArr[0].equals(resultDateTimeArr[0])),"The date in Date & Time Format Dropdown is "+dateTimeFormatArr[0]+" and in Result Date & Time is: "+resultDateTimeArr[0]);
+           listDateTimeFormat.get(i).click(); //Click on i th element
+
+           String dateTimeFormat = $("#dateTimeFormat").getText();
+
+           String[] dateTimeFormatArr = dateTimeFormat.split(" "); //Create String array for Date & Time format split
+
+           if (!(dateTimeFormatArr.length > 2)) {
+               String resultDateTime = $("#dateTimeFormatResultExample").getAttribute("value");
+               String[] resultDateTimeArr = resultDateTime.split(" ");
+
+               assertTrue((dateTimeFormatArr[0].equals(resultDateTimeArr[0])), "The date in Date & Time Format Dropdown is " + dateTimeFormatArr[0] + " and in Result Date & Time is: " + resultDateTimeArr[0]);
+           }
+           $("#dateTimeFormat").should(exist).click(); //Click on Date & Time format
+
        }
-
 
 
     }
