@@ -32,15 +32,11 @@ public class UserSettingsTest extends BaseTest {
         $("#user").should(exist).click();
         $("#myPreferences").waitUntil(visible, 3000).click(); //Click on preferences
         $(" #appearance").should(exist).click(); //Click on Appearance
-
         SelenideElement body = $("body");
         String backGroundColorBefore = body.getCssValue("background-color");
         String colorBefore = body.getCssValue("color");
-
         $("#appearance.MuiListItem-button").shouldBe(visible).click();
         $("#user").shouldBe(visible).click();
-     //   $("#appearanceThemeSwitch").shouldBe(visible);
-
         SelenideElement ckbDarkTheme = $("#ckbDarkTheme").shouldBe(visible);
         boolean darkIsChecked = $("#ckbDarkTheme input").is(checked);
         $("#ckbDarkTheme").shouldBe(visible).click();
@@ -68,7 +64,7 @@ public class UserSettingsTest extends BaseTest {
             $$("#defaultLocaleSelectMenu li").shouldHave(texts("German - Germany", "English - Great Britain"));
             $$("#defaultLocaleSelectMenu li").findBy(text("German - Germany")).click();
             $("#btnSave").shouldBe(visible).click(); //Save the changes
-            $("#btnSave").shouldHave(text("SPEICHERN")); //Verify that the app language is changed to German
+            $("#btnSave").shouldHave(text("Speichern")); //Verify that the app language is changed to German
 
         }
         String newexistingAppLanguage = $("#defaultLocale").should(exist).getText(); //Check the existing value of Language selected

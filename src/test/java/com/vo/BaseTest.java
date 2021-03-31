@@ -175,14 +175,12 @@ public abstract class BaseTest {
                 $$("#defaultLocaleSelectMenu li").shouldHave(texts("German - Germany", "English - Great Britain"));
                 $$("#defaultLocaleSelectMenu li").findBy(text("English - Great Britain")).click();
                 $("#btnSave").shouldBe(visible).click(); //Save the changes
-
                 $("#toDashboard").click(); //Click on Home button
                 $("#btnCreateForm").should(exist).click(); //Verify that user is on Dashboard page and click on Create form
             }
         $("#user").should(exist).click(); //Click on Use icon and close the menu preferences
         $("#toDashboard").should(exist).click(); //Click on Launchpad
         }
-
 
     private static void setSauceJobId() {
         WebDriver webDriver = WebDriverRunner.getWebDriver();
