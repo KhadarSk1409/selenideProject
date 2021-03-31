@@ -32,6 +32,7 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selectors.withText;
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import utils.SelenideLogReport;
 
@@ -155,7 +156,7 @@ public abstract class BaseTest {
             }
 
             //  assertEquals(title(), "VisualOrbit App");
-            assertEquals(title(), "VisualOrbit OriginOne");
+            assertTrue(title().contains("VisualOrbit"));
             ALREADY_LOGGED_IN.set(Boolean.TRUE);
         }
 
