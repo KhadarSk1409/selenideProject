@@ -135,6 +135,18 @@ public abstract class BaseTest {
         }
     }
 
+    private static boolean appHeaderAppear() {
+        boolean result = false;
+        try {
+            $("header.MuiAppBar-root").waitUntil(appears, 30000);
+            result = true;
+        } catch (Throwable t) {
+            System.out.println("App Header is not presented ");
+            t.printStackTrace();
+        }
+        return result;
+    }
+
     public static void shouldLogin() {
         if (Boolean.FALSE.equals(ALREADY_LOGGED_IN.get())) {
             open("");
@@ -149,6 +161,7 @@ public abstract class BaseTest {
             //stay signed in?
             $(".button.primary").shouldBe(visible).click();
 
+            appHeaderAppear();
             boolean presenceOfPickAnAccount = $("#loginHeader").is(exist);
             if (presenceOfPickAnAccount) {
                 // String valueToBeClicked = "//small[contains(text(),"+"'"+TEST_USER_EMAIL+"')]";
