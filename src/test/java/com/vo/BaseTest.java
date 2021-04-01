@@ -32,6 +32,7 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selectors.withText;
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import utils.SelenideLogReport;
 
@@ -73,7 +74,6 @@ public abstract class BaseTest {
             Configuration.baseUrl = Optional.ofNullable(TEST_BASE_URL).orElse("https://fireo.net");
             //Configuration.baseUrl = "http://localhost:3000";
             Configuration.timeout = 20000;
-            //Configuration.fastSetValue = true;
             //Configuration.clickViaJs = true;
             //Configuration.headless = true;
 
@@ -148,17 +148,15 @@ public abstract class BaseTest {
 
             //stay signed in?
             $(".button.primary").shouldBe(visible).click();
-             $("#loginHeader").shouldBe(visible);
-            $(byText(TEST_USER_EMAIL)).shouldBe(visible).click();
 
-//            boolean presenceOfPickAnAccount = $("#loginHeader").is(exist);
-//            if (presenceOfPickAnAccount) {
-//                // String valueToBeClicked = "//small[contains(text(),"+"'"+TEST_USER_EMAIL+"')]";
-//                $(byText(TEST_USER_EMAIL)).shouldBe(visible).click();
-//            }
+            boolean presenceOfPickAnAccount = $("#loginHeader").is(exist);
+            if (presenceOfPickAnAccount) {
+                // String valueToBeClicked = "//small[contains(text(),"+"'"+TEST_USER_EMAIL+"')]";
+                $(byText(TEST_USER_EMAIL)).shouldBe(visible).click();
+            }
 
             //  assertEquals(title(), "VisualOrbit App");
-            assertEquals(title(), "VisualOrbit OriginOne");
+            assertTrue(title().contains("VisualOrbit"));
             ALREADY_LOGGED_IN.set(Boolean.TRUE);
         }
 
@@ -182,7 +180,6 @@ public abstract class BaseTest {
         $("#user").should(exist).click(); //Click on Use icon and close the menu preferences
         $("#toDashboard").should(exist).click(); //Click on Launchpad
     }
-
 
     private static void setSauceJobId() {
         WebDriver webDriver = WebDriverRunner.getWebDriver();
