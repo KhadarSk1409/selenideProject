@@ -95,15 +95,15 @@ public class UserSettingsTest extends BaseTest {
        {
            SelenideElement selenideElement = listDateTimeFormat.get(i); //Fetch i th element from Selenide elements list
            listDateTimeFormat.get(i).click(); //Click on i th element
-       String dateTimeFormat = $("#dateTimeFormat").should(exist).getText(); //Result Date & Time field value
-       String [] dateTimeFormatArr = dateTimeFormat.split(" "); //Create String array for resultDateTime split
+           String dateTimeFormat = $("#dateTimeFormat").should(exist).getText(); //Result Date & Time field value
+           String [] dateTimeFormatArr = dateTimeFormat.split(" "); //Create String array for resultDateTime split
 
-       if(!(dateTimeFormatArr.length > 2))
-       {
-           String resultDateTime = $("#dateTimeFormatResultExample").getAttribute("value");
-           String [] resultDateTimeArr = resultDateTime.split(" ");
+           if(!(dateTimeFormatArr.length > 2))
+           {
+               String resultDateTime = $("#dateTimeFormatResultExample").getAttribute("value");
+               String [] resultDateTimeArr = resultDateTime.split(" ");
 
-              //Verify that the Date format selected in D&T format field is populated in Result D&T field
+               //Verify that the Date format selected in D&T format field is populated in Result D&T field
                assertTrue((dateTimeFormatArr[0].equals(resultDateTimeArr[0])), "The date in Date & Time Format Dropdown is " + dateTimeFormatArr[0] + " and in Result Date & Time is: " + resultDateTimeArr[0]);
            }
            $("#dateTimeFormat").should(exist).click(); //Click on Date & Time format
