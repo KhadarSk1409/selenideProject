@@ -71,7 +71,7 @@ public abstract class BaseTest {
             String target = configOptions[0];
 
             TEST_BASE_URL = System.getenv("TEST_BASE_URL");
-            Configuration.baseUrl = Optional.ofNullable(TEST_BASE_URL).orElse("https://fireo.net");
+            Configuration.baseUrl = Optional.ofNullable(TEST_BASE_URL).orElse("https://visualorbit.fireo.net");
             //Configuration.baseUrl = "http://localhost:3000";
             Configuration.timeout = 20000;
             //Configuration.clickViaJs = true;
