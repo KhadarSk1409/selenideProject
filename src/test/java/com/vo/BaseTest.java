@@ -166,21 +166,19 @@ public abstract class BaseTest {
 
 
     public static void setAppLanguageToEnglish() {
-            $("#user").should(exist).click(); //Wait until the 'User' element is visible on Dashboard and click on it
-            $("#myPreferences").click(); //Click on preferences
-            $("#account_settings.MuiListItem-button").shouldBe(visible).click(); //Account Settings
-            String existingAppLanguage = $("#defaultLocale").should(exist).getText(); //Check the existing value of Language selected
-
-            if (existingAppLanguage.contains("German")) {
-                $("#defaultLocale").click();
-                $("#defaultLocaleSelectMenu").should(appear);
-                $$("#defaultLocaleSelectMenu li").shouldHave(texts("German - Germany", "English - Great Britain"));
-                $$("#defaultLocaleSelectMenu li").findBy(text("English - Great Britain")).click();
-                $("#btnSave").shouldBe(visible).click(); //Save the changes
-
-                $("#toDashboard").click(); //Click on Home button
-                $("#btnCreateForm").should(exist).click(); //Verify that user is on Dashboard page and click on Create form
-            }
+        $("#user").should(exist).click(); //Wait until the 'User' element is visible on Dashboard and click on it
+        $("#myPreferences").click(); //Click on preferences
+        $("#account_settings.MuiListItem-button").shouldBe(visible).click(); //Account Settings
+        String existingAppLanguage = $("#defaultLocale").should(exist).getText(); //Check the existing value of Language selected
+        if (existingAppLanguage.contains("German")) {
+            $("#defaultLocale").click();
+            $("#defaultLocaleSelectMenu").should(appear);
+            $$("#defaultLocaleSelectMenu li").shouldHave(texts("German - Germany", "English - Great Britain"));
+            $$("#defaultLocaleSelectMenu li").findBy(text("English - Great Britain")).click();
+            $("#btnSave").shouldBe(visible).click(); //Save the changes
+            $("#toDashboard").click(); //Click on Home button
+            $("#btnCreateForm").should(exist).click(); //Verify that user is on Dashboard page and click on Create form
+        }
         $("#user").should(exist).click(); //Click on Use icon and close the menu preferences
         $("#toDashboard").should(exist).click(); //Click on Launchpad
     }

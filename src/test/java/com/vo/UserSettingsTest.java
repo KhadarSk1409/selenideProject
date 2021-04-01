@@ -31,7 +31,7 @@ public class UserSettingsTest extends BaseTest {
        // setAppLanguageToEnglish(); //Set App language to English
         $("#user").should(exist).click();
         $("#myPreferences").waitUntil(visible, 3000).click(); //Click on preferences
-        $(" #appearance").should(exist).click(); //Click on Appearance
+        $("#appearance").should(exist).click(); //Click on Appearance
 
         SelenideElement body = $("body");
         String backGroundColorBefore = body.getCssValue("background-color");
