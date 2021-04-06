@@ -37,7 +37,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import utils.SelenideLogReport;
 
 
-
 @Execution(ExecutionMode.SAME_THREAD)
 @ExtendWith({SelenideLogReport.class})
 public abstract class BaseTest {
@@ -196,7 +195,7 @@ public abstract class BaseTest {
 
     private static void setSauceJobId() {
         WebDriver webDriver = WebDriverRunner.getWebDriver();
-        if(webDriver instanceof RemoteWebDriver) {
+        if (webDriver instanceof RemoteWebDriver) {
             SessionId sessionId = ((RemoteWebDriver) webDriver).getSessionId();
             SAUCE_SESSION_ID.set(sessionId.toString());
         }
@@ -210,7 +209,7 @@ public abstract class BaseTest {
         }
         */
         //alternative faster way to delete values with Ctrl + a and delete
-        $(selector).sendKeys(Keys.chord(Keys.CONTROL, Keys.COMMAND,"a"));
+        $(selector).sendKeys(Keys.chord(Keys.CONTROL, Keys.COMMAND, "a"));
         $(selector).sendKeys(Keys.chord(Keys.DELETE));
         return $(selector).shouldBe(empty);
     }

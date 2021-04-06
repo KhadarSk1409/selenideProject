@@ -1,5 +1,6 @@
 package com.vo.createformdialog;
 
+import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.SelenideElement;
 import com.vo.BaseTest;
 import org.apache.logging.log4j.core.util.Assert;
@@ -9,6 +10,7 @@ import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.apache.commons.lang3.RandomStringUtils;
 
 import org.openqa.selenium.By;
@@ -37,7 +39,7 @@ public class CreateFormTest extends BaseTest {
     @DisplayName("Click on createNewFormBtn and verify that Create new form wizard is opened")
     @Order(2)
     public void clickOnCreateFormBtnAndVerifyCreateFormWizard() {
-       $("#btnCreateForm").should(exist).click();
+        $("#btnCreateForm").should(exist).click();
 
         $("#wizardFormDlg").should(appear);
     }
@@ -45,8 +47,7 @@ public class CreateFormTest extends BaseTest {
     @Test
     @DisplayName("Verify which all fields and buttons are there in the form template")
     @Order(3)
-    public void verifyTheFieldsInCreateFormWizard()
-    {
+    public void verifyTheFieldsInCreateFormWizard() {
         $("#wizard-formTitle").should(exist); //Title field
         $("#wizard-formHelp").should(exist); //Description field
         $("#wizard-formId").should(exist); //ID field
@@ -60,8 +61,7 @@ public class CreateFormTest extends BaseTest {
     @Test
     @DisplayName("Verify Cancel functionality on Create Form Wizard")
     @Order(4)
-    public void verifyCancelButtonInCreateForm()
-    {
+    public void verifyCancelButtonInCreateForm() {
         $("#wizard-cancelButton").shouldBe(enabled).click(); //Cancel button
 
         $("#confirmation-dialog-title").should(exist);
@@ -77,15 +77,15 @@ public class CreateFormTest extends BaseTest {
     @Test
     @DisplayName("Verify that Title and ID fields are mandatory in Create form wizard")
     @Order(5)
-    public void verifyMandatoryFieldsInFormWizard()  {
+    public void verifyMandatoryFieldsInFormWizard() {
 
         $("#btnCreateForm").should(exist).click(); //Click on Create form button on Dashboard page
         $("#wizard-formHelp").should(exist).setValue("xyz1"); //Enter text in description field
         //  $("#wizard-formUrl").should(exist).setValue("https://fireo.net/Dashboard/"); //Enter Direct link in Dashboard field
 
-            $("#wizard-formTitle-helper-text").should(appear).shouldHave(text("Please insert the form title")); //Verify the Error shown below Title field - "Please insert the form title"
+        $("#wizard-formTitle-helper-text").should(appear).shouldHave(text("Please insert the form title")); //Verify the Error shown below Title field - "Please insert the form title"
 
-           // $("#wizard-formTitle-helper-text").should(appear).shouldHave(text("Bitte geben Sie den Titel des Formulars ein")); //Verify the Error shown below Title field in German
+        // $("#wizard-formTitle-helper-text").should(appear).shouldHave(text("Bitte geben Sie den Titel des Formulars ein")); //Verify the Error shown below Title field in German
         $("#wizard-createFormButton").shouldBe(disabled); //Create Form button should be disabled since Title field is blank
 
         $("#wizard-formHelp").should(exist).doubleClick().sendKeys(Keys.BACK_SPACE); //Clear text in description field
@@ -111,12 +111,10 @@ public class CreateFormTest extends BaseTest {
     }
 
 
-
     @Test
     @DisplayName("Verify the character limit for Title field is 80 characters and for Description field is 150 characters")
     @Order(6)
-    public void verifyTitleFieldCharacterLimit()
-    {
+    public void verifyTitleFieldCharacterLimit() {
 
 //        $("#wizard-formTitle").should(exist).doubleClick();
 //        $("#wizard-formTitle").sendKeys(Keys.BACK_SPACE); //Clear the Title field
@@ -149,16 +147,14 @@ public class CreateFormTest extends BaseTest {
     @Test
     @DisplayName("Verify Form Creation from Create Form Wizard")
     @Order(7)
-    public void validateCreateFormFunctionality()
-    {
+    public void validateCreateFormFunctionality() {
         $("#wizard-createFormButton").should(exist).click(); //Click on create form btn in Wizard
-       String formUrl =  $("#formtree_card").should(exist).getWrappedDriver().getCurrentUrl();
-       System.out.println("The url for Create form is: "+formUrl);
-       assertTrue(formUrl.contains("visualorbit.fireo.net/designer/")); //Verify that user has navigated to the form creation page
+        String formUrl = $("#formtree_card").should(exist).getWrappedDriver().getCurrentUrl();
+        System.out.println("The url for Create form is: " + formUrl);
+        String expectedUrl = Configuration.baseUrl + "/designer/";
+        assertTrue(formUrl.contains(expectedUrl)); //Verify that user has navigated to the form creation page
     }
 
     //Qn: Is there any character limit for the ID field ?
-
-    //Qn: When the Create form button on Create form wizard is clicked, the further screens part needs to be discussed.
 
 }

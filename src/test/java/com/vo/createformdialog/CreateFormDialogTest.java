@@ -27,7 +27,7 @@ public class CreateFormDialogTest extends BaseTest {
     @Order(2)
     public void clickOnEditFormShouldOpenDesigner() {
         $("#btnCreateForm").should(appear)
-                                      .click();
+                .click();
 
         $("#wizardFormDlg").should(appear);
 
@@ -100,7 +100,7 @@ public class CreateFormDialogTest extends BaseTest {
         $("#wizard-createFormButton").shouldBe(enabled);
         $("#wizard-addlOptionsButton").shouldBe(enabled);
 
-       // $("#wizard-addlOptionsButton").click();
+        // $("#wizard-addlOptionsButton").click();
         $("#wizard-createFormButton").click();
 
         // TODO Directly going to dashboard as closing the designer is currently not working
@@ -115,9 +115,7 @@ public class CreateFormDialogTest extends BaseTest {
         $("#formRelatedTabs").should(appear);*/
 
 
-
     }
-
 
 
 }
