@@ -71,7 +71,7 @@ public abstract class BaseTest {
             String target = configOptions[0];
 
             TEST_BASE_URL = System.getenv("TEST_BASE_URL");
-            Configuration.baseUrl = Optional.ofNullable(TEST_BASE_URL).orElse("https://fireo.net");
+            Configuration.baseUrl = Optional.ofNullable(TEST_BASE_URL).orElse("https://visualorbit.fireo.net");
             //Configuration.baseUrl = "http://localhost:3000";
             Configuration.timeout = 20000;
             //Configuration.clickViaJs = true;
@@ -135,6 +135,18 @@ public abstract class BaseTest {
         }
     }
 
+    private static boolean appHeaderAppear() {
+        boolean result = false;
+        try {
+            $("header.MuiAppBar-root").waitUntil(appears, 15000);
+            result = true;
+        } catch (Throwable t) {
+            System.out.println("App Header is not presented ");
+            t.printStackTrace();
+        }
+        return result;
+    }
+
     public static void shouldLogin() {
         if (Boolean.FALSE.equals(ALREADY_LOGGED_IN.get())) {
             open("");
@@ -149,6 +161,7 @@ public abstract class BaseTest {
             //stay signed in?
             $(".button.primary").shouldBe(visible).click();
 
+            appHeaderAppear();
             boolean presenceOfPickAnAccount = $("#loginHeader").is(exist);
             if (presenceOfPickAnAccount) {
                 // String valueToBeClicked = "//small[contains(text(),"+"'"+TEST_USER_EMAIL+"')]";
@@ -164,20 +177,19 @@ public abstract class BaseTest {
 
 
     public static void setAppLanguageToEnglish() {
-            $("#user").should(exist).click(); //Wait until the 'User' element is visible on Dashboard and click on it
-            $("#myPreferences").click(); //Click on preferences
-            $("#account_settings.MuiListItem-button").shouldBe(visible).click(); //Account Settings
-            String existingAppLanguage = $("#defaultLocale").should(exist).getText(); //Check the existing value of Language selected
-
-            if (existingAppLanguage.contains("German")) {
-                $("#defaultLocale").click();
-                $("#defaultLocaleSelectMenu").should(appear);
-                $$("#defaultLocaleSelectMenu li").shouldHave(texts("German - Germany", "English - Great Britain"));
-                $$("#defaultLocaleSelectMenu li").findBy(text("English - Great Britain")).click();
-                $("#btnSave").shouldBe(visible).click(); //Save the changes
-                $("#toDashboard").click(); //Click on Home button
-                $("#btnCreateForm").should(exist).click(); //Verify that user is on Dashboard page and click on Create form
-            }
+        $("#user").should(exist).click(); //Wait until the 'User' element is visible on Dashboard and click on it
+        $("#myPreferences").click(); //Click on preferences
+        $("#account_settings.MuiListItem-button").shouldBe(visible).click(); //Account Settings
+        String existingAppLanguage = $("#defaultLocale").should(exist).getText(); //Check the existing value of Language selected
+        if (existingAppLanguage.contains("German")) {
+            $("#defaultLocale").click();
+            $("#defaultLocaleSelectMenu").should(appear);
+            $$("#defaultLocaleSelectMenu li").shouldHave(texts("German - Germany", "English - Great Britain"));
+            $$("#defaultLocaleSelectMenu li").findBy(text("English - Great Britain")).click();
+            $("#btnSave").shouldBe(visible).click(); //Save the changes
+            $("#toDashboard").click(); //Click on Home button
+            $("#btnCreateForm").should(exist).click(); //Verify that user is on Dashboard page and click on Create form
+        }
         $("#user").should(exist).click(); //Click on Use icon and close the menu preferences
         $("#toDashboard").should(exist).click(); //Click on Launchpad
     }
@@ -191,12 +203,15 @@ public abstract class BaseTest {
     }
 
     protected static SelenideElement selectAndClear(By selector) {
-        SelenideElement se = $(selector);
+       /* SelenideElement se = $(selector);
         String currentValue = se.getValue();
         if(currentValue != null && currentValue.length() > 0) {
             Arrays.asList(currentValue.split("")).forEach(s -> se.sendKeys(Keys.BACK_SPACE));
         }
-        //return new selected element back
+        */
+        //alternative faster way to delete values with Ctrl + a and delete
+        $(selector).sendKeys(Keys.chord(Keys.CONTROL, Keys.COMMAND,"a"));
+        $(selector).sendKeys(Keys.chord(Keys.DELETE));
         return $(selector).shouldBe(empty);
     }
 }
