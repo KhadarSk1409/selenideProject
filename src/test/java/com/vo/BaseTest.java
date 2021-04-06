@@ -37,7 +37,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import utils.SelenideLogReport;
 
 
-
 @Execution(ExecutionMode.SAME_THREAD)
 @ExtendWith({SelenideLogReport.class})
 public abstract class BaseTest {
@@ -138,7 +137,7 @@ public abstract class BaseTest {
     private static boolean appHeaderAppear() {
         boolean result = false;
         try {
-            $("header.MuiAppBar-root").waitUntil(appears, 30000);
+            $("header.MuiAppBar-root").waitUntil(appears, 15000);
             result = true;
         } catch (Throwable t) {
             System.out.println("App Header is not presented ");
@@ -196,27 +195,21 @@ public abstract class BaseTest {
 
     private static void setSauceJobId() {
         WebDriver webDriver = WebDriverRunner.getWebDriver();
-        if(webDriver instanceof RemoteWebDriver) {
+        if (webDriver instanceof RemoteWebDriver) {
             SessionId sessionId = ((RemoteWebDriver) webDriver).getSessionId();
             SAUCE_SESSION_ID.set(sessionId.toString());
         }
     }
 
-
-    protected static SelenideElement selectAndClear(String cssSelector) {
-        return selectAndClear(By.cssSelector(cssSelector));
-    }
-
     protected static SelenideElement selectAndClear(By selector) {
-        /*
-        SelenideElement se = $(selector);
+       /* SelenideElement se = $(selector);
         String currentValue = se.getValue();
         if(currentValue != null && currentValue.length() > 0) {
             Arrays.asList(currentValue.split("")).forEach(s -> se.sendKeys(Keys.BACK_SPACE));
         }
         */
         //alternative faster way to delete values with Ctrl + a and delete
-        $(selector).sendKeys(Keys.chord(Keys.CONTROL, Keys.COMMAND,"a"));
+        $(selector).sendKeys(Keys.chord(Keys.CONTROL, Keys.COMMAND, "a"));
         $(selector).sendKeys(Keys.chord(Keys.DELETE));
         return $(selector).shouldBe(empty);
     }

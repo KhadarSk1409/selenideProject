@@ -38,7 +38,7 @@ public class DashboardTest extends BaseTest {
     @Order(2)
     public void clickOnEditFormShouldOpenDesigner() {
         $("#btnCreateForm").should(appear)
-                                      .click();
+                .click();
 
         $("#wizardFormDlg").should(appear);
     }
@@ -51,7 +51,7 @@ public class DashboardTest extends BaseTest {
         $("#sw_show_my_forms_USER").shouldBe(visible);
         boolean onlyMyFormsVisible = $("#sw_show_my_forms_USER input").is(checked);
         System.out.println("onlyMyFormsVisible " + onlyMyFormsVisible);
-        if(onlyMyFormsVisible) {
+        if (onlyMyFormsVisible) {
             $("#sw_show_my_forms_USER").click();
             $("#sw_show_my_forms_USER input").shouldBe(not(checked));
         }
@@ -71,7 +71,7 @@ public class DashboardTest extends BaseTest {
         boolean resultIsRemove = resultClasses.contains("removeFavorite");
         boolean resultIsAdd = resultClasses.contains("addFavorite");
 
-        if(initIsAddFavorite) {
+        if (initIsAddFavorite) {
             assertTrue(resultIsRemove, "first button should change to remove favorite icon");
         } else if (initIsRemoveFavorite) {
             assertTrue(resultIsAdd, "first button should change to add favorite icon");
