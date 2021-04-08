@@ -10,6 +10,7 @@ import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.openqa.selenium.Keys.*;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -20,6 +21,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.awt.event.KeyEvent;
 import java.util.List;
 import java.util.Set;
 
@@ -104,23 +106,10 @@ public class CreateFormTest extends BaseTest {
 
         // $("#wizard-formTitle-helper-text").should(appear).shouldHave(text("Bitte geben Sie den Titel des Formulars ein")); //Verify the Error shown below Title field in German
         $("#wizard-createFormButton").shouldBe(disabled); //Create Form button should be disabled since Title field is blank
-
-        $("#wizard-formHelp").should(exist).doubleClick().sendKeys(Keys.BACK_SPACE); //Clear text in description field
-
-        $("#wizard-formTitle").should(exist).click();
-        $("#wizard-formTitle").setValue("This is the form Title"); //Enter value in Title field
-
-        $("#wizard-formId").should(exist).doubleClick();
-        $("#wizard-formId").sendKeys(Keys.BACK_SPACE); //Clearing the value in ID field
-
-        $("#wizard-formId").should(exist).doubleClick();
-        $("#wizard-formId").sendKeys(Keys.BACK_SPACE); //Clearing the value in ID field
-
-        $("#wizard-formId").should(exist).shouldHave(exactValue(""));
-
+        selectAndClear("#wizard-formHelp");
+        selectAndClear("#wizard-formTitle").setValue("This is the form Title"); //Enter value in Title field
+        selectAndClear("#wizard-formId").should(exist).shouldBe(empty);
         $("#wizard-createFormButton").shouldBe(disabled); //Create Form button should be disabled
-
-        $("#wizard-formId").should(exist).click();
         $("#wizard-formId").setValue("UniqueId1"); //Enter value in ID field
 
         $("#wizard-createFormButton").shouldBe(enabled); //Create Form button should be enabled
@@ -147,15 +136,15 @@ public class CreateFormTest extends BaseTest {
         String string80characters = RandomStringUtils.randomAlphanumeric(80);
         String newString = string80characters + "s";
 
-        $("#wizard-formTitle").setValue(newString); //Try to set the new string with 81 characters in Title field
+
+        selectAndClear("#wizard-formTitle").setValue(newString); //Try to set the new string with 81 characters in Title field
         $("#wizard-formTitle").shouldNotHave(exactValue(newString)); //New string with 81st character should not be present
         $("#wizard-formTitle").shouldHave(exactValue(string80characters)); //Only the string with 80 characters should be there
 
         String string150characters = RandomStringUtils.randomAlphanumeric(150);
         newString = string150characters + "s";
 
-        $("#wizard-formHelp").doubleClick().sendKeys(Keys.BACK_SPACE); //Clear the Description field
-        $("#wizard-formHelp").should(exist).setValue(newString); //Try to set 151 characters in the Description field
+        selectAndClear("#wizard-formHelp").setValue(newString); //Try to set 151 characters in the Description field
         $("#wizard-formHelp").shouldNotHave(exactValue(newString)); //New string with 151st character should not be present
         $("#wizard-formHelp").shouldHave(exactValue(string150characters)); //Only the string with 150 characters should be there
 
@@ -185,5 +174,7 @@ public class CreateFormTest extends BaseTest {
     }
 
     //Qn: Is there any character limit for the ID field ?
+
+    //Qn: When the Create form button on Create form wizard is clicked, the further screens part needs to be discussed.
 
 }
