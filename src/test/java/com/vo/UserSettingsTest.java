@@ -3,9 +3,7 @@ package com.vo;
 import com.codeborne.selenide.*;
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
-
 import java.util.List;
-
 import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Condition.*;
@@ -29,17 +27,17 @@ public class UserSettingsTest extends BaseTest {
         {
             System.out.println("Dark theme is checked");//Verify the background colour
             String backGroundColorBefore = body.getCssValue("background-color");
+            System.out.println("When Dark Theme is checked, the backGroundColorBefore is: "+backGroundColorBefore);
 
             $("#ckbDarkTheme").shouldBe(enabled);  //Verify that Dark Theme should be checked
             $("#ckbDarkTheme").click(); //Now change the theme value from theme check box in appearance
-
             $("#ckbDarkTheme").shouldNotBe(checked);  //Verify that Dark Theme should be checked
             $("#appearanceThemeSwitch input").shouldNotBe(checked);
 
-            //Issue: Light to Dark theme works but Dark to Light does not reflects unless page refreshed
             String backGroundColorAfter = body.getCssValue("background-color");
+            System.out.println("When Dark Theme is checked,the backGroundColorAfter is: "+backGroundColorAfter);
 
-            //   assertTrue(!(backGroundColorBefore.equalsIgnoreCase(backGroundColorAfter))); //Since the color change from Dark to White does not save, this assertion doesn't work
+            assertTrue(!(backGroundColorBefore.equalsIgnoreCase(backGroundColorAfter))); //Since the color change from Dark to White does not save, this assertion doesn't work
 
             //Now change the theme from GUI tester menu:
             $("#appearanceThemeSwitch input").click();
@@ -51,16 +49,17 @@ public class UserSettingsTest extends BaseTest {
 
             //Verify the background colour
             String backGroundColorBefore = body.getCssValue("background-color");
+            System.out.println("When Light Theme is checked, the backGroundColorBefore is: "+backGroundColorBefore);
 
             $("#ckbDarkTheme").shouldNotBe(checked);  //Verify that Dark Theme should be checked
             $("#ckbDarkTheme").click(); //Now change the theme value from theme check box in appearance
-
             $("#ckbDarkTheme").waitUntil(visible, 3000);  //Verify that Dark Theme should be checked
             $("#ckbDarkTheme").is(checked);
             $("#appearanceThemeSwitch input").shouldBe(checked);
 
             //Issue: Light to Dark theme works but Dark to Light does not reflects unless page refreshed
             String backGroundColorAfter = body.getCssValue("background-color");
+            System.out.println("When Light Theme is checked, the backGroundColorAfter is: "+backGroundColorBefore);
 
             assertTrue(!(backGroundColorBefore.equalsIgnoreCase(backGroundColorAfter))); //-Since the color change from Dark to White does not save, this assertion doesn't work
 
