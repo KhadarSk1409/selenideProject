@@ -48,14 +48,31 @@ public class CreateFormTest extends BaseTest {
     @DisplayName("Verify which all fields and buttons are there in the form template")
     @Order(3)
     public void verifyTheFieldsInCreateFormWizard() {
-        $("#wizard-formTitle").should(exist); //Title field
+        $("#wizard-formTitle").should(exist,focused); //Title field
         $("#wizard-formHelp").should(exist); //Description field
         $("#wizard-formId").should(exist); //ID field
+        $("#selectFormIcon svg").should(have(attribute("data-src","/images/noun/visualOrbit.svg")));
+        $("#selectFormIcon").click();
+        $("#selectFormIcon_dialog_content").should(appear); //Verify ICON PICKER pop up is available
+        $$("#selectFormIcon_dialog_content button .material-icons").find(attribute("iconname","fas fa-address-book")).click();
+        $("#selectFormIcon").should(have(attribute("iconname","fas fa-address-book"))); //verify that icon is selected
         $("#wizard-formUrl").should(exist); //Direct link to form Dashboard field
-        $("#wizard-addlOptionsButton").should(exist); //Additional options button
-        $("#wizard-cancelButton").should(exist); //Cancel button
+        $("#wizard-addlOptionsButton").should(exist).shouldBe(disabled); //Additional options button
+        $("#wizard-cancelButton").should(exist).shouldBe(enabled); //Cancel button should be enabled
         $("#wizard-createFormButton").shouldBe(disabled); //Create Form button and it should be disabled
         $("#wizard-backButton").shouldBe(disabled); //Back button and it should be disabled
+        String idText = $("#wizard-formId").getValue();
+        assertTrue(!(idText.isEmpty()));
+
+        String directLink = $("#wizard-formUrl").getValue();
+        assertTrue(!(directLink.isEmpty()));
+
+        String urlInID = Configuration.baseUrl + "/Dashboard/"+idText;
+
+        System.out.println("The url in ID field is: "+urlInID);
+
+        assertTrue(directLink.contains(urlInID));
+
     }
 
     @Test
@@ -148,11 +165,23 @@ public class CreateFormTest extends BaseTest {
     @DisplayName("Verify Form Creation from Create Form Wizard")
     @Order(7)
     public void validateCreateFormFunctionality() {
+
+        String idText = $("#wizard-formId").getValue();
+
         $("#wizard-createFormButton").should(exist).click(); //Click on create form btn in Wizard
         String formUrl = $("#formtree_card").should(exist).getWrappedDriver().getCurrentUrl();
         System.out.println("The url for Create form is: " + formUrl);
         String expectedUrl = Configuration.baseUrl + "/designer/";
         assertTrue(formUrl.contains(expectedUrl)); //Verify that user has navigated to the form creation page
+//
+//        $("#toDashboard").click();
+//        $("#btnCreateForm").should(exist).click();
+//
+//        $("#wizardFormDlg").should(appear);
+//
+//       // $("#wizard-formId-helper-text")
+//
+//        String idError = $("#wizard-formId-helper-text").getText();
     }
 
     //Qn: Is there any character limit for the ID field ?
