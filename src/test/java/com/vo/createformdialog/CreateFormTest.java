@@ -13,17 +13,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.openqa.selenium.Keys.*;
 
 import org.apache.commons.lang3.RandomStringUtils;
-
-import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.awt.event.KeyEvent;
-import java.util.List;
-import java.util.Set;
+
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Verify New Form Creation Functionality")
@@ -42,7 +35,6 @@ public class CreateFormTest extends BaseTest {
     @Order(2)
     public void clickOnCreateFormBtnAndVerifyCreateFormWizard() {
         $("#btnCreateForm").should(exist).click();
-
         $("#wizardFormDlg").should(appear);
     }
 
@@ -50,14 +42,32 @@ public class CreateFormTest extends BaseTest {
     @DisplayName("Verify which all fields and buttons are there in the form template")
     @Order(3)
     public void verifyTheFieldsInCreateFormWizard() {
-        $("#wizard-formTitle").should(exist); //Title field
+        $("#wizard-formTitle").should(exist, focused); //Title field
         $("#wizard-formHelp").should(exist); //Description field
         $("#wizard-formId").should(exist); //ID field
+        $("#selectFormIcon svg").should(have(attribute("data-src", "/images/noun/visualOrbit.svg")));
+        $("#selectFormIcon").click();
+        $("#selectFormIcon_dialog_content").should(appear); //Verify ICON PICKER pop up is available
+        $$("#selectFormIcon_dialog_content button .material-icons").find(attribute("iconname", "fas fa-address-book")).click();
+        $$("#selectFormIcon").contains(attribute("iconname", "fas fa-address-book"));
         $("#wizard-formUrl").should(exist); //Direct link to form Dashboard field
-        $("#wizard-addlOptionsButton").should(exist); //Additional options button
-        $("#wizard-cancelButton").should(exist); //Cancel button
+        $("#wizard-addlOptionsButton").should(exist).shouldBe(disabled); //Additional options button
+        $("#wizard-cancelButton").should(exist).shouldBe(enabled); //Cancel button should be enabled
         $("#wizard-createFormButton").shouldBe(disabled); //Create Form button and it should be disabled
         $("#wizard-backButton").shouldBe(disabled); //Back button and it should be disabled
+
+        $("#wizard-formId").shouldNotBe(empty); //Validate that ID field should not be empty
+        String idText = $("#wizard-formId").getValue();
+
+        $("#wizard-formUrl").shouldNotBe(empty); //Url field should not be empty
+
+        String expectedUrl = Configuration.baseUrl + "/Dashboard/" + idText;
+        String actualUrl = $("#wizard-formUrl").getValue();
+
+        System.out.println("The Direct link to form dashboard is: " + actualUrl);
+
+        $("#wizard-formUrl").shouldHave(value(expectedUrl)); //The url which should be there in url field
+
     }
 
     @Test
@@ -65,10 +75,8 @@ public class CreateFormTest extends BaseTest {
     @Order(4)
     public void verifyCancelButtonInCreateForm() {
         $("#wizard-cancelButton").shouldBe(enabled).click(); //Cancel button
-
         $("#confirmation-dialog-title").should(exist);
         $("#btnCancel").shouldBe(enabled).click(); //Cancel the Cancel button on Confirmation
-
         $("#wizard-cancelButton").shouldBe(enabled).click(); //Cancel button
         $("#confirmation-dialog-title").should(exist);
         $("#btnConfirm").shouldBe(enabled).click(); //Confirm the cancellation
@@ -83,18 +91,13 @@ public class CreateFormTest extends BaseTest {
 
         $("#btnCreateForm").should(exist).click(); //Click on Create form button on Dashboard page
         $("#wizard-formHelp").should(exist).setValue("xyz1"); //Enter text in description field
-        //  $("#wizard-formUrl").should(exist).setValue("https://fireo.net/Dashboard/"); //Enter Direct link in Dashboard field
-
         $("#wizard-formTitle-helper-text").should(appear).shouldHave(text("Please insert the form title")); //Verify the Error shown below Title field - "Please insert the form title"
-
-        // $("#wizard-formTitle-helper-text").should(appear).shouldHave(text("Bitte geben Sie den Titel des Formulars ein")); //Verify the Error shown below Title field in German
         $("#wizard-createFormButton").shouldBe(disabled); //Create Form button should be disabled since Title field is blank
         selectAndClear("#wizard-formHelp");
         selectAndClear("#wizard-formTitle").setValue("This is the form Title"); //Enter value in Title field
         selectAndClear("#wizard-formId").should(exist).shouldBe(empty);
         $("#wizard-createFormButton").shouldBe(disabled); //Create Form button should be disabled
         $("#wizard-formId").setValue("UniqueId1"); //Enter value in ID field
-
         $("#wizard-createFormButton").shouldBe(enabled); //Create Form button should be enabled
 
     }
@@ -105,20 +108,14 @@ public class CreateFormTest extends BaseTest {
     @Order(6)
     public void verifyTitleFieldCharacterLimit() {
 
-//        $("#wizard-formTitle").should(exist).doubleClick();
-//        $("#wizard-formTitle").sendKeys(Keys.BACK_SPACE); //Clear the Title field
-//        $("#wizard-formTitle").should(exist).shouldHave(exactValue("")); -- This is not clearing the field
-
         $("#wizard-cancelButton").shouldBe(enabled).click(); //Cancel button
         $("#confirmation-dialog-title").should(exist);
         $("#btnConfirm").shouldBe(enabled).click(); //Confirm the cancellation
         $("#btnCreateForm").shouldBe(enabled).click();  //Verify user is on dashboard page where Create Form button is visible
-
         $("#wizardFormDlg").should(appear); //Create form wizard should exist
 
         String string80characters = RandomStringUtils.randomAlphanumeric(80);
         String newString = string80characters + "s";
-
 
         selectAndClear("#wizard-formTitle").setValue(newString); //Try to set the new string with 81 characters in Title field
         $("#wizard-formTitle").shouldNotHave(exactValue(newString)); //New string with 81st character should not be present
@@ -137,14 +134,25 @@ public class CreateFormTest extends BaseTest {
     @DisplayName("Verify Form Creation from Create Form Wizard")
     @Order(7)
     public void validateCreateFormFunctionality() {
+
+        String idText = $("#wizard-formId").getValue();
+        System.out.println("The ID for first form is: " + idText); //ID value for first form
+
         $("#wizard-createFormButton").should(exist).click(); //Click on create form btn in Wizard
         String formUrl = $("#formtree_card").should(exist).getWrappedDriver().getCurrentUrl();
         System.out.println("The url for Create form is: " + formUrl);
-        String expectedUrl = Configuration.baseUrl + "/designer/";
-        assertTrue(formUrl.contains(expectedUrl)); //Verify that user has navigated to the form creation page
-    }
 
-    //Qn: Is there any character limit for the ID field ?
+        String expectedUrl = Configuration.baseUrl + "/designer/" + idText;
+        $("#formtree_card").getText().contains(expectedUrl); //Verify that user has navigated to the form creation page
+        $("#toDashboard").click(); //Go back to Dashboard
+        $("#btnCreateForm").should(exist).click(); //Click on Create Form button
+        $("#wizardFormDlg").should(appear); //Create Form wizard appears
+        $("#wizard-formId-helper-text").should(exist);
+        selectAndClear("#wizard-formId").setValue(idText).sendKeys(TAB); //Set the id which was there for previous form
+
+        $("#wizard-formId-helper-text").should(exist).shouldHave(text("The Id exists already")); //Error should be shown
+        // System.out.println("The error shown when tried to enter used Form Id is: "+$("#wizard-formId-helper-text").should(exist).getText());
+    }
 
     //Qn: When the Create form button on Create form wizard is clicked, the further screens part needs to be discussed.
 

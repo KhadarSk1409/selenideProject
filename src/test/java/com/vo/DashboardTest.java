@@ -76,7 +76,7 @@ public class DashboardTest extends BaseTest {
         } else if (initIsRemoveFavorite) {
             assertTrue(resultIsAdd, "first button should change to add favorite icon");
         } else {
-            fail("undefined favorites state, neigher add or remove buttons available");
+            fail("undefined favorites state, neither add or remove buttons available");
         }
     }
 
