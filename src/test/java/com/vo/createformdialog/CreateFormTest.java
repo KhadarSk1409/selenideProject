@@ -13,6 +13,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.openqa.selenium.Keys.*;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.openqa.selenium.Keys;
+
+import java.awt.event.KeyEvent;
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -53,15 +56,17 @@ public class CreateFormTest extends BaseTest {
         $("#wizard-createFormButton").shouldBe(disabled); //Create Form button and it should be disabled
         $("#wizard-backButton").shouldBe(disabled); //Back button and it should be disabled
 
+        $("#wizard-formId").shouldNotBe(empty); //Validate that ID field should not be empty
         String idText = $("#wizard-formId").getValue();
-        assertTrue(!(idText.isEmpty()));
 
-        String directLink = $("#wizard-formUrl").getValue();
-        assertTrue(!(directLink.isEmpty()));
+        $("#wizard-formUrl").shouldNotBe(empty); //Url field should not be empty
 
-        String urlInID = Configuration.baseUrl + "/Dashboard/" + idText;
-        System.out.println("The url in ID field is: " + urlInID);
-        assertTrue(directLink.contains(urlInID));
+        String expectedUrl = Configuration.baseUrl + "/Dashboard/" + idText;
+        String actualUrl = $("#wizard-formUrl").getValue();
+
+        System.out.println("The Direct link to form dashboard is: " + actualUrl);
+
+        $("#wizard-formUrl").shouldHave(value(expectedUrl)); //The url which should be there in url field
 
     }
 
@@ -137,16 +142,15 @@ public class CreateFormTest extends BaseTest {
         String formUrl = $("#formtree_card").should(exist).getWrappedDriver().getCurrentUrl();
         System.out.println("The url for Create form is: " + formUrl);
 
-        String expectedUrl = Configuration.baseUrl + "/designer/";
-        assertTrue(formUrl.contains(expectedUrl)); //Verify that user has navigated to the form creation page
+        String expectedUrl = Configuration.baseUrl + "/designer/" + idText;
+        $("#formtree_card").getText().contains(expectedUrl); //Verify that user has navigated to the form creation page
         $("#toDashboard").click(); //Go back to Dashboard
         $("#btnCreateForm").should(exist).click(); //Click on Create Form button
         $("#wizardFormDlg").should(appear); //Create Form wizard appears
         $("#wizard-formId-helper-text").should(exist);
-        selectAndClear("#wizard-formId"); //#wizard-formId
-        selectAndClear("#wizard-formId").setValue(idText); //Set the id which was there for previous form
+        selectAndClear("#wizard-formId").setValue(idText).sendKeys(TAB); //Set the id which was there for previous form
 
-        $("#wizard-formId-helper-text").should(exist).shouldHave(text("The Id exists")); //Error should be shown
+        $("#wizard-formId-helper-text").should(exist).shouldHave(text("The Id exists already")); //Error should be shown
         // System.out.println("The error shown when tried to enter used Form Id is: "+$("#wizard-formId-helper-text").should(exist).getText());
     }
 
