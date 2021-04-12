@@ -28,11 +28,13 @@ public class CreateFormTest extends BaseTest {
     public void createNewFormBtnFunctionality() {
         setAppLanguageToEnglish(); //New
         $("#btnCreateForm").should(exist);
+        deleteForm();
     }
 
     @Test
     @DisplayName("Click on createNewFormBtn and verify that Create new form wizard is opened")
     @Order(2)
+    @Disabled
     public void clickOnCreateFormBtnAndVerifyCreateFormWizard() {
         $("#btnCreateForm").should(exist).click();
         $("#wizardFormDlg").should(appear);
@@ -41,6 +43,7 @@ public class CreateFormTest extends BaseTest {
     @Test
     @DisplayName("Verify which all fields and buttons are there in the form template")
     @Order(3)
+    @Disabled
     public void verifyTheFieldsInCreateFormWizard() {
         $("#wizard-formTitle").should(exist, focused); //Title field
         $("#wizard-formHelp").should(exist); //Description field
@@ -73,6 +76,7 @@ public class CreateFormTest extends BaseTest {
     @Test
     @DisplayName("Verify Cancel functionality on Create Form Wizard")
     @Order(4)
+    @Disabled
     public void verifyCancelButtonInCreateForm() {
         $("#wizard-cancelButton").shouldBe(enabled).click(); //Cancel button
         $("#confirmation-dialog-title").should(exist);
@@ -87,6 +91,7 @@ public class CreateFormTest extends BaseTest {
     @Test
     @DisplayName("Verify that Title and ID fields are mandatory in Create form wizard")
     @Order(5)
+    @Disabled
     public void verifyMandatoryFieldsInFormWizard() {
 
         $("#btnCreateForm").should(exist).click(); //Click on Create form button on Dashboard page
@@ -106,6 +111,7 @@ public class CreateFormTest extends BaseTest {
     @Test
     @DisplayName("Verify the character limit for Title field is 80 characters and for Description field is 150 characters")
     @Order(6)
+    @Disabled
     public void verifyTitleFieldCharacterLimit() {
 
         $("#wizard-cancelButton").shouldBe(enabled).click(); //Cancel button
@@ -114,7 +120,8 @@ public class CreateFormTest extends BaseTest {
         $("#btnCreateForm").shouldBe(enabled).click();  //Verify user is on dashboard page where Create Form button is visible
         $("#wizardFormDlg").should(appear); //Create form wizard should exist
 
-        String string80characters = RandomStringUtils.randomAlphanumeric(80);
+        String formprefix = "test-";
+        String string80characters = formprefix+RandomStringUtils.randomAlphanumeric(75);
         String newString = string80characters + "s";
 
         selectAndClear("#wizard-formTitle").setValue(newString); //Try to set the new string with 81 characters in Title field
@@ -133,6 +140,7 @@ public class CreateFormTest extends BaseTest {
     @Test
     @DisplayName("Verify Form Creation from Create Form Wizard")
     @Order(7)
+    @Disabled
     public void validateCreateFormFunctionality() {
 
         String idText = $("#wizard-formId").getValue();
@@ -145,6 +153,7 @@ public class CreateFormTest extends BaseTest {
         String expectedUrl = Configuration.baseUrl + "/designer/" + idText;
         $("#formtree_card").getText().contains(expectedUrl); //Verify that user has navigated to the form creation page
         $("#toDashboard").click(); //Go back to Dashboard
+        deleteForm();
         $("#btnCreateForm").should(exist).click(); //Click on Create Form button
         $("#wizardFormDlg").should(appear); //Create Form wizard appears
         $("#wizard-formId-helper-text").should(exist);
@@ -152,6 +161,8 @@ public class CreateFormTest extends BaseTest {
 
         $("#wizard-formId-helper-text").should(exist).shouldHave(text("The Id exists already")); //Error should be shown
         // System.out.println("The error shown when tried to enter used Form Id is: "+$("#wizard-formId-helper-text").should(exist).getText());
+
+
     }
 
     //Qn: When the Create form button on Create form wizard is clicked, the further screens part needs to be discussed.

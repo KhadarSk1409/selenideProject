@@ -28,6 +28,7 @@ import java.util.Optional;
 import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Condition.visible;
+import static com.codeborne.selenide.Configuration.startMaximized;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selectors.withText;
 import static com.codeborne.selenide.Selenide.*;
@@ -175,7 +176,6 @@ public abstract class BaseTest {
 
     }
 
-
     public static void setAppLanguageToEnglish() {
         $("#user").should(exist).click(); //Wait until the 'User' element is visible on Dashboard and click on it
         $("#myPreferences").click(); //Click on preferences
@@ -199,6 +199,23 @@ public abstract class BaseTest {
         if (webDriver instanceof RemoteWebDriver) {
             SessionId sessionId = ((RemoteWebDriver) webDriver).getSessionId();
             SAUCE_SESSION_ID.set(sessionId.toString());
+        }
+    }
+
+    public static void deleteForm() {
+      //  $(By.xpath("//body/div[@id='root']/div[1]/div[2]/div[1]/div[1]/div[5]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/input[1]")).should(exist).sendKeys("test-");
+        $("#formRelatedTabs .MuiCardActions-root input.MuiInputBase-input").should(exist).sendKeys("test-");
+      //  Configuration.startMaximized = true;
+        int tableRows = $$("#formListTable table tbody tr").toArray().length;
+        for(int i = 0; i < tableRows; i++) {
+            SelenideElement rowelement = $("#formListTable table tbody tr");
+            rowelement.$("button").should(exist).click();
+            $("tr .fa-trash-alt").should(exist).click();
+            $("#confirm-deletion-dialog #confirmation-dialog-content").should(appear);
+            $("#confirm-deletion-dialog #btnConfirm").should(exist).click();
+           // $("#formListTable").shouldHave(text("Loading"));
+
+            $("#formListTable table").should(appear);
         }
     }
 
