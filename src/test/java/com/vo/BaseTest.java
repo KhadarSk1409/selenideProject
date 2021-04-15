@@ -25,6 +25,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 
+import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Condition.visible;
@@ -177,6 +178,12 @@ public abstract class BaseTest {
     }
 
     public static void setAppLanguageToEnglish() {
+        $("#toDashboard").shouldBe(visible);
+        //if already in english -> skip
+        if($("#toDashboard").has(text("Launchpad"))) {
+            return;
+        }
+
         $("#user").should(exist).click(); //Wait until the 'User' element is visible on Dashboard and click on it
         $("#myPreferences").click(); //Click on preferences
         $("#account_settings.MuiListItem-button").shouldBe(visible).click(); //Account Settings
@@ -187,6 +194,7 @@ public abstract class BaseTest {
             $$("#defaultLocaleSelectMenu li").shouldHave(texts("German - Germany", "English - Great Britain"));
             $$("#defaultLocaleSelectMenu li").findBy(text("English - Great Britain")).click();
             $("#btnSave").shouldBe(visible).click(); //Save the changes
+            $("#btnSave").shouldHave(text("Save"));
             $("#toDashboard").click(); //Click on Home button
             $("#btnCreateForm").should(exist).click(); //Verify that user is on Dashboard page and click on Create form
         }
@@ -202,19 +210,76 @@ public abstract class BaseTest {
         }
     }
 
+
+    protected static void applyLabelForTestForms() {
+        $("#wizardFormDlg #selFormLabelsControl").shouldBe(visible);
+        if(!$("#wizardFormDlg #selFormLabelsControl .MuiChip-label").has(text("guitest"))) {
+            $("#wizardFormDlg #selLabel ~ .MuiAutocomplete-endAdornment .MuiAutocomplete-popupIndicator").should(exist).click();
+            $(".MuiAutocomplete-popper").should(appear);
+            try {
+                $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("guitest"), 3000);
+                $$(".MuiAutocomplete-popper li").findBy(text("guitest")).click();
+            } catch (Throwable t) {
+                $("#wizardFormDlg #selLabel").setValue("guitest");
+                $(".MuiAutocomplete-popper").should(appear);
+                $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("Add \"guitest\""));
+                $$(".MuiAutocomplete-popper li").findBy(text("Add \"guitest\"")).click();
+            }
+
+            $("#wizardFormDlg #selFormLabelsControl .MuiChip-label").shouldHave(text("guitest"));
+        }
+    }
+
+    protected static boolean applySearchForTestForms() {
+        boolean hasGuiTestLabel = true;
+        //selectAndClear("#formRelatedTabs .mtable_toolbar input.MuiInputBase-input").setValue("test-gu-");
+        $("#selFormLabelsControl").shouldBe(visible);
+        if(!$("#selFormLabelsControl .MuiChip-label").has(text("guitest"))) {
+            $("#selLabel ~ .MuiAutocomplete-endAdornment .MuiAutocomplete-popupIndicator").should(exist).click();
+            $(".MuiAutocomplete-popper").should(appear);
+            try {
+                $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("guitest"));
+                $$(".MuiAutocomplete-popper li").findBy(text("guitest")).click();
+                hasGuiTestLabel = true;
+            } catch (Throwable t) {
+                hasGuiTestLabel = false;
+            }
+        }
+
+        if(hasGuiTestLabel) {
+            $("#formListTable table").shouldBe(visible);
+            try {
+                $("#formListTable table tbody tr:first-of-type").waitUntil(not(text("No records to display")), 5000);
+            } catch (Throwable t) {
+                hasGuiTestLabel = false;
+            }
+        }
+        System.out.println("applySearchForTestForms " + hasGuiTestLabel);
+        return hasGuiTestLabel;
+    }
+
     public static void deleteForm() {
-        $("#formRelatedTabs .MuiCardActions-root input.MuiInputBase-input").should(exist).sendKeys("test-");
-      //  Configuration.startMaximized = true;
+        if(!applySearchForTestForms()) {
+            System.out.println("applySearchForTestForms returned false, exiting deletion");
+            return;
+        }
         int tableRows = $$("#formListTable table tbody tr").toArray().length;
+        System.out.println("found rows to delete: " + tableRows);
         for(int i = 0; i < tableRows; i++) {
-            SelenideElement rowelement = $("#formListTable table tbody tr");
-            rowelement.$("button").should(exist).click();
+            $("#formListTable table tbody tr").shouldBe(visible);
+            if($("#formListTable table tbody tr").has(text("No records to display"))) {
+                return;
+            }
+
+            $("#formListTable table tbody tr td:first-of-type button").should(exist).click();
             $("tr .fa-trash-alt").should(exist).click();
             $("#confirm-deletion-dialog #confirmation-dialog-content").should(appear);
             $("#confirm-deletion-dialog #btnConfirm").should(exist).click();
-           // $("#formListTable").shouldHave(text("Loading"));
-
-            $("#formListTable table").should(appear);
+            $("tr .fa-trash-alt").should(disappear);
+            System.out.println("deleted row " + i);
+            if(!applySearchForTestForms()) {
+                return;
+            }
         }
     }
 
