@@ -1,21 +1,14 @@
 package com.vo.createformdialog;
 
 import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.SelenideElement;
 import com.vo.BaseTest;
-import org.apache.logging.log4j.core.util.Assert;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.*;
 
-import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Selenide.*;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.openqa.selenium.Keys.*;
-
-import org.apache.commons.lang3.RandomStringUtils;
-import org.openqa.selenium.Keys;
-
-import java.awt.event.KeyEvent;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$$;
+import static org.openqa.selenium.Keys.TAB;
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

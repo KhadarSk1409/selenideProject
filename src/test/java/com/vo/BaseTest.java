@@ -203,7 +203,6 @@ public abstract class BaseTest {
     }
 
     public static void deleteForm() {
-      //  $(By.xpath("//body/div[@id='root']/div[1]/div[2]/div[1]/div[1]/div[5]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]/input[1]")).should(exist).sendKeys("test-");
         $("#formRelatedTabs .MuiCardActions-root input.MuiInputBase-input").should(exist).sendKeys("test-");
       //  Configuration.startMaximized = true;
         int tableRows = $$("#formListTable table tbody tr").toArray().length;
