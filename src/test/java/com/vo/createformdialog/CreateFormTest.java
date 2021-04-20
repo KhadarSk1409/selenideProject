@@ -48,8 +48,8 @@ public class CreateFormTest extends BaseTest {
         $("#selectFormIcon svg").should(have(attribute("data-src", "/images/noun/visualOrbit.svg")));
         $("#selectFormIcon").click();
         $("#selectFormIcon_dialog_content").should(appear); //Verify ICON PICKER pop up is available
-        $$("#selectFormIcon_dialog_content button .material-icons").find(attribute("iconname", "fas fa-address-book")).click();
-        $$("#selectFormIcon").contains(attribute("iconname", "fas fa-address-book"));
+        $$("#selectFormIcon_dialog_content span").find(attribute("title", "noun_Business Man_919296")).click();
+        $$("#selectFormIcon").contains(attribute("data-src", "/images/noun/noun_Business Man_919296.svg"));
         $("#wizard-formUrl").should(exist); //Direct link to form Dashboard field
         $("#wizard-addlOptionsButton").should(exist).shouldBe(disabled); //Additional options button
         $("#wizard-cancelButton").should(exist).shouldBe(enabled); //Cancel button should be enabled
@@ -68,6 +68,7 @@ public class CreateFormTest extends BaseTest {
 
         $("#wizard-formUrl").shouldHave(value(expectedUrl)); //The url which should be there in url field
 
+        applyLabelForTestForms();
     }
 
     @Test
@@ -114,7 +115,8 @@ public class CreateFormTest extends BaseTest {
         $("#btnCreateForm").shouldBe(enabled).click();  //Verify user is on dashboard page where Create Form button is visible
         $("#wizardFormDlg").should(appear); //Create form wizard should exist
 
-        String string80characters = RandomStringUtils.randomAlphanumeric(80);
+        String formprefix = "test-gu-";
+        String string80characters = formprefix+RandomStringUtils.randomAlphanumeric(72);
         String newString = string80characters + "s";
 
         selectAndClear("#wizard-formTitle").setValue(newString); //Try to set the new string with 81 characters in Title field
@@ -137,7 +139,7 @@ public class CreateFormTest extends BaseTest {
 
         String idText = $("#wizard-formId").getValue();
         System.out.println("The ID for first form is: " + idText); //ID value for first form
-
+        applyLabelForTestForms();
         $("#wizard-createFormButton").should(exist).click(); //Click on create form btn in Wizard
         String formUrl = $("#formtree_card").should(exist).getWrappedDriver().getCurrentUrl();
         System.out.println("The url for Create form is: " + formUrl);
@@ -145,13 +147,22 @@ public class CreateFormTest extends BaseTest {
         String expectedUrl = Configuration.baseUrl + "/designer/" + idText;
         $("#formtree_card").getText().contains(expectedUrl); //Verify that user has navigated to the form creation page
         $("#toDashboard").click(); //Go back to Dashboard
+
         $("#btnCreateForm").should(exist).click(); //Click on Create Form button
         $("#wizardFormDlg").should(appear); //Create Form wizard appears
         $("#wizard-formId-helper-text").should(exist);
         selectAndClear("#wizard-formId").setValue(idText).sendKeys(TAB); //Set the id which was there for previous form
 
         $("#wizard-formId-helper-text").should(exist).shouldHave(text("The Id exists already")); //Error should be shown
-        // System.out.println("The error shown when tried to enter used Form Id is: "+$("#wizard-formId-helper-text").should(exist).getText());
+
+    }
+
+    @Test
+    @DisplayName("Cleanup as last step")
+    @Order(20)
+    public void cleanup() {
+        open("/dashboard");
+        deleteForm();
     }
 
     //Qn: When the Create form button on Create form wizard is clicked, the further screens part needs to be discussed.
