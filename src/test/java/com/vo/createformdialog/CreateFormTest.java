@@ -19,7 +19,7 @@ import java.awt.event.KeyEvent;
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@DisplayName("Verify New Form Creation Functionality")
+@DisplayName("Create Form Tests")
 public class CreateFormTest extends BaseTest {
 
     @Test
@@ -89,10 +89,9 @@ public class CreateFormTest extends BaseTest {
     @DisplayName("Verify that Title and ID fields are mandatory in Create form wizard")
     @Order(5)
     public void verifyMandatoryFieldsInFormWizard() {
-
         $("#btnCreateForm").should(exist).click(); //Click on Create form button on Dashboard page
         $("#wizard-formHelp").should(exist).setValue("xyz1"); //Enter text in description field
-        $("#wizard-formTitle-helper-text").should(appear).shouldHave(text("Please insert the form title")); //Verify the Error shown below Title field - "Please insert the form title"
+        $("#wizard-formTitle-helper-text").should(appear).shouldHave(text("Provide a title for the new form, you can always change this")); //Verify the Error shown below Title field - "Please insert the form title"
         $("#wizard-createFormButton").shouldBe(disabled); //Create Form button should be disabled since Title field is blank
         selectAndClear("#wizard-formHelp");
         selectAndClear("#wizard-formTitle").setValue("This is the form Title"); //Enter value in Title field

@@ -4,10 +4,7 @@ import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.SelenideElement;
 import com.vo.BaseTest;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import java.util.List;
 import static com.codeborne.selenide.CollectionCondition.size;
@@ -16,6 +13,8 @@ import static com.codeborne.selenide.Selectors.byAttribute;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DisplayName("Language Properties")
 public class LanguageProperties extends BaseTest {
 
     //Fetch languages from 'preferred form creation locales'
@@ -71,16 +70,13 @@ public class LanguageProperties extends BaseTest {
         cellsInSecondRow.get(4).$(byAttribute("title", "Edit")).should(exist); //User is back on the previous page
         cellsInSecondRow.get(1).click(); //Click on Screen
 
-        cellsInSecondRow.get(4).$(byAttribute("title", "Delete")).should(exist).click();
-        //cellsInSecondRow.get(4).$(byAttribute("title", "Delete")).click(); //Delete button for German - German
+        cellsInSecondRow.get(4).$(byAttribute("title", "Delete")).should(exist).click(); //Delete button for German - German
         cellsInSecondRow.get(0).shouldHave(text("Are you sure you want to delete this row?")); //Confirmation shown for deletion of secondary langauge
         cellsInSecondRow.get(0).click(); //Click on Screen
         cellsInSecondRow.get(1).$(byAttribute("title", "Cancel")).should(exist).click(); //Cancel the Deletion
-        //   cellsInSecondRow.get(1).$(byAttribute("title", "Cancel")).click();
         cellsInSecondRow.get(4).$(byAttribute("title", "Edit")).should(exist); //User is back on the previous page
         cellsInSecondRow.get(1).click(); //Click on screen
-        cellsInSecondRow.get(4).$(byAttribute("title", "Delete")).should(exist).click();
-        //cellsInSecondRow.get(4).$(byAttribute("title", "Delete")).click(); //Delete button for German - German
+        cellsInSecondRow.get(4).$(byAttribute("title", "Delete")).should(exist).click(); //Delete button for German - German
         cellsInSecondRow.get(0).shouldHave(text("Are you sure you want to delete this row?")); //Confirmation shown for deletion of secondary langauge
         cellsInSecondRow.get(1).$(byAttribute("title", "Save")).click(); //Confirm the Deletion
         $$("#wizardFormDlg tbody tr").shouldHave(size(1));
@@ -118,8 +114,8 @@ public class LanguageProperties extends BaseTest {
         cellsInFirstRow.get(1).shouldBe(enabled); //Form Description is now enabled
         $("#wizard-cancelButton").click(); //Click on Cancel button
         $("#confirmation-dialog-title").should(exist); //Confirmation for Cancellation is shown
-        $("#confirmation-dialog-content").should(exist).click(); //Click on Confirm button
-
+        $("#btnConfirm").should(exist).click();
+        $("#confirmation-dialog-content").shouldNot(appear); //Click on Confirm button
     }
 
 }
