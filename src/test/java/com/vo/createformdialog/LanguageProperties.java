@@ -22,7 +22,7 @@ public class LanguageProperties extends BaseTest {
     @Test
     @DisplayName("Verify initial setup in Add Language screen")
     @Order(1)
-    public void validateIntialSetup() {
+    public void validateInitialSet() {
         //Create Form:
         $("#toDashboard").click(); //Go back to Dashboard
         $("#btnCreateForm").should(exist).click(); //Click on Create Form button
@@ -39,8 +39,8 @@ public class LanguageProperties extends BaseTest {
         //the buttons “BACK”, “CREATE FORM”, “NEXT” and “CANCEL” should all be enabled:
         $("#wizard-backButton").shouldBe(enabled);
         $("#wizard-createFormButton").shouldBe(enabled);
-        $("#wizard-addlOptionsButton").shouldBe(enabled); //Next button
         $("#wizard-cancelButton").shouldBe(enabled);
+        $("#wizard-addlOptionsButton").shouldBe(enabled); //Next button
 
         //Define the table rows
         SelenideElement firstRow = $$("#wizardFormDlg tbody tr").get(0);
