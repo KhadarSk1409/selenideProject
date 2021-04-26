@@ -17,7 +17,7 @@ For best practices please check the [Selenide project](https://selenide.org/quic
 * Import/open test project from userinterface as Maven project:  
 Select 'Open or Import':  
 [<img src="docs/readme/01_import_project.png" width="500px" />](docs/readme/01_import_project.png)  
-Select pom.xml file inside tests/acceptance folder:  
+Select pom.xml file inside the test automation project folder:  
 [<img src="docs/readme/02_select_pom_file.png" width="500px" />](docs/readme/02_select_pom_file.png)  
 Open as Project:  
 [<img src="docs/readme/03_open_as_project.png" width="500px" />](docs/readme/03_open_as_project.png)
@@ -25,8 +25,13 @@ Open as Project:
 * Setup few environment variables in Run/Debug Configurations via templates. This will add defined environment variables to all tests later.  
 Create new JUnit Run/Debug Template:  
 [<img src="docs/readme/04_edit_junit_template_environment_variables.png" width="500px" />](docs/readme/04_edit_junit_template_environment_variables.png)  
-Fill environment variables. Instead of test user you can use your personal account. Please do not share your password and do not commit it anywhere!  
-[<img src="docs/readme/05_env_variables.png" width="500px" />](docs/readme/05_env_variables.png)
+Fill environment variables. Instead of test user you can use your personal account. Please do not share your password and do not commit it anywhere!
+[<img src="docs/readme/05_env_variables.png" width="500px" />](docs/readme/05_env_variables.png)  
+Example values: 
+```
+TEST_USER_EMAIL=guitester@visualorbit.com;  TEST_USER_PASSWORD=V1su#l0rbit;  
+TEST_BASE_URL=https://visualorbit.fireo.net
+```
 
 ## Running Tests in IDE
 
