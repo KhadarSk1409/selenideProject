@@ -45,8 +45,6 @@ public class PublicationProcess extends BaseTest {
         $("#wizard-addlOptionsButton").shouldBe(enabled); //Next button is enabled
         $("#wizard-cancelButton").shouldBe(enabled); //Cancel button is enabled
 
-
-
     }
 
     @Test
@@ -75,7 +73,6 @@ public class PublicationProcess extends BaseTest {
         $("#wizard-createFormButton").shouldBe(enabled);
         $("#wizard-cancelButton").shouldBe(enabled);
         $("#wizard-addlOptionsButton").shouldBe(enabled); //Next button
-
     }
 
     @Test
@@ -93,25 +90,24 @@ public class PublicationProcess extends BaseTest {
         $("#selUser-option-0 div:first-of-type").should(exist).click(); //User selects first option from the dropdown
         $("#wizard-createFormButton").should(exist).shouldBe(enabled); //Create Form button is enabled
         $("#wizard-addlOptionsButton").should(exist).shouldBe(enabled); //Next button is enabled
-
     }
 
 
     @Test
     @DisplayName("Validations after checking Members of VisualOrbit Group")
     @Order(5)
-    public void validationsAfterCheckingMembersOfVisualOrbitGroup() {
-
+    public void validationsAfterCheckingMembersOfVisualOrbitGroup() throws InterruptedException {
         $("#ckb_first_ApproverGroupInVO").should(exist).click(); //Members of VisualOrbit Group
         $("#selUser").should(exist); //Select approver dropdown is enabled
         $("#wizard-backButton").shouldBe(enabled);
         $("#wizard-cancelButton").shouldBe(enabled);
-        $("#wizard-createFormButton").shouldBe(disabled); //Create Form button is disabled
-        $("#wizard-addlOptionsButton").shouldBe(disabled); //Next button is disabled
-        $("#selUser").click(); //Click on Candidate approver dropdown
-        $("#selUser-option-0").should(exist).click(); //User selects first option from the dropdown
-        $("#wizard-createFormButton").should(exist).shouldBe(enabled); //Create Form button is enabled
-        $("#wizard-addlOptionsButton").should(exist).shouldBe(enabled); //Next button is enabled
+        $("#wizard-createFormButton").should(exist).shouldBe(disabled); //Create Form button is disabled
+        $("#wizard-addlOptionsButton").should(exist).shouldBe(disabled); //Next button is disabled
+         Thread.sleep(3000);
+        $("#selUser").click();
+        String optionDropdown = $("#selUser-option-0 div:first-of-type").should(exist).getText(); //User selects first option from the dropdown
+        $("#selUser-option-0").click();
+        $("#selUser").shouldHave(value(optionDropdown));
     }
 
 
@@ -119,7 +115,8 @@ public class PublicationProcess extends BaseTest {
     @DisplayName("Validations after Free User Selection")
     @Order(6)
     public void validationsAfterCheckingFreeUserSelection() {
-        $("#ckb_first_tApproverFreeUserSelection").should(exist).click(); //Free User Selection
+        $("#ckb_first_tApproverFreeUserSelection").should(exist); //Free User Selection
+        $("#ckb_first_tApproverFreeUserSelection").click(); //Free User Selection
         $("#selUser").should(exist); //Select approver dropdown is enabled
         $("#wizard-backButton").shouldBe(enabled);
         $("#wizard-cancelButton").shouldBe(enabled);
@@ -190,6 +187,8 @@ public class PublicationProcess extends BaseTest {
         String optionDropdown2 = $("#selUser-option-0 div:first-of-type").should(exist).getText();
         $("#selUser-option-0").click(); //User selects first option from the dropdown
         $("#fc_first_UserSelect").shouldHave(text(optionDropdown2));
+        $("#wizard-createFormButton").should(exist).shouldBe(disabled); //Create Form button is disabled
+        $("#wizard-addlOptionsButton").should(exist).shouldBe(disabled); //Next button is disabled
 
     }
 
@@ -212,7 +211,7 @@ public class PublicationProcess extends BaseTest {
         $("#wizard-createFormButton").shouldBe(disabled); //Create Form button is disabled
         $("#wizard-addlOptionsButton").shouldBe(disabled); //Next button is disabled
         $("#fc_second_MSGroupSelect #selUser").should(appear); //Select approver for MS Group dropdown is enabled
-        $("#publication_process_container").$(byText("Second Approval")).should(exist).click(); //Click on First Approvals
+        $("#publication_process_container").$(byText("Second Approval")).should(exist).click(); //Click on Second Approvals
         $("#fc_second_MSGroupSelect #selUser").click();
         String optionDropdown = $("#selUser-option-0 div:first-of-type").should(exist).getText();
         $("#selUser-option-0").click();
@@ -220,7 +219,7 @@ public class PublicationProcess extends BaseTest {
         Thread.sleep(3000);
 
         $("#ckb_second_ApproverGroupInVO").should(exist).click(); //Members of VisualOrbit Group
-        $("#publication_process_container").$(byText("Second Approval")).should(exist).click(); //Click on First Approvals
+        $("#publication_process_container").$(byText("Second Approval")).should(exist).click(); //Click on Second Approvals
         $("#fc_second_VOGroupSelect #selUser").should(appear); //Select approver dropdown is enabled
         $("#wizard-backButton").shouldBe(enabled);
         $("#wizard-cancelButton").shouldBe(enabled);
@@ -236,7 +235,7 @@ public class PublicationProcess extends BaseTest {
         $("#fc_second_VOGroupSelect #selUser").shouldHave(value(optionDropdown1));
         Thread.sleep(3000);
 
-        $("#publication_process_container").$(byText("Second Approval")).should(exist).click(); //Click on First Approvals
+        $("#publication_process_container").$(byText("Second Approval")).should(exist).click(); //Click on Second Approvals
         $("#ckb_second_tApproverFreeUserSelection").should(exist).click(); //Free User Selection
         $("#fc_second_UserSelect #selUser").should(exist); //Select approver dropdown is enabled
         $("#wizard-backButton").shouldBe(enabled);
