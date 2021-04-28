@@ -1,21 +1,13 @@
 package com.vo.createformdialog;
 
-import com.codeborne.selenide.CollectionCondition;
-import com.codeborne.selenide.Selectors;
-import com.codeborne.selenide.SelenideElement;
 import com.vo.BaseTest;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-
-import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Selectors.byAttribute;
 import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.Selenide.$;
+import static utils.ReuseActions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Publication Process")
@@ -26,15 +18,7 @@ public class PublicationProcess extends BaseTest {
     @Order(1)
     public void validateIntialSetup() {
         //Create Form:
-        $("#toDashboard").click(); //Go back to Dashboard
-        $("#btnCreateForm").should(exist).click(); //Click on Create Form button
-        $("#wizardFormDlg").should(appear); //Create Form wizard appears
-        String formTitle = RandomStringUtils.randomAlphanumeric(4);
-        $("#wizard-formTitle").setValue(formTitle); //Set Title name
-        String formDesc = RandomStringUtils.randomAlphanumeric(5);
-        $("#wizard-formHelp").setValue(formDesc); //Setting form Description
-        applyLabelForTestForms();
-        $("#btnCreateForm").shouldBe(enabled); //Create Form button should be enabled
+        createForm();
         $("#wizard-addlOptionsButton").shouldBe(enabled).click(); //Click on Additional Options
         $("#wizardFormDlg .mtable_toolbar button:first-of-type").should(exist); //+ button in Add Language - confirmation that user has navigated
         $("#wizard-addlOptionsButton").shouldBe(enabled).click(); //Next button
@@ -44,7 +28,6 @@ public class PublicationProcess extends BaseTest {
         $("#wizard-createFormButton").shouldBe(enabled); //Create Form button is enabled
         $("#wizard-addlOptionsButton").shouldBe(enabled); //Next button is enabled
         $("#wizard-cancelButton").shouldBe(enabled); //Cancel button is enabled
-
     }
 
     @Test
@@ -68,69 +51,29 @@ public class PublicationProcess extends BaseTest {
     @DisplayName("Validations after checking the checkbox Direct manager of from publisher")
     @Order(3)
     public void validationsAfterCheckingDirectManagerOfFromPublisher() {
-        $("#ckb_first_ApproverManager").shouldBe(checked); //Direct manager of form publisher checkbox is checked
-        $("#wizard-backButton").shouldBe(enabled);
-        $("#wizard-createFormButton").shouldBe(enabled);
-        $("#wizard-cancelButton").shouldBe(enabled);
-        $("#wizard-addlOptionsButton").shouldBe(enabled); //Next button
+        validationsAfterCheckingDirectManager();
     }
 
     @Test
     @DisplayName("Validations after checking Members of MS Group checkbox")
     @Order(4)
-    public void validationsAfterCheckingMembersOfMsGroup() {
-        $("#ckb_first_ApproverGroupInMS").should(exist).click(); //Members of MS Group is checked
-        $("#selUser").should(exist); //Select approver dropdown is enabled
-        $("#wizard-backButton").shouldBe(enabled);
-        $("#wizard-cancelButton").shouldBe(enabled);
-        $("#wizard-createFormButton").shouldBe(disabled); //Create Form button is disabled
-        $("#wizard-addlOptionsButton").shouldBe(disabled); //Next button is disabled
-
-        $("#selUser").click(); //Click on Candidate approver dropdown
-        $("#selUser-option-0 div:first-of-type").should(exist).click(); //User selects first option from the dropdown
-        $("#wizard-createFormButton").should(exist).shouldBe(enabled); //Create Form button is enabled
-        $("#wizard-addlOptionsButton").should(exist).shouldBe(enabled); //Next button is enabled
+    public void validationsAfterCheckingMembersOfMsGroup() throws InterruptedException {
+        validationsAfterCheckingMembersOfMSgroup();
     }
-
 
     @Test
     @DisplayName("Validations after checking Members of VisualOrbit Group")
     @Order(5)
     public void validationsAfterCheckingMembersOfVisualOrbitGroup() throws InterruptedException {
-        $("#ckb_first_ApproverGroupInVO").should(exist).click(); //Members of VisualOrbit Group
-        $("#selUser").should(exist); //Select approver dropdown is enabled
-        $("#wizard-backButton").shouldBe(enabled);
-        $("#wizard-cancelButton").shouldBe(enabled);
-        $("#wizard-createFormButton").should(exist).shouldBe(disabled); //Create Form button is disabled
-        $("#wizard-addlOptionsButton").should(exist).shouldBe(disabled); //Next button is disabled
-         Thread.sleep(3000);
-        $("#selUser").click();
-        String optionDropdown = $("#selUser-option-0 div:first-of-type").should(exist).getText(); //User selects first option from the dropdown
-        $("#selUser-option-0").click();
-        $("#selUser").shouldHave(value(optionDropdown));
+        validationsAfterCheckingMembersOfVisualOrbit();
     }
-
 
     @Test
     @DisplayName("Validations after Free User Selection")
     @Order(6)
-    public void validationsAfterCheckingFreeUserSelection() {
-        $("#ckb_first_tApproverFreeUserSelection").should(exist); //Free User Selection
-        $("#ckb_first_tApproverFreeUserSelection").click(); //Free User Selection
-        $("#selUser").should(exist); //Select approver dropdown is enabled
-        $("#wizard-backButton").shouldBe(enabled);
-        $("#wizard-cancelButton").shouldBe(enabled);
-        $("#wizard-createFormButton").shouldBe(disabled); //Create Form button is disabled
-        $("#wizard-addlOptionsButton").shouldBe(disabled); //Next button is disabled
-        $("#l_Basic_Approve_Form_Process").should(exist).click(); //Publication with two approvals
-
-        $("#selUser").click(); //Click on Candidate approver dropdown
-        $("#selUser-option-0 div:first-of-type").should(exist).click(); //User selects first option from the dropdown
-
-        $("#wizard-createFormButton").should(exist).shouldBe(enabled); //Create Form button is enabled
-        $("#wizard-addlOptionsButton").should(exist).shouldBe(enabled); //Next button is enabled
+    public void validationsAfterCheckingFreeUserSelectionCheckbox() {
+        validationsAfterCheckingFreeUserSelection();
     }
-
 
     @Test
     @DisplayName("Publication with two approvals First approval")
@@ -189,7 +132,6 @@ public class PublicationProcess extends BaseTest {
         $("#fc_first_UserSelect").shouldHave(text(optionDropdown2));
         $("#wizard-createFormButton").should(exist).shouldBe(disabled); //Create Form button is disabled
         $("#wizard-addlOptionsButton").should(exist).shouldBe(disabled); //Next button is disabled
-
     }
 
     @Test
@@ -252,7 +194,6 @@ public class PublicationProcess extends BaseTest {
         $("#wizard-cancelButton").shouldBe(enabled);
         $("#wizard-createFormButton").shouldBe(enabled); //Create Form button is disabled
         $("#wizard-addlOptionsButton").shouldBe(enabled); //Next button is disabled
-
     }
 
     @Test
