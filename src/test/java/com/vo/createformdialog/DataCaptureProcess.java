@@ -7,6 +7,7 @@ import utils.ReuseActions;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
+import static com.vo.createformdialog.ApproverSelection.selectApprovers;
 import static utils.ReuseActions.*;
 import static utils.ReuseActions.validationsAfterCheckingMembersOfMSgroup;
 
@@ -88,49 +89,10 @@ public class DataCaptureProcess extends BaseTest {
     public void validateDataCaptureTwoApprovalsFirstApprovals() throws InterruptedException {
         $("#rb_Basic_Fill_Form_Process_WithApproval_TwoStep").should(exist).click(); //with two approvals
 
-        $("#ckb_first_ApproverManager").should(exist).click(); //Direct manager of data filter checkbox is checked
-        $("#ckb_first_ApproverGroupInMS").shouldNotBe(checked); //Members of MS Group checkbox
-        $("#ckb_first_ApproverGroupInVO").shouldNotBe(checked); //Members of VisualOrbit Group checkbox
-        $("#ckb_first_tApproverFreeUserSelection").shouldNotBe(checked); //Free User Selection checkbox
-        $("#sw_first_UserCanOverwrite").shouldNotBe(selected); //Toggle - “End-User can overwrite approver(s)“ - Switched Off
+        ApproverSelection.ApproverOrder order = ApproverSelection.ApproverOrder.FIRST;
 
-        $("#ckb_first_ApproverGroupInMS").should(exist).click(); //Members of MS Group is checked
-        $("#selUser").should(exist); //Select approver dropdown is enabled
-        $("#wizard-backButton").shouldBe(enabled);
-        $("#wizard-cancelButton").shouldBe(enabled);
-        $("#wizard-createFormButton").shouldBe(disabled); //Create Form button is diabled
-        $("#wizard-addlOptionsButton").shouldBe(disabled); //Next button is disabled
-        $("#fc_first_MSGroupSelect #selUser").click();
-        String optionDropdown = $("#selUser-option-0 div:first-of-type").should(exist).getText(); //User selects first option from the dropdown
-        $("#selUser-option-0").click();
-        $("#fc_first_MSGroupSelect #selUser").shouldHave(value(optionDropdown));
-        Thread.sleep(3000);
-        //validationsAfterCheckingMembersOfMSgroup();
-
-        $("#ckb_first_ApproverGroupInVO").should(exist).click(); //Members of VisualOrbit Group
-        $("#selUser").should(exist); //Select approver dropdown is enabled
-        $("#wizard-backButton").shouldBe(enabled);
-        $("#wizard-cancelButton").shouldBe(enabled);
-        $("#wizard-createFormButton").shouldBe(disabled); //Create Form button is diabled
-        $("#wizard-addlOptionsButton").shouldBe(disabled); //Next button is disabled
-        $("#fc_first_VOGroupSelect #selUser").click(); //Click on dropdown
-        String optionDropdown1 = $("#selUser-option-0 div:first-of-type").shouldBe(visible).getText();
-        $("#selUser-option-0").click();
-        $("#fc_first_VOGroupSelect #selUser").shouldHave(value(optionDropdown1));
-        Thread.sleep(3000);
-
-        $("#ckb_first_tApproverFreeUserSelection").should(exist).click(); //Free User Selection
-        $("#selUser").should(exist); //Select approver dropdown is enabled
-        $("#wizard-backButton").shouldBe(enabled);
-        $("#wizard-cancelButton").shouldBe(enabled);
-        $("#wizard-createFormButton").shouldBe(disabled); //Create Form button is diabled
-        $("#wizard-addlOptionsButton").shouldBe(disabled); //Next button is disabled
-        $("#fc_first_UserSelect #selUser").click();
-        String optionDropdown2 = $("#selUser-option-0 div:first-of-type").should(exist).getText();
-        $("#selUser-option-0").click(); //User selects first option from the dropdown
-        $("#fc_first_UserSelect").shouldHave(text(optionDropdown2));
-        $("#wizard-createFormButton").should(exist).shouldBe(disabled); //Create Form button is disabled
-        $("#wizard-addlOptionsButton").should(exist).shouldBe(disabled); //Next button is disabled
+        $("#data_capture_process_container").$(byText(order.getLabelText())).should(exist).click(); //Click on First Approvals
+        selectApprovers("#data_capture_process_container", order);
     }
 
     @Test
@@ -140,57 +102,9 @@ public class DataCaptureProcess extends BaseTest {
         if (!$("#rb_Basic_Fill_Form_Process_WithApproval_TwoStep").isSelected())
             $("#rb_Basic_Fill_Form_Process_WithApproval_TwoStep").should(exist).click(); //Click on Data capture with two approvals
 
-        $("#data_capture_process_container").$(byText("Second Approval")).should(exist).click(); //Click Second approval
-        $("#ckb_second_ApproverGroupInMS").shouldNotBe(checked); //Members of MS Group checkbox
-        $("#ckb_second_ApproverGroupInVO").shouldNotBe(checked); //Members of VisualOrbit Group checkbox
-        $("#sw_second_UserCanOverwrite").shouldNotBe(selected); //Toggle - “End-User can overwrite approver(s)“ - Switched Off
-        $("#ckb_second_tApproverFreeUserSelection").shouldBe(checked).click(); //Free User Selection checkbox
-
-        $("#ckb_second_ApproverGroupInMS").click(); //Members of MS Group is checked
-        $("#wizard-backButton").shouldBe(enabled);
-        $("#wizard-cancelButton").shouldBe(enabled);
-        $("#wizard-createFormButton").shouldBe(disabled); //Create Form button is disabled
-        $("#wizard-addlOptionsButton").shouldBe(disabled); //Next button is disabled
-        $("#selUser").should(exist).click(); //Select approver dropdown is enabled
-        String optionDropdown = $("#selUser-option-0 div:first-of-type").shouldBe(visible).getText();
-        $("#selUser-option-0").click();
-        $("#fc_second_MSGroupSelect #selUser").shouldHave(value(optionDropdown));
-        Thread.sleep(3000);
-        //validationsAfterCheckingMembersOfMSgroup();
-
-        $("#wizard-createFormButton").should(exist).shouldBe(enabled); //Create Form button is enabled
-        $("#wizard-addlOptionsButton").should(exist).shouldBe(enabled); //Next button is enabled
-
-        $("#ckb_second_ApproverGroupInVO").should(exist).click(); //Members of VisualOrbit Group
-        $("#selUser").should(exist); //Select approver dropdown is enabled
-        $("#wizard-backButton").shouldBe(enabled);
-        $("#wizard-cancelButton").shouldBe(enabled);
-        $("#wizard-createFormButton").shouldBe(disabled); //Create Form button is diabled
-        $("#wizard-addlOptionsButton").shouldBe(disabled); //Next button is disabled
-        $("#selUser").should(exist).click(); //Select approver dropdown is enabled
-        String optionDropdown1 = $("#selUser-option-0 div:first-of-type").shouldBe(visible).getText();
-        $("#selUser-option-0").click();
-        $("#fc_second_VOGroupSelect #selUser").shouldHave(value(optionDropdown1));
-        Thread.sleep(3000);
-        // validationsAfterCheckingMembersOfVisualOrbit();
-
-        $("#wizard-createFormButton").should(exist).shouldBe(enabled); //Create Form button is enabled
-        $("#wizard-addlOptionsButton").should(exist).shouldBe(enabled); //Next button is enabled
-
-        $("#ckb_second_tApproverFreeUserSelection").should(exist).click(); //Free User Selection
-        $("#selUser").should(exist); //Select approver dropdown is enabled
-        $("#wizard-backButton").shouldBe(enabled);
-        $("#wizard-cancelButton").shouldBe(enabled);
-        $("#wizard-createFormButton").shouldBe(disabled); //Create Form button is diabled
-        $("#wizard-addlOptionsButton").shouldBe(disabled); //Next button is disabled
-        $("#selUser").should(exist).click(); //Select approver dropdown is enabled
-        String optionDropdown2 = $("#selUser-option-0 div:first-of-type").shouldBe(visible).getText();
-        $("#selUser-option-0").click(); //User selects first option from the dropdown
-        $("#fc_second_UserSelect").should(exist).shouldHave(text(optionDropdown2)); //Changed from #fc_second_UserSelect #selUser, referring to the element focused
-
-        $("#wizard-createFormButton").should(exist).shouldBe(enabled); //Create Form button is enabled
-        $("#wizard-addlOptionsButton").should(exist).shouldBe(enabled); //Next button is enabled
-        // validationsAfterCheckingFreeUserSelection();
+        ApproverSelection.ApproverOrder order = ApproverSelection.ApproverOrder.SECOND;
+        $("#data_capture_process_container").$(byText(order.getLabelText())).should(exist).click(); //Click Second approval
+        selectApprovers("#data_capture_process_container", order);
     }
 
     @Test
