@@ -235,6 +235,7 @@ public abstract class BaseTest {
         boolean hasGuiTestLabel = true;
         //selectAndClear("#formRelatedTabs .mtable_toolbar input.MuiInputBase-input").setValue("test-gu-");
         $("#btnMoreFilter").should(exist).click(); //Click on filter icon
+        $("#pMoreFilterPopoverContent").should(appear);
         $("#selFormLabelsControl").shouldBe(visible); //Label dropdown
         if (!$("#selFormLabelsControl .MuiChip-label").has(text("guitest"))) {
             $("#selLabel ~ .MuiAutocomplete-endAdornment .MuiAutocomplete-popupIndicator").should(exist).click();
@@ -246,6 +247,8 @@ public abstract class BaseTest {
             } catch (Throwable t) {
                 hasGuiTestLabel = false;
             }
+            $("body").click();
+            $("#pMoreFilterPopoverContent").should(disappear);
         }
 
         if (hasGuiTestLabel) {
@@ -261,6 +264,7 @@ public abstract class BaseTest {
     }
 
     public static void deleteForm() {
+        open("/dashboard");
         if (!applySearchForTestForms()) {
             System.out.println("applySearchForTestForms returned false, exiting deletion");
             return;
