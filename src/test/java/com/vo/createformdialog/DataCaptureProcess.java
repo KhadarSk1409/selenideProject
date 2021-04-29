@@ -2,16 +2,13 @@ package com.vo.createformdialog;
 
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
-import utils.ReuseActions;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.vo.createformdialog.ApproverSelection.selectApprovers;
-import static utils.ReuseActions.*;
-import static utils.ReuseActions.validationsAfterCheckingMembersOfMSgroup;
-
-import utils.ReuseActions;
+import static com.vo.createformdialog.ReuseActions.*;
+import static com.vo.createformdialog.ReuseActions.validationsAfterCheckingMembersOfMSgroup;
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
