@@ -88,6 +88,7 @@ public class CreateFormTest extends BaseTest {
     @Test
     @DisplayName("Verify that Title and ID fields are mandatory in Create form wizard")
     @Order(5)
+    @Disabled
     public void verifyMandatoryFieldsInFormWizard() {
         $("#btnCreateForm").should(exist).click(); //Click on Create form button on Dashboard page
         $("#wizard-formHelp").should(exist).setValue("xyz1"); //Enter text in description field
@@ -106,6 +107,7 @@ public class CreateFormTest extends BaseTest {
     @Test
     @DisplayName("Verify the character limit for Title field is 80 characters and for Description field is 150 characters")
     @Order(6)
+    @Disabled
     public void verifyTitleFieldCharacterLimit() {
 
         $("#wizard-cancelButton").shouldBe(enabled).click(); //Cancel button
@@ -134,6 +136,7 @@ public class CreateFormTest extends BaseTest {
     @Test
     @DisplayName("Verify Form Creation from Create Form Wizard")
     @Order(7)
+    @Disabled
     public void validateCreateFormFunctionality() {
 
         String idText = $("#wizard-formId").getValue();
@@ -156,13 +159,13 @@ public class CreateFormTest extends BaseTest {
 
     }
 
-    @Test
-    @DisplayName("Cleanup as last step")
-    @Order(20)
-    public void cleanup() {
-        open("/dashboard");
-        deleteForm();
-    }
+//    @Test
+//    @DisplayName("Cleanup as last step")
+//    @Order(20)
+//    public void cleanup() {
+//        open("/dashboard");
+//        deleteForm();
+//    }
 
     //Qn: When the Create form button on Create form wizard is clicked, the further screens part needs to be discussed.
 

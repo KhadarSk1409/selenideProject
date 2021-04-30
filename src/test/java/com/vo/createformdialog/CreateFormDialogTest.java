@@ -97,6 +97,8 @@ public class CreateFormDialogTest extends BaseTest {
         $("#wizard-formTitle").setValue("Hello");
         $("#wizard-formTitle").shouldNotBe(empty);
 
+        applyLabelForTestForms();
+
         $("#wizard-createFormButton").shouldBe(enabled);
         $("#wizard-addlOptionsButton").shouldBe(enabled);
 

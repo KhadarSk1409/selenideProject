@@ -63,6 +63,7 @@ public abstract class BaseTest {
         try {
             String browserConfig = BROWSER_CONFIG.get();
             System.out.println("init webdriver with browserConfig " + browserConfig);
+            Configuration.startMaximized = true;
 
             TEST_USER_EMAIL = System.getenv("TEST_USER_EMAIL");
             TEST_USER_PASSWORD = System.getenv("TEST_USER_PASSWORD");
@@ -126,6 +127,7 @@ public abstract class BaseTest {
             return;
         }
         try {
+            deleteForm();
             System.out.println("tearing down test!!!, closing the webdriver");
             List<String> webDriverLogs = getWebDriverLogs(LogType.BROWSER);
             System.out.println(StringUtils.join(webDriverLogs, "\n"));
@@ -180,7 +182,7 @@ public abstract class BaseTest {
     public static void setAppLanguageToEnglish() {
         $("#toDashboard").shouldBe(visible);
         //if already in english -> skip
-        if($("#toDashboard").has(text("Launchpad"))) {
+        if ($("#toDashboard").has(text("Launchpad"))) {
             return;
         }
 
@@ -210,10 +212,9 @@ public abstract class BaseTest {
         }
     }
 
-
     protected static void applyLabelForTestForms() {
         $("#wizardFormDlg #selFormLabelsControl").shouldBe(visible);
-        if(!$("#wizardFormDlg #selFormLabelsControl .MuiChip-label").has(text("guitest"))) {
+        if (!$("#wizardFormDlg #selFormLabelsControl .MuiChip-label").has(text("guitest"))) {
             $("#wizardFormDlg #selLabel ~ .MuiAutocomplete-endAdornment .MuiAutocomplete-popupIndicator").should(exist).click();
             $(".MuiAutocomplete-popper").should(appear);
             try {
@@ -233,8 +234,10 @@ public abstract class BaseTest {
     protected static boolean applySearchForTestForms() {
         boolean hasGuiTestLabel = true;
         //selectAndClear("#formRelatedTabs .mtable_toolbar input.MuiInputBase-input").setValue("test-gu-");
-        $("#selFormLabelsControl").shouldBe(visible);
-        if(!$("#selFormLabelsControl .MuiChip-label").has(text("guitest"))) {
+        $("#btnMoreFilter").should(exist).click(); //Click on filter icon
+        $("#pMoreFilterPopoverContent").should(appear);
+        $("#selFormLabelsControl").shouldBe(visible); //Label dropdown
+        if (!$("#selFormLabelsControl .MuiChip-label").has(text("guitest"))) {
             $("#selLabel ~ .MuiAutocomplete-endAdornment .MuiAutocomplete-popupIndicator").should(exist).click();
             $(".MuiAutocomplete-popper").should(appear);
             try {
@@ -244,9 +247,11 @@ public abstract class BaseTest {
             } catch (Throwable t) {
                 hasGuiTestLabel = false;
             }
+            $("body").click();
+            $("#pMoreFilterPopoverContent").should(disappear);
         }
 
-        if(hasGuiTestLabel) {
+        if (hasGuiTestLabel) {
             $("#formListTable table").shouldBe(visible);
             try {
                 $("#formListTable table tbody tr:first-of-type").waitUntil(not(text("No records to display")), 5000);
@@ -259,15 +264,16 @@ public abstract class BaseTest {
     }
 
     public static void deleteForm() {
-        if(!applySearchForTestForms()) {
+        open("/dashboard");
+        if (!applySearchForTestForms()) {
             System.out.println("applySearchForTestForms returned false, exiting deletion");
             return;
         }
         int tableRows = $$("#formListTable table tbody tr").toArray().length;
         System.out.println("found rows to delete: " + tableRows);
-        for(int i = 0; i < tableRows; i++) {
+        for (int i = 0; i < tableRows; i++) {
             $("#formListTable table tbody tr").shouldBe(visible);
-            if($("#formListTable table tbody tr").has(text("No records to display"))) {
+            if ($("#formListTable table tbody tr").has(text("No records to display"))) {
                 return;
             }
 
@@ -277,7 +283,7 @@ public abstract class BaseTest {
             $("#confirm-deletion-dialog #btnConfirm").should(exist).click();
             $("tr .fa-trash-alt").should(disappear);
             System.out.println("deleted row " + i);
-            if(!applySearchForTestForms()) {
+            if (!applySearchForTestForms()) {
                 return;
             }
         }
@@ -293,4 +299,6 @@ public abstract class BaseTest {
         $(selector).sendKeys(Keys.chord(Keys.DELETE));
         return $(selector).shouldBe(empty);
     }
+
+
 }
