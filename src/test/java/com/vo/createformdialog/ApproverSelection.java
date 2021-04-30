@@ -77,9 +77,12 @@ public class ApproverSelection {
         $("#wizard-createFormButton").shouldBe(disabled); //Create Form button is disabled
         $("#wizard-addlOptionsButton").shouldBe(disabled); //Next button is disabled
         $(format("#fc_%s_UserSelect #selUser",s)).should(exist).click(); //Click on Free User Selection dropdown
+        $(".MuiAutocomplete-popper").should(appear);
         String optionDropdown2 = $("#selUser-option-0 div:first-of-type").should(exist).getText();
         $("#selUser-option-0").click(); //User selects first option from the dropdown
         $(format("#fc_%s_UserSelect",s)).shouldHave(text(optionDropdown2));
+        $("#selUser ~ .MuiAutocomplete-endAdornment .MuiAutocomplete-popupIndicator").should(exist).click();
+        $(".MuiAutocomplete-popper").should(disappear);
         Condition expectedState = disabled;
         if(ApproverOrder.SECOND.equals(order)) {
             expectedState = enabled;

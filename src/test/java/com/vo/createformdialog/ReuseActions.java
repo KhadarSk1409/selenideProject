@@ -2,6 +2,7 @@ package com.vo.createformdialog;
 
 import com.vo.BaseTest;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.*;
 
 import static com.codeborne.selenide.Condition.*;
@@ -10,7 +11,7 @@ import static com.codeborne.selenide.Selenide.$;
 
 public class ReuseActions extends BaseTest {
 
-    public static void createForm() {
+    public static Pair<String, String> createForm() {
         //Create Form:
         $("#toDashboard").click(); //Go back to Dashboard
         $("#btnCreateForm").should(exist).click(); //Click on Create Form button
@@ -21,6 +22,8 @@ public class ReuseActions extends BaseTest {
         $("#wizard-formHelp").setValue(formDesc); //Setting form Description
         applyLabelForTestForms();
         $("#btnCreateForm").shouldBe(enabled); //Create Form button should be enabled
+
+        return Pair.of(formTitle, formDesc);
     }
 
     public static void validationsAfterCheckingDirectManager() {

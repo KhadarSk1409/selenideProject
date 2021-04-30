@@ -241,7 +241,7 @@ public abstract class BaseTest {
             $("#selLabel ~ .MuiAutocomplete-endAdornment .MuiAutocomplete-popupIndicator").should(exist).click();
             $(".MuiAutocomplete-popper").should(appear);
             try {
-                $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("guitest"));
+                $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("guitest"), 5000);
                 $$(".MuiAutocomplete-popper li").findBy(text("guitest")).click();
                 hasGuiTestLabel = true;
             } catch (Throwable t) {

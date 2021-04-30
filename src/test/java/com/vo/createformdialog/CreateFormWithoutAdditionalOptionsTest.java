@@ -19,27 +19,19 @@ import java.awt.event.KeyEvent;
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@DisplayName("Create Form Tests")
-public class CreateFormTest extends BaseTest {
+@DisplayName("Create Form Without Additional Options")
+public class CreateFormWithoutAdditionalOptionsTest extends BaseTest {
 
     @Test
-    @DisplayName("Verify the presence of Create New Form Btn on Dashboard")
+    @DisplayName("Should open Create Form Wizard Dialog")
     @Order(1)
     public void createNewFormBtnFunctionality() {
-        setAppLanguageToEnglish(); //New
-        $("#btnCreateForm").should(exist);
-    }
-
-    @Test
-    @DisplayName("Click on createNewFormBtn and verify that Create new form wizard is opened")
-    @Order(2)
-    public void clickOnCreateFormBtnAndVerifyCreateFormWizard() {
         $("#btnCreateForm").should(exist).click();
         $("#wizardFormDlg").should(appear);
     }
 
     @Test
-    @DisplayName("Verify which all fields and buttons are there in the form template")
+    @DisplayName("Verify main form properties")
     @Order(3)
     public void verifyTheFieldsInCreateFormWizard() {
         $("#wizard-formTitle").should(exist, focused); //Title field
@@ -72,7 +64,7 @@ public class CreateFormTest extends BaseTest {
     }
 
     @Test
-    @DisplayName("Verify Cancel functionality on Create Form Wizard")
+    @DisplayName("Verify Cancel")
     @Order(4)
     public void verifyCancelButtonInCreateForm() {
         $("#wizard-cancelButton").shouldBe(enabled).click(); //Cancel button
@@ -158,15 +150,5 @@ public class CreateFormTest extends BaseTest {
         $("#wizard-formId-helper-text").should(exist).shouldHave(text("The Id exists already")); //Error should be shown
 
     }
-
-//    @Test
-//    @DisplayName("Cleanup as last step")
-//    @Order(20)
-//    public void cleanup() {
-//        open("/dashboard");
-//        deleteForm();
-//    }
-
-    //Qn: When the Create form button on Create form wizard is clicked, the further screens part needs to be discussed.
 
 }

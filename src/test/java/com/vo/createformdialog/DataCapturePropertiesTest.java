@@ -13,7 +13,7 @@ import static com.vo.createformdialog.ReuseActions.validationsAfterCheckingMembe
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Data Capture Process")
-public class DataCaptureProcess extends BaseTest {
+public class DataCapturePropertiesTest extends BaseTest {
 
     @Test
     @DisplayName("Verify initial setup in Add Language screen")
@@ -104,16 +104,4 @@ public class DataCaptureProcess extends BaseTest {
         selectApprovers("#data_capture_process_container", order);
     }
 
-    @Test
-    @DisplayName("Cleanup as last step")
-    @Order(9)
-    public void cleanup() {
-        if ($("#wizard-cancelButton").exists()) {
-            $("#wizard-cancelButton").click(); //Click on Cancel button
-            $("#confirmation-dialog-title").should(exist); //Confirmation for Cancellation is shown
-            $("#btnConfirm").should(exist).click();
-            $("#confirmation-dialog-content").shouldNot(appear); //Click on Confirm button
-        }
-
-    }
 }

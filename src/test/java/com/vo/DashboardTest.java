@@ -28,7 +28,7 @@ public class DashboardTest extends BaseTest {
         $("#usageStatistics").should(appear);
         $("#platformNews").should(appear);
         $("#tasksCard").should(appear);
-        $("#datacaptureOverview").should(appear);
+        $("#lastUsedListTable").should(appear);
         $("#formRelatedTabs").should(appear);
     }
 
@@ -47,7 +47,8 @@ public class DashboardTest extends BaseTest {
     @DisplayName("Click on 'Favorites' should change Navigation")
     @Order(3)
     public void clickOnFavoriteShouldChangeNavigation() {
-
+        $("#btnMoreFilter").should(exist).click(); //Click on filter icon
+        $("#pMoreFilterPopoverContent").should(appear);
         $("#sw_show_my_forms_USER").shouldBe(visible);
         boolean onlyMyFormsVisible = $("#sw_show_my_forms_USER input").is(checked);
         System.out.println("onlyMyFormsVisible " + onlyMyFormsVisible);
@@ -55,6 +56,8 @@ public class DashboardTest extends BaseTest {
             $("#sw_show_my_forms_USER").click();
             $("#sw_show_my_forms_USER input").shouldBe(not(checked));
         }
+        $("body").click();
+        $("#pMoreFilterPopoverContent").should(disappear);
 
         SelenideElement firstFavoritesBtn = $$(".favorite")
                 .shouldHave(sizeGreaterThan(0)).get(0);

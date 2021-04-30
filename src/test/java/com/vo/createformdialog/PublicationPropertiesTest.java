@@ -11,7 +11,7 @@ import static com.vo.createformdialog.ReuseActions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Publication Process")
-public class PublicationProcess extends BaseTest {
+public class PublicationPropertiesTest extends BaseTest {
 
     @Test
     @DisplayName("Verify Initial Setup")
@@ -96,27 +96,5 @@ public class PublicationProcess extends BaseTest {
         ApproverSelection.ApproverOrder order = ApproverSelection.ApproverOrder.SECOND;
         $("#publication_process_container").$(byText(order.getLabelText())).should(exist).click(); //Click on Second Approvals
         selectApprovers("#publication_process_container", order);
-    }
-
-    @Test
-    @DisplayName("Cleanup as last step")
-    @Order(9)
-    public void cleanup() {
-        if ($("#wizard-cancelButton").exists()) {
-            $("#wizard-cancelButton").click(); //Click on Cancel button
-            $("#confirmation-dialog-title").should(exist); //Confirmation for Cancellation is shown
-            $("#btnConfirm").should(exist).click();
-            $("#confirmation-dialog-content").shouldNot(appear); //Click on Confirm button
-        }
-
-//    @Test
-//    @DisplayName("Cleanup as last step")
-//    @Order(9)
-//    public void cleanup() {
-//        open("/dashboard");
-//        deleteForm();
-//    }
-        //#wizardFormDlg h6
-
     }
 }
