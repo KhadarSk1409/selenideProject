@@ -8,7 +8,7 @@ import static com.codeborne.selenide.Selenide.$;
 import static java.lang.String.format;
 
 
-public class ApproverSelection {
+public class ReuseApproverSelection {
 
     public enum ApproverOrder {
         FIRST("first", "First Approval"),

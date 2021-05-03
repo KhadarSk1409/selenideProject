@@ -80,7 +80,6 @@ public class CreateFormWithoutAdditionalOptionsTest extends BaseTest {
     @Test
     @DisplayName("Verify that Title and ID fields are mandatory in Create form wizard")
     @Order(5)
-    @Disabled
     public void verifyMandatoryFieldsInFormWizard() {
         $("#btnCreateForm").should(exist).click(); //Click on Create form button on Dashboard page
         $("#wizard-formHelp").should(exist).setValue("xyz1"); //Enter text in description field
@@ -99,7 +98,6 @@ public class CreateFormWithoutAdditionalOptionsTest extends BaseTest {
     @Test
     @DisplayName("Verify the character limit for Title field is 80 characters and for Description field is 150 characters")
     @Order(6)
-    @Disabled
     public void verifyTitleFieldCharacterLimit() {
 
         $("#wizard-cancelButton").shouldBe(enabled).click(); //Cancel button
@@ -128,7 +126,6 @@ public class CreateFormWithoutAdditionalOptionsTest extends BaseTest {
     @Test
     @DisplayName("Verify Form Creation from Create Form Wizard")
     @Order(7)
-    @Disabled
     public void validateCreateFormFunctionality() {
 
         String idText = $("#wizard-formId").getValue();
@@ -150,5 +147,6 @@ public class CreateFormWithoutAdditionalOptionsTest extends BaseTest {
         $("#wizard-formId-helper-text").should(exist).shouldHave(text("The Id exists already")); //Error should be shown
 
     }
+
 
 }
