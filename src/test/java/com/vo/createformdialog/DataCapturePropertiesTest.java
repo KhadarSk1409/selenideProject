@@ -6,13 +6,13 @@ import org.junit.jupiter.api.*;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
-import static com.vo.createformdialog.ApproverSelection.selectApprovers;
+import static com.vo.createformdialog.ReuseApproverSelection.selectApprovers;
 import static com.vo.createformdialog.ReuseActions.*;
 import static com.vo.createformdialog.ReuseActions.validationsAfterCheckingMembersOfMSgroup;
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@DisplayName("Data Capture Process")
+@DisplayName("Data Capture Properties")
 public class DataCapturePropertiesTest extends BaseTest {
 
     @Test
@@ -86,7 +86,7 @@ public class DataCapturePropertiesTest extends BaseTest {
     public void validateDataCaptureTwoApprovalsFirstApprovals() throws InterruptedException {
         $("#rb_Basic_Fill_Form_Process_WithApproval_TwoStep").should(exist).click(); //with two approvals
 
-        ApproverSelection.ApproverOrder order = ApproverSelection.ApproverOrder.FIRST;
+        ReuseApproverSelection.ApproverOrder order = ReuseApproverSelection.ApproverOrder.FIRST;
 
         $("#data_capture_process_container").$(byText(order.getLabelText())).should(exist).click(); //Click on First Approvals
         selectApprovers("#data_capture_process_container", order);
@@ -99,7 +99,7 @@ public class DataCapturePropertiesTest extends BaseTest {
         if (!$("#rb_Basic_Fill_Form_Process_WithApproval_TwoStep").isSelected())
             $("#rb_Basic_Fill_Form_Process_WithApproval_TwoStep").should(exist).click(); //Click on Data capture with two approvals
 
-        ApproverSelection.ApproverOrder order = ApproverSelection.ApproverOrder.SECOND;
+        ReuseApproverSelection.ApproverOrder order = ReuseApproverSelection.ApproverOrder.SECOND;
         $("#data_capture_process_container").$(byText(order.getLabelText())).should(exist).click(); //Click Second approval
         selectApprovers("#data_capture_process_container", order);
     }

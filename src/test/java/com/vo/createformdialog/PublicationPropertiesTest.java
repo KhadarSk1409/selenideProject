@@ -6,11 +6,11 @@ import org.junit.jupiter.api.*;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
-import static com.vo.createformdialog.ApproverSelection.selectApprovers;
+import static com.vo.createformdialog.ReuseApproverSelection.selectApprovers;
 import static com.vo.createformdialog.ReuseActions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@DisplayName("Publication Process")
+@DisplayName("Publication Properties Tests")
 public class PublicationPropertiesTest extends BaseTest {
 
     @Test
@@ -82,7 +82,7 @@ public class PublicationPropertiesTest extends BaseTest {
 
         $("#rb_Basic_Approve_Form_Process_TwoSteps").should(exist).click(); //Publication with two approvals
 
-        ApproverSelection.ApproverOrder order = ApproverSelection.ApproverOrder.FIRST;
+        ReuseApproverSelection.ApproverOrder order = ReuseApproverSelection.ApproverOrder.FIRST;
         $("#publication_process_container").$(byText(order.getLabelText())).should(exist).click(); //Click on First Approvals
         selectApprovers("#publication_process_container", order);
     }
@@ -93,7 +93,7 @@ public class PublicationPropertiesTest extends BaseTest {
     public void validatePublicationTwoApprovalsSecondApprovals() throws InterruptedException {
         $("#rb_Basic_Approve_Form_Process_TwoSteps").should(exist).click(); //Publication with two approvals
 
-        ApproverSelection.ApproverOrder order = ApproverSelection.ApproverOrder.SECOND;
+        ReuseApproverSelection.ApproverOrder order = ReuseApproverSelection.ApproverOrder.SECOND;
         $("#publication_process_container").$(byText(order.getLabelText())).should(exist).click(); //Click on Second Approvals
         selectApprovers("#publication_process_container", order);
     }
