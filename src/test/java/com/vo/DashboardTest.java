@@ -82,7 +82,4 @@ public class DashboardTest extends BaseTest {
             fail("undefined favorites state, neither add or remove buttons available");
         }
     }
-
-
-
 }
