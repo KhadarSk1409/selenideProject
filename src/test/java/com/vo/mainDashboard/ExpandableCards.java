@@ -17,11 +17,18 @@ public class ExpandableCards extends BaseTest {
     public void shouldExpandAndCollapseMyTasks() {
             $("#bpmRelatedTabsCard .vo-expand-collapse").click(); //Expands My Tasks
             $("#bpmRelatedTabsCard .vo-expand-collapse").should(have(attribute("title", "Collapse")));
-            $("#usageStatistics").shouldNot(exist); //Task Statistics should not exist
-            $("#platformNews").shouldNot(exist); //Platform News should not exist
+            $("#bpmRelatedTabsCard").should(appear);
+            $("#usageStatistics").should(disappear);
+            $("#platformNews").should(disappear);
+            $("#lastUsedListCard").should(disappear);
+            $("#formRelatedTabsCard").should(disappear);
             $("#bpmRelatedTabsCard .vo-expand-collapse").click(); //Collapse My Tasks
             $("#bpmRelatedTabsCard .vo-expand-collapse").should(have(attribute("title", "Expand")));
-            $("#platformNews").should(exist); //Verify whether Platform News is visible or not
+            $("#bpmRelatedTabsCard").should(appear);
+            $("#usageStatistics").should(appear);
+            $("#platformNews").should(appear);
+            $("#lastUsedListCard").should(appear);
+            $("#formRelatedTabsCard").should(appear);
     }
 
     @Test
@@ -30,15 +37,18 @@ public class ExpandableCards extends BaseTest {
     public void shouldExpandAndCollapseLastSubmissions() {
             $("#lastUsedListCard .vo-expand-collapse").click(); //Expands Last Submissions
             $("#lastUsedListCard .vo-expand-collapse").should(have(attribute("title", "Collapse")));
-            $("#bpmRelatedTabsCard").shouldNot(exist); //My Tasks should not exist
-            $("#formRelatedTabsCard").shouldNot(exist); //My Forms should not exist
-            $("#usageStatistics").shouldNot(exist); //Task Statistics should not exist
-            $("#platformNews").shouldNot(exist); //Platform News should not exist
-            $("#lastUsedListCard .vo-expand-collapse").click(); //Collapse My Forms
+            $("#lastUsedListCard").should(appear);
+            $("#bpmRelatedTabsCard").should(disappear);
+            $("#formRelatedTabsCard").should(disappear);
+            $("#usageStatistics").should(disappear);
+            $("#platformNews").should(disappear);
+            $("#lastUsedListCard .vo-expand-collapse").click(); //Collapse Last Submissions
             $("#lastUsedListCard .vo-expand-collapse").should(have(attribute("title", "Expand")));
-            $("#bpmRelatedTabsCard").should(exist); //My Tasks should be visible
-            $("#usageStatistics").should(exist); //Verify whether Task Statistics is visible or not
-            $("#platformNews").should(exist); //Verify whether Platform News is visible or not
+            $("#bpmRelatedTabsCard").should(appear);
+            $("#usageStatistics").should(appear);
+            $("#platformNews").should(appear);
+            $("#lastUsedListCard").should(appear);
+            $("#formRelatedTabsCard").should(appear);
     }
 
     @Test
@@ -47,12 +57,17 @@ public class ExpandableCards extends BaseTest {
     public void shouldExpandAndCollapseMyForms() {
             $("#formRelatedTabsCard .vo-expand-collapse").click(); //Expands My Forms
             $("#formRelatedTabsCard .vo-expand-collapse").should(have(attribute("title", "Collapse")));
-            $("#usageStatistics").shouldNot(exist); //Task Statistics should not exist
-            $("#platformNews").shouldNot(exist); //Platform News should not exist
+            $("#formRelatedTabsCard").should(appear);
+            $("#usageStatistics").should(disappear);
+            $("#platformNews").should(disappear);
+            $("#bpmRelatedTabsCard").should(disappear);
+            $("#lastUsedListCard").should(disappear);
             $("#formRelatedTabsCard .vo-expand-collapse").click(); //Collapse My Forms
             $("#formRelatedTabsCard .vo-expand-collapse").should(have(attribute("title", "Expand")));
-            $("#bpmRelatedTabsCard").should(exist); //My Tasks should be visible
-            $("#usageStatistics").should(exist); //Verify whether Task Statistics is visible or not
-            $("#platformNews").should(exist); //Verify whether Platform News is visible or not
+            $("#bpmRelatedTabsCard").should(appear);
+            $("#usageStatistics").should(appear);
+            $("#platformNews").should(appear);
+            $("#lastUsedListCard").should(appear);
+            $("#formRelatedTabsCard").should(appear);
     }
 }
