@@ -50,7 +50,6 @@ public class ExpandableCards extends BaseTest {
             $("#lastUsedListCard").should(appear);
             $("#formRelatedTabsCard").should(appear);
     }
-
     @Test
     @DisplayName("Should Expand and Collapse My Forms")
     @Order(3)
