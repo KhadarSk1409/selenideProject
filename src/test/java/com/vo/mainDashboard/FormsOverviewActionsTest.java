@@ -10,6 +10,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import java.util.List;
+import java.util.function.IntConsumer;
+import java.util.function.IntFunction;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
@@ -74,9 +76,10 @@ public class FormsOverviewActionsTest extends BaseTest {
             return;
         }
 
-        for (int i = 0; i <= rowsSize; i++) {
-            SelenideElement rowEl = $("#formListTable tbody tr:nth-child(" + i + ")");
+        IntFunction<SelenideElement> getRow = (int idx) -> $("#formListTable tbody tr:nth-of-type(" + idx + ")");
 
+        for (int i = 1; i <= rowsSize; i++) {
+            SelenideElement rowEl = getRow.apply(i);
 
             String formState = rowEl.$("td:nth-child(3)").getText();
             String createdBy = rowEl.$("td:nth-child(4)").getText();
@@ -90,7 +93,7 @@ public class FormsOverviewActionsTest extends BaseTest {
                 $("#formtree_card").shouldBe(visible).shouldHave(text("Form structure"));
                 $("#toDashboard").click();
                 $("#formListTable").should(appear);
-                rowEl = $("#formListTable tbody tr:nth-child(" + i + ")");
+                rowEl = getRow.apply(i);
                 rowEl.$(".fa-chart-area").closest("button").shouldBe(enabled).click();//Click on Open form dashboard
                 $("#toDashboard").click();
             } else if (formState.equals("Published/in draft") && createdBy.equals("GUI Tester")) {
@@ -102,7 +105,7 @@ public class FormsOverviewActionsTest extends BaseTest {
                 $("#formtree_card").shouldBe(visible).shouldHave(text("Form structure"));
                 $("#toDashboard").click();
                 $("#formListTable").should(appear);
-                rowEl = $("#formListTable tbody tr:nth-child(" + i + ")");
+                rowEl = getRow.apply(i);
                 rowEl.$(".fa-chart-area").closest("button").shouldBe(enabled).click();//Click on Open form dashboard
                 $("#toDashboard").click();
             } else {
