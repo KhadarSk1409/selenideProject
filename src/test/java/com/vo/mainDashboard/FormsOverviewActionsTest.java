@@ -62,7 +62,7 @@ public class FormsOverviewActionsTest extends BaseTest {
     }
 
     @Test
-    @DisplayName("Navigation Actions in Forms Overview Table")
+    @DisplayName("Navigation Actions in Form Overview Table")
     @Order(2)
     public void formsNavigationActions() {
         SelenideElement table = $("#formRelatedTabsCard .MuiTableBody-root").shouldBe(visible);
