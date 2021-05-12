@@ -1,22 +1,16 @@
 package com.vo.mainDashboard;
 
-import com.codeborne.selenide.*;
-import com.codeborne.selenide.impl.WebDriverContainer;
+import com.codeborne.selenide.ElementsCollection;
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
-
-import java.util.List;
-import java.lang.*;
-
-import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Selectors.byCssSelector;
-import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.WebDriverRunner.url;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static utils.ReuseActions.navigateToFormDashBoardFromFavoriteForms;
-
 import org.openqa.selenium.By;
-import utils.ReuseActions;
+
+import static com.codeborne.selenide.CollectionCondition.texts;
+import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selectors.byText;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$$;
+import static utils.ReuseActions.navigateToFormDashBoardFromFavoriteForms;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Form Dashboard components validations")
@@ -60,17 +54,19 @@ public class FormDashBoardComponents extends BaseTest {
 
     }
 
-
     @Test
     @DisplayName("Verify Switching on User Data List Tabs should change visible tables")
     @Order(3)
     public void verifySwitchingOnUserDataListTabs() {
-        $("#gridItemUserDataList button.MuiButtonBase-root.MuiTab-root").shouldHave(text("My Submissions")).shouldHave(attribute("aria-selected", "true"));
+        $$("#gridItemUserDataList .MuiTab-root").shouldHave(texts("MY SUBMISSIONS", "ALL SUBMISSIONS", "DATA CAPTURE"));
+        $(byText("My Submissions")).shouldBe(enabled);
+   //     $("#gridItemUserDataList button.MuiButtonBase-root.MuiTab-root").shouldHave(text("My Submissions")).shouldHave(attribute("aria-selected", "true"));
         $("#userDataListCardTable").shouldBe(visible); //Grid for My Submissions
         $("#gridItemUserDataList button.MuiButtonBase-root.MuiTab-root").shouldHave(value("All Submissions")).should(exist).click();
         $("#dataListCardTable").should(appear); //Grid for All Submissions
         $("#gridItemUserDataList button.MuiButtonBase-root.MuiTab-root").shouldHave(text("Data Capture")).should(exist).click();
         $("#full-width-tabpanel-DATA_CAPTURE table").should(appear); //Grid for Data Capture
     }
+
 
 }
