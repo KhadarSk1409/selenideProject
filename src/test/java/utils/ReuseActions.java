@@ -1,5 +1,7 @@
-package com.vo.createformdialog;
+package utils;
 
+import com.codeborne.selenide.CollectionCondition;
+import com.codeborne.selenide.ElementsCollection;
 import com.vo.BaseTest;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -8,6 +10,7 @@ import org.junit.jupiter.api.*;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$$;
 
 public class ReuseActions extends BaseTest {
 
@@ -78,6 +81,15 @@ public class ReuseActions extends BaseTest {
         $("#selUser-option-0").should(exist).click(); //User selects first option from the dropdown
         $("#wizard-createFormButton").should(exist).shouldBe(enabled); //Create Form button is enabled
         $("#wizard-addlOptionsButton").should(exist).shouldBe(enabled); //Next button is enabled
+    }
+
+    public static void navigateToFormDashBoardFromFavoriteForms(){
+        $("#btnCreateForm").should(exist);
+        $("#navFavoriteFormsItems .MuiListItem-root").should(exist);
+        ElementsCollection listFavForms = $$("#navFavoriteFormsItems .MuiListItem-root");
+        listFavForms.shouldHave(CollectionCondition.sizeGreaterThan(1)); //Verify that Favorite form is available
+        listFavForms.get(0).click(); //Click on the Favorite form
+        $("#full-width-tabpanel-MY_DATA").should(exist); //Navigated to Form Dashboard
     }
 
 

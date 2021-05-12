@@ -1,19 +1,17 @@
 package com.vo.createformdialog;
 
-import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.SelenideElement;
 import com.vo.BaseTest;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
+
 import java.util.List;
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byAttribute;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
-import static com.vo.createformdialog.ReuseActions.createForm;
+import static utils.ReuseActions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Language Properties")

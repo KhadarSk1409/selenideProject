@@ -4,6 +4,8 @@ import com.codeborne.selenide.*;
 import com.codeborne.selenide.impl.WebDriverContainer;
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
+import utils.ReuseActions;
+
 import java.util.List;
 import java.lang.*;
 
@@ -13,6 +15,7 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.WebDriverRunner.url;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static utils.ReuseActions.navigateToFormDashBoardFromFavoriteForms;
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -23,13 +26,7 @@ public class AreaHeaderTest extends BaseTest {
     @DisplayName("Navigate to Form Dashboard from Favorites")
     @Order(1)
     public void navigateToFormDashboardFromFavorites() {
-        //  List<SelenideElement> listFavForms = $("#root").$$(byClassName("MuiCollapse-wrapperInner")); //Fetch the Favorite forms list elements
-        $("#btnCreateForm").should(exist);
-        $("#navFavoriteFormsItems .MuiListItem-root").should(exist);
-        ElementsCollection listFavForms = $$("#navFavoriteFormsItems .MuiListItem-root");
-        listFavForms.shouldHave(CollectionCondition.sizeGreaterThan(1)); //Verify that Favorite form is available
-        listFavForms.get(0).click(); //Click on the Favorite form
-        $("#full-width-tabpanel-MY_DATA").should(exist); //Navigated to Form Dashboard
+        navigateToFormDashBoardFromFavoriteForms();
 
     }
 
@@ -41,7 +38,6 @@ public class AreaHeaderTest extends BaseTest {
         $("#toDashboard").should(exist).click(); //Click on Launchpad
         $("#btnCreateForm").should(exist); //Verify that Create form button is available
         $("#formListTable table tbody tr").should(exist);
-       // List<SelenideElement> formRows = $$("#formListTable table tbody tr"); //Fetch form rows
         ElementsCollection formRows = $$("#formListTable table tbody tr"); //Fetch form rows
         int formRowsSize = formRows.size();
         for (int i = 0; i < formRowsSize; i++) {
