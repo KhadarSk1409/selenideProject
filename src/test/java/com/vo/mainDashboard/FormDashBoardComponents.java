@@ -1,20 +1,12 @@
 package com.vo.mainDashboard;
 
-import com.codeborne.selenide.*;
-import com.codeborne.selenide.impl.WebDriverContainer;
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
 
-import java.util.List;
-import java.lang.*;
-
 import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Selectors.byCssSelector;
 import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.WebDriverRunner.url;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static utils.ReuseActions.navigateToFormDashBoardFromFavoriteForms;
+import static reusables.ReuseActions.navigateToFormDashBoardFromFavoriteForms;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Form Dashboard components validations")
@@ -34,13 +26,7 @@ public class FormDashBoardComponents extends BaseTest {
         $("#gridItemTasks button").getAttribute("title").equals("Expand");  //Verify that Expand button is present in My Tasks section
         $("#gridItemUserDataList").should(exist);   //User Data Lists should be available
         $("#gridItemUserDataList button").getAttribute("title").equals("Expand");   //Verify that Expand button is present in User Data Lists section
-        ElementsCollection userDataListTabs = $$("#full-width-tab-0");
-        System.out.println("The number of tabs in User Data List Tabs are: " + userDataListTabs.size());
-
-        userDataListTabs.get(0).shouldHave(text("MY SUBMISSIONS"));     //User data list section has My Submissions tab
-        userDataListTabs.get(1).shouldHave(text("All Submissions"));    //User data list section has All Submissions tab
-        userDataListTabs.get(2).shouldHave(text("Data Capture"));       //User data list section has Data capture tab
-
+        $$("#full-width-tab-0").shouldHave(texts("MY SUBMISSIONS", "All Submissions", "Data Capture")); //User data lists contain these three tabs
     }
 
     @Test

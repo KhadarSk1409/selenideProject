@@ -7,7 +7,7 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.vo.createformdialog.ReuseApproverSelection.selectApprovers;
-import static utils.ReuseActions.*;
+import static reusables.ReuseActions.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Publication Properties Tests")
