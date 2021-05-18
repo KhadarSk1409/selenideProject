@@ -1,4 +1,4 @@
-package formDashboard;
+package com.vo.formDashboard;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
@@ -12,6 +12,8 @@ import static com.codeborne.selenide.Condition.exist;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.switchTo;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static reusables.ReuseActions.navigateToFormDashBoardFromFavoriteForms;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -73,10 +75,9 @@ public class MenuActionsTest extends BaseTest {
         $("#formDashboardHeaderAppBar .btnMoreOptionsMenu").should(exist).click(); //Menu button on Form Dashboard
         $("#optionsMenu ul li:nth-child(5)").should(exist).shouldHave(Condition.text("Copy Form Dataset URL to Clipboard")).click();
         String clipBoardUrl = Selenide.clipboard().getText(); //Assigned copied url to string
-        clipBoardUrl.contains("vo-tenant-subscription-key");
-        clipBoardUrl.contains("MS-EXCEL");
-        clipBoardUrl.contains("targetLocale");
-        clipBoardUrl.contains("dateEpoch");
-        getWebDriver().close();
+        assertTrue(clipBoardUrl.contains("vo-tenant-subscription-key"));
+        assertTrue(clipBoardUrl.contains("MS-EXCEL"));
+        assertTrue(clipBoardUrl.contains("targetLocale"));
+        assertTrue(clipBoardUrl.contains("dateEpoch"));
     }
 }
