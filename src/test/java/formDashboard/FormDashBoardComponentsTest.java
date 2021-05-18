@@ -1,4 +1,4 @@
-package com.vo.mainDashboard;
+package formDashboard;
 
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
