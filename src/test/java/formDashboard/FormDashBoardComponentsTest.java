@@ -1,4 +1,4 @@
-package com.vo.mainDashboard;
+package formDashboard;
 
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
@@ -11,7 +11,7 @@ import static reusables.ReuseActions.navigateToFormDashBoardFromFavoriteForms;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Form Dashboard components validations")
 
-public class FormDashBoardComponents extends BaseTest {
+public class FormDashBoardComponentsTest extends BaseTest {
     @BeforeAll
     @DisplayName("Navigate to Form Dashboard from forms in Favorite Forms")
     public static void navigateFormDashboardFavoritesForms() {
