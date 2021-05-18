@@ -30,7 +30,7 @@ public class DataCaptureWithoutApprovalTest extends BaseTest {
     }
 
     @Test
-    @DisplayName("Verifying the Data Capture process without approval")
+    @DisplayName("Data Capture without approval should create a Form Fill Task")
     @Order(2)
     public void dataCaptureWithoutApproval() {
             $("#formDashboardHeaderLeft").should(appear);
@@ -44,9 +44,7 @@ public class DataCaptureWithoutApprovalTest extends BaseTest {
             $("#selUser").click();
             $("#btnStartProcess").click(); //Start Data Capture Process
             $("#gridItemTasks").should(exist);
-            $("#gridItemUserDataList").should(exist).$("#gridItemUserDataList div:nth-child(4)").click();
-            $("#full-width-tab-0").should(exist); //Need to click on Data Capture here
-            $("div[role='tablist'] button:nth-child(3)").click(); //Click on Data Capture
+            $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).click();
             $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("In Progress")); //Verify the Data Capture state
             $("#gridItemTasks").should(exist);
             $("#FormDashboardTasksCard .MuiCardContent-root").should(exist);
