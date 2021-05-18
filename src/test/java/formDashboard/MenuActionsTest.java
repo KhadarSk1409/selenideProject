@@ -1,4 +1,4 @@
-package com.vo.mainDashboard;
+package formDashboard;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
@@ -17,7 +17,7 @@ import static reusables.ReuseActions.navigateToFormDashBoardFromFavoriteForms;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Menu actions validations")
 
-public class menuActionsTest extends BaseTest {
+public class MenuActionsTest extends BaseTest {
     @BeforeAll
     @DisplayName("Navigate to Form Dashboard from forms in Favorite Forms")
     public static void navigateFormDashboardFavoritesForms() {
