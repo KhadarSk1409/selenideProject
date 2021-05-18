@@ -7,8 +7,7 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.vo.createformdialog.ReuseApproverSelection.selectApprovers;
-import static com.vo.createformdialog.ReuseActions.*;
-import static com.vo.createformdialog.ReuseActions.validationsAfterCheckingMembersOfMSgroup;
+import static reusables.ReuseActions.*;
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
