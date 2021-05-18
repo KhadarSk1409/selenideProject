@@ -57,6 +57,6 @@ public class DataCaptureWithoutApprovalTest extends BaseTest {
             $("#data-approve-reject-dialog").$("#btnConfirm").click();
             $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
             $("div[role='tablist'] button:nth-child(3)").click();
-            $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("Completed "));
+            $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("Completed"));
     }
 }
