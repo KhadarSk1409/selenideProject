@@ -41,7 +41,7 @@ public class DataCaptureWithOneApprovalTest extends BaseTest {
         $("#btnStartProcess").click(); //Start Data Capture Process
         $("#gridItemTasks").should(exist);
         $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).click();
-        $("#tasksCard tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Progress")); //Verify the Data Capture state
+        $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Progress")); //Verify the Data Capture state
         $("#gridItemTasks").should(exist);
         $("#FormDashboardTasksCard .MuiCardContent-root").should(exist);
         $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
@@ -51,10 +51,9 @@ public class DataCaptureWithOneApprovalTest extends BaseTest {
         $("#textField_form-user-cd4b7447-4047-4b50-9495-2fd44a9f2321").setValue("TEST");
         $("#btnAcceptTask").click();
         $("#data-approve-reject-dialog").$("#btnConfirm").click();
-        $("#tasksCard tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Approval")); //Verify the Data Capture state as In Approval
+        $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Approval")); //Verify the Data Capture state as In Approval
         $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='fas fa-check']").shouldBe(visible).click(); //Click on Approve
-        $("#tasksCard tr[index='0'] td:nth-of-type(5)").shouldHave(value("Completed"));
+        $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("Completed"));
         $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
-
     }
 }
