@@ -1,8 +1,11 @@
 package com.vo.mainDashboard;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.SelenideElement;
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
+
+import java.util.function.IntFunction;
 
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
@@ -38,7 +41,7 @@ public class DataCaptureWithOneApprovalTest extends BaseTest {
         $("#btnStartProcess").click(); //Start Data Capture Process
         $("#gridItemTasks").should(exist);
         $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).click();
-        $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("In Progress")); //Verify the Data Capture state
+        $("#tasksCard tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Progress")); //Verify the Data Capture state
         $("#gridItemTasks").should(exist);
         $("#FormDashboardTasksCard .MuiCardContent-root").should(exist);
         $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
@@ -48,9 +51,9 @@ public class DataCaptureWithOneApprovalTest extends BaseTest {
         $("#textField_form-user-cd4b7447-4047-4b50-9495-2fd44a9f2321").setValue("TEST");
         $("#btnAcceptTask").click();
         $("#data-approve-reject-dialog").$("#btnConfirm").click();
-        $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("In Approval")); //Verify the Data Capture state as In Approval
+        $("#tasksCard tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Approval")); //Verify the Data Capture state as In Approval
         $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='fas fa-check']").shouldBe(visible).click(); //Click on Approve
-        $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("Completed"));
+        $("#tasksCard tr[index='0'] td:nth-of-type(5)").shouldHave(value("Completed"));
         $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
 
     }
