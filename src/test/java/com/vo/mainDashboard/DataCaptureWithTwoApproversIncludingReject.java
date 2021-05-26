@@ -21,7 +21,7 @@ public class DataCaptureWithTwoApproversIncludingReject extends BaseTest {
     }
 
         @Test
-        @DisplayName("Data Capture with Two approval should create a Form Fill Task and Verify Reject Process")
+        @DisplayName("Data Capture with Two Approvals including Address Rejection and Final Approval")
         @Order(2)
         public void dataCaptureWithTwoApprovalIncludingReject() {
             $("#formDashboardHeaderLeft").should(appear);
