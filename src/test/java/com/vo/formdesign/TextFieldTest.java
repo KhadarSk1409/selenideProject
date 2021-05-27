@@ -135,7 +135,7 @@ public class TextFieldTest extends BaseTest {
                     .setValue(textfield_prefix).sendKeys(Keys.TAB);
             //TODO check appearance on designer
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(By.id(TextFieldOptionsIds.textfield_prefix.name())).shouldHave(text(textfield_prefix));
+            $(By.id(TextFieldOptionsIds.textfield_prefix.name())).shouldHave(value(textfield_prefix));
         }
 
         //Suffix
@@ -146,7 +146,7 @@ public class TextFieldTest extends BaseTest {
                     .setValue(textfield_suffix).sendKeys(Keys.TAB);
             //TODO check appearance on designer
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(By.id(TextFieldOptionsIds.textfield_suffix.name())).shouldHave(text(textfield_suffix));
+            $(By.id(TextFieldOptionsIds.textfield_suffix.name())).shouldHave(value(textfield_suffix));
         }
 
         //Default Value
@@ -157,7 +157,7 @@ public class TextFieldTest extends BaseTest {
                     .setValue(textfield_defaultValue).sendKeys(Keys.TAB);
             //TODO check appearance on designer
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(By.id(TextFieldOptionsIds.textfield_defaultValue.name())).shouldHave(text(textfield_defaultValue));
+            $(By.id(TextFieldOptionsIds.textfield_defaultValue.name())).shouldHave(value(textfield_defaultValue));
         }
 
         //chars normal
