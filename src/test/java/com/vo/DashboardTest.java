@@ -40,7 +40,7 @@ public class DashboardTest extends BaseTest {
         $("#btnCreateForm").should(appear)
                 .click();
 
-        $("#wizardFormDlg").should(appear);
+        $("#dlgFormFormWizard").should(appear);
     }
 
     @Test

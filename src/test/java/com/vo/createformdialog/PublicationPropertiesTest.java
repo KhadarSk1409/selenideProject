@@ -18,9 +18,9 @@ public class PublicationPropertiesTest extends BaseTest {
     @Order(1)
     public void validateIntialSetup() {
         //Create Form:
-        createForm();
+        createNewForm();
         $("#wizard-addlOptionsButton").shouldBe(enabled).click(); //Click on Additional Options
-        $("#wizardFormDlg .mtable_toolbar button:first-of-type").should(exist); //+ button in Add Language - confirmation that user has navigated
+        $("#dlgFormFormWizard .mtable_toolbar button:first-of-type").should(exist); //+ button in Add Language - confirmation that user has navigated
         $("#wizard-addlOptionsButton").shouldBe(enabled).click(); //Next button
         //Verify that user is navigated to Publication Process
         $("#ckbApprovalProcessRequired").should(exist).shouldNotBe(checked); //Checkbox - "Yes, Enable publication workflow for this form" is unchecked
@@ -34,7 +34,7 @@ public class PublicationPropertiesTest extends BaseTest {
     @DisplayName("Validations after checking Enable Publication checkbox")
     @Order(2)
     public void validationsAfterCheckingEnablePublication() {
-        $("#wizardFormDlg  input").should(exist).click(); //Checkbox is checked
+        $("#dlgFormFormWizard  input").should(exist).click(); //Checkbox is checked
 
         if (!($("#rb_Basic_Approve_Form_Process").isSelected())) //If Publication with one approval is not checked
             $("#rb_Basic_Approve_Form_Process").click(); //Select Publication with one approval
