@@ -205,21 +205,21 @@ public abstract class BaseTest {
     }
 
     protected static void applyLabelForTestForms() {
-        $("#dlgFormFormWizard #selFormLabelsControl").shouldBe(visible);
-        if (!$("#dlgFormFormWizard #selFormLabelsControl .MuiChip-label").has(text("guitest"))) {
-            $("#dlgFormFormWizard #selLabel ~ .MuiAutocomplete-endAdornment .MuiAutocomplete-popupIndicator").should(exist).click();
+        $("#wizardFormDlg #selFormLabelsControl").shouldBe(visible);
+        if (!$("#wizardFormDlg #selFormLabelsControl .MuiChip-label").has(text("guitest"))) {
+            $("#wizardFormDlg #selLabel ~ .MuiAutocomplete-endAdornment .MuiAutocomplete-popupIndicator").should(exist).click();
             $(".MuiAutocomplete-popper").should(appear);
             try {
                 $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("guitest"), 3000);
                 $$(".MuiAutocomplete-popper li").findBy(text("guitest")).click();
             } catch (Throwable t) {
-                $("#dlgFormFormWizard #selLabel").setValue("guitest");
+                $("#wizardFormDlg #selLabel").setValue("guitest");
                 $(".MuiAutocomplete-popper").should(appear);
                 $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("Add \"guitest\""));
                 $$(".MuiAutocomplete-popper li").findBy(text("Add \"guitest\"")).click();
             }
 
-            $("#dlgFormFormWizard #selFormLabelsControl .MuiChip-label").shouldHave(text("guitest"));
+            $("#wizardFormDlg #selFormLabelsControl .MuiChip-label").shouldHave(text("guitest"));
         }
     }
 

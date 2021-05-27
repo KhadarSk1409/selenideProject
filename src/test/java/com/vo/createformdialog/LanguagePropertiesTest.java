@@ -24,7 +24,7 @@ public class LanguagePropertiesTest extends BaseTest {
     @Order(1)
     public void validateInitialSet() {
         //Create Form:
-        Pair<String, String> formTitleDesc = createNewForm();
+        Pair<String, String> formTitleDesc = createForm();
         String formTitle = formTitleDesc.getLeft();
         String formDesc = formTitleDesc.getRight();
 

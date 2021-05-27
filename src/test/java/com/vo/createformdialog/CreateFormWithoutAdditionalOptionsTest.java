@@ -20,7 +20,7 @@ public class CreateFormWithoutAdditionalOptionsTest extends BaseTest {
     @Order(1)
     public void createNewFormBtnFunctionality() {
         $("#btnCreateForm").should(exist).click();
-        $("#dlgFormFormWizard").should(appear);
+        $("#wizardFormDlg").should(appear);
     }
 
     @Test
@@ -92,11 +92,12 @@ public class CreateFormWithoutAdditionalOptionsTest extends BaseTest {
     @DisplayName("Verify the character limit for Title field is 80 characters and for Description field is 150 characters")
     @Order(6)
     public void verifyTitleFieldCharacterLimit() {
+
         $("#wizard-cancelButton").shouldBe(enabled).click(); //Cancel button
         $("#confirmation-dialog-title").should(exist);
         $("#btnConfirm").shouldBe(enabled).click(); //Confirm the cancellation
         $("#btnCreateForm").shouldBe(enabled).click();  //Verify user is on dashboard page where Create Form button is visible
-        $("#dlgFormFormWizard").should(appear); //Create form wizard should exist
+        $("#wizardFormDlg").should(appear); //Create form wizard should exist
 
         String formprefix = "test-gu-";
         String string80characters = formprefix+RandomStringUtils.randomAlphanumeric(72);
@@ -119,6 +120,7 @@ public class CreateFormWithoutAdditionalOptionsTest extends BaseTest {
     @DisplayName("Verify Form Creation from Create Form Wizard")
     @Order(7)
     public void validateCreateFormFunctionality() {
+
         String idText = $("#wizard-formId").getValue();
         System.out.println("The ID for first form is: " + idText); //ID value for first form
         applyLabelForTestForms();
@@ -131,7 +133,7 @@ public class CreateFormWithoutAdditionalOptionsTest extends BaseTest {
         $("#toDashboard").click(); //Go back to Dashboard
 
         $("#btnCreateForm").should(exist).click(); //Click on Create Form button
-        $("#dlgFormFormWizard").should(appear); //Create Form wizard appears
+        $("#wizardFormDlg").should(appear); //Create Form wizard appears
         $("#wizard-formId-helper-text").should(exist);
         selectAndClear("#wizard-formId").setValue(idText).sendKeys(TAB); //Set the id which was there for previous form
 

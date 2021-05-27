@@ -19,10 +19,10 @@ public class DataCapturePropertiesTest extends BaseTest {
     @Order(1)
     public void validateIntialSetup() {
         //Create Form:
-        createNewForm();
+        createForm();
         $("#wizard-addlOptionsButton").shouldBe(enabled).click(); //Click on Additional Options
 
-        $("#dlgFormFormWizard .mtable_toolbar button:first-of-type").should(exist); //+ button in Add Language - confirmation that user has navigated
+        $("#wizardFormDlg .mtable_toolbar button:first-of-type").should(exist); //+ button in Add Language - confirmation that user has navigated
         $("#wizard-addlOptionsButton").shouldBe(enabled).click(); //Next button
         $("#wizard-addlOptionsButton").shouldBe(enabled).click(); //Next button
 

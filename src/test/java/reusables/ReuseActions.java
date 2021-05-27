@@ -12,11 +12,11 @@ import static com.codeborne.selenide.Selenide.$$;
 
 public class ReuseActions extends BaseTest {
 
-    public static Pair<String, String> createNewForm() {
-        //Create New Form:
+    public static Pair<String, String> createForm() {
+        //Create Form:
         $("#toDashboard").click(); //Go back to Dashboard
         $("#btnCreateForm").should(exist).click(); //Click on Create Form button
-        $("#dlgFormFormWizard").should(appear); //Create Form wizard appears - Not working?
+        $("#wizardFormDlg").should(appear); //Create Form wizard appears
         String formTitle = RandomStringUtils.randomAlphanumeric(4);
         $("#wizard-formTitle").setValue(formTitle); //Set Title name
         String formDesc = RandomStringUtils.randomAlphanumeric(5);
