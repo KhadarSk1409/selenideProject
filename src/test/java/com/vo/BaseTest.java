@@ -4,8 +4,7 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -59,6 +58,7 @@ public abstract class BaseTest {
 
             TEST_USER_EMAIL = System.getenv("TEST_USER_EMAIL");
             TEST_USER_PASSWORD = System.getenv("TEST_USER_PASSWORD");
+
             String buildId = Optional.ofNullable(System.getenv("BUILD_ID")).orElse("NO_BUILD_ID");
 
             String[] configOptions = browserConfig.split(":");
@@ -103,7 +103,9 @@ public abstract class BaseTest {
                 WEB_DRIVER.set(driver);
             }
 
-            shouldLogin();
+                shouldLogin();
+
+
             setAppLanguageToEnglish(); //Newly added
         } catch (Throwable t) {
             System.out.println("error on test setup: ");
@@ -167,6 +169,7 @@ public abstract class BaseTest {
             //  assertEquals(title(), "VisualOrbit App");
             assertTrue(title().contains("VisualOrbit"));
             ALREADY_LOGGED_IN.set(Boolean.TRUE);
+
         }
 
     }
