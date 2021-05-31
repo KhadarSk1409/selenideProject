@@ -1,9 +1,6 @@
 row,col,col+AF8-span,textfield+AF8-label,textfield+AF8-help,textfield+AF8-defaultValue,required,chars+AF8-alpha,chars+AF8-alpha+AF8-num,chars+AF8-all,min+AF8-length,max+AF8-length
 1,1,,Std No Option,,,,,,,,
 1,2,,Help Text,This is a help te,,,,,,,
-2,1,,Prefix Test,Added Prefix,,,,,,,
-2,2,,Suffix Test,Added Suffix,,,,,,,
-2,4,,Pre and Suffix,,,,,,,,
 3,1,,Default Value Set,,Default Value,,,,,,
 4,1,,Only Capitals,,,,,,,,
 4,2,,Only Smallcase,,,,,,,,
