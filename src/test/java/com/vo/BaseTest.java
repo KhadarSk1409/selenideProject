@@ -3,6 +3,7 @@ package com.vo;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
+import com.vo.mainDashboard.MultipleUserSwitchTest;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -44,6 +45,13 @@ public abstract class BaseTest {
     public static ThreadLocal<RemoteWebDriver> WEB_DRIVER = new ThreadLocal<>();
     public static ThreadLocal<Boolean> ALREADY_LOGGED_IN = ThreadLocal.withInitial(() -> Boolean.FALSE);
     public static ThreadLocal<Boolean> IGNORE_BEFORE_AND_AFTER_LIFECYCLE = ThreadLocal.withInitial(() -> Boolean.FALSE);
+
+    enum UserType {
+        MAIN_TEST_USER,
+        USER_01,
+        USER_02,
+        USER_03
+    }
 
     @BeforeAll
     public static void setup() {
@@ -103,7 +111,10 @@ public abstract class BaseTest {
                 WEB_DRIVER.set(driver);
             }
 
-                shouldLogin();
+                //shouldLogin();
+
+            UserType currentUser = UserType.USER_01;
+            switchCurrentUser(System.getenv(String.valueOf(currentUser)));
 
 
             setAppLanguageToEnglish(); //Newly added
@@ -169,6 +180,44 @@ public abstract class BaseTest {
             //  assertEquals(title(), "VisualOrbit App");
             assertTrue(title().contains("VisualOrbit"));
             ALREADY_LOGGED_IN.set(Boolean.TRUE);
+
+        }
+
+    }
+    public static void switchCurrentUser(String targetUserType) {
+
+        if (Boolean.FALSE.equals(ALREADY_LOGGED_IN.get())) {
+            open("");
+            setSauceJobId();
+
+            String User= System.getenv("targetUserType");
+            System.out.println(User);
+            $(By.name("loginfmt")).should(appear).setValue(targetUserType);
+            $(".button.primary").shouldBe(visible).click();
+            //$("#displayName").shouldHave(text(UserType.));
+
+            String USER_PASS = System.getenv("USER_PASSWORD");
+            $(By.name("passwd")).should(appear).setValue(USER_PASS);
+            $(".button.primary").shouldBe(visible).click();
+
+            //stay signed in?
+            $(".button.primary").shouldBe(visible).click();
+
+            appHeaderAppear();
+            boolean presenceOfPickAnAccount = $("#loginHeader").is(exist);
+            if (presenceOfPickAnAccount) {
+                // String valueToBeClicked = "//small[contains(text(),"+"'"+TEST_USER_EMAIL+"')]";
+                $(byText(TEST_USER_EMAIL)).shouldBe(visible).click();
+            }
+
+            //  assertEquals(title(), "VisualOrbit App");
+            assertTrue(title().contains("VisualOrbit"));
+            ALREADY_LOGGED_IN.set(Boolean.TRUE);
+
+            //Current user is logging out
+            $("#user").click();
+            $("#user p").click();
+            $("#btnYesLogout").should(appear).click();
 
         }
 
