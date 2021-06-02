@@ -112,7 +112,7 @@ public class XmlReportGeneratingListener implements TestExecutionListener {
 	}
 
 	private void writeXmlReportSafely(TestIdentifier testIdentifier, String rootName) {
-		Path xmlFile = this.reportsDir.resolve("TEST-" + rootName + ".xml");
+		Path xmlFile = this.reportsDir.resolve("TEST-" + rootName.replaceAll(":", "_") + ".xml");
 		try (Writer fileWriter = Files.newBufferedWriter(xmlFile)) {
 			new XmlReportWriter(this.reportData).writeXmlReport(testIdentifier, fileWriter);
 		}
