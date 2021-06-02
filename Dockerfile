@@ -1,6 +1,6 @@
 # docker login visualorbit.azurecr.io
 # or az acr login --name visualorbit
-# docker build -t visualorbit.azurecr.io/visualorbit/uitests:latest . 
+# docker build -t visualorbit.azurecr.io/visualorbit/uitests:latest .
 # docker push visualorbit.azurecr.io/visualorbit/uitests:latest
 
 
@@ -9,6 +9,7 @@ FROM maven:3.6.2-jdk-11
 
 WORKDIR /app
 
+RUN chmod go+w /app
 
 COPY docker/mvn-global-settings.xml /usr/share/maven/conf/settings.xml
 COPY src/ ./src
