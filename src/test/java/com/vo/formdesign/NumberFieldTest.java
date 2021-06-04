@@ -89,8 +89,7 @@ public class NumberFieldTest extends BaseTest {
                                String checkbox_thousandSeparator,
                                String checkbox_allowNegative,
                                String checkbox_allowLeadingZeros,
-                               String checkbox_onlyInteger,
-                               String text_thosandSeparator
+                               String checkbox_onlyInteger
     )  {
 
         String blockId = "#block-loc_en-GB-r_" + row + "-c_" + col;
@@ -160,6 +159,16 @@ public class NumberFieldTest extends BaseTest {
             $(checkBoxId + " input").shouldBe(selected);
         }
 
+        //Enter Default value
+        if (StringUtils.isNotEmpty(text_numberField_defaultValueNumber)) {
+            //    $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            selectAndClear(By.id(NumberFieldOptionsIds.numberField_defaultValueNumber.name()))
+                    .setValue(text_numberField_defaultValueNumber).sendKeys(Keys.TAB);
+            $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
+            $("#numberField_defaultValueNumber").shouldHave(value(text_numberField_defaultValueNumber)).waitUntil(appears, 4000);
+        }
+
 
         //Read only checkbox
         if (StringUtils.isNotEmpty(checkbox_readOnly)) {
@@ -172,17 +181,6 @@ public class NumberFieldTest extends BaseTest {
 
             //When you don't have any value in Default value edit box and click on Read only checkbox it should show error
             $("#numberField_defaultValueNumber-helper-text").should(exist).shouldHave(text("Must be set, if read only"));
-
-
-            //Enter Default value
-            if (StringUtils.isNotEmpty(text_numberField_defaultValueNumber)) {
-                //    $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-                String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-                selectAndClear(By.id(NumberFieldOptionsIds.numberField_defaultValueNumber.name()))
-                        .setValue(text_numberField_defaultValueNumber).sendKeys(Keys.TAB);
-                $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
-                $("#numberField_defaultValueNumber").shouldHave(value(text_numberField_defaultValueNumber)).waitUntil(appears, 4000);
-            }
 
         }
 
@@ -207,12 +205,6 @@ public class NumberFieldTest extends BaseTest {
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
 
-            //Validating commas be introduced in Default value field:
-            if (StringUtils.isNotEmpty(text_thosandSeparator)) {
-                $(checkBoxId).shouldBe(visible).click(); //seems to be a bug - needs to remove this step later ?
-                String valueInDefaultField = $("#numberField_defaultValueNumber").getValue().toString();
-                assertTrue(valueInDefaultField.equals(text_thosandSeparator));
-            }
         }
 
         //Allow Negative checkbox
