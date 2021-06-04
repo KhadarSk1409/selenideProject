@@ -4,8 +4,7 @@ import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -36,15 +35,36 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public abstract class BaseTest {
 
     protected static String TEST_BASE_URL = null;
-    protected static String TEST_USER_EMAIL = null;
-    protected static String TEST_USER_PASSWORD = null;
     public static String SAUCE_USERNAME = null;
     public static String SAUCE_ACCESS_KEY = null;
     public static ThreadLocal<String> BROWSER_CONFIG = ThreadLocal.withInitial(() -> "local");
     public static ThreadLocal<String> SAUCE_SESSION_ID = new ThreadLocal<>();
     public static ThreadLocal<RemoteWebDriver> WEB_DRIVER = new ThreadLocal<>();
     public static ThreadLocal<Boolean> ALREADY_LOGGED_IN = ThreadLocal.withInitial(() -> Boolean.FALSE);
+    public static ThreadLocal<UserType> CURRENT_USER = ThreadLocal.withInitial(() -> UserType.MAIN_TEST_USER);
     public static ThreadLocal<Boolean> IGNORE_BEFORE_AND_AFTER_LIFECYCLE = ThreadLocal.withInitial(() -> Boolean.FALSE);
+
+    public enum UserType {
+        MAIN_TEST_USER("TEST_USER_EMAIL", "TEST_USER_PASSWORD"),
+        USER_01("TEST_USER_EMAIL_01", "TEST_USER_PASSWORD_01"),
+        USER_02("TEST_USER_EMAIL_02", "TEST_USER_PASSWORD_02"),
+        USER_03("TEST_USER_EMAIL_03", "TEST_USER_PASSWORD_03");
+
+        String envUserEmail, envUserPassword;
+
+        UserType(String envUserEmail, String envUserPassword) {
+            this.envUserEmail = envUserEmail;
+            this.envUserPassword = envUserPassword;
+        }
+
+        public String userEmail() {
+            return System.getenv(this.envUserEmail);
+        }
+
+        public String password() {
+            return System.getenv(this.envUserPassword);
+        }
+    }
 
     @BeforeAll
     public static void setup() {
@@ -57,8 +77,6 @@ public abstract class BaseTest {
             System.out.println("init webdriver with browserConfig " + browserConfig);
             Configuration.startMaximized = true;
 
-            TEST_USER_EMAIL = System.getenv("TEST_USER_EMAIL");
-            TEST_USER_PASSWORD = System.getenv("TEST_USER_PASSWORD");
             String buildId = Optional.ofNullable(System.getenv("BUILD_ID")).orElse("NO_BUILD_ID");
 
             String[] configOptions = browserConfig.split(":");
@@ -103,7 +121,9 @@ public abstract class BaseTest {
                 WEB_DRIVER.set(driver);
             }
 
-            shouldLogin();
+            shouldLogin(UserType.MAIN_TEST_USER);
+
+
             setAppLanguageToEnglish(); //Newly added
         } catch (Throwable t) {
             System.out.println("error on test setup: ");
@@ -143,33 +163,54 @@ public abstract class BaseTest {
         return result;
     }
 
-    public static void shouldLogin() {
+    public static void shouldLogin(UserType targetUser) {
+        if(Boolean.TRUE.equals(ALREADY_LOGGED_IN.get()) && targetUser != CURRENT_USER.get()) {
+            //logout current user is logging out
+            $("#user").click();
+            $("#user p").click();
+            $("#btnYesLogout").should(appear).click();
+            boolean presenceOfPickAnAccount = $("#loginHeader").is(exist);
+            if (presenceOfPickAnAccount) {
+                $(byText(CURRENT_USER.get().userEmail())).shouldBe(visible).click();
+            }
+            ALREADY_LOGGED_IN.set(Boolean.FALSE);
+        }
+
         if (Boolean.FALSE.equals(ALREADY_LOGGED_IN.get())) {
             open("");
             setSauceJobId();
-            $(By.name("loginfmt")).should(appear).setValue(TEST_USER_EMAIL);
+            boolean presenceUseOtherAccount = $("#otherTileText").is(exist);
+            if(presenceUseOtherAccount) {
+                $("#otherTileText").shouldBe(visible).click();
+            }
+            $(By.name("loginfmt")).should(appear).setValue(targetUser.userEmail());
             $(".button.primary").shouldBe(visible).click();
-            $("#displayName").shouldHave(text(TEST_USER_EMAIL));
+            $("#displayName").shouldHave(text(targetUser.userEmail()));
 
-            $(By.name("passwd")).should(appear).setValue(TEST_USER_PASSWORD);
+            $(By.name("passwd")).should(appear).setValue(targetUser.password());
             $(".button.primary").shouldBe(visible).click();
 
             //stay signed in?
-            $(".button.primary").shouldBe(visible).click();
+            boolean presenceOfStaySignedIn = $(".button.primary").is(exist);
+            if(presenceOfStaySignedIn) {
+                $(".button.primary").shouldBe(visible).click();
+            }
 
             appHeaderAppear();
             boolean presenceOfPickAnAccount = $("#loginHeader").is(exist);
             if (presenceOfPickAnAccount) {
                 // String valueToBeClicked = "//small[contains(text(),"+"'"+TEST_USER_EMAIL+"')]";
-                $(byText(TEST_USER_EMAIL)).shouldBe(visible).click();
+                $(byText(targetUser.userEmail())).shouldBe(visible).click();
             }
 
             //  assertEquals(title(), "VisualOrbit App");
             assertTrue(title().contains("VisualOrbit"));
             ALREADY_LOGGED_IN.set(Boolean.TRUE);
+            CURRENT_USER.set(targetUser);
         }
 
     }
+
 
     public static void setAppLanguageToEnglish() {
         $("#toDashboard").shouldBe(visible);
