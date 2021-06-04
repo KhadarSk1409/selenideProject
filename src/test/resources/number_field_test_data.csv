@@ -1,6 +1,7 @@
 row,col,col+AF8-span,textfield+AF8-label,textfield+AF8-help,disableLabel,required,text_numberField_defaultValueNumber,textfield_decimalScale,textfield_minValue,textfield_maxValue,readOnly,applyFormatter,thousandSeparator,allowNegative,allowLeadingZeros,onlyInteger
 1,1,,Number Field Test,,,,,,,,,,,,,
 1,2,,Help Text,This is Help Text,X,,,,,,,,,,,
+1,3,,Default Value,This is Help Text,,,1234567,,,,,,,,,
 2,2,,Read Only,This is Help Text,,,,,,,X,,,,,
 2,1,,Text Number,This is Help Text,,,1234567,,,,,,,,,
 1,3,,Apply Format,This is Help Text,,,1234567,,,,,X,,,,
