@@ -89,9 +89,8 @@ public class NumberFieldTest extends BaseTest {
                                String checkbox_thousandSeparator,
                                String checkbox_allowNegative,
                                String checkbox_allowLeadingZeros,
-                               String checkbox_onlyInteger,
-                               String text_thosandSeparator
-    ) throws InterruptedException {
+                               String checkbox_onlyInteger
+    )  {
 
         String blockId = "#block-loc_en-GB-r_" + row + "-c_" + col;
 
@@ -120,11 +119,9 @@ public class NumberFieldTest extends BaseTest {
         //Label
         if (StringUtils.isNotEmpty(textfield_label)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            Thread.sleep(2000);
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(NumberFieldOptionsIds.textfield_label.name()))
                     .setValue(textfield_label).sendKeys(Keys.TAB);
-            Thread.sleep(3000);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(blockId).shouldHave(text(textfield_label)).waitUntil(appears, 4000);
         }
@@ -135,7 +132,6 @@ public class NumberFieldTest extends BaseTest {
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(NumberFieldOptionsIds.textfield_help.name()))
                     .setValue(textfield_help).sendKeys(Keys.TAB);
-            Thread.sleep(3000);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(blockId).shouldHave(text(textfield_help)).waitUntil(appears, 4000);
         }
@@ -147,7 +143,6 @@ public class NumberFieldTest extends BaseTest {
 
             String checkBoxId = "#" + NumberFieldOptionsIds.checkbox_disableLabel.name();
             $(checkBoxId).shouldBe(visible).click();
-            Thread.sleep(3000);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
             $(blockId).shouldNotHave(value(textfield_label)).waitUntil(appears, 4000);
@@ -156,54 +151,45 @@ public class NumberFieldTest extends BaseTest {
         //required
         if (StringUtils.isNotEmpty(checkbox_required)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            Thread.sleep(2000);
             String checkBoxId = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_required.name();
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             $(checkBoxId).shouldBe(visible).click();
-            Thread.sleep(2000);
             //$(checkBoxId + " input").shouldHave(value("true"));
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
+        }
+
+        //Enter Default value
+        if (StringUtils.isNotEmpty(text_numberField_defaultValueNumber)) {
+            //    $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            selectAndClear(By.id(NumberFieldOptionsIds.numberField_defaultValueNumber.name()))
+                    .setValue(text_numberField_defaultValueNumber).sendKeys(Keys.TAB);
+            $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
+            $("#numberField_defaultValueNumber").shouldHave(value(text_numberField_defaultValueNumber)).waitUntil(appears, 4000);
         }
 
 
         //Read only checkbox
         if (StringUtils.isNotEmpty(checkbox_readOnly)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            Thread.sleep(2000);
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_readOnly.name();
             $(checkBoxId).shouldBe(visible).click();
-            Thread.sleep(2000);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
-            Thread.sleep(2000);
 
             //When you don't have any value in Default value edit box and click on Read only checkbox it should show error
             $("#numberField_defaultValueNumber-helper-text").should(exist).shouldHave(text("Must be set, if read only"));
-
-
-            //Enter Default value
-            if (StringUtils.isNotEmpty(text_numberField_defaultValueNumber)) {
-                //    $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-                String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-                selectAndClear(By.id(NumberFieldOptionsIds.numberField_defaultValueNumber.name()))
-                        .setValue(text_numberField_defaultValueNumber).sendKeys(Keys.TAB);
-                Thread.sleep(3000);
-                $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
-                $("#numberField_defaultValueNumber").shouldHave(value(text_numberField_defaultValueNumber)).waitUntil(appears, 4000);
-            }
 
         }
 
         //Apply user format checkbox check
         if (StringUtils.isNotEmpty(checkbox_applyFormatter)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            Thread.sleep(2000);
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_applyFormatter.name();
             $(checkBoxId).shouldBe(visible).click();
-            Thread.sleep(2000);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
         }
@@ -211,34 +197,22 @@ public class NumberFieldTest extends BaseTest {
         //Thousand Separator checkbox check
         if (StringUtils.isNotEmpty(checkbox_thousandSeparator)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            Thread.sleep(2000);
             selectAndClear(By.id(NumberFieldOptionsIds.numberField_defaultValueNumber.name()))
                     .setValue(text_numberField_defaultValueNumber).sendKeys(Keys.TAB); //Enter value in Default chekbox
-            Thread.sleep(2000);
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_thousandSeparator.name();
             $(checkBoxId).shouldBe(visible).click();
-            Thread.sleep(2000);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
 
-            //Validating commas be introduced in Default value field:
-            if (StringUtils.isNotEmpty(text_thosandSeparator)) {
-                $(checkBoxId).shouldBe(visible).click(); //seems to be a bug - needs to remove this step later ?
-                Thread.sleep(3000);
-                String valueInDefaultField = $("#numberField_defaultValueNumber").getValue().toString();
-                assertTrue(valueInDefaultField.equals(text_thosandSeparator));
-            }
         }
 
         //Allow Negative checkbox
         if (StringUtils.isNotEmpty(checkbox_allowNegative)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            Thread.sleep(2000);
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_allowNegative.name();
             $(checkBoxId).shouldBe(visible).click();
-            Thread.sleep(2000);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
         }
@@ -246,11 +220,9 @@ public class NumberFieldTest extends BaseTest {
         //Allow leading zeros
         if (StringUtils.isNotEmpty(checkbox_allowLeadingZeros)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            Thread.sleep(2000);
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_allowLeadingZeros.name();
             $(checkBoxId).shouldBe(visible).click();
-            Thread.sleep(2000);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
         }
@@ -258,18 +230,15 @@ public class NumberFieldTest extends BaseTest {
         //Only integer
         if (StringUtils.isNotEmpty(checkbox_onlyInteger)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            Thread.sleep(2000);
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_onlyInteger.name();
             $(checkBoxId).shouldBe(visible).click();
-            Thread.sleep(2000);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
 
             //here also check that after this is checked the Decimal places textfield should be disabled
             $("#numberField_decimalScale").shouldBe(disabled); //Decimal places
             $(checkBoxId).shouldBe(visible).click(); //Click Only integer checkbox again
-            Thread.sleep(2000);
             $(checkBoxId).shouldNotBe(checked);
         }
 
@@ -277,10 +246,8 @@ public class NumberFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(textfield_decimalScale)) {
             //    $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            Thread.sleep(2000);
             selectAndClear(By.id(NumberFieldOptionsIds.numberField_decimalScale.name()))
                     .setValue(textfield_decimalScale).sendKeys(Keys.TAB);
-            Thread.sleep(2000);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
             $("#numberField_decimalScale").shouldHave(value(textfield_decimalScale)).waitUntil(appears, 4000);
         }
@@ -289,10 +256,8 @@ public class NumberFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(textfield_minValue)) {
             //    $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            Thread.sleep(2000);
             selectAndClear(By.id(NumberFieldOptionsIds.numberField_minValue.name()))
                     .setValue(textfield_minValue).sendKeys(Keys.TAB);
-            Thread.sleep(2000);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
             $("#numberField_minValue").shouldHave(value(textfield_minValue)).waitUntil(appears, 4000);
         }
@@ -301,10 +266,8 @@ public class NumberFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(textfield_maxValue)) {
             //    $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            Thread.sleep(2000);
             selectAndClear(By.id(NumberFieldOptionsIds.numberField_maxValue.name()))
                     .setValue(textfield_maxValue).sendKeys(Keys.TAB);
-            Thread.sleep(2000);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
             $("#numberField_maxValue").shouldHave(value(textfield_maxValue)).waitUntil(appears, 4000);
         }
