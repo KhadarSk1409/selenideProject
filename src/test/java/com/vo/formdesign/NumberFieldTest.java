@@ -238,8 +238,6 @@ public class NumberFieldTest extends BaseTest {
 
             //here also check that after this is checked the Decimal places textfield should be disabled
             $("#numberField_decimalScale").shouldBe(disabled); //Decimal places
-            $(checkBoxId).shouldBe(visible).click(); //Click Only integer checkbox again
-            $(checkBoxId).shouldNotBe(checked);
         }
 
         //Enter Decimal Places
