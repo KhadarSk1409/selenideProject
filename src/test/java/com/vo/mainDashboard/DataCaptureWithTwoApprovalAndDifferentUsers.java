@@ -42,35 +42,34 @@ public class DataCaptureWithTwoApprovalAndDifferentUsers extends BaseTest {
 
         //Should Login as GUI TESTER 01
         shouldLogin(BaseTest.UserType.USER_01);
-        $("#tasksCard tbody td:nth-child(1)").should(exist); //A Task should be visible in MY TASKS
-        $("#tasksCard tbody td:nth-child(6)").should(exist).click();
-        $("#dashboard-data-card-dialog_actions").should(appear);
+        open("/dashboard/TA-TWO-APPROVAL-DIFF-USERS");
+        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
+        $("#data-card-dialog_actions").should(appear);
         $("#dataContainer").should(exist);
         $("#textField_form-user-530d85bf-490a-4c54-8c13-fc3571b46a46").should(exist);
-        $("#textField_form-user-530d85bf-490a-4c54-8c13-fc3571b46a46").setValue("TEST");
+        $("#textField_form-user-530d85bf-490a-4c54-8c13-fc3571b46a46").setValue("TEST");//Enter Some Text
         $("#btnAcceptTask").click();
         $("#data-approve-reject-dialog").$("#btnConfirm").shouldBe(enabled).click();
+        $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
 
         //Should Login as GUI TESTER 02
         shouldLogin(BaseTest.UserType.USER_02);
-        $("#bpmRelatedTabsCard").should(exist);
-        $("#tasksCard tbody td:nth-child(1)").should(exist); //A Task should be visible in MY TASKS
-        $("#tasksCard tbody tr td:nth-child(6) span:nth-child(2) span[iconname='fas fa-check'").shouldBe(visible).shouldBe(enabled).click();
-        $("#tasksCard div:nth-child(2) p").shouldBe(visible); //My Tasks Should be empty
+        open("/dashboard/TA-TWO-APPROVAL-DIFF-USERS");
+        $("#FormDashboardTasksCard div:nth-child(1) span[iconname='fas fa-check']").shouldBe(visible).shouldBe(enabled).click();
+        $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
 
         //Should Login as GUI TESTER 03
         shouldLogin(UserType.USER_03);
-        $("#bpmRelatedTabsCard").should(exist);
-        $("#tasksCard tbody td:nth-child(1)").should(exist); //A Task should be visible in MY TASKS
-        $("#tasksCard tbody tr td:nth-child(6) span:nth-child(2) span[iconname='fas fa-check'").shouldBe(visible).shouldBe(enabled).click();
-        $("#tasksCard div:nth-child(2) p").shouldBe(visible); //My Tasks Should be empty
+        open("/dashboard/TA-TWO-APPROVAL-DIFF-USERS");
+        $("#FormDashboardTasksCard div:nth-child(1) span[iconname='fas fa-check']").shouldBe(visible).shouldBe(enabled).click();
+        $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
 
         //Should Login as GUI Tester
         shouldLogin(BaseTest.UserType.MAIN_TEST_USER);
-        open("/dashboard/ASdii60Gt");
+        open("/dashboard/TA-TWO-APPROVAL-DIFF-USERS");
         $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
         $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).click();
-        $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("Completed"));
+        $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("Completed")); //Verify the Final Data Capture State
 
     }
 }
