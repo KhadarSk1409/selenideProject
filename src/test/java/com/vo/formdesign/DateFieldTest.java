@@ -207,7 +207,10 @@ public class DateFieldTest extends BaseTest {
             $(checkBoxId).shouldBe(visible).click();
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
-            $("#date_defaultValueDate-helper-text").should(exist).shouldHave(text("Must be set, if read only")); //Verify the error shown when read only checkbox is checked wihtout any value in default value field
+
+            if (StringUtils.isEmpty(text_numberField_defaultValueNumber)) {
+                $("#date_defaultValueDate-helper-text").should(exist).shouldHave(text("Must be set, if read only")); //Verify the error shown when read only checkbox is checked wihtout any value in default value field
+            }
         }
 
         //Disable future checkbox check

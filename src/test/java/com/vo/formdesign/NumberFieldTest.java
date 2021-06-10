@@ -161,7 +161,6 @@ public class NumberFieldTest extends BaseTest {
 
         //Enter Default value
         if (StringUtils.isNotEmpty(text_numberField_defaultValueNumber)) {
-            //    $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(NumberFieldOptionsIds.numberField_defaultValueNumber.name()))
                     .setValue(text_numberField_defaultValueNumber).sendKeys(Keys.TAB);
@@ -179,8 +178,10 @@ public class NumberFieldTest extends BaseTest {
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
 
-            //When you don't have any value in Default value edit box and click on Read only checkbox it should show error
-            $("#numberField_defaultValueNumber-helper-text").should(exist).shouldHave(text("Must be set, if read only"));
+            if (StringUtils.isEmpty(text_numberField_defaultValueNumber)) {
+                //When you don't have any value in Default value edit box and click on Read only checkbox it should show error
+                $("#numberField_defaultValueNumber-helper-text").should(exist).shouldHave(text("Must be set, if read only"));
+            }
 
         }
 
