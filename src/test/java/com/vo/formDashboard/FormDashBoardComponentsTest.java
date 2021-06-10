@@ -13,9 +13,9 @@ import static reusables.ReuseActions.navigateToFormDashBoardFromFavoriteForms;
 
 public class FormDashBoardComponentsTest extends BaseTest {
     @BeforeAll
-    @DisplayName("Navigate to Form Dashboard from forms in Favorite Forms")
+    @DisplayName("Open Sample Form")
     public static void navigateFormDashboardFavoritesForms() {
-        navigateToFormDashBoardFromFavoriteForms();
+        open("/dashboard/sample-form");
     }
 
     @Test
@@ -58,7 +58,7 @@ public class FormDashBoardComponentsTest extends BaseTest {
 
         $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).click();
         $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).shouldHave(cssClass("Mui-selected"));
-        $("#full-width-tabpanel-DATA_CAPTURE table").should(appear); //Grid for Data Capture
+        $("#full-width-tabpanel-DATA_CAPTURE").should(appear); //Grid for Data Capture
     }
 
 }

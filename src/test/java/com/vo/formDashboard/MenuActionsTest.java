@@ -2,15 +2,17 @@ package com.vo.formDashboard;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.commands.WaitUntil;
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import static com.codeborne.selenide.Condition.appear;
 import static com.codeborne.selenide.Condition.exist;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.switchTo;
+import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -21,27 +23,25 @@ import static reusables.ReuseActions.navigateToFormDashBoardFromFavoriteForms;
 
 public class MenuActionsTest extends BaseTest {
     @BeforeAll
-    @DisplayName("Navigate to Form Dashboard from forms in Favorite Forms")
+    @DisplayName("Open Sample Form")
     public static void navigateFormDashboardFavoritesForms() {
-        navigateToFormDashBoardFromFavoriteForms();
+        open("/dashboard/sample-form");
     }
 
 
     @Test
     @DisplayName("Verify Clicking on PDF opens new window")
     @Order(1)
-    public void verifyClickPDFOpensTabWithJspdfBtn() throws InterruptedException {
+    public void verifyClickPDFOpensTabWithJspdfBtn() {
         $("#formDashboardHeaderAppBar .btnMoreOptionsMenu").should(exist).click(); //Menu button on Form Dashboard
         $("#optionsMenu ul li:nth-child(1)").should(exist).shouldHave(Condition.text("PDF")).click();
-        Thread.sleep(30000);
-
-        //Verifying new tab opened and switch to it
-        Set<String> handles = getWebDriver().getWindowHandles();
-        List<String> tabs = new ArrayList<String>(handles);
-        switchTo().window(tabs.get(1));
+        new WebDriverWait(getWebDriver(), 10).until(v -> {
+            Set<String> handles = getWebDriver().getWindowHandles();
+            return handles.size() > 1;
+        });
+        switchTo().window(1);
         $("#btnJsPdf").should(exist);
-        Thread.sleep(5000);
-        switchTo().window(tabs.get(0));
+        switchTo().window(0);
     }
 
     @Test
@@ -74,7 +74,8 @@ public class MenuActionsTest extends BaseTest {
     public void verifyClickOnCopyFormDatasetCopiesUrl() {
         $("#formDashboardHeaderAppBar .btnMoreOptionsMenu").should(exist).click(); //Menu button on Form Dashboard
         $("#optionsMenu ul li:nth-child(5)").should(exist).shouldHave(Condition.text("Copy Form Dataset URL to Clipboard")).click();
-        String clipBoardUrl = Selenide.clipboard().getText(); //Assigned copied url to string
+        String clipBoardUrl = getClipboardContent();
+        System.out.println("clipboard content: " + clipBoardUrl);
         assertTrue(clipBoardUrl.contains("vo-tenant-subscription-key"));
         assertTrue(clipBoardUrl.contains("MS-EXCEL"));
         assertTrue(clipBoardUrl.contains("targetLocale"));
