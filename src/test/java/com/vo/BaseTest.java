@@ -1,6 +1,7 @@
 package com.vo;
 
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
 import org.apache.commons.lang3.StringUtils;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -20,6 +22,7 @@ import utils.SelenideLogReport;
 import java.net.URL;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
@@ -114,7 +117,15 @@ public abstract class BaseTest {
                     put("name", browserConfig);
                     put("maxDuration", 3600);
                     put("idleTimeout", 1000);
+                    put("screenResolution", "1920x1200");
                 }});
+                //profile.content_settings.exceptions.clipboard
+                ChromeOptions chromeOptions = new ChromeOptions();
+                chromeOptions.setExperimentalOption("prefs", new LinkedHashMap(){{
+                    //0 is default , 1 is enable and 2 is disable
+                    put("profile.content_settings.exceptions.clipboard", getClipBoardSettingsMap(1));
+                }});
+                caps.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
 
                 RemoteWebDriver driver = new RemoteWebDriver(new URL(SAUCE_URL), caps);
                 WebDriverRunner.setWebDriver(driver);
@@ -129,6 +140,33 @@ public abstract class BaseTest {
             System.out.println("error on test setup: ");
             t.printStackTrace();
         }
+    }
+
+    private static Map<String,Object> getClipBoardSettingsMap(int settingValue) {
+        Map cbPreference = new LinkedHashMap() {{
+            put("[*.],*", new LinkedHashMap() {{
+                put("last_modified",String.valueOf(System.currentTimeMillis()));
+                put("setting", settingValue);
+            }});
+        }};
+        return cbPreference;
+    }
+
+    public String getClipboardContent() {
+        if (BROWSER_CONFIG.get().startsWith("local")) {
+            return Selenide.clipboard().getText();
+        }
+        executeJavaScript("async function getCBContents() { " +
+                "try { " +
+                "  window.cb = await navigator.clipboard.readText(); " +
+                "  console.log(\"Pasted content: \", window.cb); " +
+                "} catch (err) { " +
+                "  console.error(\"Failed to read clipboard contents: \", err); " +
+                "  window.cb = \"Error : \" + err; " +
+                "} } " +
+                "getCBContents();");
+        Object result = Optional.ofNullable(executeJavaScript("return window.cb;")).orElse("null");
+        return result.toString();
     }
 
     // we close browser manually
