@@ -26,9 +26,9 @@ public class TimeFieldTest extends BaseTest {
     protected static ThreadLocal<String> formName = ThreadLocal.withInitial(() -> "Time Field Test Form-Design Auto Test " + BROWSER_CONFIG.get() + " " + System.currentTimeMillis());
 
     enum TimeFieldOptionsIds {
-        textfield_label,
+        timefield_label,
         checkbox_disableLabel,
-        textfield_help,
+        timefield_help,
         checkbox_required,
 
         prop_hourMinuteSecond_hourMinuteSecond,
@@ -70,16 +70,15 @@ public class TimeFieldTest extends BaseTest {
     @ParameterizedTest
     @CsvFileSource(resources = "/time_field_test_data.csv", numLinesToSkip = 1)
     public void allTimeField(Integer row, Integer col, Integer colSpan,
-                             String textfield_label,
-                             String textfield_help,
+                             String timefield_label,
+                             String timefield_help,
                              String checkbox_disableLabel,
                              String checkbox_required,
-                             String text_numberField_defaultValueNumber,
-                             
+
                              String radioBtn_hrMinSec_hrMinSec,
                              String radio_hrMin_hrMin,
                              String radio_hour_hour,
-                             String text_time_defaultValueTime,
+                             String time_defaultValueTime,
 
                              String checkbox_readOnly,
                              String checkbox_ampm
@@ -111,13 +110,13 @@ public class TimeFieldTest extends BaseTest {
         }
 
         //Label
-        if (StringUtils.isNotEmpty(textfield_label)) {
+        if (StringUtils.isNotEmpty(timefield_label)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(TimeFieldTest.TimeFieldOptionsIds.textfield_label.name()))
-                    .setValue(textfield_label).sendKeys(Keys.TAB);
+            selectAndClear(By.id(TimeFieldTest.TimeFieldOptionsIds.timefield_label.name()))
+                    .setValue(timefield_label).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(textfield_label)).waitUntil(appears, 4000);
+            $(blockId).shouldHave(text(timefield_label)).waitUntil(appears, 4000);
 
         }
 
@@ -129,16 +128,16 @@ public class TimeFieldTest extends BaseTest {
             $(checkBoxId).shouldBe(visible).click();
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
-            $(blockId).shouldNotHave(value(textfield_label)).waitUntil(appears, 4000);
+            $(blockId).shouldNotHave(value(timefield_label)).waitUntil(appears, 4000);
         }
 
         //Help
-        if (StringUtils.isNotEmpty(textfield_help)) {
+        if (StringUtils.isNotEmpty(timefield_help)) {
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(TimeFieldTest.TimeFieldOptionsIds.textfield_help.name()))
-                    .setValue(textfield_help).sendKeys(Keys.TAB);
+            selectAndClear(By.id(TimeFieldTest.TimeFieldOptionsIds.timefield_help.name()))
+                    .setValue(timefield_help).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(textfield_help)).waitUntil(appears, 4000);
+            $(blockId).shouldHave(text(timefield_help)).waitUntil(appears, 4000);
         }
 
         //required
@@ -195,13 +194,13 @@ public class TimeFieldTest extends BaseTest {
         }
 
         //Enter Default value
-        if (StringUtils.isNotEmpty(text_time_defaultValueTime)) {
+        if (StringUtils.isNotEmpty(time_defaultValueTime)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(TimeFieldTest.TimeFieldOptionsIds.time_defaultValueTime.name()))
-                    .setValue(text_time_defaultValueTime).sendKeys(Keys.TAB);
+                    .setValue(time_defaultValueTime).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $("#time_defaultValueTime").shouldHave(value(text_time_defaultValueTime));
+            $("#time_defaultValueTime").shouldHave(value(time_defaultValueTime));
         }
 
         //Read only checkbox check
@@ -213,7 +212,7 @@ public class TimeFieldTest extends BaseTest {
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
 
-            if (StringUtils.isNotEmpty(text_numberField_defaultValueNumber)) {
+            if (StringUtils.isNotEmpty(time_defaultValueTime)) {
                 $("#time_defaultValueTime-helper-text").should(exist).shouldHave(text("Must be set, if read only")); //Verify the error shown when read only checkbox is checked wihtout any value in default value field
             }
         }

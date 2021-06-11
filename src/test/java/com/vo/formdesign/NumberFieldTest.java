@@ -25,8 +25,8 @@ public class NumberFieldTest extends BaseTest {
     protected static ThreadLocal<String> formName = ThreadLocal.withInitial(() -> "Number Field Test Form-Design Auto Test " + BROWSER_CONFIG.get() + " " + System.currentTimeMillis());
 
     enum NumberFieldOptionsIds {
-        textfield_label,
-        textfield_help,
+        numberfield_label,
+        numberfield_help,
         checkbox_disableLabel,
         checkbox_required,
 
@@ -74,15 +74,15 @@ public class NumberFieldTest extends BaseTest {
     @ParameterizedTest
     @CsvFileSource(resources = "/number_field_test_data.csv", numLinesToSkip = 1)
     public void allNumberField(Integer row, Integer col, Integer colSpan,
-                               String textfield_label,
-                               String textfield_help,
+                               String numberfield_label,
+                               String numberfield_help,
                                String checkbox_disableLabel,
                                String checkbox_required,
 
                                String text_numberField_defaultValueNumber,
-                               String textfield_decimalScale,
-                               String textfield_minValue,
-                               String textfield_maxValue,
+                               String numberfield_decimalScale,
+                               String numberfield_minValue,
+                               String numberfield_maxValue,
 
                                String checkbox_readOnly,
                                String checkbox_applyFormatter,
@@ -117,23 +117,23 @@ public class NumberFieldTest extends BaseTest {
         }
 
         //Label
-        if (StringUtils.isNotEmpty(textfield_label)) {
+        if (StringUtils.isNotEmpty(numberfield_label)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(NumberFieldOptionsIds.textfield_label.name()))
-                    .setValue(textfield_label).sendKeys(Keys.TAB);
+            selectAndClear(By.id(NumberFieldOptionsIds.numberfield_label.name()))
+                    .setValue(numberfield_label).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(textfield_label)).waitUntil(appears, 4000);
+            $(blockId).shouldHave(text(numberfield_label)).waitUntil(appears, 4000);
         }
 
         //Help
-        if (StringUtils.isNotEmpty(textfield_help)) {
+        if (StringUtils.isNotEmpty(numberfield_help)) {
             // $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(NumberFieldOptionsIds.textfield_help.name()))
-                    .setValue(textfield_help).sendKeys(Keys.TAB);
+            selectAndClear(By.id(NumberFieldOptionsIds.numberfield_help.name()))
+                    .setValue(numberfield_help).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(textfield_help)).waitUntil(appears, 4000);
+            $(blockId).shouldHave(text(numberfield_help)).waitUntil(appears, 4000);
         }
 
         //Hide(disable) Label
@@ -145,7 +145,7 @@ public class NumberFieldTest extends BaseTest {
             $(checkBoxId).shouldBe(visible).click();
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
-            $(blockId).shouldNotHave(value(textfield_label)).waitUntil(appears, 4000);
+            $(blockId).shouldNotHave(value(numberfield_label)).waitUntil(appears, 4000);
         }
 
         //required
@@ -242,33 +242,33 @@ public class NumberFieldTest extends BaseTest {
         }
 
         //Enter Decimal Places
-        if (StringUtils.isNotEmpty(textfield_decimalScale)) {
+        if (StringUtils.isNotEmpty(numberfield_decimalScale)) {
             //    $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(NumberFieldOptionsIds.numberField_decimalScale.name()))
-                    .setValue(textfield_decimalScale).sendKeys(Keys.TAB);
+                    .setValue(numberfield_decimalScale).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
-            $("#numberField_decimalScale").shouldHave(value(textfield_decimalScale)).waitUntil(appears, 4000);
+            $("#numberField_decimalScale").shouldHave(value(numberfield_decimalScale)).waitUntil(appears, 4000);
         }
 
         //Enter Minimum Value
-        if (StringUtils.isNotEmpty(textfield_minValue)) {
+        if (StringUtils.isNotEmpty(numberfield_minValue)) {
             //    $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(NumberFieldOptionsIds.numberField_minValue.name()))
-                    .setValue(textfield_minValue).sendKeys(Keys.TAB);
+                    .setValue(numberfield_minValue).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
-            $("#numberField_minValue").shouldHave(value(textfield_minValue)).waitUntil(appears, 4000);
+            $("#numberField_minValue").shouldHave(value(numberfield_minValue)).waitUntil(appears, 4000);
         }
 
         //Enter Maximum Value
-        if (StringUtils.isNotEmpty(textfield_maxValue)) {
+        if (StringUtils.isNotEmpty(numberfield_maxValue)) {
             //    $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(NumberFieldOptionsIds.numberField_maxValue.name()))
-                    .setValue(textfield_maxValue).sendKeys(Keys.TAB);
+                    .setValue(numberfield_maxValue).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
-            $("#numberField_maxValue").shouldHave(value(textfield_maxValue)).waitUntil(appears, 4000);
+            $("#numberField_maxValue").shouldHave(value(numberfield_maxValue)).waitUntil(appears, 4000);
         }
 
     }

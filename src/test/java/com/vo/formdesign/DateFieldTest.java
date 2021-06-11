@@ -73,17 +73,17 @@ public class DateFieldTest extends BaseTest {
     @ParameterizedTest
     @CsvFileSource(resources = "/date_field_test_data.csv", numLinesToSkip = 1)
     public void allDateField(Integer row, Integer col, Integer colSpan,
-                             String textfield_label,
-                             String textfield_help,
+                             String text_label,
+                             String text_help,
                              String checkbox_disableLabel,
                              String checkbox_required,
-                             String text_numberField_defaultValueNumber,
+                             String text_timeField_defaultValueTime,
 
                              String radioBtn_Date,
                              String radio_yearMonth,
                              String radio_year,
-                             String textfield_minValue,
-                             String textfield_maxValue,
+                             String date_minValue,
+                             String date_maxValue,
 
                              String checkbox_readOnly,
                              String checkbox_disableFuture,
@@ -116,13 +116,13 @@ public class DateFieldTest extends BaseTest {
         }
 
         //Label
-        if (StringUtils.isNotEmpty(textfield_label)) {
+        if (StringUtils.isNotEmpty(text_label)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(DateFieldTest.DateFieldOptionsIds.textfield_label.name()))
-                    .setValue(textfield_label).sendKeys(Keys.TAB);
+                    .setValue(text_label).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(textfield_label)).waitUntil(appears, 4000);
+            $(blockId).shouldHave(text(text_label)).waitUntil(appears, 4000);
 
         }
 
@@ -134,16 +134,16 @@ public class DateFieldTest extends BaseTest {
             $(checkBoxId).shouldBe(visible).click();
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
-            $(blockId).shouldNotHave(value(textfield_label)).waitUntil(appears, 4000);
+            $(blockId).shouldNotHave(value(text_label)).waitUntil(appears, 4000);
         }
 
         //Help
-        if (StringUtils.isNotEmpty(textfield_help)) {
+        if (StringUtils.isNotEmpty(text_help)) {
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(DateFieldTest.DateFieldOptionsIds.textfield_help.name()))
-                    .setValue(textfield_help).sendKeys(Keys.TAB);
+                    .setValue(text_help).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(textfield_help)).waitUntil(appears, 4000);
+            $(blockId).shouldHave(text(text_help)).waitUntil(appears, 4000);
         }
 
         //required
@@ -189,13 +189,13 @@ public class DateFieldTest extends BaseTest {
         }
 
         //Select Default
-        if (StringUtils.isNotEmpty(text_numberField_defaultValueNumber)) {
+        if (StringUtils.isNotEmpty(text_timeField_defaultValueTime)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(DateFieldTest.DateFieldOptionsIds.date_defaultValueDate.name()))
-                    .setValue(text_numberField_defaultValueNumber).sendKeys(Keys.TAB);
+                    .setValue(text_timeField_defaultValueTime).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $("#date_defaultValueDate").shouldHave(value(text_numberField_defaultValueNumber));
+            $("#date_defaultValueDate").shouldHave(value(text_timeField_defaultValueTime));
         }
 
 
@@ -208,7 +208,7 @@ public class DateFieldTest extends BaseTest {
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
 
-            if (StringUtils.isEmpty(text_numberField_defaultValueNumber)) {
+            if (StringUtils.isEmpty(text_timeField_defaultValueTime)) {
                 $("#date_defaultValueDate-helper-text").should(exist).shouldHave(text("Must be set, if read only")); //Verify the error shown when read only checkbox is checked wihtout any value in default value field
             }
         }
@@ -234,21 +234,21 @@ public class DateFieldTest extends BaseTest {
         }
 
         //Enter Minimum Value
-        if (StringUtils.isNotEmpty(textfield_minValue)) {
+        if (StringUtils.isNotEmpty(date_minValue)) {
             String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(DateFieldTest.DateFieldOptionsIds.date_minDate.name()))
-                    .setValue(textfield_minValue).sendKeys(Keys.TAB);
+                    .setValue(date_minValue).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
-            $("#date_minDate").shouldHave(value(textfield_minValue)).waitUntil(appears, 4000);
+            $("#date_minDate").shouldHave(value(date_minValue)).waitUntil(appears, 4000);
         }
 
         //Enter Maximum Value
-        if (StringUtils.isNotEmpty(textfield_maxValue)) {
+        if (StringUtils.isNotEmpty(date_maxValue)) {
             String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(DateFieldTest.DateFieldOptionsIds.date_maxDate.name()))
-                    .setValue(textfield_maxValue).sendKeys(Keys.TAB);
+                    .setValue(date_maxValue).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
-            $("#date_maxDate").shouldHave(value(textfield_maxValue)).waitUntil(appears, 4000);
+            $("#date_maxDate").shouldHave(value(date_maxValue)).waitUntil(appears, 4000);
         }
 
     }
