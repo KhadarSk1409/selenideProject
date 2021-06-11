@@ -21,27 +21,24 @@ import java.util.stream.IntStream;
 import static com.codeborne.selenide.Condition.*;
 import static reusables.ReuseActions.createNewForm;
 
-public class DateFieldTest extends BaseTest {
+public class TimeFieldTest extends BaseTest {
 
-    protected static ThreadLocal<String> formName = ThreadLocal.withInitial(() -> "Date Field Test Form-Design Auto Test " + BROWSER_CONFIG.get() + " " + System.currentTimeMillis());
+    protected static ThreadLocal<String> formName = ThreadLocal.withInitial(() -> "Time Field Test Form-Design Auto Test " + BROWSER_CONFIG.get() + " " + System.currentTimeMillis());
 
-    enum DateFieldOptionsIds {
-        textfield_label,
-        textfield_help,
+    enum TimeFieldOptionsIds {
+        timefield_label,
         checkbox_disableLabel,
+        timefield_help,
         checkbox_required,
 
-        prop_yearMonthDay_yearMonthDay,
-        prop_yearMonth_yearMonth,
-        prop_year_year,
+        prop_hourMinuteSecond_hourMinuteSecond,
+        prop_hourMinute_hourMinute,
+        prop_minuteSecond_minuteSecond,
+        prop_hour_hour,
 
-        date_minDate,
-        date_maxDate,
-        date_defaultValueDate, //#date_defaultValueDate ~.MuiInputAdornment-root button
-        checkbox_readOnly,  //#date_minDate~.MuiInputAdornment-root button
-        checkbox_disableFuture, //#date_maxDate~.MuiInputAdornment-root button
-        checkbox_disablePast, //div.MuiPickersModal-dialogRoot .MuiPickersModal-dialog
-
+        time_defaultValueTime,
+        checkbox_readOnly,
+        checkbox_ampm;
     }
 
     @Test
@@ -56,38 +53,35 @@ public class DateFieldTest extends BaseTest {
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Initial version
         $(blockId).shouldBe(visible).click();
         $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
-        $("#li-template-DateField-03").should(appear).click(); //li-template-DateField-03
+        $("#li-template-TimeField-03").should(appear).click(); //li-template-TimeField-03
         $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
         $("#formelement_properties_card").should(appear);
 
         $("#panel2a-header").should(exist).click(); //Advanced section dropdown
 
         //options for text field should exist:
-        Arrays.asList(DateFieldTest.DateFieldOptionsIds.values()).forEach(textFieldId -> $(By.id(textFieldId.name())).shouldBe(visible));
+        Arrays.asList(TimeFieldTest.TimeFieldOptionsIds.values()).forEach(textFieldId -> $(By.id(textFieldId.name())).shouldBe(visible));
         $("#blockButtonDelete").shouldBe(visible).click();
-        $("#li-template-DateField-03").should(disappear);
+        $("#li-template-TimeField-03").should(disappear);
     }
 
     @Order(2)
     @DisplayName("createNewFormulaDesignForDateFields")
     @ParameterizedTest
-    @CsvFileSource(resources = "/date_field_test_data.csv", numLinesToSkip = 1)
-    public void allDateField(Integer row, Integer col, Integer colSpan,
-                             String text_label,
-                             String text_help,
+    @CsvFileSource(resources = "/time_field_test_data.csv", numLinesToSkip = 1)
+    public void allTimeField(Integer row, Integer col, Integer colSpan,
+                             String timefield_label,
+                             String timefield_help,
                              String checkbox_disableLabel,
                              String checkbox_required,
-                             String text_timeField_defaultValueTime,
 
-                             String radioBtn_Date,
-                             String radio_yearMonth,
-                             String radio_year,
-                             String date_minValue,
-                             String date_maxValue,
+                             String radioBtn_hrMinSec_hrMinSec,
+                             String radio_hrMin_hrMin,
+                             String radio_hour_hour,
+                             String time_defaultValueTime,
 
                              String checkbox_readOnly,
-                             String checkbox_disableFuture,
-                             String checkbox_disablePast
+                             String checkbox_ampm
 
     ) throws InterruptedException {
 
@@ -101,7 +95,7 @@ public class DateFieldTest extends BaseTest {
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
         $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
-        $("#li-template-DateField-03").should(appear).click();
+        $("#li-template-TimeField-03").should(appear).click();
         $("#formelement_properties_card").should(appear);
 
         if (colSpan != null && colSpan > 1) {
@@ -116,13 +110,13 @@ public class DateFieldTest extends BaseTest {
         }
 
         //Label
-        if (StringUtils.isNotEmpty(text_label)) {
+        if (StringUtils.isNotEmpty(timefield_label)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(DateFieldTest.DateFieldOptionsIds.textfield_label.name()))
-                    .setValue(text_label).sendKeys(Keys.TAB);
+            selectAndClear(By.id(TimeFieldTest.TimeFieldOptionsIds.timefield_label.name()))
+                    .setValue(timefield_label).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(text_label)).waitUntil(appears, 4000);
+            $(blockId).shouldHave(text(timefield_label)).waitUntil(appears, 4000);
 
         }
 
@@ -130,26 +124,26 @@ public class DateFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_disableLabel)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            String checkBoxId = "#" + DateFieldTest.DateFieldOptionsIds.checkbox_disableLabel.name();
+            String checkBoxId = "#" + TimeFieldTest.TimeFieldOptionsIds.checkbox_disableLabel.name();
             $(checkBoxId).shouldBe(visible).click();
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
-            $(blockId).shouldNotHave(value(text_label)).waitUntil(appears, 4000);
+            $(blockId).shouldNotHave(value(timefield_label)).waitUntil(appears, 4000);
         }
 
         //Help
-        if (StringUtils.isNotEmpty(text_help)) {
+        if (StringUtils.isNotEmpty(timefield_help)) {
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(DateFieldTest.DateFieldOptionsIds.textfield_help.name()))
-                    .setValue(text_help).sendKeys(Keys.TAB);
+            selectAndClear(By.id(TimeFieldTest.TimeFieldOptionsIds.timefield_help.name()))
+                    .setValue(timefield_help).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(text_help)).waitUntil(appears, 4000);
+            $(blockId).shouldHave(text(timefield_help)).waitUntil(appears, 4000);
         }
 
         //required
         if (StringUtils.isNotEmpty(checkbox_required)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String checkBoxId = "#" + DateFieldTest.DateFieldOptionsIds.checkbox_required.name();
+            String checkBoxId = "#" + TimeFieldTest.TimeFieldOptionsIds.checkbox_required.name();
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             $(checkBoxId).shouldBe(visible).click();
             //$(checkBoxId + " input").shouldHave(value("true"));
@@ -158,98 +152,79 @@ public class DateFieldTest extends BaseTest {
             $(blockId).shouldHave(text("Required"));
         }
 
-        //Select Date radioBtn
-        if (StringUtils.isNotEmpty(radioBtn_Date)) {
+        //Hour Minute Second radioBtn
+        if (StringUtils.isNotEmpty(radioBtn_hrMinSec_hrMinSec)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            String radioBtnId = "#" + DateFieldTest.DateFieldOptionsIds.prop_yearMonthDay_yearMonthDay.name();
+            String radioBtnId = "#" + TimeFieldTest.TimeFieldOptionsIds.prop_hourMinuteSecond_hourMinuteSecond.name();
             $(radioBtnId).shouldBe(visible).click();
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(radioBtnId + " input").shouldBe(selected);
         }
 
-        //Select Year and Month radioBtn
-        if (StringUtils.isNotEmpty(radio_yearMonth)) {
+        //Hour Minute radioBtn
+        if (StringUtils.isNotEmpty(radio_hrMin_hrMin)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            String radioBtnId = "#" + DateFieldTest.DateFieldOptionsIds.prop_yearMonthDay_yearMonthDay.name();
+            String radioBtnId = "#" + TimeFieldTest.TimeFieldOptionsIds.prop_hourMinute_hourMinute.name();
             $(radioBtnId).shouldBe(visible).click();
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(radioBtnId + " input").shouldBe(selected);
         }
 
-        //Select Year radioBtn
-        if (StringUtils.isNotEmpty(radio_year)) {
+        //Minute Second radioBtn
+        if (StringUtils.isNotEmpty(radio_hour_hour)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            String radioBtnId = "#" + DateFieldTest.DateFieldOptionsIds.prop_yearMonthDay_yearMonthDay.name();
+            String radioBtnId = "#" + TimeFieldTest.TimeFieldOptionsIds.prop_minuteSecond_minuteSecond.name();
             $(radioBtnId).shouldBe(visible).click();
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(radioBtnId + " input").shouldBe(selected);
         }
 
-        //Select Default
-        if (StringUtils.isNotEmpty(text_timeField_defaultValueTime)) {
+
+        //Hour radioBtn
+        if (StringUtils.isNotEmpty(radio_hour_hour)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(DateFieldTest.DateFieldOptionsIds.date_defaultValueDate.name()))
-                    .setValue(text_timeField_defaultValueTime).sendKeys(Keys.TAB);
+            String radioBtnId = "#" + TimeFieldTest.TimeFieldOptionsIds.prop_hour_hour.name();
+            $(radioBtnId).shouldBe(visible).click();
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $("#date_defaultValueDate").shouldHave(value(text_timeField_defaultValueTime));
+            $(radioBtnId + " input").shouldBe(selected);
         }
 
+        //Enter Default value
+        if (StringUtils.isNotEmpty(time_defaultValueTime)) {
+            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            selectAndClear(By.id(TimeFieldTest.TimeFieldOptionsIds.time_defaultValueTime.name()))
+                    .setValue(time_defaultValueTime).sendKeys(Keys.TAB);
+            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $("#time_defaultValueTime").shouldHave(value(time_defaultValueTime));
+        }
 
         //Read only checkbox check
         if (StringUtils.isNotEmpty(checkbox_readOnly)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            String checkBoxId = "#" + DateFieldTest.DateFieldOptionsIds.checkbox_readOnly.name();
+            String checkBoxId = "#" + TimeFieldTest.TimeFieldOptionsIds.checkbox_readOnly.name();
             $(checkBoxId).shouldBe(visible).click();
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
 
-            if (StringUtils.isEmpty(text_timeField_defaultValueTime)) {
-                $("#date_defaultValueDate-helper-text").should(exist).shouldHave(text("Must be set, if read only")); //Verify the error shown when read only checkbox is checked wihtout any value in default value field
+            if (StringUtils.isNotEmpty(time_defaultValueTime)) {
+                $("#time_defaultValueTime-helper-text").should(exist).shouldHave(text("Must be set, if read only")); //Verify the error shown when read only checkbox is checked wihtout any value in default value field
             }
         }
 
-        //Disable future checkbox check
-        if (StringUtils.isNotEmpty(checkbox_disableFuture)) {
+        //Verify 12h/24h checkbox for hour selection
+        if (StringUtils.isNotEmpty(checkbox_ampm)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            String checkBoxId = "#" + DateFieldTest.DateFieldOptionsIds.checkbox_disableFuture.name();
+            String checkBoxId = "#" + TimeFieldTest.TimeFieldOptionsIds.checkbox_ampm.name();
             $(checkBoxId).shouldBe(visible).click();
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
         }
-
-        //Disable past checkbox check
-        if (StringUtils.isNotEmpty(checkbox_disablePast)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            String checkBoxId = "#" + DateFieldTest.DateFieldOptionsIds.checkbox_disablePast.name();
-            $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(checkBoxId + " input").shouldBe(selected);
-        }
-
-        //Enter Minimum Value
-        if (StringUtils.isNotEmpty(date_minValue)) {
-            String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(DateFieldTest.DateFieldOptionsIds.date_minDate.name()))
-                    .setValue(date_minValue).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
-            $("#date_minDate").shouldHave(value(date_minValue)).waitUntil(appears, 4000);
-        }
-
-        //Enter Maximum Value
-        if (StringUtils.isNotEmpty(date_maxValue)) {
-            String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(DateFieldTest.DateFieldOptionsIds.date_maxDate.name()))
-                    .setValue(date_maxValue).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
-            $("#date_maxDate").shouldHave(value(date_maxValue)).waitUntil(appears, 4000);
-        }
-
     }
 }

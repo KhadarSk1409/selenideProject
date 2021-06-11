@@ -78,13 +78,13 @@ public class CurrencyFieldTest extends BaseTest {
     @ParameterizedTest
     @CsvFileSource(resources = "/currency_field_test_data.csv", numLinesToSkip = 1)
     public void allCurrencyField(Integer row, Integer col, Integer colSpan,
-                                 String textfield_label,
-                                 String textfield_help,
-                                 String textfield_currency_field,
+                                 String currency_label,
+                                 String currency_help,
+                                 String currency_field,
                                  String checkbox_disableLabel,
                                  String checkbox_required,
 
-                                 String text_numberField_defaultValueNumber,
+                                 String text_currencyField_defaultValueCurrency,
                                  String textfield_decimalScale,
                                  String textfield_minValue,
                                  String textfield_maxValue,
@@ -122,14 +122,13 @@ public class CurrencyFieldTest extends BaseTest {
         }
 
         //Label
-        if (StringUtils.isNotEmpty(textfield_label)) {
+        if (StringUtils.isNotEmpty(currency_label)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name()))
-                    .setValue(textfield_label).sendKeys(Keys.TAB);
+                    .setValue(currency_label).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(textfield_label)).waitUntil(appears, 4000);
+            $(blockId).shouldHave(text(currency_label)).waitUntil(appears, 4000);
 
         }
 
@@ -142,17 +141,17 @@ public class CurrencyFieldTest extends BaseTest {
             $(checkBoxId).shouldBe(visible).click();
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
-            $(blockId).shouldNotHave(value(textfield_label)).waitUntil(appears, 4000);
+            $(blockId).shouldNotHave(value(currency_label)).waitUntil(appears, 4000);
         }
 
         //Help
-        if (StringUtils.isNotEmpty(textfield_help)) {
+        if (StringUtils.isNotEmpty(currency_help)) {
             // $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_help.name()))
-                    .setValue(textfield_help).sendKeys(Keys.TAB);
+                    .setValue(currency_help).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(textfield_help)).waitUntil(appears, 4000);
+            $(blockId).shouldHave(text(currency_help)).waitUntil(appears, 4000);
         }
 
         //required
@@ -167,12 +166,12 @@ public class CurrencyFieldTest extends BaseTest {
         }
 
         //Currencies field
-        if (StringUtils.isNotEmpty(textfield_currency_field)) {
+        if (StringUtils.isNotEmpty(currency_field)) {
             $("#sel_input_currencies").shouldBe(visible);
             $("#sel_control_currencies .selLabelChip").shouldHave(text("EUR"));
             $("#sel_control_currencies .selLabelChip").sendKeys(Keys.BACK_SPACE); //Clear the default value in Currencies field
 
-            Arrays.asList(textfield_currency_field.split(",")).forEach(currency -> {
+            Arrays.asList(currency_field.split(",")).forEach(currency -> {
                 $("#sel_input_currencies").should(exist).click();
                 $(".MuiAutocomplete-popper").should(appear);
                 $$(".MuiAutocomplete-popper li").findBy(text(currency)).should(exist).click();
@@ -181,12 +180,12 @@ public class CurrencyFieldTest extends BaseTest {
         }
 
         //Enter Default value
-        if (StringUtils.isNotEmpty(text_numberField_defaultValueNumber)) {
+        if (StringUtils.isNotEmpty(text_currencyField_defaultValueCurrency)) {
             String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name()))
-                    .setValue(text_numberField_defaultValueNumber).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
-            $("#numberField_defaultValueNumber").shouldHave(value(text_numberField_defaultValueNumber)).waitUntil(appears, 4000);
+                    .setValue(text_currencyField_defaultValueCurrency).sendKeys(Keys.TAB);
+            $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //fVerify that version has increased
+            $("#numberField_defaultValueNumber").shouldHave(value(text_currencyField_defaultValueCurrency)).waitUntil(appears, 4000);
         }
 
 
@@ -199,7 +198,7 @@ public class CurrencyFieldTest extends BaseTest {
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
 
-            if (StringUtils.isEmpty(text_numberField_defaultValueNumber)) {
+            if (StringUtils.isEmpty(text_currencyField_defaultValueCurrency)) {
                 //When you don't have any value in Default value edit box and click on Read only checkbox it should show error
                 $("#numberField_defaultValueNumber-helper-text").should(exist).shouldHave(text("Must be set, if read only"));
             }
@@ -219,7 +218,7 @@ public class CurrencyFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_thousandSeparator)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name()))
-                    .setValue(text_numberField_defaultValueNumber).sendKeys(Keys.TAB); //Enter value in Default chekbox
+                    .setValue(text_currencyField_defaultValueCurrency).sendKeys(Keys.TAB); //Enter value in Default chekbox
 
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + CurrencyFieldTest.CurrencyFieldOptionsIds.checkbox_thousandSeparator.name();
