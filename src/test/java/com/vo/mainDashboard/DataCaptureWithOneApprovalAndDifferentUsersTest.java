@@ -13,7 +13,7 @@ import static com.vo.BaseTest.shouldLogin;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Data Capture with One Approval and Different Users")
-public class DataCaptureWithOneApprovalAndDifferentUsers extends BaseTest {
+public class DataCaptureWithOneApprovalAndDifferentUsersTest extends BaseTest {
 
         @Test
         @DisplayName("Open At Form Approval with One Approver")
