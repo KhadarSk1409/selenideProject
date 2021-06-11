@@ -85,7 +85,7 @@ public abstract class BaseTest {
             TEST_BASE_URL = System.getenv("TEST_BASE_URL");
             Configuration.baseUrl = Optional.ofNullable(TEST_BASE_URL).orElse("https://visualorbit.fireo.net");
             //Configuration.baseUrl = "http://localhost:3000";
-            Configuration.timeout = 20000;
+            Configuration.timeout = 30000;
             //Configuration.fastSetValue = true;
             //Configuration.clickViaJs = true;
             //Configuration.headless = true;
