@@ -11,7 +11,7 @@ import static com.codeborne.selenide.Selenide.*;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName(("Data Capture with Two Approval including Reject"))
 
-public class DataCaptureWithTwoApproversIncludingReject extends BaseTest {
+public class DataCaptureWithTwoApproversIncludingRejectTest extends BaseTest {
 
     @Test
     @DisplayName(("Open Data Capture with Two Approval"))

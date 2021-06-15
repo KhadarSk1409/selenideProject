@@ -9,7 +9,7 @@ import static com.codeborne.selenide.Selenide.title;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Expandable Cards")
-public class ExpandableCards extends BaseTest {
+public class ExpandableCardsTest extends BaseTest {
 
     @Test
     @DisplayName("Should Expand and Collapse My Tasks")

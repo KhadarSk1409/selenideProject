@@ -11,7 +11,7 @@ import static com.codeborne.selenide.Selenide.$;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Data Capture without Approval by Two Users")
-public class DataCaptureWithoutApprovalByTwoUsers extends BaseTest {
+public class DataCaptureWithoutApprovalByTwoUsersTest extends BaseTest {
 
     @Test
     @DisplayName("Open the Data Capture without approval")

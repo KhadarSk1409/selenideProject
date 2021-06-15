@@ -12,7 +12,7 @@ import static com.codeborne.selenide.Selenide.$;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Data Capture with Two Approval and Different Users")
-public class DataCaptureWithTwoApprovalAndDifferentUsers extends BaseTest {
+public class DataCaptureWithTwoApprovalAndDifferentUsersTest extends BaseTest {
 
     @Test
     @DisplayName("Open TA Two Approval and Different Users Form")
