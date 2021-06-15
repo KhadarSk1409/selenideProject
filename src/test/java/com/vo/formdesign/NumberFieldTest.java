@@ -25,8 +25,8 @@ public class NumberFieldTest extends BaseTest {
     protected static ThreadLocal<String> formName = ThreadLocal.withInitial(() -> "Number Field Test Form-Design Auto Test " + BROWSER_CONFIG.get() + " " + System.currentTimeMillis());
 
     enum NumberFieldOptionsIds {
-        numberfield_label,
-        numberfield_help,
+        textfield_label,
+        textfield_help,
         checkbox_disableLabel,
         checkbox_required,
 
@@ -120,7 +120,7 @@ public class NumberFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(numberfield_label)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(NumberFieldOptionsIds.numberfield_label.name()))
+            selectAndClear(By.id(NumberFieldOptionsIds.textfield_label.name()))
                     .setValue(numberfield_label).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(blockId).shouldHave(text(numberfield_label)).waitUntil(appears, 4000);
@@ -130,7 +130,7 @@ public class NumberFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(numberfield_help)) {
             // $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(NumberFieldOptionsIds.numberfield_help.name()))
+            selectAndClear(By.id(NumberFieldOptionsIds.textfield_help.name()))
                     .setValue(numberfield_help).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(blockId).shouldHave(text(numberfield_help)).waitUntil(appears, 4000);
