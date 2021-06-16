@@ -43,9 +43,10 @@ public class DataCaptureWithOneApprovalAndDifferentUsersTest extends BaseTest {
 
         //Should Login as GUI TESTER 01
         shouldLogin(BaseTest.UserType.USER_01);
-        $("#tasksCard tbody td:nth-child(1)").should(exist); //A Task should be visible in MY TASKS
-        $("#tasksCard tbody td:nth-child(6)").should(exist).click();
-        $("#dashboard-data-card-dialog_actions").should(appear);
+        open("/dashboard/ASdii60Gt");
+        $("#formDashboardHeaderAppBar").should(exist);
+        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
+        $("#data-card-dialog_actions").should(appear);
         $("#dataContainer").should(exist);
         $("#textField_form-user-fbea34a0-bf35-45eb-9f42-d586230f9cf6").should(exist);
         $("#textField_form-user-fbea34a0-bf35-45eb-9f42-d586230f9cf6").setValue("TEST");
@@ -54,14 +55,15 @@ public class DataCaptureWithOneApprovalAndDifferentUsersTest extends BaseTest {
 
         //Should Login as GUI TESTER 02
         shouldLogin(BaseTest.UserType.USER_02);
-        $("#bpmRelatedTabsCard").should(exist);
-        $("#tasksCard tbody td:nth-child(1)").should(exist); //A Task should be visible in MY TASKS
-        $("#tasksCard tbody tr td:nth-child(6) span:nth-child(2) span[iconname='fas fa-check'").shouldBe(visible).click();
-        $("#tasksCard div:nth-child(2) p").shouldBe(visible); //My Tasks Should be empty
+        open("/dashboard/ASdii60Gt");
+        $("#formDashboardHeaderAppBar").should(exist);
+        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='fas fa-check']").shouldBe(visible).click();
+        $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
 
         //Should Login as GUI Tester
         shouldLogin(BaseTest.UserType.MAIN_TEST_USER);
         open("/dashboard/ASdii60Gt");
+        $("#formDashboardHeaderAppBar").should(exist);
         $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
         $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).click();
         $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("Completed"));

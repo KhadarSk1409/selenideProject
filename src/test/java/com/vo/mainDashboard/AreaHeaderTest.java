@@ -13,6 +13,7 @@ import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.WebDriverRunner.url;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static reusables.ReuseActions.navigateToFormDashBoardFromFavoriteForms;
+import static com.codeborne.selenide.Selenide.executeJavaScript;
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -97,8 +98,13 @@ public class AreaHeaderTest extends BaseTest {
     public void verifyEditFormDesignButton() {
         $("#btnEditFormDesign").should(exist).click(); //Edit Form Design
         $("#btnFormDesignPublish").should(exist); //Publish button to ensure user has navigated to Edit Form screen
-        $("#btnCloseEditForm").should(exist).click(); //Click on x on Edit Form design
-        $("#btnCloseEditForm").should(disappear);
+        String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+        $("#btnCloseEditForm").shouldBe(enabled).click(); //Click on x on Edit Form design
+        $("#btnEditFormDesign").should(exist).click(); //Edit Form Design
+        $("#formMinorversion").shouldHave(text(initialVerNumStr)); //Verify that version has increased
+        $("#btnCloseEditForm").shouldBe(enabled).click(); //Click on x on Edit Form design
+        $("#formMinorversion").shouldNot(exist);
+        $("#btnCloseEditForm").shouldNot(exist);
         $("#btnEditFormDesign").should(exist); //Edit Form Design to ensure that user has navigated back to Form Dashboard
     }
 
@@ -120,10 +126,9 @@ public class AreaHeaderTest extends BaseTest {
     public void verifyMenuItemsForFormDashboard() {
         $("#formDashboardHeaderAppBar .btnMoreOptionsMenu").should(exist).click();
         $("#optionsMenu ul li:nth-child(1)").should(exist).shouldHave(Condition.text("PDF"));
-        $("#optionsMenu ul li:nth-child(2)").should(exist).shouldHave(Condition.text("Edit Form Permissions"));
-        $("#optionsMenu ul li:nth-child(3)").should(exist).shouldHave(Condition.text("Data Capture"));
-        $("#optionsMenu ul li:nth-child(4)").should(exist).shouldHave(Condition.text("Visualize form design changes in data tables"));
-        $("#optionsMenu ul li:nth-child(5)").should(exist).shouldHave(Condition.text("Copy Form Dataset URL to Clipboard"));
+        $("#optionsMenu ul li:nth-child(2)").should(exist).shouldHave(Condition.text("Data Capture"));
+        $("#optionsMenu ul li:nth-child(3)").should(exist).shouldHave(Condition.text("Visualize form design changes in data tables"));
+        $("#optionsMenu ul li:nth-child(4)").should(exist).shouldHave(Condition.text("Copy Form Dataset URL to Clipboard"));
 
     }
 

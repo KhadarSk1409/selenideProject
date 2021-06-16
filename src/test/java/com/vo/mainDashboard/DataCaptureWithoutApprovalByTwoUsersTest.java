@@ -42,9 +42,10 @@ public class DataCaptureWithoutApprovalByTwoUsersTest extends BaseTest {
 
         //Should Login as GUI TESTER 01
         shouldLogin(UserType.USER_01);
-        $("#tasksCard tbody td:nth-child(1)").should(exist); //A Task should be visible in MY TASKS
-        $("#tasksCard tbody td:nth-child(6)").should(exist).click();
-        $("#dashboard-data-card-dialog_actions").should(appear);
+        open("/dashboard/DATA-CAPTURE-WO-PROCESS");
+        $("#formDashboardHeaderLeft").should(appear);
+        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
+        $("#data-card-dialog_actions").should(appear);
         $("#dataContainer").should(exist);
         $("#textField_form-user-160cfec0-aef2-4927-a8a8-aff595813f53").should(exist);
         $("#textField_form-user-160cfec0-aef2-4927-a8a8-aff595813f53").setValue("TEST");
@@ -54,6 +55,7 @@ public class DataCaptureWithoutApprovalByTwoUsersTest extends BaseTest {
         //Should Login as GUI Tester
         shouldLogin(UserType.MAIN_TEST_USER);
         open("/dashboard/DATA-CAPTURE-WO-PROCESS");
+        $("#formDashboardHeaderLeft").should(appear);
         $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
         $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).click();
         $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("Completed"));
