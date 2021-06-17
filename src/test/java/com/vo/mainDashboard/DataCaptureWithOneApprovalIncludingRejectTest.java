@@ -41,7 +41,7 @@ public class DataCaptureWithOneApprovalIncludingRejectTest extends BaseTest {
         $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).click();
         $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Progress")); //Verify the Data Capture state
         $("#gridItemTasks").should(exist);
-        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
+        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
         $("#data-card-dialog_actions").should(appear);
         $("#dataContainer").should(exist);
         $("#textField_form-user-cd4b7447-4047-4b50-9495-2fd44a9f2321").should(exist);
@@ -49,22 +49,22 @@ public class DataCaptureWithOneApprovalIncludingRejectTest extends BaseTest {
         $("#btnAcceptTask").click();
         $("#data-approve-reject-dialog").$("#btnConfirm").click();
         $("#FormDashboardTasksCard .MuiCardContent-root").should(exist);
-        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1)").shouldBe(visible).shouldHave(text("Approve record"));
+        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1)").shouldBe(visible).shouldHave(text("Approve record"));
         $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Approval"));
-        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far far fa-eye']").shouldBe(visible).click();
+        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far far fa-eye']").shouldBe(visible).click();
         $("#data-card-dialog_actions").should(appear).$("#btnRejectDataTask").click(); //Click on Reject
         $("#textfield_RejectReason").should(appear).setValue("Form is being Rejected"); //Comment for Rejection
         $("#data-approve-reject-dialog").$("#btnConfirm").click();
-        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1)").shouldBe(visible).shouldHave(text("Form is being Rejected"));
-        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
+        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1)").shouldBe(visible).shouldHave(text("Form is being Rejected"));
+        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
         $("#dataContainer").should(exist);
         $("#textField_form-user-cd4b7447-4047-4b50-9495-2fd44a9f2321").should(exist);
         $("#textField_form-user-cd4b7447-4047-4b50-9495-2fd44a9f2321").setValue(" Approved ");
         $("#btnAcceptTask").click();
         $("#selUser").should(exist);
         $("#data-approve-reject-dialog").$("#btnConfirm").click();
-        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1)").shouldBe(visible).shouldHave(text("Approve record"));
-        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far far fa-eye']").click();
+        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1)").shouldBe(visible).shouldHave(text("Approve record"));
+        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far far fa-eye']").click();
         $("#btnAcceptTask").click();
         $("#selUser").should(exist);
         $("#data-approve-reject-dialog").$("#btnConfirm").click();

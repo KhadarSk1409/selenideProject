@@ -45,7 +45,7 @@ public class DataCaptureWithOneApprovalAndDifferentUsersTest extends BaseTest {
         shouldLogin(BaseTest.UserType.USER_01);
         open("/dashboard/ASdii60Gt");
         $("#formDashboardHeaderAppBar").should(exist);
-        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
+        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
         $("#data-card-dialog_actions").should(appear);
         $("#dataContainer").should(exist);
         $("#textField_form-user-fbea34a0-bf35-45eb-9f42-d586230f9cf6").should(exist);
@@ -57,7 +57,7 @@ public class DataCaptureWithOneApprovalAndDifferentUsersTest extends BaseTest {
         shouldLogin(BaseTest.UserType.USER_02);
         open("/dashboard/ASdii60Gt");
         $("#formDashboardHeaderAppBar").should(exist);
-        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='fas fa-check']").shouldBe(visible).click();
+        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='fas fa-check']").shouldBe(visible).click();
         $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
 
         //Should Login as GUI Tester

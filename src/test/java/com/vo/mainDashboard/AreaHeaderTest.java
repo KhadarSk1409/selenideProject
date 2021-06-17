@@ -8,12 +8,10 @@ import java.lang.*;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byCssSelector;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
+import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.url;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static reusables.ReuseActions.navigateToFormDashBoardFromFavoriteForms;
-import static com.codeborne.selenide.Selenide.executeJavaScript;
 
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -78,7 +76,7 @@ public class AreaHeaderTest extends BaseTest {
         String expectedUrl = url(); //Get the url of the browser
         $("#cUsageOverview p i").should(exist).click(); //Click on copy url button in the Data card
         String clipBoardUrl = Selenide.clipboard().getText();
-        assertTrue(clipBoardUrl.equals(expectedUrl));
+        assertTrue(clipBoardUrl.equals(expectedUrl),"Expected: "+expectedUrl+" Received: "+clipBoardUrl);
     }
 
     @Test
@@ -124,11 +122,10 @@ public class AreaHeaderTest extends BaseTest {
     @DisplayName("Verify Menu items for Form Dashboard")
     @Order(8)
     public void verifyMenuItemsForFormDashboard() {
+        open("/dashboard/sample-form");
         $("#formDashboardHeaderAppBar .btnMoreOptionsMenu").should(exist).click();
-        $("#optionsMenu ul li:nth-child(1)").should(exist).shouldHave(Condition.text("PDF"));
-        $("#optionsMenu ul li:nth-child(2)").should(exist).shouldHave(Condition.text("Data Capture"));
-        $("#optionsMenu ul li:nth-child(3)").should(exist).shouldHave(Condition.text("Visualize form design changes in data tables"));
-        $("#optionsMenu ul li:nth-child(4)").should(exist).shouldHave(Condition.text("Copy Form Dataset URL to Clipboard"));
+        $$("#optionsMenu ul li").shouldHaveSize(5)
+                .shouldHave(CollectionCondition.texts("PDF", "Edit Form Permissions", "Data Capture", "Visualize form design changes in data tables", "Copy Form Dataset URL to Clipboard" ));
 
     }
 

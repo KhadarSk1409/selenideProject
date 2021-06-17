@@ -44,7 +44,7 @@ public class DataCaptureWithoutApprovalByTwoUsersTest extends BaseTest {
         shouldLogin(UserType.USER_01);
         open("/dashboard/DATA-CAPTURE-WO-PROCESS");
         $("#formDashboardHeaderLeft").should(appear);
-        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
+        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
         $("#data-card-dialog_actions").should(appear);
         $("#dataContainer").should(exist);
         $("#textField_form-user-160cfec0-aef2-4927-a8a8-aff595813f53").should(exist);

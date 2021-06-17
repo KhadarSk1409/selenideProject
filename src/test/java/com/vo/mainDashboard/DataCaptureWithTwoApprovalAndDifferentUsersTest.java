@@ -43,7 +43,8 @@ public class DataCaptureWithTwoApprovalAndDifferentUsersTest extends BaseTest {
         //Should Login as GUI TESTER 01
         shouldLogin(BaseTest.UserType.USER_01);
         open("/dashboard/TA-TWO-APPROVAL-DIFF-USERS");
-        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
+        $("#formDashboardHeaderLeft").should(appear);
+        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
         $("#data-card-dialog_actions").should(appear);
         $("#dataContainer").should(exist);
         $("#textField_form-user-530d85bf-490a-4c54-8c13-fc3571b46a46").should(exist);
@@ -55,18 +56,21 @@ public class DataCaptureWithTwoApprovalAndDifferentUsersTest extends BaseTest {
         //Should Login as GUI TESTER 02
         shouldLogin(BaseTest.UserType.USER_02);
         open("/dashboard/TA-TWO-APPROVAL-DIFF-USERS");
+        $("#formDashboardHeaderLeft").should(appear);
         $("#FormDashboardTasksCard div:nth-child(1) span[iconname='fas fa-check']").shouldBe(visible).shouldBe(enabled).click();
         $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
 
         //Should Login as GUI TESTER 03
         shouldLogin(UserType.USER_03);
         open("/dashboard/TA-TWO-APPROVAL-DIFF-USERS");
+        $("#formDashboardHeaderLeft").should(appear);
         $("#FormDashboardTasksCard div:nth-child(1) span[iconname='fas fa-check']").shouldBe(visible).shouldBe(enabled).click();
         $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
 
         //Should Login as GUI Tester
         shouldLogin(BaseTest.UserType.MAIN_TEST_USER);
         open("/dashboard/TA-TWO-APPROVAL-DIFF-USERS");
+        $("#formDashboardHeaderLeft").should(appear);
         $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
         $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).click();
         $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("Completed")); //Verify the Final Data Capture State

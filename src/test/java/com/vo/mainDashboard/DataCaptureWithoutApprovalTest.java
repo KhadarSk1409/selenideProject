@@ -48,7 +48,7 @@ public class DataCaptureWithoutApprovalTest extends BaseTest {
             $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("In Progress")); //Verify the Data Capture state
             $("#gridItemTasks").should(exist);
             $("#FormDashboardTasksCard .MuiCardContent-root").should(exist);
-            $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
+            $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
             $("#data-card-dialog_actions").should(appear);
             $("#dataContainer").should(exist);
             $("#textField_form-user-160cfec0-aef2-4927-a8a8-aff595813f53").should(exist);
