@@ -58,14 +58,8 @@ public class EditFormPropertiesTest extends BaseTest {
         open("/dashboard/x44uarePG");//Open the Form
         $("#formDashboardHeaderLeft").should(exist);
         $("#btnEditFormDesign").should(exist).click();//Click on Edit Form Design
-
-        String selectedIconName=$("#formtree_card .MuiIcon-root svg").getAttribute("data-src");
-
-        String selectedLanguage=$("#designer_formCardHeader button:nth-child(2)").getText();
-
-        assertTrue(selectedIconName.contains(iconName));
-        assertEquals(newLang.toUpperCase(), selectedLanguage);
-
+        $("#formtree_card .MuiIcon-root svg").shouldHave(attributeMatching("data-src", ".*"+iconName+".*"));
+        $("#designer_formCardHeader button:nth-child(2)").shouldHave(text(newLang.toUpperCase()));
         $("#nav_button").should(exist).click();
         $("#designer_panel_menu ul li:nth-child(8)").click();
         $("#designer_tab_FormProperties tbody tr:nth-child(2)  button:nth-child(2)").click(); //Delete the selected language
