@@ -41,7 +41,8 @@ public class DataCaptureWithOneApprovalIncludingRejectAndDifferentUsersTest exte
         //Should Login as GUI TESTER 01
         shouldLogin(BaseTest.UserType.USER_01);
         open("/dashboard/D8ipXoYf-");
-        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
+        $("#formDashboardHeaderLeft").should(appear);
+        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
         $("#data-card-dialog_actions").should(appear);
         $("#dataContainer").should(exist);
         $("#textField_form-user-4993983d-0f44-4ae0-a4e7-84b5f550b86f").should(exist);
@@ -52,13 +53,15 @@ public class DataCaptureWithOneApprovalIncludingRejectAndDifferentUsersTest exte
         //Should Login as GUI TESTER 02
         shouldLogin(BaseTest.UserType.USER_02);
         open("/dashboard/D8ipXoYf-");
+        $("#formDashboardHeaderLeft").should(appear);
         $("#FormDashboardTasksCard div:nth-child(1) span[iconname='fas fa-times']").shouldBe(visible).shouldBe(enabled).click(); //Click on Reject
         $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
 
         //Should Login as GUI TESTER 01
         shouldLogin(BaseTest.UserType.USER_01);
         open("/dashboard/D8ipXoYf-");
-        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
+        $("#formDashboardHeaderLeft").should(appear);
+        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
         $("#data-card-dialog_actions").should(appear);
         $("#dataContainer").should(exist);
         $("#textField_form-user-4993983d-0f44-4ae0-a4e7-84b5f550b86f").should(exist);
@@ -69,6 +72,7 @@ public class DataCaptureWithOneApprovalIncludingRejectAndDifferentUsersTest exte
         //Should Login as GUI TESTER 02
         shouldLogin(BaseTest.UserType.USER_02);
         open("/dashboard/D8ipXoYf-");
+        $("#formDashboardHeaderLeft").should(appear);
         $("#FormDashboardTasksCard div:nth-child(1) span[iconname='fas fa-check']").shouldBe(visible).shouldBe(enabled).click();
         $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
 

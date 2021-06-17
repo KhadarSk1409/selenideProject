@@ -39,7 +39,7 @@ public class DataCaptureWithTwoApprovalTest extends BaseTest {
         $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Progress")); //Verify the Data Capture state
         $("#gridItemTasks").should(exist);
         $("#FormDashboardTasksCard .MuiCardContent-root").should(exist);
-        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
+        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
         $("#data-card-dialog_actions").should(appear);
         $("#dataContainer").should(exist);
         $("#textField_form-user-8210db0d-bed5-4657-805f-5e5b0c51ac7e").should(exist);
@@ -47,10 +47,10 @@ public class DataCaptureWithTwoApprovalTest extends BaseTest {
         $("#btnAcceptTask").click();
         $("#data-approve-reject-dialog").$("#btnConfirm").click();
         $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Approval")); //Verify the Data Capture state as In Approval
-        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='fas fa-check']").shouldBe(visible).click(); //First Approval
+        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='fas fa-check']").shouldBe(visible).click(); //First Approval
         $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Approval"));
-        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1)").shouldBe(visible).shouldHave(text("Additional approval needed. This record has already been approved by GUI Tester."));
-        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='fas fa-check']").click(); //Second Approval
+        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1)").shouldBe(visible).shouldHave(text("Additional approval needed. This record has already been approved by GUI Tester."));
+        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='fas fa-check']").click(); //Second Approval
         $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("Completed"));
         $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
 

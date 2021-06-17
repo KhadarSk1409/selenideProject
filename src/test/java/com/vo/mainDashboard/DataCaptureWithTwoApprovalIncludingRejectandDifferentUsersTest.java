@@ -43,7 +43,7 @@ public class DataCaptureWithTwoApprovalIncludingRejectandDifferentUsersTest exte
         shouldLogin(BaseTest.UserType.USER_01);
         open("/dashboard/sflEpUvhO");
         $("#formDashboardHeaderAppBar").should(exist);
-        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
+        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
         $("#data-card-dialog_actions").should(appear);
         $("#dataContainer").should(exist);
         $("#textField_form-user-65d469f8-0db9-45a4-90f2-ca983c738d75").should(exist);
@@ -72,7 +72,7 @@ public class DataCaptureWithTwoApprovalIncludingRejectandDifferentUsersTest exte
         shouldLogin(BaseTest.UserType.USER_01);
         open("/dashboard/sflEpUvhO");
         $("#formDashboardHeaderAppBar").should(exist);
-        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
+        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
         $("#data-card-dialog_actions").should(appear);
         $("#dataContainer").should(exist);
         $("#textField_form-user-65d469f8-0db9-45a4-90f2-ca983c738d75").should(exist);
