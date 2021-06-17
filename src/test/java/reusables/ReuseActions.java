@@ -85,7 +85,7 @@ public class ReuseActions extends BaseTest {
         $("#btnCreateForm").should(exist);
         $("#navFavoriteFormsItems .MuiListItem-root").should(exist);
         ElementsCollection listFavForms = $$("#navFavoriteFormsItems .MuiListItem-root");
-      //  listFavForms.shouldHave(CollectionCondition.sizeGreaterThan(1)); //Verify that Favorite form is available
+       listFavForms.shouldHave(CollectionCondition.sizeGreaterThanOrEqual(1)); //Verify that Favorite form is available
         listFavForms.get(0).click(); //Click on the Favorite form
         $("#full-width-tabpanel-MY_DATA").should(exist); //Navigated to Form Dashboard
     }
