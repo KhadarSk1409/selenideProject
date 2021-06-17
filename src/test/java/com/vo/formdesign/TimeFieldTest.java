@@ -26,9 +26,9 @@ public class TimeFieldTest extends BaseTest {
     protected static ThreadLocal<String> formName = ThreadLocal.withInitial(() -> "Time Field Test Form-Design Auto Test " + BROWSER_CONFIG.get() + " " + System.currentTimeMillis());
 
     enum TimeFieldOptionsIds {
-        timefield_label,
+        textfield_label,
         checkbox_disableLabel,
-        timefield_help,
+        textfield_help,
         checkbox_required,
 
         prop_hourMinuteSecond_hourMinuteSecond,
@@ -113,7 +113,7 @@ public class TimeFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(timefield_label)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(TimeFieldTest.TimeFieldOptionsIds.timefield_label.name()))
+            selectAndClear(By.id(TimeFieldTest.TimeFieldOptionsIds.textfield_label.name()))
                     .setValue(timefield_label).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(blockId).shouldHave(text(timefield_label)).waitUntil(appears, 4000);
@@ -134,7 +134,7 @@ public class TimeFieldTest extends BaseTest {
         //Help
         if (StringUtils.isNotEmpty(timefield_help)) {
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(TimeFieldTest.TimeFieldOptionsIds.timefield_help.name()))
+            selectAndClear(By.id(TimeFieldTest.TimeFieldOptionsIds.textfield_help.name()))
                     .setValue(timefield_help).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(blockId).shouldHave(text(timefield_help)).waitUntil(appears, 4000);
