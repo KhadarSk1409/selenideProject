@@ -1,16 +1,11 @@
 package com.vo.mainDashboard;
 
-import com.codeborne.selenide.Condition;
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
 
-import static com.codeborne.selenide.CollectionCondition.containExactTextsCaseSensitive;
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Verify the Form Properties")
@@ -20,7 +15,7 @@ public class EditFormPropertiesTest extends BaseTest {
     @DisplayName("Open the Form Properties Test form")
     @Order(1)
     public void openFormDashboard(){
-        open("/dashboard/x44uarePG");
+        open("/dashboard/sqJiKRUdB");
     }
 
     @Test
@@ -55,9 +50,9 @@ public class EditFormPropertiesTest extends BaseTest {
 
         //Verify the selected options
         $("#toDashboard").click(); //Click on Launchpad
-        open("/dashboard/x44uarePG");//Open the Form
+        open("/dashboard/sqJiKRUdB"); //Open the Form
         $("#formDashboardHeaderLeft").should(exist);
-        $("#btnEditFormDesign").should(exist).click();//Click on Edit Form Design
+        $("#btnEditFormDesign").should(exist).click(); //Click on Edit Form Design
         $("#formtree_card .MuiIcon-root svg").shouldHave(attributeMatching("data-src", ".*"+iconName+".*"));
         $("#designer_formCardHeader button:nth-child(2)").shouldHave(text(newLang.toUpperCase()));
         $("#nav_button").should(exist).click();
@@ -66,6 +61,8 @@ public class EditFormPropertiesTest extends BaseTest {
         $("#designer_tab_FormProperties tbody tr:nth-child(2) button:nth-child(1)").click();
         $("#btnFormDesignPublish").click(); //Click on Publish
         $("#form-publish-dialog").$("#btnConfirm").click();
+        $("#formDashboardHeaderLeft").should(exist);
+        $("#btnEditFormDesign").should(exist);
 
     }
 }
