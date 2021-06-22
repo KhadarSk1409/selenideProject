@@ -1,7 +1,9 @@
 row,col,col+AF8-span,text_label,text_help,edit_values,disableLabel,checkbox_required,checkbox_globalSelection,text_numberField_minCount,text_numberField_maxCount,checkbox_other_values,dropdown_direction
 1,1,,Checkbox group Label,,,,,,,,,
 1,2,,Help Text,This is Help Text,,X,,,,,,
-4,1,,Values edit,,"Male,Female",,,,,,,
+4,1,,Values edit 2,,"Male,Female",,,,,,,
+3,1,,Values edit 3,,"One, two, three",,,,,,,
+3,2,,Values edit 5,,"One, two, three, four, five",,,,,,,
 1,3,,Checkbox required,,,,X,,,,,
 1,4,,Dropdown Selection,,,,,,,,,vertical
 2,1,,Allow select/Deselect all,,,,,X,,,,

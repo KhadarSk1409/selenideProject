@@ -131,30 +131,48 @@ public class CheckboxgroupTest extends BaseTest {
 
         //Values
         if (StringUtils.isNotEmpty(edit_values)) {
-            String[] arr = edit_values.toString().split(",");
 
-            String strValue1 = arr[0];
-            String strValue2 = arr[1];
+            String[] arr = edit_values.split(",");
 
             $("#formelement_properties_card .editForm").should(exist).click(); //Click on edit value pen icon
             $("#form-value-list-card-dialog_content").should(exist); //Value List Editor window
 
-            //Double click on first Label cell:
-            $("div.ag-body-viewport .ag-center-cols-viewport .ag-row:nth-child(1) .ag-cell:nth-child(2)").should(exist).doubleClick();
-            $("div.ag-popup input.ag-input-field-input").setValue(strValue1).sendKeys(Keys.ENTER); //Enter the value in edit box
-            $("div.ag-body-viewport .ag-center-cols-viewport .ag-row:nth-child(1) .ag-cell:nth-child(2)").shouldHave(text(strValue1));
+            //Deleting the existing rows:
+            while ($("div.ag-pinned-right-cols-container .ag-row div div button").exists()) {
+                $("div.ag-pinned-right-cols-container .ag-row div div button").waitUntil(appear, 5000);
+                $("div.ag-pinned-right-cols-container .ag-row div div button").click();
+            }
 
-            //Double click on second Label cell:
-            $("div.ag-body-viewport .ag-center-cols-viewport .ag-row:nth-child(2) .ag-cell:nth-child(2)").should(exist).doubleClick();
-            $("div.ag-popup input.ag-input-field-input").setValue(strValue2).sendKeys(Keys.ENTER); //Enter the value in edit box
-            $("div.ag-body-viewport .ag-center-cols-viewport .ag-row:nth-child(2) .ag-cell:nth-child(2)").shouldHave(text(strValue2));
+            //Add rows in value list editor for the number of labels
+            if (!$("div.ag-pinned-right-cols-container .ag-row").exists()) {
+                for (int x = 0; x < arr.length; x++) {
+                    $("#value_list_values span button").should(exist).click();
+                }
+            }
+
+            for (int i = 0; i < arr.length; i++) {
+                int j = i + 1;
+
+                //Click on label option
+                String strLabel = "div.ag-body-viewport .ag-center-cols-viewport .ag-row:nth-child(" + j + ") .ag-cell:nth-child(2)";
+                $(strLabel).should(exist).doubleClick();
+                String str = arr[i].toString();
+                $("div.ag-popup input.ag-input-field-input").sendKeys(Keys.BACK_SPACE); //Clear the default value in Currencies field
+                $("div.ag-popup input.ag-input-field-input").setValue(str).sendKeys(Keys.ENTER);
+                $(strLabel).shouldHave(text(str));
+            }
+
+            //Select a record as primary
+            $("div.ag-pinned-left-cols-container .ag-row:nth-child(1) input").should(exist).click();
 
             //Click on close button
             $("#form-value-list-card-dialog_actions #btnClosePropertiesForm").should(exist).click();
 
-            //Verify that values are reflecting in the block:
-            $(blockId).should(exist).shouldHave(text(strValue1));
-            $(blockId).should(exist).shouldHave(text(strValue2));
+            Arrays.asList(edit_values.split(",")).forEach(labelvalue -> {
+                //Verify that values are reflecting in the block:
+                $(blockId).should(exist).should(exist).shouldHave(text(labelvalue));
+            });
+
         }
 
         //Hide(disable) Label
