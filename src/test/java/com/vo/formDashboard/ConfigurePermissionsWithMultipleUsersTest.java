@@ -22,7 +22,7 @@ public class ConfigurePermissionsWithMultipleUsersTest extends BaseTest {
         $("#formDashboardHeaderAppBar .btnMoreOptionsMenu").should(exist).click(); //Menu button on Form Dashboard
         $("#optionsMenu ul li:nth-child(2)").should(exist).shouldHave(Condition.text("Edit Form Permissions")).click(); //Edit permissions submenu
         $("#form-wizard-dialog-title").should(appear);
-        $(".fa-plus").should(exist).click();
+        $("#form_authorization_container .fa-plus").should(exist).click();
         $("#alert-dialog-title").should(appear);
         $("#autocomplete_select_user").should(exist).click();
         $(".MuiAutocomplete-popper").should(appear);
