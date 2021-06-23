@@ -67,7 +67,7 @@ public class CheckboxgroupTest extends BaseTest {
     }
 
     @Order(2)
-    @DisplayName("createNewFormulaDesignForTextfields")
+    @DisplayName("createNewFormulaDesignForCheckBoxGroupfields")
     @ParameterizedTest
     @CsvFileSource(resources = "/checkboxgroup_field_test_data.csv", numLinesToSkip = 1)
     public void alltextfield(Integer row, Integer col, Integer colSpan,
