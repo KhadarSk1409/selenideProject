@@ -10,13 +10,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
-
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static java.lang.Integer.parseInt;
@@ -73,6 +71,7 @@ public class CheckboxgroupTest extends BaseTest {
     public void alltextfield(Integer row, Integer col, Integer colSpan,
                              String text_label,
                              String text_help,
+                             String preselection_value,
                              String edit_values,
                              String disableLabel,
                              String checkbox_required,
@@ -81,6 +80,7 @@ public class CheckboxgroupTest extends BaseTest {
                              String text_numberField_maxCount,
                              String checkbox_other_values,
                              String dropdown_direction
+
 
     ) {
         String blockId = "#block-loc_en-GB-r_" + row + "-c_" + col;
@@ -121,7 +121,6 @@ public class CheckboxgroupTest extends BaseTest {
 
         //Help
         if (StringUtils.isNotEmpty(text_help)) {
-            // $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(CheckboxgroupTest.CheckboxgroupIds.textfield_help.name()))
                     .setValue(text_help).sendKeys(Keys.TAB);
@@ -138,15 +137,19 @@ public class CheckboxgroupTest extends BaseTest {
             $("#form-value-list-card-dialog_content").should(exist); //Value List Editor window
 
             //Deleting the existing rows:
-            while ($("div.ag-pinned-right-cols-container .ag-row div div button").exists()) {
-                $("div.ag-pinned-right-cols-container .ag-row div div button").waitUntil(appear, 5000);
-                $("div.ag-pinned-right-cols-container .ag-row div div button").click();
+            List<SelenideElement> delBtn = $$("div.ag-pinned-right-cols-container .ag-row .fa-trash-alt");
+            int countDelBtn = $$("div.ag-pinned-right-cols-container .ag-row .fa-trash-alt").size();
+            for (int n = countDelBtn; n >= 1; n--) {
+                SelenideElement deleteBtn = delBtn.get(n);
+                String strDeleteBtn = ".ag-row:nth-child("+n+") .fa-trash-alt"; //Delete the n th row
+                $(strDeleteBtn).click();
+                $(strDeleteBtn).waitUntil(disappear, 10000);
             }
 
             //Add rows in value list editor for the number of labels
             if (!$("div.ag-pinned-right-cols-container .ag-row").exists()) {
                 for (int x = 0; x < arr.length; x++) {
-                    $("#value_list_values span button").should(exist).click();
+                    $("#value_list_values button .fa-plus").should(exist).click();
                 }
             }
 
@@ -157,13 +160,18 @@ public class CheckboxgroupTest extends BaseTest {
                 String strLabel = "div.ag-body-viewport .ag-center-cols-viewport .ag-row:nth-child(" + j + ") .ag-cell:nth-child(2)";
                 $(strLabel).should(exist).doubleClick();
                 String str = arr[i].toString();
-                $("div.ag-popup input.ag-input-field-input").sendKeys(Keys.BACK_SPACE); //Clear the default value in Currencies field
+                $("div.ag-popup input.ag-input-field-input").sendKeys(Keys.BACK_SPACE); //Clear the default value in label field
                 $("div.ag-popup input.ag-input-field-input").setValue(str).sendKeys(Keys.ENTER);
                 $(strLabel).shouldHave(text(str));
-            }
 
-            //Select a record as primary
-            $("div.ag-pinned-left-cols-container .ag-row:nth-child(1) input").should(exist).click();
+                //Select the checkbox for the primary selection value row
+                if (StringUtils.isNotEmpty(preselection_value)) {
+                    if (preselection_value.equals(str)) {
+                        $("div.ag-pinned-left-cols-container .ag-row:nth-child(" + j + ") input").should(exist).click();
+                    }
+                }
+
+            }
 
             //Click on close button
             $("#form-value-list-card-dialog_actions #btnClosePropertiesForm").should(exist).click();
