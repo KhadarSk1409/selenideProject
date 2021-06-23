@@ -71,8 +71,8 @@ public class CheckboxgroupTest extends BaseTest {
     public void alltextfield(Integer row, Integer col, Integer colSpan,
                              String text_label,
                              String text_help,
-                             String preselection_value,
                              String edit_values,
+                             String preselection_value,
                              String disableLabel,
                              String checkbox_required,
                              String checkbox_globalSelection,
@@ -131,7 +131,7 @@ public class CheckboxgroupTest extends BaseTest {
         //Values
         if (StringUtils.isNotEmpty(edit_values)) {
 
-            String[] arr = edit_values.split(",");
+            String[] values = edit_values.split(",");
 
             $("#formelement_properties_card .editForm").should(exist).click(); //Click on edit value pen icon
             $("#form-value-list-card-dialog_content").should(exist); //Value List Editor window
@@ -140,7 +140,6 @@ public class CheckboxgroupTest extends BaseTest {
             List<SelenideElement> delBtn = $$("div.ag-pinned-right-cols-container .ag-row .fa-trash-alt");
             int countDelBtn = $$("div.ag-pinned-right-cols-container .ag-row .fa-trash-alt").size();
             for (int n = countDelBtn; n >= 1; n--) {
-                SelenideElement deleteBtn = delBtn.get(n);
                 String strDeleteBtn = ".ag-row:nth-child("+n+") .fa-trash-alt"; //Delete the n th row
                 $(strDeleteBtn).click();
                 $(strDeleteBtn).waitUntil(disappear, 10000);
@@ -148,39 +147,47 @@ public class CheckboxgroupTest extends BaseTest {
 
             //Add rows in value list editor for the number of labels
             if (!$("div.ag-pinned-right-cols-container .ag-row").exists()) {
-                for (int x = 0; x < arr.length; x++) {
+                for (int x = 0; x < values.length; x++) {
                     $("#value_list_values button .fa-plus").should(exist).click();
                 }
             }
 
-            for (int i = 0; i < arr.length; i++) {
-                int j = i + 1;
+            List<String> preselected = new ArrayList<>();
+            if(StringUtils.isNotEmpty(preselection_value)) {
+                preselected = Arrays.asList(preselection_value.split(","));
+            }
 
+            for (int i = 1; i <= values.length; i++) {
                 //Click on label option
-                String strLabel = "div.ag-body-viewport .ag-center-cols-viewport .ag-row:nth-child(" + j + ") .ag-cell:nth-child(2)";
-                $(strLabel).should(exist).doubleClick();
-                String str = arr[i].toString();
+                String labelSelector = "div.ag-body-viewport .ag-center-cols-viewport .ag-row:nth-child(" + i + ") .ag-cell:nth-child(2)";
+                $(labelSelector).should(exist).doubleClick();
+                String labelValue = values[i-1];
                 $("div.ag-popup input.ag-input-field-input").sendKeys(Keys.BACK_SPACE); //Clear the default value in label field
-                $("div.ag-popup input.ag-input-field-input").setValue(str).sendKeys(Keys.ENTER);
-                $(strLabel).shouldHave(text(str));
+                $("div.ag-popup input.ag-input-field-input").setValue(labelValue).sendKeys(Keys.ENTER);
+                $(labelSelector).shouldHave(text(labelValue));
 
-                //Select the checkbox for the primary selection value row
-                if (StringUtils.isNotEmpty(preselection_value)) {
-                    if (preselection_value.equals(str)) {
-                        $("div.ag-pinned-left-cols-container .ag-row:nth-child(" + j + ") input").should(exist).click();
-                    }
+                if(preselected.contains(labelValue)) {
+                    String checkboxSelector = "div.ag-pinned-left-cols-container .ag-row:nth-child(" + i + ") input";
+                    $(checkboxSelector).should(exist).click();
+                    $(checkboxSelector).shouldBe(checked);
                 }
-
             }
 
             //Click on close button
             $("#form-value-list-card-dialog_actions #btnClosePropertiesForm").should(exist).click();
 
-            Arrays.asList(edit_values.split(",")).forEach(labelvalue -> {
-                //Verify that values are reflecting in the block:
-                $(blockId).should(exist).should(exist).shouldHave(text(labelvalue));
-            });
+            //verify preselection on designer surface
+            $(blockId).should(exist);
+            for(int i=1; i <= values.length; i++) {
+                String labelValue = values[i-1];
+                $(blockId).find("fieldset label:nth-child(" + i + ")").shouldHave(text(labelValue));
 
+                if(preselected.contains(labelValue)) {
+                    $(blockId).find("fieldset label:nth-child(" + i + ") input").shouldBe(checked);
+                } else {
+                    $(blockId).find("fieldset label:nth-child(" + i + ") input").shouldNotBe(checked);
+                }
+            }
         }
 
         //Hide(disable) Label
