@@ -17,11 +17,15 @@ public class FormPublicationProcessWithMultipleUsersTest extends BaseTest {
 
     @Test
     @DisplayName("Verify Create a form and publish with multiple users")
-    public void publicationProcess() {
+    public void publicationProcess()  {
         shouldLogin(UserType.USER_01);
         $("#btnCreateForm").should(exist).click(); //Click on Create New Form
         $("#dlgFormFormWizard").should(appear);
-        $("#wizard-formTitle").should(exist).setValue("Form Publication Process Test"); //Enter the Title
+        $("#wizard-formTitle").should(exist).setValue("FORM PUBLICATION PROCESS"); //Enter the Title
+        $("#selFormLabelsControl .MuiChip-label").has(text("guitest"));
+        $("#selLabel ~ .MuiAutocomplete-endAdornment .MuiAutocomplete-popupIndicator").should(exist).click();
+        $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("guitest"), 8000);
+        $$(".MuiAutocomplete-popper li").findBy(text("guitest")).click(); //Click on the selected Label
         $("#wizard-createFormButton").should(exist).shouldBe(enabled).click(); //Click on Create Form
         $("#formDashboardHeaderLeft").should(appear);
         $("#block-loc_en-GB-r_1-c_1").should(exist).click(); //Click on + to add a field
@@ -51,8 +55,19 @@ public class FormPublicationProcessWithMultipleUsersTest extends BaseTest {
         $("#form-publish-dialog").$("#btnConfirm").should(exist).shouldBe(enabled).click();
 
         shouldLogin(UserType.USER_02); //Should login as GUI Tester 02
-        $("#tasksCard tbody tr:nth-child(3) td:nth-child(3)").shouldHave(value("Form Publication Process Test")).should(exist);
-        $("#tasksCard  tbody tr:nth-child(3) td:nth-child(6) span:nth-child(2) .fa-check").click(); //Click on Quick Approve
+        $("#tasksCard tbody tr:nth-child(3) td:nth-child(3)")
+                .shouldHave(value("FORM PUBLICATION PROCESS")).should(exist);
+        $("#tasksCard  tbody tr:nth-child(3) td:nth-child(6) span:nth-child(2) .fa-check")
+                .should(exist).shouldBe(enabled).click(); //Click on Quick Approve
+        $("#tasksCard  tbody tr:nth-child(3) td:nth-child(6) span:nth-child(2)").shouldNot(exist);
 
+        //Verify the form approved by GUI Tester 02 is Published or not
+        shouldLogin(UserType.USER_01); //Should login as GUI Tester 01
+        $("#formListTable tbody tr:nth-child(1) td:nth-child(3)").should(exist)
+                .shouldHave(Condition.text("Published"));
+
+        //Search and delete Forms with guitest label
+        applySearchForTestForms();
+        deleteForm();
     }
 }
