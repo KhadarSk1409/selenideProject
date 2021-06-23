@@ -10,11 +10,13 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
+
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static java.lang.Integer.parseInt;
@@ -140,7 +142,7 @@ public class CheckboxgroupTest extends BaseTest {
             List<SelenideElement> delBtn = $$("div.ag-pinned-right-cols-container .ag-row .fa-trash-alt");
             int countDelBtn = $$("div.ag-pinned-right-cols-container .ag-row .fa-trash-alt").size();
             for (int n = countDelBtn; n >= 1; n--) {
-                String strDeleteBtn = ".ag-row:nth-child("+n+") .fa-trash-alt"; //Delete the n th row
+                String strDeleteBtn = ".ag-row:nth-child(" + n + ") .fa-trash-alt"; //Delete the n th row
                 $(strDeleteBtn).click();
                 $(strDeleteBtn).waitUntil(disappear, 10000);
             }
@@ -153,7 +155,7 @@ public class CheckboxgroupTest extends BaseTest {
             }
 
             List<String> preselected = new ArrayList<>();
-            if(StringUtils.isNotEmpty(preselection_value)) {
+            if (StringUtils.isNotEmpty(preselection_value)) {
                 preselected = Arrays.asList(preselection_value.split(","));
             }
 
@@ -161,12 +163,12 @@ public class CheckboxgroupTest extends BaseTest {
                 //Click on label option
                 String labelSelector = "div.ag-body-viewport .ag-center-cols-viewport .ag-row:nth-child(" + i + ") .ag-cell:nth-child(2)";
                 $(labelSelector).should(exist).doubleClick();
-                String labelValue = values[i-1];
+                String labelValue = values[i - 1];
                 $("div.ag-popup input.ag-input-field-input").sendKeys(Keys.BACK_SPACE); //Clear the default value in label field
                 $("div.ag-popup input.ag-input-field-input").setValue(labelValue).sendKeys(Keys.ENTER);
                 $(labelSelector).shouldHave(text(labelValue));
 
-                if(preselected.contains(labelValue)) {
+                if (preselected.contains(labelValue)) {
                     String checkboxSelector = "div.ag-pinned-left-cols-container .ag-row:nth-child(" + i + ") input";
                     $(checkboxSelector).should(exist).click();
                     $(checkboxSelector).shouldBe(checked);
@@ -178,11 +180,10 @@ public class CheckboxgroupTest extends BaseTest {
 
             //verify preselection on designer surface
             $(blockId).should(exist);
-            for(int i=1; i <= values.length; i++) {
-                String labelValue = values[i-1];
+            for (int i = 1; i <= values.length; i++) {
+                String labelValue = values[i - 1];
                 $(blockId).find("fieldset label:nth-child(" + i + ")").shouldHave(text(labelValue));
-
-                if(preselected.contains(labelValue)) {
+                if (preselected.contains(labelValue)) {
                     $(blockId).find("fieldset label:nth-child(" + i + ") input").shouldBe(checked);
                 } else {
                     $(blockId).find("fieldset label:nth-child(" + i + ") input").shouldNotBe(checked);
@@ -215,7 +216,6 @@ public class CheckboxgroupTest extends BaseTest {
 
         //Enter Minimum Value
         if (StringUtils.isNotEmpty(text_numberField_minCount)) {
-            //    $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(CheckboxgroupTest.CheckboxgroupIds.numberField_minCount.name()))
                     .setValue(text_numberField_minCount).sendKeys(Keys.TAB);
