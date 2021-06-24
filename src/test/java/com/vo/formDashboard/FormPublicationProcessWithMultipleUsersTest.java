@@ -51,6 +51,7 @@ public class FormPublicationProcessWithMultipleUsersTest extends BaseTest {
         $$(".MuiAutocomplete-popper li").findBy(text("GUI Tester 02guitester02@visualorbit.com")).click(); //Click on the selected user
         $("#sw_first_UserCanOverwrite").should(exist).click();
         $("#btnNext").should(exist).click(); //Click on Next
+        $("#designer_tab_Publications div:nth-child(7)").shouldHave(text("Ready and Save"));
         $("#btnSave").should(exist).click(); //Click on Save
         $("#btnFormDesignPublish").should(exist).click();
         $("#form-publish-dialog").$("#btnConfirm").should(exist).shouldBe(enabled).click();
@@ -60,13 +61,12 @@ public class FormPublicationProcessWithMultipleUsersTest extends BaseTest {
         SelenideElement table = $("#tasksCard .MuiTableBody-root").shouldBe(visible);
 
         ElementsCollection rows = table.$$("tr");
-        System.out.println(" Form Count is " + rows.size());
+        System.out.println(" Tasks Count is " + rows.size());
 
         if (rows.size() == 0) {
-            System.out.println("No Forms available");
+            System.out.println("No Tasks available");
             return;
         }
-
         rows.forEach(rowEl -> {
             String form = rowEl.$("td:nth-child(3)").getText();
 
@@ -74,16 +74,25 @@ public class FormPublicationProcessWithMultipleUsersTest extends BaseTest {
                 rowEl.$(".fa-check").closest("button").should(exist).shouldBe(enabled).click();
             }
         });
+        $("#toDashboard").should(exist).click();
 
         //Verify the form approved by GUI Tester 02 is Published or not
         shouldLogin(UserType.USER_01); //Should login as GUI Tester 01
-        $("#formListTable tbody tr:nth-child(1) td:nth-child(2)")
-                .shouldHave(value(actualFormName)).should(exist);
-        $("#formListTable tbody tr:nth-child(1) td:nth-child(3)").should(exist)
-                .shouldHave(Condition.text("Published"));
 
-        //Search and delete Forms with guitest label
-        applySearchForTestForms();
-        deleteForm();
+        SelenideElement formListTable = $("#formListTable .MuiTableBody-root").shouldBe(visible);
+
+        ElementsCollection formRows = formListTable.$$("tr");
+        System.out.println(" Form Count is " + formRows.size());
+
+        if (formRows.size() == 0) {
+            System.out.println("No Forms available");
+            return;
+        }
+        formRows.forEach(rowEl -> {
+            String finalFormName = rowEl.$("td:nth-child(2)").getText();
+            if (finalFormName.equals(actualFormName)) {
+                rowEl.$("td:nth-child(3)").shouldHave(Condition.text("Published"));
+            }
+        });
     }
 }
