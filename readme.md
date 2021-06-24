@@ -29,6 +29,9 @@ Fill environment variables. Instead of test user you can use your personal accou
 [<img src="docs/readme/05_env_variables.png" width="500px" />](docs/readme/05_env_variables.png)  
 Example values: 
 ```
+TEST_USER_EMAIL_01=guitester01@visualorbit.com;  TEST_USER_PASSWORD_01=GU!Tester#O1;
+TEST_USER_EMAIL_02=guitester02@visualorbit.com;  TEST_USER_PASSWORD_02=GU!Tester#O1;
+TEST_USER_EMAIL_03=guitester03@visualorbit.com;  TEST_USER_PASSWORD_03=GU!Tester#O1;
 TEST_USER_EMAIL=guitester@visualorbit.com;  TEST_USER_PASSWORD=V1su#l0rbit;  
 TEST_BASE_URL=https://visualorbit.fireo.net
 ```
