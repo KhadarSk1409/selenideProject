@@ -78,6 +78,7 @@ public class CheckboxgroupTest extends BaseTest {
                              String disableLabel,
                              String checkbox_required,
                              String checkbox_globalSelection,
+                             String text_minCount_morethan3,
                              String text_numberField_minCount,
                              String text_numberField_maxCount,
                              String checkbox_other_values,
@@ -211,12 +212,22 @@ public class CheckboxgroupTest extends BaseTest {
             //$(checkBoxId + " input").shouldHave(value("true"));
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
+            $(blockId).should(exist).shouldHave(text("*"));
         }
 
 
         //Enter Minimum Value
         if (StringUtils.isNotEmpty(text_numberField_minCount)) {
             String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+
+            //Verify that if user enters more than 3 in Min count, an error should be shown on the Values:
+            selectAndClear(By.id(SelectTest.SelectIds.numberField_minCount.name()))
+                    .setValue(text_minCount_morethan3).sendKeys(Keys.TAB);
+            $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
+
+            String errorShown = "The values count 3 is less than minimum count "+text_minCount_morethan3;
+            $("#panel1a-content div:nth-child(5) p.Mui-error").should(exist).shouldHave(text(errorShown));
+
             selectAndClear(By.id(CheckboxgroupTest.CheckboxgroupIds.numberField_minCount.name()))
                     .setValue(text_numberField_minCount).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased

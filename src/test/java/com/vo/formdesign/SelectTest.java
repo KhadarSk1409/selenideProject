@@ -230,7 +230,7 @@ public class SelectTest extends BaseTest {
                     .setValue(text_minCount_morethan3).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
 
-            String errorShown = "The values count " + text_minCount_morethan3 + " is less than minimum count 4";
+            String errorShown = "The values count 3 is less than minimum count "+text_minCount_morethan3;
             $("#panel1a-content div:nth-child(5) p.Mui-error").should(exist).shouldHave(text(errorShown));
 
             selectAndClear(By.id(SelectTest.SelectIds.numberField_minCount.name()))

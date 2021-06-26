@@ -203,9 +203,9 @@ public class RadioGroupTest extends BaseTest {
             String checkBoxId = "#" + RadioGroupTest.RadiogroupIds.checkbox_required.name();
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             $(checkBoxId).shouldBe(visible).click();
-            //$(checkBoxId + " input").shouldHave(value("true"));
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
+            $(blockId).should(exist).shouldHave(text("*"));
         }
 
         //Other values:
