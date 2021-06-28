@@ -223,9 +223,9 @@ public class SelectTest extends BaseTest {
         //Enter Minimum Count
         if (StringUtils.isNotEmpty(text_numberField_minCount)) {
             String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
             selectAndClear(By.id(SelectTest.SelectIds.numberField_minCount.name()))
                     .setValue(text_numberField_minCount).sendKeys(Keys.TAB);
+            $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
             $("#numberField_minCount").shouldHave(value(text_numberField_minCount)).waitUntil(appears, 4000);
         }
 
