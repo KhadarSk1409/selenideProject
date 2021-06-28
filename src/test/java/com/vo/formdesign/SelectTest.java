@@ -86,7 +86,6 @@ public class SelectTest extends BaseTest {
                              String disableLabel,
                              String checkbox_required,
                              String checkbox_allow_multiple,
-                             String text_minCount_morethan3,
                              String text_numberField_minCount,
                              String text_numberField_maxCount,
                              String dropdown_direction
@@ -224,15 +223,7 @@ public class SelectTest extends BaseTest {
         //Enter Minimum Count
         if (StringUtils.isNotEmpty(text_numberField_minCount)) {
             String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-
-            //Verify that if user enters more than 3 in Min count, an error should be shown on the Values:
-            selectAndClear(By.id(SelectTest.SelectIds.numberField_minCount.name()))
-                    .setValue(text_minCount_morethan3).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
-
-            String errorShown = "The values count 3 is less than minimum count "+text_minCount_morethan3;
-            $("#panel1a-content div:nth-child(5) p.Mui-error").should(exist).shouldHave(text(errorShown));
-
             selectAndClear(By.id(SelectTest.SelectIds.numberField_minCount.name()))
                     .setValue(text_numberField_minCount).sendKeys(Keys.TAB);
             $("#numberField_minCount").shouldHave(value(text_numberField_minCount)).waitUntil(appears, 4000);
