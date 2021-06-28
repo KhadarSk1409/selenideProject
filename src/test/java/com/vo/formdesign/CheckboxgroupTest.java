@@ -214,26 +214,6 @@ public class CheckboxgroupTest extends BaseTest {
             $(blockId).should(exist).shouldHave(text("*"));
         }
 
-
-        //Enter Minimum Value
-        if (StringUtils.isNotEmpty(text_numberField_minCount)) {
-            String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(CheckboxgroupTest.CheckboxgroupIds.numberField_minCount.name()))
-                    .setValue(text_numberField_minCount).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
-            $("#numberField_minCount").shouldHave(value(text_numberField_minCount)).waitUntil(appears, 4000);
-        }
-
-        //Enter Maximum Value
-        if (StringUtils.isNotEmpty(text_numberField_maxCount)) {
-            //    $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(CheckboxgroupIds.numberField_maxCount.name()))
-                    .setValue(text_numberField_maxCount).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
-            $("#numberField_maxCount").shouldHave(value(text_numberField_maxCount)).waitUntil(appears, 4000);
-        }
-
         //Allow select:
         if (StringUtils.isNotEmpty(checkbox_globalSelection)) {
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
@@ -241,6 +221,60 @@ public class CheckboxgroupTest extends BaseTest {
             $(checkBoxId).shouldBe(visible).click();
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
+        }
+
+
+        //Enter Minimum Value
+        if (StringUtils.isNotEmpty(text_numberField_minCount)) {
+            $("#formelement_properties_card .editForm").should(exist).click(); //Click on edit value pen icon
+            $("#form-value-list-card-dialog_content").should(exist); //Value List Editor window
+
+            List<SelenideElement> rowsInListEditor = $$("#myGrid div.ag-center-cols-container div.ag-row"); //fetch number of rows in List editor
+            int rowsCount = rowsInListEditor.size();
+
+            //Click on close button
+            $("#form-value-list-card-dialog_actions #btnClosePropertiesForm").should(exist).click();
+            $(By.id(CheckboxgroupTest.CheckboxgroupIds.numberField_minCount.name())).should(exist); //Verify that Minimum count field exists
+
+            String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            selectAndClear(By.id(CheckboxgroupTest.CheckboxgroupIds.numberField_minCount.name()))
+                    .setValue(text_numberField_minCount).sendKeys(Keys.TAB);
+            $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
+
+            $("#numberField_minCount").shouldHave(value(text_numberField_minCount)).waitUntil(appears, 4000);
+
+            int int_text_numberField_minCount = parseInt(text_numberField_minCount);
+
+            //Verify that if the Min count is less than rowCount, then error should be shown
+            if(int_text_numberField_minCount < rowsCount){
+                String errorMinCount1 = "The values count "+rowsCount+" is less than minimum count "+text_numberField_minCount;
+                $("#panel1a-content div:nth-child(5) p.Mui-error").should(exist).shouldHave(text(errorMinCount1));
+            }
+
+        }
+
+        //Enter Maximum Value
+        if (StringUtils.isNotEmpty(text_numberField_maxCount)) {
+            String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            selectAndClear(By.id(CheckboxgroupIds.numberField_maxCount.name()))
+                    .setValue(text_numberField_maxCount).sendKeys(Keys.TAB);
+            $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
+
+            $("#numberField_maxCount").shouldHave(value(text_numberField_maxCount)).waitUntil(appears, 4000);
+
+            //Verify that if Max count is less than Min count, relevant errors should be shown:
+            if(StringUtils.isNotEmpty(text_numberField_minCount)) {
+                int int_text_numberField_minCount = parseInt(text_numberField_minCount);
+                int int_text_numberField_maxCount = parseInt(text_numberField_maxCount);
+                if(int_text_numberField_minCount > int_text_numberField_maxCount){
+                    String errorMaxCount1 = "The maximum value "+text_numberField_maxCount+" is less than minimum value "+text_numberField_minCount;
+                    $("#panel1a-content div:nth-child(5) p.Mui-error").should(exist).shouldHave(text(errorMaxCount1));
+
+                    String errorMaxCount2 = "The maximum value "+text_numberField_maxCount+" is less than minimum value "+text_numberField_minCount;
+                    $("#panel2a-content div:nth-child(5) p.Mui-error").should(exist).shouldHave(text(errorMaxCount2));
+                }
+            }
+
         }
 
         //Other values:
