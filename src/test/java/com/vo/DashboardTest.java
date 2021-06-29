@@ -29,7 +29,7 @@ public class DashboardTest extends BaseTest {
         $("#platformNews").should(appear);
         $("#tasksCard").should(appear);
         $("#lastUsedListTable").should(appear);
-        $("#formRelatedTabs").should(appear);
+        $("#formRelatedTabsCard").should(appear);
     }
 
 

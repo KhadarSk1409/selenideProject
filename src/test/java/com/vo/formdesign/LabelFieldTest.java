@@ -40,7 +40,7 @@ public class LabelFieldTest extends BaseTest {
         $("#li-template-LabelField-05").should(appear);
         // $("#li-template-LabelField-05").doubleClick();
 //        $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-        $("#formelement_properties_card").should(appear);
+        $("#formelement_properties_card").should(exist);
         $(blockId).shouldBe(visible).click();
         $("#li-template-LabelField-05").should(appear).click();
         $("#textfield_value").should(appear);

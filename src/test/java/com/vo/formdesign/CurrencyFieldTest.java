@@ -108,7 +108,7 @@ public class CurrencyFieldTest extends BaseTest {
         $(blockId).shouldBe(visible).click();
         $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
         $("#li-template-CurrencyField-05").should(appear).click();
-        $("#formelement_properties_card").should(appear);
+        $("#formelement_properties_card").should(exist);
 
         if (colSpan != null && colSpan > 1) {
             int prevWidth = $(blockId).getRect().getWidth();
