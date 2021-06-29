@@ -18,24 +18,24 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static java.lang.Integer.parseInt;
 import static reusables.ReuseActions.createNewForm;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@DisplayName("Checkboxgroup Tests")
-public class CheckboxgroupTest extends BaseTest {
+@DisplayName("Select Tests")
+public class SelectTest extends BaseTest {
 
-    enum CheckboxgroupIds {
+    enum SelectIds {
         textfield_label,
         checkbox_disableLabel,
         textfield_help,
         checkbox_required,
         property_select_direction,
-        checkbox_globalSelection,
         numberField_minCount,
         numberField_maxCount,
-        checkbox_other;
+        checkbox_multiple;
     }
 
     @Test
@@ -50,38 +50,49 @@ public class CheckboxgroupTest extends BaseTest {
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Initial version
         $(blockId).shouldBe(visible).click();
         $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
-        $("#li-template-CheckboxGroupField-03").should(appear).click();
+
+        //Click on Show More
+        $("#template_basis_list").find(byText("Show More")).should(exist).click();
+
+        $("#li-template-SelectField-04").should(appear).click();
         $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
         $("#formelement_properties_card").should(appear);
 
         $("#panel2a-header").should(exist).click(); //Advanced section dropdown
 
         //options for text field should exist:
-        Arrays.asList(CheckboxgroupTest.CheckboxgroupIds.values()).forEach(textFieldId -> $(By.id(textFieldId.name())).shouldBe(visible));
+        Arrays.asList(SelectTest.SelectIds.values()).forEach(textFieldId -> $(By.id(textFieldId.name())).shouldBe(visible));
+
+        //Verify that initial value in Label field is 'Select':
+        $("#textfield_label").should(exist).shouldHave(text("Select"));
+
+        //Verify that initially the Minimum count field is disabled
+        $("#numberField_minCount").shouldBe(disabled);
+
+        //Verify that initially the Maximum count field is disabled
+        $("#numberField_minCount").shouldBe(disabled);
 
         //Verify that initial value in Direction dropdown is Horizontal
-        $("#property_select_direction").should(exist).shouldHave(text("Horizontal"));
+        //  $("#property_select_direction").should(exist).shouldHave(text("Horizontal")); //Needs to be removed for Select
 
         $("#blockButtonDelete").shouldBe(visible).click();
-        $("#li-template-CheckboxGroupField-03").should(disappear);
+        $("#li-template-SelectField-04").should(disappear);
     }
 
     @Order(2)
-    @DisplayName("createNewFormulaDesignForCheckBoxGroupfields")
+    @DisplayName("createNewFormulaDesignForSelect")
     @ParameterizedTest
-    @CsvFileSource(resources = "/checkboxgroup_field_test_data.csv", numLinesToSkip = 1)
+    @CsvFileSource(resources = "/select_field_test_data.csv", numLinesToSkip = 1)
     public void alltextfield(Integer row, Integer col, Integer colSpan,
                              String text_label,
                              String text_help,
+                             String disableLabel,
                              String edit_values,
                              String preselection_value,
-                             String disableLabel,
                              String checkbox_required,
-                             String checkbox_globalSelection,
+                             String checkbox_allow_multiple,
                              String text_numberField_minCount,
-                             String text_numberField_maxCount,
-                             String checkbox_other_values,
-                             String dropdown_direction
+                             String text_numberField_maxCount
 
 
     ) {
@@ -95,7 +106,7 @@ public class CheckboxgroupTest extends BaseTest {
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
         $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
-        $("#li-template-CheckboxGroupField-03").should(appear).click();
+        $("#li-template-SelectField-04").should(appear).click();
         $("#formelement_properties_card").should(appear);
 
         if (colSpan != null && colSpan > 1) {
@@ -114,7 +125,7 @@ public class CheckboxgroupTest extends BaseTest {
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            selectAndClear(By.id(CheckboxgroupTest.CheckboxgroupIds.textfield_label.name()))
+            selectAndClear(By.id(SelectTest.SelectIds.textfield_label.name()))
                     .setValue(text_label).sendKeys(Keys.TAB);
             $(blockId).should(exist);
             $(blockId).shouldHave(text(text_label)).waitUntil(appears, 4000);
@@ -124,7 +135,7 @@ public class CheckboxgroupTest extends BaseTest {
         //Help
         if (StringUtils.isNotEmpty(text_help)) {
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(CheckboxgroupTest.CheckboxgroupIds.textfield_help.name()))
+            selectAndClear(By.id(SelectTest.SelectIds.textfield_help.name()))
                     .setValue(text_help).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(blockId).shouldHave(text(text_help)).waitUntil(appears, 4000);
@@ -182,11 +193,14 @@ public class CheckboxgroupTest extends BaseTest {
             $(blockId).should(exist);
             for (int i = 1; i <= values.length; i++) {
                 String labelValue = values[i - 1];
-                $(blockId).find("fieldset label:nth-child(" + i + ")").shouldHave(text(labelValue));
                 if (preselected.contains(labelValue)) {
-                    $(blockId).find("fieldset label:nth-child(" + i + ") input").shouldBe(checked);
+                    // $(blockId).find("fieldset label:nth-child(" + i + ") input").shouldBe(checked);
+                    // $(blockId).find("fieldset label:nth-child(" + i + ")").shouldHave(text(labelValue));
+                    $(blockId).find(".MuiInputBase-root").shouldHave(text(labelValue));
                 } else {
-                    $(blockId).find("fieldset label:nth-child(" + i + ") input").shouldNotBe(checked);
+                    //  $(blockId).find("fieldset label:nth-child(" + i + ") input").shouldNotBe(checked);
+                    //  $(blockId).find("fieldset label:nth-child(" + i + ")").shouldNotHave(text(labelValue));
+                    $(blockId).find(".MuiInputBase-root").shouldNotHave(text(labelValue));
                 }
             }
         }
@@ -195,7 +209,7 @@ public class CheckboxgroupTest extends BaseTest {
         if (StringUtils.isNotEmpty(disableLabel)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            String checkBoxId = "#" + CheckboxgroupTest.CheckboxgroupIds.checkbox_disableLabel.name();
+            String checkBoxId = "#" + SelectTest.SelectIds.checkbox_disableLabel.name();
             $(checkBoxId).shouldBe(visible).click();
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
@@ -205,24 +219,26 @@ public class CheckboxgroupTest extends BaseTest {
         //required
         if (StringUtils.isNotEmpty(checkbox_required)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String checkBoxId = "#" + CheckboxgroupTest.CheckboxgroupIds.checkbox_required.name();
+            String checkBoxId = "#" + SelectTest.SelectIds.checkbox_required.name();
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             $(checkBoxId).shouldBe(visible).click();
-            //$(checkBoxId + " input").shouldHave(value("true"));
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
             $(blockId).should(exist).shouldHave(text("*"));
         }
 
-        //Allow select:
-        if (StringUtils.isNotEmpty(checkbox_globalSelection)) {
+        //Allow Multiple:
+        if (StringUtils.isNotEmpty(checkbox_allow_multiple)) {
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            String checkBoxId = "#" + CheckboxgroupTest.CheckboxgroupIds.checkbox_globalSelection.name();
+            String checkBoxId = "#" + SelectTest.SelectIds.checkbox_multiple.name();
             $(checkBoxId).shouldBe(visible).click();
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
-        }
 
+            //Now the Minimum and Maximum count field should be enabled:
+            $("#numberField_minCount").should(exist).shouldBe(enabled);
+            $("#numberField_maxCount").should(exist).shouldBe(enabled);
+        }
 
         //Enter Minimum Value
         if (StringUtils.isNotEmpty(text_numberField_minCount)) {
@@ -234,10 +250,15 @@ public class CheckboxgroupTest extends BaseTest {
 
             //Click on close button
             $("#form-value-list-card-dialog_actions #btnClosePropertiesForm").should(exist).click();
-            $(By.id(CheckboxgroupTest.CheckboxgroupIds.numberField_minCount.name())).should(exist); //Verify that Minimum count field exists
+
+            //Click on Allow multiple checkbox:
+            String checkBoxId = "#" + SelectTest.SelectIds.checkbox_multiple.name();
+            $(checkBoxId).shouldBe(visible).click();
+
+            $(By.id(SelectTest.SelectIds.numberField_minCount.name())).should(exist); //Verify that Minimum count field exists
 
             String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(CheckboxgroupTest.CheckboxgroupIds.numberField_minCount.name()))
+            selectAndClear(By.id(SelectTest.SelectIds.numberField_minCount.name()))
                     .setValue(text_numberField_minCount).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
 
@@ -246,8 +267,8 @@ public class CheckboxgroupTest extends BaseTest {
             int int_text_numberField_minCount = parseInt(text_numberField_minCount);
 
             //Verify that if the Min count is less than rowCount, then error should be shown
-            if(int_text_numberField_minCount < rowsCount){
-                String errorMinCount1 = "The values count "+rowsCount+" is less than minimum count "+text_numberField_minCount;
+            if (int_text_numberField_minCount < rowsCount) {
+                String errorMinCount1 = "The values count " + rowsCount + " is less than minimum count " + text_numberField_minCount;
                 $("#panel1a-content div:nth-child(5) p.Mui-error").should(exist).shouldHave(text(errorMinCount1));
             }
 
@@ -255,44 +276,35 @@ public class CheckboxgroupTest extends BaseTest {
 
         //Enter Maximum Value
         if (StringUtils.isNotEmpty(text_numberField_maxCount)) {
+            if(!($(By.id(SelectTest.SelectIds.numberField_maxCount.name())).isEnabled())){
+                $("#checkbox_multiple").click();
+            }
+
             String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(CheckboxgroupIds.numberField_maxCount.name()))
+            selectAndClear(By.id(SelectTest.SelectIds.numberField_maxCount.name()))
                     .setValue(text_numberField_maxCount).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
 
             $("#numberField_maxCount").shouldHave(value(text_numberField_maxCount)).waitUntil(appears, 4000);
 
             //Verify that if Max count is less than Min count, relevant errors should be shown:
-            if(StringUtils.isNotEmpty(text_numberField_minCount)) {
+            if (StringUtils.isNotEmpty(text_numberField_minCount)) {
+                selectAndClear(By.id(SelectIds.numberField_minCount.name()))
+                        .setValue(text_numberField_minCount).sendKeys(Keys.TAB); //Enter the value in Min count field
+
                 int int_text_numberField_minCount = parseInt(text_numberField_minCount);
                 int int_text_numberField_maxCount = parseInt(text_numberField_maxCount);
-                if(int_text_numberField_minCount > int_text_numberField_maxCount){
-                    String errorMaxCount1 = "The maximum value "+text_numberField_maxCount+" is less than minimum value "+text_numberField_minCount;
+                if (int_text_numberField_minCount > int_text_numberField_maxCount) {
+                    String errorMaxCount1 = "The maximum value " + text_numberField_maxCount + " is less than minimum value " + text_numberField_minCount;
                     $("#panel1a-content div:nth-child(5) p.Mui-error").should(exist).shouldHave(text(errorMaxCount1));
 
-                    String errorMaxCount2 = "The maximum value "+text_numberField_maxCount+" is less than minimum value "+text_numberField_minCount;
+                    String errorMaxCount2 = "The maximum value " + text_numberField_maxCount + " is less than minimum value " + text_numberField_minCount;
                     $("#panel2a-content div:nth-child(5) p.Mui-error").should(exist).shouldHave(text(errorMaxCount2));
                 }
             }
 
         }
 
-        //Other values:
-        if (StringUtils.isNotEmpty(checkbox_other_values)) {
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            String checkBoxId = "#" + CheckboxgroupTest.CheckboxgroupIds.checkbox_other.name();
-            $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(checkBoxId + " input").shouldBe(selected);
-        }
-
-        //Direction
-        //Click on Direction. Select Vertical
-        if (StringUtils.isNotEmpty(dropdown_direction)) {
-            $(By.id(CheckboxgroupTest.CheckboxgroupIds.property_select_direction.name())).should(exist).click();
-            $(By.id(CheckboxgroupTest.CheckboxgroupIds.property_select_direction.name())).selectOptionByValue(dropdown_direction);
-            $(By.id(CheckboxgroupTest.CheckboxgroupIds.property_select_direction.name())).shouldHave(value(dropdown_direction));
-        }
 
     }
 }
