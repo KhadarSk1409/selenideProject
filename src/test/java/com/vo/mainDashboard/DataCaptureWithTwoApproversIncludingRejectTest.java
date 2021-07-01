@@ -6,6 +6,7 @@ import org.junit.jupiter.api.*;
 
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selectors.byAttribute;
 import static com.codeborne.selenide.Selenide.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -35,14 +36,13 @@ public class DataCaptureWithTwoApproversIncludingRejectTest extends BaseTest {
             $$(".MuiAutocomplete-popper li").findBy(text("GUI Tester")).click();
             $("#selUser").click();
             $("#btnStartProcess").click(); //Start Data Capture Process
-            $("#gridItemTasks").should(exist);
-            $("#cUsageOverview").should(exist);
-            $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1)").should(appear);
             $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).click();
             $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Progress")); //Verify the Data Capture state
+            String formDataCaptureId= $("#tasksCard tbody tr:nth-of-type(2)").should(exist).getAttribute("id");
             $("#gridItemTasks").should(exist);
             $("#FormDashboardTasksCard .MuiCardContent-root").should(exist);
-            $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
+            $("#FormDashboardTasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
+                    .should(exist).$(".fa-edit").closest("button").should(exist).click();
             $("#data-card-dialog_actions").should(appear);
             $("#dataContainer").should(exist);
             $("#textField_form-user-8210db0d-bed5-4657-805f-5e5b0c51ac7e").should(exist);
@@ -50,30 +50,30 @@ public class DataCaptureWithTwoApproversIncludingRejectTest extends BaseTest {
             $("#btnAcceptTask").click();
             $("#data-approve-reject-dialog").$("#btnConfirm").click();
             $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Approval")); //Verify the Data Capture state as In Approval
-            $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far far fa-eye']").shouldBe(visible).click(); //First Approval
+            $("#FormDashboardTasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
+                    .should(exist).$(".fa-eye").closest("button").should(exist).click();
             $("#data-card-dialog_actions").should(appear).$("#btnAcceptTask").click(); //Click on Accept
-            $("#data-approve-reject-dialog").$("#btnConfirm").click();
-            $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1)").shouldBe(visible).shouldHave(text("Approve record"));
+            $("#data-approve-reject-dialog").$("#btnConfirm").should(exist).click();
             $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Approval"));
-            $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far far fa-eye']").click();
-            $("#btnRejectDataTask").click(); //Click on Reject
+            $("#FormDashboardTasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
+                    .should(exist).$(".fa-eye").closest("button").should(exist).click();
+            $("#btnRejectDataTask").should(exist).click(); //Click on Reject
             $("#textfield_RejectReason").should(appear).setValue("Form is being Rejected by Second Approver"); //Comment for Rejection
-            $("#data-approve-reject-dialog").$("#btnConfirm").click();
-            $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1)").should(exist);
-            $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far far fa-eye']").shouldBe(visible).click();
+            $("#data-approve-reject-dialog").$("#btnConfirm").should(exist).click();
+            $("#FormDashboardTasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
+                    .should(exist).$(".fa-eye").closest("button").should(exist).click();
             $("#dataContainer").should(exist);
             $("#textField_form-user-8210db0d-bed5-4657-805f-5e5b0c51ac7e").should(exist);
-            $("#btnAcceptTask").click(); //Click on Accept
+            $("#btnAcceptTask").should(exist).click(); //Click on Accept
             $("#data-approve-reject-dialog").$("#btnConfirm").click();
             $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Approval"));
-            $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1)").should(exist);
-            $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far far fa-eye']").shouldBe(visible).click();
+            $("#FormDashboardTasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
+                    .should(exist).$(".fa-eye").closest("button").should(exist).click();
             $("#dataContainer").should(exist);
             $("#textField_form-user-8210db0d-bed5-4657-805f-5e5b0c51ac7e").should(exist);
-            $("#btnAcceptTask").click(); //Click on Accept
-            $("#data-approve-reject-dialog").$("#btnConfirm").click();
-            $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
-            $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("Completed"));
+            $("#btnAcceptTask").should(exist).click(); //Click on Accept
+            $("#data-approve-reject-dialog").$("#btnConfirm").should(exist).click();
+            $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").should(exist).shouldHave(value("Completed"));
 
-        }
+    }
 }

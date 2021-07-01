@@ -6,6 +6,7 @@ import org.junit.jupiter.api.*;
 
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selectors.byAttribute;
 import static com.codeborne.selenide.Selenide.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -37,50 +38,52 @@ public class DataCaptureWithOneApprovalIncludingRejectAndDifferentUsersTest exte
         $("#gridItemTasks").should(exist);
         $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).click();
         $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("In Progress")); //Verify the Data Capture state
+        String formDataCaptureId= $("#tasksCard tbody tr:nth-of-type(2)").should(exist).getAttribute("id");
 
         //Should Login as GUI TESTER 01
         shouldLogin(BaseTest.UserType.USER_01);
         open("/dashboard/D8ipXoYf-");
         $("#formDashboardHeaderLeft").should(appear);
-        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
+        $("#FormDashboardTasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
+                .should(exist).$(".fa-edit").closest("button").should(exist).click();
         $("#data-card-dialog_actions").should(appear);
         $("#dataContainer").should(exist);
         $("#textField_form-user-4993983d-0f44-4ae0-a4e7-84b5f550b86f").should(exist);
         $("#textField_form-user-4993983d-0f44-4ae0-a4e7-84b5f550b86f").setValue("TEST");
-        $("#btnAcceptTask").click();
+        $("#btnAcceptTask").should(exist).click();
         $("#data-approve-reject-dialog").$("#btnConfirm").shouldBe(enabled).click();
 
         //Should Login as GUI TESTER 02
         shouldLogin(BaseTest.UserType.USER_02);
         open("/dashboard/D8ipXoYf-");
         $("#formDashboardHeaderLeft").should(appear);
-        $("#FormDashboardTasksCard div:nth-child(1) span[iconname='fas fa-times']").shouldBe(visible).shouldBe(enabled).click(); //Click on Reject
-        $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
+        $("#FormDashboardTasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
+                .should(exist).$(".fa-times").closest("button").should(exist).click();
 
         //Should Login as GUI TESTER 01
         shouldLogin(BaseTest.UserType.USER_01);
         open("/dashboard/D8ipXoYf-");
         $("#formDashboardHeaderLeft").should(appear);
-        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
+        $("#FormDashboardTasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
+                .should(exist).$(".fa-edit").closest("button").should(exist).click();
         $("#data-card-dialog_actions").should(appear);
         $("#dataContainer").should(exist);
         $("#textField_form-user-4993983d-0f44-4ae0-a4e7-84b5f550b86f").should(exist);
         $("#textField_form-user-4993983d-0f44-4ae0-a4e7-84b5f550b86f").setValue(" VERIFIED");
-        $("#btnAcceptTask").click();
+        $("#btnAcceptTask").should(exist).click();
         $("#data-approve-reject-dialog").$("#btnConfirm").shouldBe(enabled).click();
 
         //Should Login as GUI TESTER 02
         shouldLogin(BaseTest.UserType.USER_02);
         open("/dashboard/D8ipXoYf-");
         $("#formDashboardHeaderLeft").should(appear);
-        $("#FormDashboardTasksCard div:nth-child(1) span[iconname='fas fa-check']").shouldBe(visible).shouldBe(enabled).click();
-        $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
+        $("#FormDashboardTasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
+                .should(exist).$(".fa-check").closest("button").should(exist).click();
 
         //Should Login as GUI Tester
         shouldLogin(BaseTest.UserType.MAIN_TEST_USER);
         open("/dashboard/D8ipXoYf-");
         $("#formDashboardHeaderAppBar").should(exist);
-        $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
         $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).click();
         $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("Completed")); //Verify the Final Data Capture State
 

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.*;
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Condition.value;
+import static com.codeborne.selenide.Selectors.byAttribute;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.vo.BaseTest.shouldLogin;
@@ -40,12 +41,14 @@ public class DataCaptureWithOneApprovalAndDifferentUsersTest extends BaseTest {
         $("#gridItemTasks").should(exist);
         $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).click();
         $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("In Progress")); //Verify the Data Capture state
+        String formDataCaptureId= $("#tasksCard tbody tr:nth-of-type(2)").should(exist).getAttribute("id");
 
         //Should Login as GUI TESTER 01
         shouldLogin(BaseTest.UserType.USER_01);
         open("/dashboard/ASdii60Gt");
         $("#formDashboardHeaderAppBar").should(exist);
-        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
+        $("#FormDashboardTasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
+                .should(exist).$(".fa-edit").closest("button").click();
         $("#data-card-dialog_actions").should(appear);
         $("#dataContainer").should(exist);
         $("#textField_form-user-fbea34a0-bf35-45eb-9f42-d586230f9cf6").should(exist);
@@ -57,14 +60,13 @@ public class DataCaptureWithOneApprovalAndDifferentUsersTest extends BaseTest {
         shouldLogin(BaseTest.UserType.USER_02);
         open("/dashboard/ASdii60Gt");
         $("#formDashboardHeaderAppBar").should(exist);
-        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='fas fa-check']").shouldBe(visible).click();
-        $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
+        $("#FormDashboardTasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
+                .should(exist).$(".fa-check").closest("button").click();
 
         //Should Login as GUI Tester
         shouldLogin(BaseTest.UserType.MAIN_TEST_USER);
         open("/dashboard/ASdii60Gt");
         $("#formDashboardHeaderAppBar").should(exist);
-        $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
         $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).click();
         $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("Completed"));
 
