@@ -6,6 +6,7 @@ import org.junit.jupiter.api.*;
 
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selectors.byAttribute;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Selenide.$;
 
@@ -39,12 +40,14 @@ public class DataCaptureWithoutApprovalByTwoUsersTest extends BaseTest {
         $("#gridItemTasks").should(exist);
         $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).click();
         $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("In Progress")); //Verify the Data Capture state
+        String formDataCaptureId= $("#tasksCard tbody tr:nth-of-type(2)").should(exist).getAttribute("id");
 
         //Should Login as GUI TESTER 01
         shouldLogin(UserType.USER_01);
         open("/dashboard/DATA-CAPTURE-WO-PROCESS");
         $("#formDashboardHeaderLeft").should(appear);
-        $("#FormDashboardTasksCard .MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1) span[iconname='far fa-edit']").shouldBe(visible).click();
+        $("#FormDashboardTasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
+                .should(exist).$(".fa-edit").closest("button").click();
         $("#data-card-dialog_actions").should(appear);
         $("#dataContainer").should(exist);
         $("#textField_form-user-160cfec0-aef2-4927-a8a8-aff595813f53").should(exist);
@@ -56,7 +59,6 @@ public class DataCaptureWithoutApprovalByTwoUsersTest extends BaseTest {
         shouldLogin(UserType.MAIN_TEST_USER);
         open("/dashboard/DATA-CAPTURE-WO-PROCESS");
         $("#formDashboardHeaderLeft").should(appear);
-        $("#FormDashboardTasksCard .voEmptySpaceFiller").shouldBe(visible); //My Tasks should be empty
         $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).click();
         $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("Completed"));
 
