@@ -103,7 +103,7 @@ public class NumberFieldTest extends BaseTest {
         $(blockId).shouldBe(visible).click();
         $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
         $("#li-template-NumberField-04").should(appear).click();
-        $("#formelement_properties_card").should(exist);
+        $("#formelement_properties_card").should(appear);
 
         if (colSpan != null && colSpan > 1) {
             int prevWidth = $(blockId).getRect().getWidth();
