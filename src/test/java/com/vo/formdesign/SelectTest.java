@@ -194,12 +194,8 @@ public class SelectTest extends BaseTest {
             for (int i = 1; i <= values.length; i++) {
                 String labelValue = values[i - 1];
                 if (preselected.contains(labelValue)) {
-                    // $(blockId).find("fieldset label:nth-child(" + i + ") input").shouldBe(checked);
-                    // $(blockId).find("fieldset label:nth-child(" + i + ")").shouldHave(text(labelValue));
                     $(blockId).find(".MuiInputBase-root").shouldHave(text(labelValue));
                 } else {
-                    //  $(blockId).find("fieldset label:nth-child(" + i + ") input").shouldNotBe(checked);
-                    //  $(blockId).find("fieldset label:nth-child(" + i + ")").shouldNotHave(text(labelValue));
                     $(blockId).find(".MuiInputBase-root").shouldNotHave(text(labelValue));
                 }
             }
