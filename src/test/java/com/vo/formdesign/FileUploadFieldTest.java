@@ -82,7 +82,8 @@ public class FileUploadFieldTest extends BaseTest {
                              String text_max_file_size,
                              String text_numberField_minCount,
                              String text_numberField_maxCount,
-                             String edit_values
+                             String edit_values,
+                             String preselection_value
 
 
     ) {
@@ -185,20 +186,51 @@ public class FileUploadFieldTest extends BaseTest {
 
         //Values
         if (StringUtils.isNotEmpty(edit_values)) {
+
+            String[] values = edit_values.split(",");
+
             $("#formelement_properties_card .editForm").should(exist).click(); //Click on edit value pen icon
             $("#form-value-list-card-dialog_content").should(exist); //Value List Editor window
 
-            //Click on label option
-            String labelSelector = "div.ag-body-viewport .ag-center-cols-viewport .ag-row:nth-child(1) .ag-cell:nth-child(2)";
-            $(labelSelector).should(exist).doubleClick();
-            $("div.ag-popup input.ag-input-field-input").sendKeys(Keys.BACK_SPACE); //Clear the default value in label field
-            $("div.ag-popup input.ag-input-field-input").setValue(edit_values).sendKeys(Keys.ENTER);
-            $(labelSelector).shouldHave(text(edit_values));
+            //Deleting the existing rows:
+            List<SelenideElement> delBtn = $$("div.ag-pinned-right-cols-container .ag-row .fa-trash-alt");
+            int countDelBtn = $$("div.ag-pinned-right-cols-container .ag-row .fa-trash-alt").size();
+            for (int n = countDelBtn; n >= 1; n--) {
+                String strDeleteBtn = ".ag-row:nth-child(" + n + ") .fa-trash-alt"; //Delete the n th row
+                $(strDeleteBtn).click();
+                $(strDeleteBtn).waitUntil(disappear, 10000);
+            }
+
+            //Add rows in value list editor for the number of labels
+            if (!$("div.ag-pinned-right-cols-container .ag-row").exists()) {
+                for (int x = 0; x < values.length; x++) {
+                    $("#form-value-list-card-dialog_content .fa-plus").should(exist).click();
+                }
+            }
+
+            List<String> preselected = new ArrayList<>();
+            if (StringUtils.isNotEmpty(preselection_value)) {
+                preselected = Arrays.asList(preselection_value.split(","));
+            }
+
+            for (int i = 1; i <= values.length; i++) {
+                //Click on label option
+                String labelSelector = "div.ag-body-viewport .ag-center-cols-viewport .ag-row:nth-child(" + i + ") .ag-cell:nth-child(2)";
+                $(labelSelector).should(exist).doubleClick();
+                String labelValue = values[i - 1];
+                $("div.ag-popup input.ag-input-field-input").sendKeys(Keys.BACK_SPACE); //Clear the default value in label field
+                $("div.ag-popup input.ag-input-field-input").setValue(labelValue).sendKeys(Keys.ENTER);
+                $(labelSelector).shouldHave(text(labelValue));
+
+                if (preselected.contains(labelValue)) {
+                    String checkboxSelector = "div.ag-pinned-left-cols-container .ag-row:nth-child(" + i + ") input";
+                    $(checkboxSelector).should(exist).click();
+                    $(checkboxSelector).shouldBe(checked);
+                }
+            }
 
             //Click on close button
             $("#form-value-list-card-dialog_actions #btnClosePropertiesForm").should(exist).click();
-            $("#blockButtonDelete").shouldBe(visible).click();
-            $("#li-template-FileUploadField-03").should(disappear);
         }
 
     }

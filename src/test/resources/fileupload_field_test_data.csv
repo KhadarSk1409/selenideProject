@@ -1,9 +1,9 @@
-row,col,col+AF8-span,text_label,checkbox_disableLabel,text_help,checkbox_required,text_max_file_size,text_numberField_minCount,text_numberField_maxCount,edit_values
-2,1,,FileUpload@123,,,,,,,
-2,1,,Help Text,X,This is Help Text,,,,,
-2,1,,Checkbox required,,,X,,,,
-2,1,,Max File Size,,,,5000,,,
-2,1,,Min count,,,,,3,,
-2,1,,Max count,,,,,,5,
-2,1,,Min count_MoreThanMax,,,,,5,4,
-2,1,,Values,,,,,,,Abcd
+row,col,col+AF8-span,text_label,checkbox_disableLabel,text_help,checkbox_required,text_max_file_size,text_numberField_minCount,text_numberField_maxCount,edit_values,preselection_value
+2,1,,FileUpload@123,,,,,,,,
+2,1,,Help Text,X,This is Help Text,,,,,,
+2,1,,Checkbox required,,,X,,,,,
+2,1,,Max File Size,,,,5000,,,,
+2,1,,Min count,,,,,3,,,
+2,1,,Max count,,,,,,5,,
+2,1,,Min count_MoreThanMax,,,,,5,4,,
+2,1,,Values,,,,,,,"Abcd,Xyz,Ghj,Two","Xyz,Two"
