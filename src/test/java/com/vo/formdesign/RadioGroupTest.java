@@ -91,9 +91,9 @@ public class RadioGroupTest extends BaseTest {
         }
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
         $("#li-template-RadioGroupField-03").should(appear).click();
         $("#formelement_properties_card").should(appear);
+        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
         if (colSpan != null && colSpan > 1) {
             int prevWidth = $(blockId).getRect().getWidth();
@@ -110,11 +110,10 @@ public class RadioGroupTest extends BaseTest {
         if (StringUtils.isNotEmpty(text_label)) {
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             selectAndClear(By.id(RadioGroupTest.RadiogroupIds.textfield_label.name()))
                     .setValue(text_label).sendKeys(Keys.TAB);
-            $(blockId).should(exist);
-            $(blockId).shouldHave(text(text_label)).waitUntil(appears, 4000);
+            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(blockId).shouldHave(text(text_label));
         }
 
 

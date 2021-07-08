@@ -34,17 +34,16 @@ public class LabelFieldTest extends BaseTest {
         $("#btnFormDesignPublish").should(exist); //Verify that user has navigated to form design
 
         String blockId = "#block-loc_en-GB-r_1-c_1"; //Need to change later as of now _1 is returning two results
+        $(blockId).shouldBe(visible);
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Initial version
-        $(blockId).shouldBe(visible).click();
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
+        $(blockId).click();
         $("#li-template-LabelField-05").should(appear);
-        // $("#li-template-LabelField-05").doubleClick();
-//        $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
         $("#formelement_properties_card").should(appear);
+        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
         $(blockId).shouldBe(visible).click();
         $("#li-template-LabelField-05").should(appear).click();
         $("#textfield_value").should(appear);
-        //     $("#panel2a-header").should(exist).click(); //Advanced section dropdown
+
         //options for text field should exist:
         Arrays.asList(LabelFieldTest.LabelFieldOptionsIds.values()).forEach(valueId -> $(By.id(valueId.name())).shouldBe(visible));
 

@@ -94,9 +94,11 @@ public class FileUploadFieldTest extends BaseTest {
         }
 
         String blockId = "#block-loc_en-GB-r_2-c_1"; //2nd row first column
+        String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $("#li-template-FileUploadField-03").click();
+        $("#li-template-FileUploadField-03").waitUntil(exist, 10000).click();
         $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
+        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
         //Label
         if (StringUtils.isNotEmpty(text_label)) {
@@ -105,7 +107,6 @@ public class FileUploadFieldTest extends BaseTest {
                     .setValue(text_label).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(By.id(FileUploadFieldTest.FileUploadFieldIds.textfield_label.name())).shouldHave(text(text_label)); //The Label
-            $(blockId).should(exist);
             $(blockId).shouldHave(text(text_label)).waitUntil(appears, 4000);
 
         }

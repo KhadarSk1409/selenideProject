@@ -100,9 +100,9 @@ public class DateFieldTest extends BaseTest {
         }
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
         $("#li-template-DateField-03").should(appear).click();
         $("#formelement_properties_card").should(appear);
+        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
         if (colSpan != null && colSpan > 1) {
             int prevWidth = $(blockId).getRect().getWidth();

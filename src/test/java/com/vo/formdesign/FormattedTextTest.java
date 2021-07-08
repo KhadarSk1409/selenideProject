@@ -49,7 +49,6 @@ public class FormattedTextTest extends BaseTest {
         String blockId = "#block-loc_en-GB-r_1-c_1"; //Need to change later as of now _1 is returning two results
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Initial version
         $(blockId).shouldBe(visible).click();
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
 
         //Click on Show More
         $("#template_basis_list").find(byText("Show More")).should(exist).click();
@@ -57,6 +56,7 @@ public class FormattedTextTest extends BaseTest {
         $("#li-template-RichTextEditor-05").should(appear).click();
         $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
         $("#formelement_properties_card").should(appear);
+        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
 
         $("#panel2a-header").should(exist).click(); //Advanced section dropdown
 
@@ -94,10 +94,9 @@ public class FormattedTextTest extends BaseTest {
         }
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
         $("#li-template-RichTextEditor-05").should(exist).click();
-
         $("#formelement_properties_card").should(appear);
+        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
         if (colSpan != null && colSpan > 1) {
             int prevWidth = $(blockId).getRect().getWidth();
@@ -113,10 +112,11 @@ public class FormattedTextTest extends BaseTest {
         //Label
         if (StringUtils.isNotEmpty(text_label)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             $(By.id("textfield_label")).should(exist);
             selectAndClear(By.id(FormattedTextTest.FormattedTextIds.textfield_label.name()))
                     .setValue(text_label).sendKeys(Keys.TAB);
-            $(blockId).should(exist);
+            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(blockId).shouldHave(text(text_label)).waitUntil(appears, 4000);
         }
 
