@@ -88,17 +88,18 @@ public class FileUploadFieldTest extends BaseTest {
 
     ) {
 
-        if($("#blockButtonDelete").exists()){
-            $("#blockButtonDelete").click();
-            $("#li-template-FileUploadField-03").should(disappear);
+        String blockId = "#block-loc_en-GB-r_" + row + "-c_" + col;
+        //create new block, if not exist
+        if (!$(blockId).exists()) {
+            String prevBlockId = "#block-loc_en-GB-r_" + (row - 1) + "-c_" + col;
+            $(prevBlockId + " .add-row").shouldBe(visible).click();
         }
-
-        String blockId = "#block-loc_en-GB-r_2-c_1"; //2nd row first column
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $("#li-template-FileUploadField-03").waitUntil(exist, 10000).click();
+        $("#li-template-FileUploadField-03").should(exist).click();
         $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
         $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
+
 
         //Label
         if (StringUtils.isNotEmpty(text_label)) {
@@ -107,8 +108,7 @@ public class FileUploadFieldTest extends BaseTest {
                     .setValue(text_label).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(By.id(FileUploadFieldTest.FileUploadFieldIds.textfield_label.name())).shouldHave(text(text_label)); //The Label
-            $(blockId).shouldHave(text(text_label)).waitUntil(appears, 4000);
-
+            $(blockId).shouldHave(text(text_label));
         }
 
         //Hide(disable) Label

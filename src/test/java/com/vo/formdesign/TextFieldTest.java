@@ -129,7 +129,7 @@ public class TextFieldTest extends BaseTest {
 
         //Prefix
         if (StringUtils.isNotEmpty(textfield_prefix)) {
-         //   $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
+            //   $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(TextFieldOptionsIds.textfield_prefix.name()))
                     .setValue(textfield_prefix).sendKeys(Keys.TAB);
@@ -140,7 +140,7 @@ public class TextFieldTest extends BaseTest {
 
         //Suffix
         if (StringUtils.isNotEmpty(textfield_suffix)) {
-       //     $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
+            //     $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(TextFieldOptionsIds.textfield_suffix.name()))
                     .setValue(textfield_suffix).sendKeys(Keys.TAB);
@@ -271,4 +271,34 @@ public class TextFieldTest extends BaseTest {
 
     }
 
+    @Test
+    @Order(3)
+    @DisplayName("publish and open FormPage")
+    public void publishAndOpenFormPage() {
+        //Click on publish button, wait until form dashboard opens and click on fill form
+
+
+    }
+
+    @Order(4)
+    @DisplayName("verify fields on form")
+    @ParameterizedTest
+    @CsvFileSource(resources = "/text_field_test_data.csv", numLinesToSkip = 1)
+    public void verifyFieldsOnForm(Integer row, Integer col, Integer colSpan, String textfield_label,
+                             String textfield_help,
+                             String textfield_prefix,
+                             String textfield_suffix,
+                             String textfield_defaultValue,
+                             String property_toggle_button_normal, String property_toggle_button_uppercase, String property_toggle_button_lowercase,
+                             String checkbox_disableLabel,
+                             String checkbox_required,
+                             String property_onlyAlphabets_onlyAlphabets,
+                             String property_alphabetsAndNumerics_alphabetsAndNumerics,
+                             String property_allCharacters_allCharacters,
+                             Integer minLength,
+                             Integer maxLength
+    ) {
+
+    
+    }
 }

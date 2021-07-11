@@ -46,7 +46,7 @@ public class FormattedTextTest extends BaseTest {
         $("#wizard-createFormButton").should(exist).click();
         $("#btnFormDesignPublish").should(exist); //Verify that user has navigated to form design
 
-        String blockId = "#block-loc_en-GB-r_1-c_1"; //Need to change later as of now _1 is returning two results
+        String blockId = "#block-loc_en-GB-r_1-c_1";
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Initial version
         $(blockId).shouldBe(visible).click();
 
@@ -62,6 +62,9 @@ public class FormattedTextTest extends BaseTest {
 
         //options for text field should exist:
         Arrays.asList(FormattedTextTest.FormattedTextIds.values()).forEach(textFieldId -> $(By.id(textFieldId.name())).shouldBe(visible));
+
+        $("#blockButtonDelete").shouldBe(visible).click();
+        $("#li-template-RadioGroupField-03").should(disappear);
 
     }
 
@@ -80,11 +83,6 @@ public class FormattedTextTest extends BaseTest {
 
 
     ) {
-
-        if ($("#blockButtonDelete").exists()) {
-            $("#blockButtonDelete").click();
-            $("#li-template-RichTextEditor-05").should(disappear);
-        }
 
         String blockId = "#block-loc_en-GB-r_" + row + "-c_" + col;
         //create new block, if not exist
