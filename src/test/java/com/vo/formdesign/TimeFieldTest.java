@@ -52,11 +52,10 @@ public class TimeFieldTest extends BaseTest {
         String blockId = "#block-loc_en-GB-r_1-c_1"; //Need to change later as of now _1 is returning two results
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Initial version
         $(blockId).shouldBe(visible).click();
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
         $("#li-template-TimeField-03").should(appear).click(); //li-template-TimeField-03
         $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
         $("#formelement_properties_card").should(appear);
-
+        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
         $("#panel2a-header").should(exist).click(); //Advanced section dropdown
 
         //options for text field should exist:
@@ -94,9 +93,9 @@ public class TimeFieldTest extends BaseTest {
         }
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
         $("#li-template-TimeField-03").should(appear).click();
         $("#formelement_properties_card").should(appear);
+        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
         if (colSpan != null && colSpan > 1) {
             int prevWidth = $(blockId).getRect().getWidth();

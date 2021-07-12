@@ -47,10 +47,9 @@ public class TextAreaFieldTest extends BaseTest {
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Initial version
         $(blockId).shouldBe(visible).click();
         $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
-        $("#li-template-TextareaField-05").should(appear).click();
-        //li-template-TextareaField-05
+        $("#li-template-TextareaField-05").should(exist).click();
         $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-        $("#formelement_properties_card").should(appear);
+        $("#formelement_properties_card").should(exist);
         $("#panel2a-header").should(exist).click(); //Advanced section dropdown
 
         //options for text field should exist:

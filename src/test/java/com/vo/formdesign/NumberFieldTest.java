@@ -101,9 +101,9 @@ public class NumberFieldTest extends BaseTest {
         }
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
         $("#li-template-NumberField-04").should(appear).click();
         $("#formelement_properties_card").should(appear);
+        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
         if (colSpan != null && colSpan > 1) {
             int prevWidth = $(blockId).getRect().getWidth();
@@ -123,7 +123,7 @@ public class NumberFieldTest extends BaseTest {
             selectAndClear(By.id(NumberFieldOptionsIds.textfield_label.name()))
                     .setValue(numberfield_label).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(numberfield_label)).waitUntil(appears, 4000);
+            $(blockId).shouldHave(text(numberfield_label));
         }
 
         //Help
