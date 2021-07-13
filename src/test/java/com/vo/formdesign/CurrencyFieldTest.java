@@ -106,9 +106,9 @@ public class CurrencyFieldTest extends BaseTest {
         }
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
         $("#li-template-CurrencyField-05").should(appear).click();
         $("#formelement_properties_card").should(appear);
+        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
         if (colSpan != null && colSpan > 1) {
             int prevWidth = $(blockId).getRect().getWidth();
@@ -129,7 +129,6 @@ public class CurrencyFieldTest extends BaseTest {
                     .setValue(currency_label).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(blockId).shouldHave(text(currency_label)).waitUntil(appears, 4000);
-
         }
 
         //Hide(disable) Label

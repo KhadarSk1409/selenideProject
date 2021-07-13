@@ -90,9 +90,9 @@ public class TextFieldTest extends BaseTest {
         }
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
         $("#li-template-Textfield-04").should(appear).click();
         $("#formelement_properties_card").should(appear);
+        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
         if (colSpan != null && colSpan > 1) {
             int prevWidth = $(blockId).getRect().getWidth();
@@ -111,7 +111,7 @@ public class TextFieldTest extends BaseTest {
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(TextFieldOptionsIds.textfield_label.name()))
                     .setValue(textfield_label).sendKeys(Keys.TAB);
-
+            $(By.id(TextFieldOptionsIds.textfield_label.name())).shouldHave(value(textfield_label));
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(blockId).shouldHave(text(textfield_label));
         }
@@ -129,7 +129,7 @@ public class TextFieldTest extends BaseTest {
 
         //Prefix
         if (StringUtils.isNotEmpty(textfield_prefix)) {
-         //   $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
+            //   $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(TextFieldOptionsIds.textfield_prefix.name()))
                     .setValue(textfield_prefix).sendKeys(Keys.TAB);
@@ -140,7 +140,7 @@ public class TextFieldTest extends BaseTest {
 
         //Suffix
         if (StringUtils.isNotEmpty(textfield_suffix)) {
-       //     $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
+            //     $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(TextFieldOptionsIds.textfield_suffix.name()))
                     .setValue(textfield_suffix).sendKeys(Keys.TAB);
@@ -271,4 +271,34 @@ public class TextFieldTest extends BaseTest {
 
     }
 
+    @Test
+    @Order(3)
+    @DisplayName("publish and open FormPage")
+    public void publishAndOpenFormPage() {
+        //Click on publish button, wait until form dashboard opens and click on fill form
+
+
+    }
+
+    @Order(4)
+    @DisplayName("verify fields on form")
+    @ParameterizedTest
+    @CsvFileSource(resources = "/text_field_test_data.csv", numLinesToSkip = 1)
+    public void verifyFieldsOnForm(Integer row, Integer col, Integer colSpan, String textfield_label,
+                             String textfield_help,
+                             String textfield_prefix,
+                             String textfield_suffix,
+                             String textfield_defaultValue,
+                             String property_toggle_button_normal, String property_toggle_button_uppercase, String property_toggle_button_lowercase,
+                             String checkbox_disableLabel,
+                             String checkbox_required,
+                             String property_onlyAlphabets_onlyAlphabets,
+                             String property_alphabetsAndNumerics_alphabetsAndNumerics,
+                             String property_allCharacters_allCharacters,
+                             Integer minLength,
+                             Integer maxLength
+    ) {
+
+    
+    }
 }

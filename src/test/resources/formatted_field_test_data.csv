@@ -1,7 +1,7 @@
 row,col,col+AF8-span,text_label,checkbox_disableLabel,text_help,checkbox_required,checkbox_readOnly,edit_values,fraction_edit_value
-2,1,,Formatted Text,,,,,,
+1,1,,Formatted Text Label,,,,,,
 2,1,,Label Help Text,,This is Help Text,,,,
-2,1,,Hide Label,X,,,,,
-2,1,,Checkbox required,,,X,,,
-2,1,,Read Only,,,,X,,
-2,1,,Values edit,,,,,"Hamling switched the focus to science fiction, and it became similar in content to its sister",Hamling switched the focus
+3,1,,Hide Label,X,,,,,
+4,1,,Checkbox required,,,X,,,
+5,1,,Read Only,,,,X,,
+6,1,,Values edit,,,,,"Hamling switched the focus to science fiction, and it became similar in content to its sister",Hamling switched the focus
