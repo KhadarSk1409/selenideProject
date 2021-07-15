@@ -20,8 +20,17 @@ public class TextFieldBlockActionsTest extends BaseTest {
     @DisplayName("Open Form Designer Block Actions form")
     @Order(1)
     public void openFormDesigner() {
+        createNewForm();
+        $("#wizard-createFormButton").should(exist).click();
+        $("#btnFormDesignPublish").should(exist); //Verify that user has navigated to form design
 
-        open("/designer/Element_Block_Actions");
+        String blockId = "#block-loc_en-GB-r_1-c_1"; //Need to change later as of now _1 is returning two results
+        String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Initial version
+        $(blockId).shouldBe(visible).click();
+        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
+        $("#li-template-Textfield-04").should(appear).click();
+        $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
+        $("#formelement_properties_card").should(appear);
     }
 
     @Test
