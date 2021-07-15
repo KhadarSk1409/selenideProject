@@ -1,4 +1,4 @@
-package com.vo;
+package com.vo._entrypoint;
 
 import com.vo.createformdialog.CreateFormWithoutAdditionalOptionsTest;
 import com.vo.createformdialog.DataCapturePropertiesTest;
