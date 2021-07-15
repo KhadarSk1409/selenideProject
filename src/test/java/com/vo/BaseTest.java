@@ -210,6 +210,7 @@ public abstract class BaseTest {
             boolean presenceOfPickAnAccount = $("#loginHeader").is(exist);
             if (presenceOfPickAnAccount) {
                 $(byText(CURRENT_USER.get().userEmail())).shouldBe(visible).click();
+                Wait().until((input) -> WebDriverRunner.url().endsWith("logoutsession"));
             }
             ALREADY_LOGGED_IN.set(Boolean.FALSE);
         }
