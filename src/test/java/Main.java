@@ -80,7 +80,7 @@ public class Main {
             // Register a listener of your choice
             LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
                     .selectors(
-                            DiscoverySelectors.selectPackage("com.vo.formDashboard")
+                            DiscoverySelectors.selectPackage("com.vo.createformdialog")
                     )
                     .configurationParameter(LauncherConstants.CAPTURE_STDOUT_PROPERTY_NAME, "true")
                     .configurationParameter(LauncherConstants.CAPTURE_STDERR_PROPERTY_NAME, "true")
