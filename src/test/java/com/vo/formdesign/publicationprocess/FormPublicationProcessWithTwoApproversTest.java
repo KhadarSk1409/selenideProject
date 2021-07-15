@@ -12,6 +12,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static reusables.ReuseActions.createNewForm;
@@ -22,23 +23,19 @@ public class FormPublicationProcessWithTwoApproversTest extends BaseTest {
 
     @Test
     @DisplayName("Create a form and publish with Two Approvals")
-    public void formPublicationWithTwoApprovers(){
+    public void formPublicationWithTwoApprovers() {
 
         Pair<String, String> formName=createNewForm();
         String actualFormName= formName.getKey();
         $("#wizard-createFormButton").should(exist).shouldBe(enabled).click(); //Click on Create Form
-        applyLabelForTestForms(); //Apply guitest label
         $("#formDashboardHeaderLeft").should(appear);
         $("#block-loc_en-GB-r_1-c_1").should(exist).click(); //Click on + to add a field
         $("#template_card").should(appear).$("#li-template-Textfield-04").click(); //Add one field
-        $("#btnFormDesignPublish").should(exist).click(); //Click on Publish
-        $("#form-publish-dialog").$("#btnConfirm").should(exist).shouldBe(enabled).click(); //Click on Confirm
-        $("#formDashboardHeaderLeft").should(exist);
-        $("#btnEditFormDesign").should(exist).shouldBe(enabled).click(); //Click on Edit Form Design
         $("#formtree_card").should(exist);
         $("#formelement_properties_card").should(exist);
         $("#nav_button").should(exist).click();
-        $("#designer_panel_menu ul li:nth-child(4)").click(); //Should click on Configure publication process
+        $("#designer_panel_menu ul").$(byText("Configure publication process"))
+                .should(exist).click(); //Should click on Configure publication process
         $("#ckbApprovalProcessRequired").should(exist).click();
         $("#btnNext").should(exist).click();
         $("#l_Basic_Approve_Form_Process_TwoSteps").shouldBe(visible).click(); //Publication with two approval should be checked
@@ -79,7 +76,8 @@ public class FormPublicationProcessWithTwoApproversTest extends BaseTest {
                 rowEl.$(".fa-check").closest("button").should(exist).shouldBe(enabled).click();
             }
         });
-        $("#toDashboard").should(exist).click();
+        $("#user").should(exist);
+        $("#navMainDashboard").should(exist).click();
 
         //Should login as GUI Tester 02
         shouldLogin(UserType.USER_02);
@@ -98,7 +96,8 @@ public class FormPublicationProcessWithTwoApproversTest extends BaseTest {
                 rowEl.$(".fa-check").closest("button").should(exist).shouldBe(enabled).click();
             }
         });
-        $("#toDashboard").should(exist).click();
+        $("#user").should(exist);
+        $("#navMainDashboard").should(exist).click();
 
         //Verify the form approved is Published or not
         shouldLogin(UserType.MAIN_TEST_USER); //Should login as GUI Tester

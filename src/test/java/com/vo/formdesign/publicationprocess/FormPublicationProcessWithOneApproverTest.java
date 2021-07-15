@@ -12,6 +12,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static reusables.ReuseActions.createNewForm;
@@ -22,23 +23,19 @@ public class FormPublicationProcessWithOneApproverTest extends BaseTest {
 
     @Test
     @DisplayName("Create a form and publish with One Approval")
-    public void formPublicationWithOneApprover(){
+    public void formPublicationWithOneApprover() {
 
         Pair<String, String> formName=createNewForm();
         String actualFormName= formName.getKey();
         $("#wizard-createFormButton").should(exist).shouldBe(enabled).click(); //Click on Create Form
-        applyLabelForTestForms(); //Apply guitest label
         $("#formDashboardHeaderLeft").should(appear);
         $("#block-loc_en-GB-r_1-c_1").should(exist).click(); //Click on + to add a field
         $("#template_card").should(appear).$("#li-template-Textfield-04").click(); //Add one field
-        $("#btnFormDesignPublish").should(exist).click(); //Click on Publish
-        $("#form-publish-dialog").$("#btnConfirm").should(exist).shouldBe(enabled).click(); //Click on Confirm
-        $("#formDashboardHeaderLeft").should(exist);
-        $("#btnEditFormDesign").should(exist).shouldBe(enabled).click(); //Click on Edit Form Design
         $("#formtree_card").should(exist);
         $("#formelement_properties_card").should(exist);
         $("#nav_button").should(exist).click();
-        $("#designer_panel_menu ul li:nth-child(4)").click(); //Should click on Configure publication process
+        $("#designer_panel_menu ul").$(byText("Configure publication process"))
+                .should(exist).click(); //Should click on Configure publication process
         $("#ckbApprovalProcessRequired").should(exist).click();
         $("#btnNext").should(exist).click();
         $("#rb_Basic_Approve_Form_Process").shouldBe(checked); //Publication with one approval should be checked
