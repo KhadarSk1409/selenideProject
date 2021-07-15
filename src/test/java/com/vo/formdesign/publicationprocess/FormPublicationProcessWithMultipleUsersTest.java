@@ -1,4 +1,4 @@
-package com.vo.formDashboard;
+package com.vo.formdesign.publicationprocess;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
