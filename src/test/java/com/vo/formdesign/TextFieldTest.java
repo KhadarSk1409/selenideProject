@@ -2,17 +2,23 @@ package com.vo.formdesign;
 
 import com.codeborne.selenide.CollectionCondition;
 import com.vo.BaseTest;
+import jdk.javadoc.doclet.Reporter;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
+import org.junit.platform.engine.reporting.ReportEntry;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+
 import java.util.Arrays;
+import java.util.logging.Logger;
 import java.util.stream.IntStream;
+
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static java.lang.Integer.parseInt;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static reusables.ReuseActions.createNewForm;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -66,13 +72,15 @@ public class TextFieldTest extends BaseTest {
     @DisplayName("createNewFormulaDesignForTextfields")
     @ParameterizedTest
     @CsvFileSource(resources = "/text_field_test_data.csv", numLinesToSkip = 1)
-    public void alltextfield(Integer row, Integer col, Integer colSpan, String textfield_label,
+    public void alltextfield(Integer row, Integer col, Integer colSpan,
+                             String textfield_label,
+                             String checkbox_disableLabel,
                              String textfield_help,
                              String textfield_prefix,
                              String textfield_suffix,
                              String textfield_defaultValue,
+                             String lower_case,
                              String property_toggle_button_normal, String property_toggle_button_uppercase, String property_toggle_button_lowercase,
-                             String checkbox_disableLabel,
                              String checkbox_required,
                              String property_onlyAlphabets_onlyAlphabets,
                              String property_alphabetsAndNumerics_alphabetsAndNumerics,
@@ -114,6 +122,17 @@ public class TextFieldTest extends BaseTest {
             $(By.id(TextFieldOptionsIds.textfield_label.name())).shouldHave(value(textfield_label));
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(blockId).shouldHave(text(textfield_label));
+        }
+
+        //disable Label
+        if (StringUtils.isNotEmpty(checkbox_disableLabel)) {
+            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String checkBoxId = "#" + TextFieldOptionsIds.checkbox_disableLabel.name();
+            $(checkBoxId).shouldBe(visible).click();
+            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(checkBoxId + " input").shouldBe(selected);
+            $(blockId).shouldNotHave(text(textfield_label)); //Verify that the label is hidden for that block
         }
 
         //Help
@@ -160,6 +179,41 @@ public class TextFieldTest extends BaseTest {
             $(By.id(TextFieldOptionsIds.textfield_defaultValue.name())).shouldHave(value(textfield_defaultValue));
         }
 
+        //Lower case
+        if (StringUtils.isNotEmpty(lower_case)) {
+            //Select lower case and verify that Prefix, Suffix and Default value change to lower case:
+            $("#prop_toggle_button_lowercase").should(exist).click();
+
+            if (StringUtils.isNotEmpty(textfield_prefix)) {
+                $("#prop_toggle_button_lowercase").should(exist).click(); //Click on lower case
+                String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+                selectAndClear(By.id(TextFieldOptionsIds.textfield_prefix.name()))
+                        .setValue(textfield_prefix).sendKeys(Keys.TAB);
+                $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+                String prefixStr = $(By.id(TextFieldOptionsIds.textfield_prefix.name())).getValue();
+                assertTrue(prefixStr.equals(textfield_prefix.toLowerCase()));
+            }
+
+            if (StringUtils.isNotEmpty(textfield_suffix)) {
+                // String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+                selectAndClear(By.id(TextFieldOptionsIds.textfield_suffix.name()))
+                        .setValue(textfield_suffix).sendKeys(Keys.TAB);
+                //  $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
+                String suffixStr = $(By.id(TextFieldOptionsIds.textfield_suffix.name())).getValue();
+                assertTrue(suffixStr.equals(textfield_suffix.toLowerCase()));
+            }
+
+            if (StringUtils.isNotEmpty(textfield_defaultValue)) {
+                //  String initialVerNumStr3 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+                selectAndClear(By.id(TextFieldOptionsIds.textfield_defaultValue.name()))
+                        .setValue(textfield_defaultValue).sendKeys(Keys.TAB);
+                //  $("#formMinorversion").shouldNotHave(text(initialVerNumStr3)); //Verify that version has increased
+                String defaultStr = $(By.id(TextFieldOptionsIds.textfield_defaultValue.name())).getValue();
+                assertTrue(defaultStr.equals(textfield_defaultValue.toLowerCase()));
+            }
+
+        }
+
         //chars normal
         if (StringUtils.isNotEmpty(property_toggle_button_normal)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
@@ -187,16 +241,6 @@ public class TextFieldTest extends BaseTest {
             $(By.id(TextFieldOptionsIds.prop_toggle_button_lowercase.name())).shouldHave(attribute("aria-pressed", "true"));
         }
 
-        //disable Label
-        if (StringUtils.isNotEmpty(checkbox_disableLabel)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            String checkBoxId = "#" + TextFieldOptionsIds.checkbox_disableLabel.name();
-            $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(checkBoxId + " input").shouldBe(selected);
-        }
-
         //required
         if (StringUtils.isNotEmpty(checkbox_required)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
@@ -205,6 +249,7 @@ public class TextFieldTest extends BaseTest {
             $(checkBoxId).shouldBe(visible).click();
             //$(checkBoxId + " input").shouldHave(value("true"));
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(blockId).shouldHave(text("*"));
             $(checkBoxId + " input").shouldBe(selected);
         }
 
@@ -276,7 +321,12 @@ public class TextFieldTest extends BaseTest {
     @DisplayName("publish and open FormPage")
     public void publishAndOpenFormPage() {
         //Click on publish button, wait until form dashboard opens and click on fill form
+        $("#btnFormDesignPublish").should(exist).click();
 
+        $("#form-publish-dialog .MuiPaper-root").should(appear); //Publish confirmation dialog appears
+        $("#form-publish-dialog  #btnConfirm").should(exist).click(); //Click on Confirm button
+        $("#btnCreateNewData").should(exist).click(); //Fill form button on Launch screen
+        $("#dataContainer").should(appear); //Verify that the form details screen appears
 
     }
 
@@ -284,21 +334,91 @@ public class TextFieldTest extends BaseTest {
     @DisplayName("verify fields on form")
     @ParameterizedTest
     @CsvFileSource(resources = "/text_field_test_data.csv", numLinesToSkip = 1)
-    public void verifyFieldsOnForm(Integer row, Integer col, Integer colSpan, String textfield_label,
-                             String textfield_help,
-                             String textfield_prefix,
-                             String textfield_suffix,
-                             String textfield_defaultValue,
-                             String property_toggle_button_normal, String property_toggle_button_uppercase, String property_toggle_button_lowercase,
-                             String checkbox_disableLabel,
-                             String checkbox_required,
-                             String property_onlyAlphabets_onlyAlphabets,
-                             String property_alphabetsAndNumerics_alphabetsAndNumerics,
-                             String property_allCharacters_allCharacters,
-                             Integer minLength,
-                             Integer maxLength
+    public void verifyFieldsOnForm(Integer row, Integer col, Integer colSpan,
+                                   String textfield_label,
+                                   String checkbox_disableLabel,
+                                   String textfield_help,
+                                   String textfield_prefix,
+                                   String textfield_suffix,
+                                   String textfield_defaultValue,
+                                   String lower_case,
+                                   String property_toggle_button_normal, String property_toggle_button_uppercase, String property_toggle_button_lowercase,
+                                   String checkbox_required,
+                                   String property_onlyAlphabets_onlyAlphabets,
+                                   String property_alphabetsAndNumerics_alphabetsAndNumerics,
+                                   String property_allCharacters_allCharacters,
+                                   Integer minLength,
+                                   Integer maxLength
     ) {
 
-    
+        String blockStr = "#data_block-loc_en-GB-r_" + row + "-c_" + col;
+        String labelInFillForm = blockStr + " .MuiFormLabel-root";
+        String helpInFillForm = blockStr + " .MuiFormHelperText-root";
+        String prefixSuffixInFillForm = blockStr + " .MuiInputBase-root";
+        String prefixInFillForm1 = blockStr + " .MuiInputAdornment-positionStart";
+        String suffixInFillForm1 = blockStr + " .MuiInputAdornment-positionEnd";
+        String prefixSuffixText = blockStr + " .MuiInputAdornment-root";
+        String defaultValueInFillForm = blockStr + " .MuiInputBase-input";
+        String requiredFieldInFillForm = blockStr + " .MuiFormLabel-asterisk";
+
+        //Label
+        if (StringUtils.isNotEmpty(textfield_label)) {
+            System.out.println("Verifying label: " + textfield_label);
+            if (StringUtils.isNotEmpty(checkbox_disableLabel)) {
+                $(labelInFillForm).shouldNotHave(text(textfield_label)); //Verify that Label should not appear on the form - hide label
+            } else {
+                $(labelInFillForm).shouldHave(text(textfield_label)); //Verify that Label appears on the form
+            }
+        }
+
+        //required
+        if (StringUtils.isNotEmpty(checkbox_required)) {
+            System.out.println("Verifying required: *");
+            $(requiredFieldInFillForm).shouldHave(text("*"));
+        }
+
+        //Help
+        if (StringUtils.isNotEmpty(textfield_help)) {
+            System.out.println("Verifying help: " + textfield_help);
+            $(helpInFillForm).shouldHave(text(textfield_help));
+
+            if (StringUtils.isNotEmpty(lower_case)) {
+                // $(prefixSuffixInFillForm).click();
+                String upperCaseStr = textfield_label.toUpperCase();
+                //    $(prefixSuffixInFillForm).click();
+                //  $(prefixSuffixInFillForm).sendKeys("abcd");
+                $(prefixSuffixInFillForm).setValue(upperCaseStr); //TBD
+                String str = $(prefixSuffixInFillForm).getValue();
+                assertTrue(str.equals(textfield_label.toLowerCase()));
+            }
+        }
+
+        //Prefix
+        if (StringUtils.isNotEmpty(textfield_prefix)) {
+            System.out.println("Verifying prefix: " + textfield_prefix);
+            $(prefixSuffixInFillForm).shouldHave(text(textfield_prefix));
+            $(prefixInFillForm1).shouldHave(text(textfield_prefix));
+        }
+
+        //Suffix
+        if (StringUtils.isNotEmpty(textfield_suffix)) {
+            System.out.println("Verifying suffix: " + textfield_suffix);
+            $(prefixSuffixInFillForm).shouldHave(text(textfield_suffix));
+            $(suffixInFillForm1).shouldHave(text(textfield_suffix));
+        }
+
+
+        //Default value
+        if (StringUtils.isNotEmpty(textfield_defaultValue)) {
+            System.out.println("Verifying default value: " + textfield_defaultValue);
+            $(defaultValueInFillForm).shouldHave(value(textfield_defaultValue));
+
+        }
+
+
     }
+
+
 }
+
+
