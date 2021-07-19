@@ -387,9 +387,8 @@ public class TextFieldTest extends BaseTest {
                 String upperCaseStr = textfield_label.toUpperCase();
                 //    $(prefixSuffixInFillForm).click();
                 //  $(prefixSuffixInFillForm).sendKeys("abcd");
-                $(prefixSuffixInFillForm).setValue(upperCaseStr); //TBD
-                String str = $(prefixSuffixInFillForm).getValue();
-                assertTrue(str.equals(textfield_label.toLowerCase()));
+                $(blockStr + " input").setValue(upperCaseStr).pressTab();
+                $(blockStr + " input").shouldHave(value(upperCaseStr.toLowerCase()));
             }
         }
 
