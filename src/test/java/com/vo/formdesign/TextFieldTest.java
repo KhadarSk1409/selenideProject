@@ -3,6 +3,7 @@ package com.vo.formdesign;
 import com.codeborne.selenide.CollectionCondition;
 import com.vo.BaseTest;
 import jdk.javadoc.doclet.Reporter;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -381,16 +382,6 @@ public class TextFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(textfield_help)) {
             System.out.println("Verifying help: " + textfield_help);
             $(helpInFillForm).shouldHave(text(textfield_help));
-
-            if (StringUtils.isNotEmpty(lower_case)) {
-                // $(prefixSuffixInFillForm).click();
-                String upperCaseStr = textfield_label.toUpperCase();
-                //    $(prefixSuffixInFillForm).click();
-                //  $(prefixSuffixInFillForm).sendKeys("abcd");
-                $(prefixSuffixInFillForm).setValue(upperCaseStr); //TBD
-                String str = $(prefixSuffixInFillForm).getValue();
-                assertTrue(str.equals(textfield_label.toLowerCase()));
-            }
         }
 
         //Prefix
@@ -412,12 +403,21 @@ public class TextFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(textfield_defaultValue)) {
             System.out.println("Verifying default value: " + textfield_defaultValue);
             $(defaultValueInFillForm).shouldHave(value(textfield_defaultValue));
-
         }
 
+        //Lower case
+        if (StringUtils.isNotEmpty(lower_case)) {
+            String upperCaseStr = textfield_label.toUpperCase();
+            $(blockStr + " input").setValue(upperCaseStr).pressTab();
+            $(blockStr + " input").shouldHave(value(upperCaseStr.toLowerCase()));
+
+            //Verify that user can enter 14 characters:
+            String upperCaseStr14 = (RandomStringUtils.randomAlphanumeric(14)).toUpperCase();
+            $(blockStr + " input").setValue(upperCaseStr14).pressTab();
+            $(blockStr + " input").shouldHave(value(upperCaseStr14.toLowerCase()));
+        }
 
     }
-
 
 }
 
