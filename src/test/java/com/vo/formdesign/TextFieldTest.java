@@ -12,6 +12,7 @@ import org.junit.platform.engine.reporting.ReportEntry;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
+import javax.print.DocFlavor;
 import java.util.Arrays;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
@@ -80,12 +81,11 @@ public class TextFieldTest extends BaseTest {
                              String textfield_prefix,
                              String textfield_suffix,
                              String textfield_defaultValue,
-                             String lower_case,
                              String property_toggle_button_normal, String property_toggle_button_uppercase, String property_toggle_button_lowercase,
                              String checkbox_required,
-                             String property_onlyAlphabets_onlyAlphabets,
-                             String property_alphabetsAndNumerics_alphabetsAndNumerics,
-                             String property_allCharacters_allCharacters,
+                             String property_onlyAlphabets,
+                             String property_alphabetsAndNumerics,
+                             String property_allCharacters,
                              Integer minLength,
                              Integer maxLength
     ) {
@@ -128,10 +128,8 @@ public class TextFieldTest extends BaseTest {
         //disable Label
         if (StringUtils.isNotEmpty(checkbox_disableLabel)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + TextFieldOptionsIds.checkbox_disableLabel.name();
             $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
             $(blockId).shouldNotHave(text(textfield_label)); //Verify that the label is hidden for that block
         }
@@ -180,41 +178,6 @@ public class TextFieldTest extends BaseTest {
             $(By.id(TextFieldOptionsIds.textfield_defaultValue.name())).shouldHave(value(textfield_defaultValue));
         }
 
-        //Lower case
-        if (StringUtils.isNotEmpty(lower_case)) {
-            //Select lower case and verify that Prefix, Suffix and Default value change to lower case:
-            $("#prop_toggle_button_lowercase").should(exist).click();
-
-            if (StringUtils.isNotEmpty(textfield_prefix)) {
-                $("#prop_toggle_button_lowercase").should(exist).click(); //Click on lower case
-                String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-                selectAndClear(By.id(TextFieldOptionsIds.textfield_prefix.name()))
-                        .setValue(textfield_prefix).sendKeys(Keys.TAB);
-                $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-                String prefixStr = $(By.id(TextFieldOptionsIds.textfield_prefix.name())).getValue();
-                assertTrue(prefixStr.equals(textfield_prefix.toLowerCase()));
-            }
-
-            if (StringUtils.isNotEmpty(textfield_suffix)) {
-                // String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-                selectAndClear(By.id(TextFieldOptionsIds.textfield_suffix.name()))
-                        .setValue(textfield_suffix).sendKeys(Keys.TAB);
-                //  $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
-                String suffixStr = $(By.id(TextFieldOptionsIds.textfield_suffix.name())).getValue();
-                assertTrue(suffixStr.equals(textfield_suffix.toLowerCase()));
-            }
-
-            if (StringUtils.isNotEmpty(textfield_defaultValue)) {
-                //  String initialVerNumStr3 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-                selectAndClear(By.id(TextFieldOptionsIds.textfield_defaultValue.name()))
-                        .setValue(textfield_defaultValue).sendKeys(Keys.TAB);
-                //  $("#formMinorversion").shouldNotHave(text(initialVerNumStr3)); //Verify that version has increased
-                String defaultStr = $(By.id(TextFieldOptionsIds.textfield_defaultValue.name())).getValue();
-                assertTrue(defaultStr.equals(textfield_defaultValue.toLowerCase()));
-            }
-
-        }
-
         //chars normal
         if (StringUtils.isNotEmpty(property_toggle_button_normal)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
@@ -255,7 +218,7 @@ public class TextFieldTest extends BaseTest {
         }
 
         //only Alphabets
-        if (StringUtils.isNotEmpty(property_onlyAlphabets_onlyAlphabets)) {
+        if (StringUtils.isNotEmpty(property_onlyAlphabets)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String radioBtnId = "#" + TextFieldOptionsIds.prop_onlyAlphabets_onlyAlphabets.name();
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
@@ -266,7 +229,7 @@ public class TextFieldTest extends BaseTest {
         }
 
         //Alphabets and numerics
-        if (StringUtils.isNotEmpty(property_alphabetsAndNumerics_alphabetsAndNumerics)) {
+        if (StringUtils.isNotEmpty(property_alphabetsAndNumerics)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String radioBtnId = "#" + TextFieldOptionsIds.prop_alphabetsAndNumerics_alphabetsAndNumerics.name();
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
@@ -276,7 +239,7 @@ public class TextFieldTest extends BaseTest {
         }
 
         //All chars
-        if (StringUtils.isNotEmpty(property_allCharacters_allCharacters)) {
+        if (StringUtils.isNotEmpty(property_allCharacters)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String radioBtnId = "#" + TextFieldOptionsIds.prop_allCharacters_allCharacters.name();
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
@@ -342,12 +305,11 @@ public class TextFieldTest extends BaseTest {
                                    String textfield_prefix,
                                    String textfield_suffix,
                                    String textfield_defaultValue,
-                                   String lower_case,
                                    String property_toggle_button_normal, String property_toggle_button_uppercase, String property_toggle_button_lowercase,
                                    String checkbox_required,
-                                   String property_onlyAlphabets_onlyAlphabets,
-                                   String property_alphabetsAndNumerics_alphabetsAndNumerics,
-                                   String property_allCharacters_allCharacters,
+                                   String property_onlyAlphabets,
+                                   String property_alphabetsAndNumerics,
+                                   String property_allCharacters,
                                    Integer minLength,
                                    Integer maxLength
     ) {
@@ -405,17 +367,144 @@ public class TextFieldTest extends BaseTest {
         }
 
         //Lower case
-        if (StringUtils.isNotEmpty(lower_case)) {
+        if (StringUtils.isNotEmpty(property_toggle_button_lowercase)) {
             String upperCaseStr = textfield_label.toUpperCase();
             $(blockStr + " input").setValue(upperCaseStr).pressTab();
             $(blockStr + " input").shouldHave(value(upperCaseStr.toLowerCase()));
 
             //Verify that user can enter 14 characters:
             String upperCaseStr14 = (RandomStringUtils.randomAlphanumeric(14)).toUpperCase();
+            selectAndClear(blockStr + " input");
             $(blockStr + " input").setValue(upperCaseStr14).pressTab();
             $(blockStr + " input").shouldHave(value(upperCaseStr14.toLowerCase()));
+
+            // Negative scenario:
+            String bothCasesStr1 = (RandomStringUtils.randomAlphabetic(15));
+            selectAndClear(blockStr + " input");
+            $(blockStr + " input").setValue(bothCasesStr1).pressTab();
+            $(helpInFillForm).shouldHave(text("The length must be in the range 0 - 14")); //Verify the error shown
         }
 
+        //Upper case
+        if (StringUtils.isNotEmpty(property_toggle_button_uppercase)) {
+            String lowerCaseStr = textfield_label.toLowerCase();
+            $(blockStr + " input").setValue(lowerCaseStr).pressTab();
+            $(blockStr + " input").shouldHave(value(lowerCaseStr.toLowerCase()));
+
+            //Verify that user can enter 14 characters:
+            String lowerCaseStr14 = (RandomStringUtils.randomAlphanumeric(14)).toLowerCase();
+            selectAndClear(blockStr + " input");
+            $(blockStr + " input").setValue(lowerCaseStr14).pressTab();
+            $(blockStr + " input").shouldHave(value(lowerCaseStr14.toUpperCase()));
+
+        }
+
+        //Alphabets Both cases
+        if (StringUtils.isNotEmpty(property_toggle_button_normal)) {
+            //Positive scenario:
+            String bothCasesStr = (RandomStringUtils.randomAlphabetic(14));
+            $(blockStr + " input").setValue(bothCasesStr).pressTab();
+            $(blockStr + " input").shouldHave(value(bothCasesStr));
+
+            // Negative scenario:
+            String bothCasesStr1 = (RandomStringUtils.randomAlphabetic(15));
+            selectAndClear(blockStr + " input");
+            $(blockStr + " input").setValue(bothCasesStr1).pressTab();
+            $(helpInFillForm).shouldHave(text("The length must be in the range 0 - 14")); //Verify the error shown
+        }
+
+
+        //Only Alphabets
+        if (StringUtils.isNotEmpty(property_onlyAlphabets)) {
+            //Positive scenario:
+            String Str = (RandomStringUtils.randomAlphabetic(14));
+            $(blockStr + " input").setValue(Str).pressTab();
+            $(blockStr + " input").shouldHave(value(Str));
+
+            //Negative scenario:
+            String Str1 = (RandomStringUtils.randomAlphabetic(15));
+            selectAndClear(blockStr + " input");
+            $(blockStr + " input").clear();
+            $(blockStr + " input").shouldNotHave(value(Str1));
+            $(blockStr + " input").setValue(Str1).pressTab();
+            $(helpInFillForm).shouldHave(text("The length must be in the range 0 - 14")); //Verify the error shown
+
+            selectAndClear(blockStr + " input");
+            $(blockStr + " input").shouldNotHave(value(Str));
+            $(blockStr + " input").shouldNotHave(value(Str1));
+
+            String integerSeq = "1234567890";
+            $(blockStr + " input").setValue(integerSeq);
+            $(blockStr + " input").shouldHave(value("")); //Field should be empty - integer not accepted
+        }
+
+        //AlphaNumeric
+        if (StringUtils.isNotEmpty(property_alphabetsAndNumerics)) {
+            //Positive scenario:
+            String Str = (RandomStringUtils.randomAlphanumeric(14));
+            selectAndClear(blockStr + " input");
+            $(blockStr + " input").setValue(Str).pressTab();
+            $(blockStr + " input").shouldHave(value(Str));
+
+            //Negative scenario:
+            String Str1 = (RandomStringUtils.randomAlphanumeric(15));
+            selectAndClear(blockStr + " input");
+            $(blockStr + " input").shouldNotHave(text(Str));
+            $(blockStr + " input").setValue(Str1).pressTab();
+            $(helpInFillForm).shouldHave(text("The length must be in the range 0 - 14")); //Verify the error shown
+        }
+
+        //All Characters
+        if (StringUtils.isNotEmpty(property_allCharacters)) {
+            //Positive scenario:
+            String Str = (RandomStringUtils.randomAlphanumeric(14));
+            selectAndClear(By.id(blockStr + " input"));
+            $(blockStr + " input").setValue(Str).pressTab();
+            $(blockStr + " input").shouldHave(value(Str));
+
+            //Negative scenario:
+            String Str1 = (RandomStringUtils.randomAlphanumeric(15));
+            selectAndClear(blockStr + " input");
+            $(blockStr + " input").shouldNotHave(value(Str));
+            $(blockStr + " input").setValue(Str1).pressTab();
+            $(helpInFillForm).shouldHave(text("The length must be in the range 0 - 14")); //Verify the error shown
+        }
+
+        //Min Length
+        if (minLength != null && minLength > 0) {
+            //Positive scenario:
+            String Str = (RandomStringUtils.randomAlphanumeric(minLength));
+            $(blockStr + " input").setValue(Str).pressTab();
+            $(blockStr + " input").shouldHave(value(Str));
+
+            //Negative scenario:
+            int lessThanMinLength = minLength - 1; //Less than min length
+            String errorStr = "The length must be in the range " + minLength + " - " + maxLength;
+            String Str1 = (RandomStringUtils.randomAlphanumeric(lessThanMinLength));
+            selectAndClear(blockStr + " input");
+            $(blockStr + " input").shouldNotHave(value(Str)); //Verify that field is cleared
+            $(blockStr + " input").setValue(Str1).pressTab();
+
+            $(helpInFillForm).shouldHave(text(errorStr)); //Error should be shown
+        }
+
+        if (maxLength != null && maxLength > 0) {
+            //Positive scenario:
+            String Str = (RandomStringUtils.randomAlphanumeric(maxLength));
+            selectAndClear(blockStr + " input");
+            $(blockStr + " input").setValue(Str).pressTab();
+            $(blockStr + " input").shouldHave(value(Str));
+
+            //Negative scenario:
+            int moreThanMaxLength = minLength + 1; //More than Max length
+            String errorStr = "The length must be in the range " + minLength + " - " + maxLength;
+            String Str1 = (RandomStringUtils.randomAlphanumeric(moreThanMaxLength));
+            selectAndClear(blockStr + " input");
+            $(blockStr + " input").shouldNotHave(value(Str)); //Verify that field is cleared
+            $(blockStr + " input").setValue(Str1).pressTab();
+
+            $(helpInFillForm).shouldHave(text(errorStr)); //Error should be shown
+        }
     }
 
 }
