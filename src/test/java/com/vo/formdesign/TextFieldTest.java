@@ -503,7 +503,7 @@ public class TextFieldTest extends BaseTest {
             $(blockStr + " input").shouldNotHave(value(Str)); //Verify that field is cleared
             $(blockStr + " input").setValue(Str1).pressTab();
 
-            $(helpInFillForm).shouldHave(text(errorStr)); //Error should be shown
+            $(blockStr + " input").shouldHave(value(Str1.substring(0, maxLength))); //the value in field should be cutted by max allowed length
         }
     }
 
