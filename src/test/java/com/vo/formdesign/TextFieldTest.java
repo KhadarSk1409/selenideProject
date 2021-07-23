@@ -496,7 +496,7 @@ public class TextFieldTest extends BaseTest {
             $(blockStr + " input").shouldHave(value(Str));
 
             //Negative scenario:
-            int moreThanMaxLength = minLength + 1; //More than Max length
+            int moreThanMaxLength = maxLength + 1; //More than Max length
             String errorStr = "The length must be in the range " + minLength + " - " + maxLength;
             String Str1 = (RandomStringUtils.randomAlphanumeric(moreThanMaxLength));
             selectAndClear(blockStr + " input");
