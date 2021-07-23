@@ -108,7 +108,6 @@ public class TextAreaFieldTest extends BaseTest {
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(TextAreaFieldOptionsIds.textfield_label.name()))
                     .setValue(textfield_label).sendKeys(Keys.TAB);
-
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(blockId).shouldHave(text(textfield_label));
         }
@@ -371,13 +370,12 @@ public class TextAreaFieldTest extends BaseTest {
 
             //Negative scenario:
             int moreThanMaxLength = minLength + 1; //More than Max length
-            String errorStr = "The length must be in the range " + minLength + " - " + maxLength;
             String Str1 = (RandomStringUtils.randomAlphanumeric(moreThanMaxLength));
             selectAndClear(blockStr + " input");
             $(blockStr + " input").shouldNotHave(value(Str)); //Verify that field is cleared
             $(blockStr + " input").setValue(Str1).pressTab();
 
-            $(helpInFillForm).shouldHave(text(errorStr)); //Error should be shown
+            $(blockStr + " input").shouldHave(value(Str1.substring(0, maxLength))); //the value in field should be cutted by max allowed length
         }
     }
 
