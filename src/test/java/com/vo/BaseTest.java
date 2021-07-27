@@ -215,6 +215,7 @@ public abstract class BaseTest {
         if (Boolean.FALSE.equals(ALREADY_LOGGED_IN.get())) {
             open("");
             setSauceJobId();
+            Wait().until((input) -> WebDriverRunner.url().contains("oauth2/v2.0/authorize"));
             boolean presenceUseOtherAccount = $("#otherTileText").is(exist);
             if(presenceUseOtherAccount) {
                 $("#otherTileText").shouldBe(visible).click();
