@@ -13,8 +13,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
+import static com.codeborne.selenide.Selenide.*;
 import static reusables.ReuseActions.createNewForm;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -70,6 +69,7 @@ public class FormPublicationProcessWithOneApproverTest extends BaseTest {
                 rowEl.$(".fa-check").closest("button").should(exist).shouldBe(enabled).click();
             }
         });
+        $(table).shouldNotHave(Condition.attribute(actualFormName));
         $("#toDashboard").should(exist).click();
 
         //Verify the form approved by GUI Tester 01 is Published or not

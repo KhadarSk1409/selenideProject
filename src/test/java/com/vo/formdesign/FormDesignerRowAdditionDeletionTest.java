@@ -46,41 +46,57 @@ public class FormDesignerRowAdditionDeletionTest extends BaseTest {
         $("#block-loc_en-GB-r_4-c_2").should(exist).click();
 
         //Adding rows
-        $("#block-loc_en-GB-r_1-c_1").should(exist);
-        $("#block-loc_en-GB-r_1-c_1 div:nth-child(2) .fa-plus").should(exist).click(); //Click on + icon to add new row
+        //Adding a new row before existing first row
+        $("#section_1-loc_en-GB-r_1-c_1").should(exist);
+        $("#section_1-loc_en-GB-r_1-c_1 div:nth-child(1) .fa-plus").should(exist).click();
         $("#block-loc_en-GB-r_1-c_2").should(exist).click();
         $("#block-loc_en-GB-r_1-c_3").should(exist).click();
-        $("#block-loc_en-GB-r_2-c_1").should(appear).click();
+        $("#block-loc_en-GB-r_1-c_1").should(exist).click();
         $("#template_card").should(appear);
         $("#li-template-Textfield-04").should(appear).click();
-        $("#block-loc_en-GB-r_2-c_1 span[iconname='fas fa-pen']").should(exist).click();
-        $("#textfield_label").should(exist).setValue(" 001 ");
-        $("#block-loc_en-GB-r_2-c_2").should(exist).click();
-        $("#block-loc_en-GB-r_2-c_3").should(exist).click();
-        $("#block-loc_en-GB-r_2-c_1").should(exist).shouldHave(Condition.text("Text field 001"));
+        $("#block-loc_en-GB-r_1-c_1 div:nth-child(1) .fa-pen").should(exist).click();
+        $("#textfield_label").should(exist).setValue(" 000 ");
+        $("#block-loc_en-GB-r_1-c_2").should(exist).click();
+        $("#block-loc_en-GB-r_1-c_3").should(exist).click();
+        $("#block-loc_en-GB-r_1-c_1").should(exist).shouldHave(Condition.text("Text field 000"));
 
-        $("#block-loc_en-GB-r_5-c_1").should(exist);
-        $("#block-loc_en-GB-r_5-c_1 div:nth-child(2) .fa-plus").should(exist).click(); ////Click on + icon to add new row
-        $("#block-loc_en-GB-r_5-c_2").should(exist).click();
-        $("#block-loc_en-GB-r_5-c_3").should(exist).click();
-        $("#block-loc_en-GB-r_6-c_1").should(exist).click();
+        //Adding a new row in between existing rows
+        $("#block-loc_en-GB-r_2-c_1 div:nth-child(2) .fa-plus").should(exist).click(); //Click on + icon to add new row
+        $("#block-loc_en-GB-r_3-c_2").should(exist).click();
+        $("#block-loc_en-GB-r_3-c_3").should(exist).click();
+        $("#block-loc_en-GB-r_3-c_1").should(appear).click();
         $("#template_card").should(appear);
         $("#li-template-Textfield-04").should(appear).click();
-        $("#block-loc_en-GB-r_6-c_1 div:nth-child(1) .fa-pen").should(exist).click();
+        $("#block-loc_en-GB-r_3-c_1 span[iconname='fas fa-pen']").should(exist).click();
+        $("#textfield_label").should(exist).setValue(" 001 ");
+        $("#block-loc_en-GB-r_3-c_2").should(exist).click();
+        $("#block-loc_en-GB-r_3-c_3").should(exist).click();
+        $("#block-loc_en-GB-r_3-c_1").should(exist).shouldHave(Condition.text("Text field 001"));
+
+        //Adding a new row after the existing row
+        $("#block-loc_en-GB-r_6-c_1 div:nth-child(2) .fa-plus").should(exist).click(); //Click on + icon to add new row
+        $("#block-loc_en-GB-r_7-c_2").should(exist).click();
+        $("#block-loc_en-GB-r_7-c_3").should(exist).click();
+        $("#block-loc_en-GB-r_7-c_1").should(exist).click();
+        $("#template_card").should(appear);
+        $("#li-template-Textfield-04").should(appear).click();
+        $("#block-loc_en-GB-r_7-c_1 div:nth-child(1) .fa-pen").should(exist).click();
         $("#textfield_label").should(exist).setValue(" 002 ");
-        $("#block-loc_en-GB-r_6-c_2").should(exist).click();
-        $("#block-loc_en-GB-r_6-c_3").should(exist).click();
-        $("#block-loc_en-GB-r_6-c_1").should(exist).shouldHave(Condition.text("Text field 002"));
+        $("#block-loc_en-GB-r_7-c_2").should(exist).click();
+        $("#block-loc_en-GB-r_7-c_3").should(exist).click();
+        $("#block-loc_en-GB-r_7-c_1").should(exist).shouldHave(Condition.text("Text field 002"));
 
         //Deletions of added rows
-        $("#block-loc_en-GB-r_2-c_1 .fa-trash-alt").should(exist).click(); // Click on Delete 2nd row
+        $("#block-loc_en-GB-r_1-c_1 div:nth-child(3) .fa-trash-alt").should(exist).click(); //Click on Delete 1st row
+        $("#block-loc_en-GB-r_1-c_2").should(exist).click();
+        $("#block-loc_en-GB-r_1-c_1").should(exist).shouldNotHave(Condition.text("Text field 000")); //Verify the added row is deleted
+
+        $("#block-loc_en-GB-r_2-c_1 div:nth-child(3) .fa-trash-alt").should(exist).click(); //Click on Delete 2nd row
         $("#block-loc_en-GB-r_2-c_2").should(exist).click();
         $("#block-loc_en-GB-r_2-c_1").should(exist).shouldNotHave(Condition.text("Text field 001")); //Verify the added row is deleted
 
-
-        $("#block-loc_en-GB-r_5-c_1 .fa-trash-alt").should(exist).click(); //Click on Delete 5th row
+        $("#block-loc_en-GB-r_5-c_1 div:nth-child(3) .fa-trash-alt").should(exist).click(); //Click on Delete 5th row
         $("#block-loc_en-GB-r_4-c_2").should(exist).click();
-        $("#block-loc_en-GB-r_4-c_1").should(exist).click();
         $("#block-loc_en-GB-r_4-c_1").should(exist).shouldNotHave(Condition.text("Text field 002")); //Verify the added row is deleted
 
     }
