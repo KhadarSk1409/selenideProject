@@ -181,10 +181,12 @@ public class TextAreaFieldTest extends BaseTest {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String radioBtnId = "#" + TextAreaFieldTest.TextAreaFieldOptionsIds.prop_allCharacters_allCharacters.name();
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            $(radioBtnId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            //$(checkBoxId + " input").shouldHave(value("true"));
-            $(radioBtnId + " input").shouldBe(selected);
+            if(! $(radioBtnId + " input").isSelected()) {
+                $(radioBtnId).shouldBe(visible).click();
+                $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+                //$(checkBoxId + " input").shouldHave(value("true"));
+                $(radioBtnId + " input").shouldBe(selected);
+            }
         }
 
         if (minLength != null && minLength > 0) {
