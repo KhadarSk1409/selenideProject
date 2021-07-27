@@ -15,5 +15,7 @@ row,col,col+AF8-span,textfield+AF8-label,disable+AF8-label,textfield+AF8-help,te
 7,1,3,Three Columns,,,,,,,,,,,,,,
 8,1,4,Four Columns,,,,,,,,,,,,,,
 9,1,,Only Alphabets,,,,,,,,,,X,,,,
+3,2,,All characters,,,,,,,,,,,,X,,
+3,3,,Alphanumeric,,,,,,,,,,,X,,,
 9,2,,No Special Chars,,,,,,,,,,,,,,
 9,4,,Min. Max Length,,Min. 5 Characters,,,,,,,,,,,5,14

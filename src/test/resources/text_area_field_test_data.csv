@@ -11,5 +11,7 @@ row,col,col+AF8-span,textfield+AF8-label,checkbox_disableLabel,textfield+AF8-hel
 7,1,3,Three Columns,,,,,,,,,
 8,1,4,Four Columns,,,,,,,,,
 9,1,,Only Alphabets,,,,,X,,,,
+1,4,,All characters,,,,,,,X,,
+2,1,,AlphaNumeric,,,,,,X,,,
 9,2,,No Special Chars,,,,,,,,,
 9,4,,Min. Length,,Min. 5 Characters,,,,,,5,14

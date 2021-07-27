@@ -457,13 +457,13 @@ public class TextFieldTest extends BaseTest {
         //All Characters
         if (StringUtils.isNotEmpty(property_allCharacters)) {
             //Positive scenario:
-            String Str = (RandomStringUtils.randomAlphanumeric(14));
+            String Str = (RandomStringUtils.randomAlphanumeric(4)+"!@#$%^&*()");
             selectAndClear(By.id(blockStr + " input"));
             $(blockStr + " input").setValue(Str).pressTab();
             $(blockStr + " input").shouldHave(value(Str));
 
             //Negative scenario:
-            String Str1 = (RandomStringUtils.randomAlphanumeric(15));
+            String Str1 = (RandomStringUtils.randomAlphanumeric(5)+"!@#$%^&*()");
             selectAndClear(blockStr + " input");
             $(blockStr + " input").shouldNotHave(value(Str));
             $(blockStr + " input").setValue(Str1).pressTab();

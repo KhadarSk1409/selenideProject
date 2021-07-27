@@ -116,7 +116,7 @@ public class TextAreaFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_disableLabel)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            String checkBoxId = "#" + TextFieldTest.TextFieldOptionsIds.checkbox_disableLabel.name();
+            String checkBoxId = "#" + TextAreaFieldTest.TextAreaFieldOptionsIds.checkbox_disableLabel.name();
             $(checkBoxId).shouldBe(visible).click();
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
@@ -148,7 +148,7 @@ public class TextAreaFieldTest extends BaseTest {
         //required
         if (StringUtils.isNotEmpty(checkbox_required)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String checkBoxId = "#" + TextFieldTest.TextFieldOptionsIds.checkbox_required.name();
+            String checkBoxId = "#" + TextAreaFieldTest.TextAreaFieldOptionsIds.checkbox_required.name();
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             $(checkBoxId).shouldBe(visible).click();
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
@@ -159,7 +159,7 @@ public class TextAreaFieldTest extends BaseTest {
         //only Alphabets
         if (StringUtils.isNotEmpty(property_onlyAlphabets)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String radioBtnId = "#" + TextAreaFieldOptionsIds.prop_onlyAlphabets_onlyAlphabets.name();
+            String radioBtnId = "#" + TextAreaFieldTest.TextAreaFieldOptionsIds.prop_onlyAlphabets_onlyAlphabets.name();
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             $(radioBtnId).shouldBe(visible).click();
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
@@ -169,7 +169,7 @@ public class TextAreaFieldTest extends BaseTest {
         //Alphabets and numerics
         if (StringUtils.isNotEmpty(property_alphabetsAndNumerics)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String radioBtnId = "#" + TextAreaFieldOptionsIds.prop_alphabetsAndNumerics_alphabetsAndNumerics.name();
+            String radioBtnId = "#" + TextAreaFieldTest.TextAreaFieldOptionsIds.prop_alphabetsAndNumerics_alphabetsAndNumerics.name();
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             $(radioBtnId).shouldBe(visible).click();
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
@@ -179,7 +179,7 @@ public class TextAreaFieldTest extends BaseTest {
         //All chars
         if (StringUtils.isNotEmpty(property_allCharacters)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String radioBtnId = "#" + TextAreaFieldOptionsIds.prop_allCharacters_allCharacters.name();
+            String radioBtnId = "#" + TextAreaFieldTest.TextAreaFieldOptionsIds.prop_allCharacters_allCharacters.name();
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             $(radioBtnId).shouldBe(visible).click();
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
@@ -224,7 +224,6 @@ public class TextAreaFieldTest extends BaseTest {
     public void publishAndOpenFormPage() {
         //Click on publish button, wait until form dashboard opens and click on fill form
         $("#btnFormDesignPublish").should(exist).click();
-
         $("#form-publish-dialog .MuiPaper-root").should(appear); //Publish confirmation dialog appears
         $("#form-publish-dialog  #btnConfirm").should(exist).click(); //Click on Confirm button
         $("#btnCreateNewData").should(exist).click(); //Fill form button on Launch screen
@@ -255,6 +254,7 @@ public class TextAreaFieldTest extends BaseTest {
         String defaultValueInFillForm = blockStr + " .MuiInputBase-input";
         String requiredFieldInFillForm = blockStr + " .MuiFormLabel-asterisk";
         String inputFieldInFillForm = blockStr + " .MuiOutlinedInput-root";
+        String textareaInput = inputFieldInFillForm + " textarea:nth-of-type(1)";
 
         //Label
         if (StringUtils.isNotEmpty(textfield_label)) {
@@ -278,39 +278,71 @@ public class TextAreaFieldTest extends BaseTest {
             $(helpInFillForm).shouldHave(text(textfield_help));
         }
 
-
         //Default value
         if (StringUtils.isNotEmpty(textfield_defaultValue)) {
             System.out.println("Verifying default value: " + textfield_defaultValue);
             $(defaultValueInFillForm).shouldHave(value(textfield_defaultValue));
         }
 
+        //AlphaNumeric
+        if (StringUtils.isNotEmpty(property_alphabetsAndNumerics)) {
+            //Positive scenario:
+            String Str = (RandomStringUtils.randomAlphanumeric(400));
+            selectAndClear(textareaInput);
+            $(textareaInput).setValue(Str).pressTab();
+            $(textareaInput).shouldHave(value(Str));
 
-       // Only Alphabets
+            //Negative scenario:
+            String Str1 = (RandomStringUtils.randomAlphanumeric(401));
+            selectAndClear(textareaInput);
+            $(textareaInput).shouldNotHave(text(Str));
+            $(textareaInput).setValue(Str1).pressTab();
+            $(textareaInput).shouldHave(value(Str1.substring(0, 400))); //the value in field should be cutted by max allowed length
+            $(helpInFillForm).shouldHave(text("The length must be in the range 0 - 400")); //Verify the error shown
+        }
+
+        //All Characters
+        if (StringUtils.isNotEmpty(property_allCharacters)) {
+            //Positive scenario:
+            String Str = (RandomStringUtils.randomAlphanumeric(390) + "!@#$%^&*()");
+            selectAndClear(textareaInput);
+            $(textareaInput).setValue(Str).pressTab();
+            $(textareaInput).shouldHave(value(Str));
+
+            //Negative scenario:
+            String Str1 = (RandomStringUtils.randomAlphanumeric(391) + "!@#$%^&*()");
+            selectAndClear(textareaInput);
+            $(textareaInput).shouldNotHave(value(Str));
+            $(textareaInput).setValue(Str1).pressTab();
+            $(textareaInput).shouldHave(value(Str1.substring(0, 400))); //the value in field should be cutted by max allowed length
+            $(helpInFillForm).shouldHave(text("The length must be in the range 0 - 400")); //Verify the error shown
+        }
+
+
+        // Only Alphabets
         if (StringUtils.isNotEmpty(property_onlyAlphabets)) {
             //Positive scenario:
             String Str = (RandomStringUtils.randomAlphabetic(400));
-            String onlyAlphabetsInput = inputFieldInFillForm+" textarea:nth-of-type(1)";
-            $(onlyAlphabetsInput).setValue(Str).pressTab();
-            $(onlyAlphabetsInput).shouldHave(value(Str));
+            $(textareaInput).setValue(Str).pressTab();
+            $(textareaInput).shouldHave(value(Str));
 
             //Negative scenario:
             String Str1 = (RandomStringUtils.randomAlphabetic(401));
-            selectAndClear(onlyAlphabetsInput);
-            $(onlyAlphabetsInput).clear();
-            $(onlyAlphabetsInput).shouldNotHave(value(Str1));
-            $(onlyAlphabetsInput).setValue(Str1).pressTab();
+            selectAndClear(textareaInput);
+            $(textareaInput).clear();
+            $(textareaInput).shouldNotHave(value(Str1));
+            $(textareaInput).setValue(Str1).pressTab();
             //"The length must be in the range  0 - 400"
-            $(onlyAlphabetsInput).shouldHave(value(Str1.substring(0, 400))); //the value in field should be cutted by max allowed length
+            $(textareaInput).shouldHave(value(Str1.substring(0, 400))); //the value in field should be cutted by max allowed length
             $(helpInFillForm).shouldHave(text("The length must be in the range 0 - 400")); //Verify the error shown
 
-            selectAndClear(onlyAlphabetsInput);
-            $(onlyAlphabetsInput).shouldNotHave(value(Str));
-            $(onlyAlphabetsInput).shouldNotHave(value(Str1));
+            selectAndClear(textareaInput);
+            $(textareaInput).shouldNotHave(value(Str));
+            $(textareaInput).shouldNotHave(value(Str1));
 
             String integerSeq = "1234567890";
-            $(onlyAlphabetsInput).setValue(integerSeq);
-            $(onlyAlphabetsInput).shouldHave(value("")); //Field should be empty - integer not accepted
+            $(textareaInput).setValue(integerSeq);
+            $(textareaInput).shouldHave(value("")); //Field should be empty - integer not accepted
         }
 
 
@@ -318,17 +350,16 @@ public class TextAreaFieldTest extends BaseTest {
         if (minLength != null && minLength > 0) {
             //Positive scenario:
             String Str = (RandomStringUtils.randomAlphanumeric(minLength));
-            String onlyAlphabetsInput = inputFieldInFillForm+" textarea:nth-of-type(1)";
-            $(onlyAlphabetsInput).setValue(Str).pressTab();
-            $(onlyAlphabetsInput).shouldHave(value(Str));
+            $(textareaInput).setValue(Str).pressTab();
+            $(textareaInput).shouldHave(value(Str));
 
             //Negative scenario:
             int lessThanMinLength = minLength - 1; //Less than min length
             String errorStr = "The length must be in the range " + minLength + " - " + maxLength;
             String Str1 = (RandomStringUtils.randomAlphanumeric(lessThanMinLength));
-            selectAndClear(onlyAlphabetsInput);
-            $(onlyAlphabetsInput).shouldNotHave(value(Str)); //Verify that field is cleared
-            $(onlyAlphabetsInput).setValue(Str1).pressTab();
+            selectAndClear(textareaInput);
+            $(textareaInput).shouldNotHave(value(Str)); //Verify that field is cleared
+            $(textareaInput).setValue(Str1).pressTab();
 
             $(helpInFillForm).shouldHave(text(errorStr)); //Error should be shown
         }
@@ -336,19 +367,19 @@ public class TextAreaFieldTest extends BaseTest {
         if (maxLength != null && maxLength > 0) {
             //Positive scenario:
             String Str = (RandomStringUtils.randomAlphanumeric(maxLength));
-            String onlyAlphabetsInput = inputFieldInFillForm+" textarea:nth-of-type(1)";
-            selectAndClear(onlyAlphabetsInput);
-            $(onlyAlphabetsInput).setValue(Str).pressTab();
-            $(onlyAlphabetsInput).shouldHave(value(Str));
+            //  String textareaInput = inputFieldInFillForm+" textarea:nth-of-type(1)";
+            selectAndClear(textareaInput);
+            $(textareaInput).setValue(Str).pressTab();
+            $(textareaInput).shouldHave(value(Str));
 
             //Negative scenario:
             int moreThanMaxLength = maxLength + 1; //More than Max length
             String Str1 = (RandomStringUtils.randomAlphanumeric(moreThanMaxLength));
-            selectAndClear(onlyAlphabetsInput);
-            $(onlyAlphabetsInput).shouldNotHave(value(Str)); //Verify that field is cleared
-            $(onlyAlphabetsInput).setValue(Str1).pressTab();
+            selectAndClear(textareaInput);
+            $(textareaInput).shouldNotHave(value(Str)); //Verify that field is cleared
+            $(textareaInput).setValue(Str1).pressTab();
 
-            $(onlyAlphabetsInput).shouldHave(value(Str1.substring(0, maxLength))); //the value in field should be cutted by max allowed length
+            $(textareaInput).shouldHave(value(Str1.substring(0, maxLength))); //the value in field should be cutted by max allowed length
         }
     }
 
