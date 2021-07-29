@@ -16,5 +16,4 @@ public class MultipleUserSwitchTest extends BaseTest {
         shouldLogin(UserType.USER_03);
         shouldLogin(UserType.MAIN_TEST_USER);
     }
-
-  }
+}

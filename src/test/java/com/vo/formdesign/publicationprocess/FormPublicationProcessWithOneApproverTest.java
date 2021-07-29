@@ -1,4 +1,4 @@
-package com.vo.formDashboard;
+package com.vo.formdesign.publicationprocess;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
@@ -12,43 +12,39 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static reusables.ReuseActions.createNewForm;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@DisplayName("Verify the form publication process with multiple users")
-public class FormPublicationProcessWithMultipleUsersTest extends BaseTest {
+@DisplayName("Verify Form Publication Process with One Approver")
+public class FormPublicationProcessWithOneApproverTest extends BaseTest {
 
     @Test
-    @DisplayName("Verify Create a form and publish with multiple users")
-    public void publicationProcess() {
-        shouldLogin(UserType.USER_01);
-        //Create a New Form
+    @DisplayName("Create a form and publish with One Approval")
+    public void formPublicationWithOneApprover() {
+
         Pair<String, String> formName=createNewForm();
         String actualFormName= formName.getKey();
         $("#wizard-createFormButton").should(exist).shouldBe(enabled).click(); //Click on Create Form
-        applyLabelForTestForms(); //Apply guitest label
         $("#formDashboardHeaderLeft").should(appear);
         $("#block-loc_en-GB-r_1-c_1").should(exist).click(); //Click on + to add a field
         $("#template_card").should(appear).$("#li-template-Textfield-04").click(); //Add one field
-        $("#btnFormDesignPublish").should(exist).click(); //Click on Publish
-        $("#form-publish-dialog").$("#btnConfirm").should(exist).shouldBe(enabled).click(); //Click on Confirm
-        $("#formDashboardHeaderLeft").should(exist);
-        $("#btnEditFormDesign").should(exist).shouldBe(enabled).click(); //Click on Edit Form Design
         $("#formtree_card").should(exist);
         $("#formelement_properties_card").should(exist);
         $("#nav_button").should(exist).click();
-        $("#designer_panel_menu ul li:nth-child(4)").click(); //Should click on Configure publication process
+        $("#designer_panel_menu ul").$(byText("Configure publication process"))
+                .should(exist).click(); //Should click on Configure publication process
         $("#ckbApprovalProcessRequired").should(exist).click();
         $("#btnNext").should(exist).click();
         $("#rb_Basic_Approve_Form_Process").shouldBe(checked); //Publication with one approval should be checked
         $("#btnNext").should(exist).click(); //Click on Next
         $("#ckb_first_tApproverFreeUserSelection").should(exist).click(); //Click on Free User Selection
         $("#fc_first_UserSelect").$("#selUser").should(exist).click(); //Click on SelUser to select the user
-        //Select GUI Tester 02 to Approve and Publish
+        //Select GUI Tester 01 to Approve and Publish
         $(".MuiAutocomplete-popper").should(appear);
-        $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("GUI Tester 02guitester02@visualorbit.com"), 5000);
-        $$(".MuiAutocomplete-popper li").findBy(text("GUI Tester 02guitester02@visualorbit.com")).click(); //Click on the selected user
+        $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("GUI Tester 01guitester01@visualorbit.com"), 5000);
+        $$(".MuiAutocomplete-popper li").findBy(text("GUI Tester 01guitester01@visualorbit.com")).click(); //Click on the selected user
         $("#sw_first_UserCanOverwrite").should(exist).click();
         $("#btnNext").should(exist).click(); //Click on Next
         $("#designer_tab_Publications div:nth-child(7)").shouldHave(text("Ready and Save"));
@@ -56,10 +52,9 @@ public class FormPublicationProcessWithMultipleUsersTest extends BaseTest {
         $("#btnFormDesignPublish").should(exist).click();
         $("#form-publish-dialog").$("#btnConfirm").should(exist).shouldBe(enabled).click();
 
-        shouldLogin(UserType.USER_02); //Should login as GUI Tester 02
-
+        //Should login as GUI Tester 01
+        shouldLogin(UserType.USER_01);
         SelenideElement table = $("#tasksCard .MuiTableBody-root").shouldBe(visible);
-
         ElementsCollection rows = table.$$("tr");
         System.out.println(" Tasks Count is " + rows.size());
 
@@ -74,10 +69,11 @@ public class FormPublicationProcessWithMultipleUsersTest extends BaseTest {
                 rowEl.$(".fa-check").closest("button").should(exist).shouldBe(enabled).click();
             }
         });
+        $(table).shouldNotHave(Condition.attribute(actualFormName));
         $("#toDashboard").should(exist).click();
 
-        //Verify the form approved by GUI Tester 02 is Published or not
-        shouldLogin(UserType.USER_01); //Should login as GUI Tester 01
+        //Verify the form approved by GUI Tester 01 is Published or not
+        shouldLogin(UserType.MAIN_TEST_USER); //Should login as GUI Tester
 
         SelenideElement formListTable = $("#formListTable .MuiTableBody-root").shouldBe(visible);
 

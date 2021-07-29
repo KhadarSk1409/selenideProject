@@ -5,6 +5,7 @@ import org.junit.jupiter.api.*;
 
 import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selectors.byAttribute;
 import static com.codeborne.selenide.Selenide.*;
 import static reusables.ReuseActions.navigateToFormDashBoardFromFavoriteForms;
 
@@ -23,9 +24,9 @@ public class FormDashBoardComponentsTest extends BaseTest {
     @Order(1)
     public void verifyMainComponentsInFormDashboard() {
         $("#gridItemTasks").should(exist);  //My Tasks section should be avaialble
-        $("#gridItemTasks button").getAttribute("title").equals("Expand");  //Verify that Expand button is present in My Tasks section
+        $("#gridItemTasks button").shouldHave(attribute("title", "Expand"));  //Verify that Expand button is present in My Tasks section
         $("#gridItemUserDataList").should(exist);   //User Data Lists should be available
-        $("#gridItemUserDataList button").getAttribute("title").equals("Expand");   //Verify that Expand button is present in User Data Lists section
+        $("#gridItemUserDataList").find(byAttribute("title", "Expand")).should(exist);   //Verify that Expand button is present in User Data Lists section
         $$("#full-width-tab-0").shouldHave(texts("MY SUBMISSIONS", "All Submissions", "Data Capture")); //User data lists contain these three tabs
     }
 
