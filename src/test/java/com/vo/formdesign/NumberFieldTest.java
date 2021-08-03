@@ -12,9 +12,14 @@ import org.openqa.selenium.Keys;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Arrays;
+import java.util.Locale;
+import java.util.Random;
 import java.util.stream.IntStream;
 
 import static com.codeborne.selenide.Condition.*;
@@ -423,46 +428,27 @@ public class NumberFieldTest extends BaseTest {
             $(inputField).shouldHave(value(numberField_defaultValueNumber));
         }
 
-//        //Decimal value
-//        if(StringUtils.isNotEmpty(numberfield_decimalScale)){
-//            System.out.println("Verifying number decimal");
-//
-//            $(inputField).shouldHave(value(numberField_defaultValueNew));
-//
-//            //Verify that if user enters a multiple decimal, it changes to predefined decimal:
-//
-//            //Define random number string
-//            String randomStr = (RandomStringUtils.randomNumeric(4)); //Random number
-//            int randomInt = Integer.parseInt(randomStr); //change to int
-//
-//            //Define decimal pattern using DecimalFormat class (it takes argument as string)
-//            DecimalFormat df1 = new DecimalFormat("#.###"); //Set pattern
-//
-//            String formatStr = df1.format(randomInt); //Expected: formatStr should change to the decimal format defined above
-//
-//            //Using this object of DecimalFormat, set parse Big decimal as true
-//             df1.setParseBigDecimal(true);
-//
-//            //Parse the four digit String to number, with ref to DecimalFormat object and assign to Bigdecimal
-//            BigDecimal changetoBigDecimal = (BigDecimal) df1.parse(formatStr); //Change to Bigdecimal
-//
-//
-//            String newValueInField = df1.format(randomStr); //Convert to string
-//
-//            //Set the value in decimal:
-//            selectAndClear(inputField).setValue(newValueInField).pressTab();
-//
-//            //Verify that three decimal is changed to two decimal
-//            int numDecimalScale = Integer.parseInt(numberfield_decimalScale); //Scale number
-//            DecimalFormat df = new DecimalFormat("#.##");
-//            df.setMaximumFractionDigits(numDecimalScale); //Set fraction to numberfield_decimalScale
-//
-//            //Change to Bigdecimal:
-//            df.setParseBigDecimal(true);
-//            BigDecimal bigDecimal_numberField_defaultValueNumber = (BigDecimal) df.parse(numberField_defaultValueNumber);
-//            String valueInField = df.format(bigDecimal_numberField_defaultValueNumber); //Convert to string
-//            $(inputField).shouldHave(value(valueInField));
-//        }
+        //Decimal scale value verify, that decimal places are cutted by configured amount of decimal places
+        if(StringUtils.isNotEmpty(numberfield_decimalScale)){
+            //construct a number decimal value
+            Random r = new Random();
+            int integer = r.nextInt(100);
+            double decimal = r.nextDouble();
+            BigDecimal bd = new BigDecimal(integer+decimal);
+
+            //use uk number format b/c gui test user has uk locale actived per default
+            DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.UK);
+            df.setMaximumFractionDigits(Integer.parseInt(numberfield_decimalScale));
+            df.setRoundingMode(RoundingMode.DOWN);
+            df.setParseBigDecimal(true);
+            System.out.println("random bigdecmial: " +  " .... " + bd.toString() + " .... " + df.format(bd));
+            //try to set a big decimal value with full amount of decimal places
+            selectAndClear(inputField).setValue(bd.toString()).pressTab();
+
+            //it should have only specified amount of decimal places in gui accepted
+            $(inputField).shouldHave(value(df.format(bd)));
+
+        }
 
         //Allow leading zeroes:
         if (StringUtils.isNotEmpty(checkbox_allowLeadingZeros)) {
@@ -533,4 +519,17 @@ public class NumberFieldTest extends BaseTest {
         }
     }
 
+    public static void main(String[] args) {
+        Random r = new Random();
+        int integer = r.nextInt(100);
+        double decimal = r.nextDouble();
+        BigDecimal bd = new BigDecimal(integer+decimal);
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.UK);
+        df.setMaximumFractionDigits(2);
+        df.setRoundingMode(RoundingMode.DOWN);
+        df.setParseBigDecimal(true);
+        System.out.println("random bigdecmial: " +  " .... " + bd.toString() + " .... " + df.format(bd));
+
     }
+
+}
