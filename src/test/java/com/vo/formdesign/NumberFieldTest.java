@@ -30,6 +30,8 @@ import static reusables.ReuseActions.createNewForm;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Number Field Creation Tests")
 public class NumberFieldTest extends BaseTest {
+
+
     enum NumberFieldOptionsIds {
         textfield_label,
         textfield_help,
@@ -99,8 +101,8 @@ public class NumberFieldTest extends BaseTest {
                                String numberfield_help,
                                String checkbox_disableLabel,
                                String checkbox_required,
-                               String numberfield_decimalScale,
 
+                               String numberfield_decimalScale,
                                String numberfield_minValue,
                                String numberfield_maxValue,
 
@@ -274,16 +276,13 @@ public class NumberFieldTest extends BaseTest {
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
             $("#numberField_decimalScale").shouldHave(value(numberfield_decimalScale));
         }
-//
+
         //Enter Default value
         if (StringUtils.isNotEmpty(numberField_defaultValueNumber)) {
             selectAndClear(By.id(NumberFieldOptionsIds.numberField_defaultValueNumber.name()))
                     .setValue(numberField_defaultValueNumber).sendKeys(Keys.TAB);
             if (StringUtils.isNotEmpty(numberfield_decimalScale)) {
-                selectAndClear(By.id(NumberFieldOptionsIds.numberField_defaultValueNumber.name())).setValue("0.0000").sendKeys(Keys.TAB); //Set 0.0000 in Default value
-                $("#numberField_defaultValueNumber").shouldHave(value("0.00"));
-                selectAndClear(By.id(NumberFieldOptionsIds.numberField_decimalScale.name()))
-                        .setValue("").sendKeys(Keys.TAB);
+                $("#numberField_defaultValueNumber").shouldHave(value("1234.56"));
             } else {
                 $("#numberField_defaultValueNumber").shouldHave(value(numberField_defaultValueNumber));
             }
@@ -343,7 +342,7 @@ public class NumberFieldTest extends BaseTest {
 
         $("#form-publish-dialog .MuiPaper-root").should(appear); //Publish confirmation dialog appears
         $("#form-publish-dialog  #btnConfirm").should(exist).click(); //Click on Confirm button
-        $("#btnCreateNewData").waitUntil(exist, 50000).click(); //Fill form button on Launch screen
+        $("#btnCreateNewData").should(exist).click(); //Fill form button on Launch screen
         $("#dataContainer").should(appear); //Verify that the form details screen appears
 
     }
@@ -358,8 +357,8 @@ public class NumberFieldTest extends BaseTest {
                                      String numberfield_help,
                                      String checkbox_disableLabel,
                                      String checkbox_required,
-                                     String numberfield_decimalScale,
 
+                                     String numberfield_decimalScale,
                                      String numberfield_minValue,
                                      String numberfield_maxValue,
 
@@ -375,7 +374,6 @@ public class NumberFieldTest extends BaseTest {
         String blockStr = "#data_block-loc_en-GB-r_" + row + "-c_" + col;
         String labelInFillForm = blockStr + " .MuiFormLabel-root";
         String helpInFillForm = blockStr + " .MuiFormHelperText-root";
-        String defaultValueInFillForm = blockStr + " .MuiInputBase-input";
         String requiredFieldInFillForm = blockStr + " .MuiFormLabel-asterisk";
         String inputField = blockStr + " input";
 
@@ -402,130 +400,114 @@ public class NumberFieldTest extends BaseTest {
             $(helpInFillForm).shouldHave(text(numberfield_help));
         }
 
-        //Default value
-        if (StringUtils.isNotEmpty(numberField_defaultValueNumber)) {
-            System.out.println("Verifying default value: " + numberField_defaultValueNumber);
-            if (StringUtils.isNotEmpty(numberfield_minValue)) {
-                $(defaultValueInFillForm).shouldHave(value(numberfield_minValue));
-            } else if (StringUtils.isNotEmpty(numberfield_maxValue)) {
-                $(defaultValueInFillForm).shouldHave(value(numberfield_maxValue));
-//            } else if (StringUtils.isNotEmpty(numberfield_decimalScale)) {
-//                $(defaultValueInFillForm).shouldHave(value("0."));
-//            }
-                {
-                    $(defaultValueInFillForm).shouldHave(value(numberField_defaultValueNumber));
-                }
+
+        //Read Only checkbox
+        if (StringUtils.isNotEmpty(checkbox_readOnly)) {
+            System.out.println("Verifying checkbox readOnly");
+            $(inputField).shouldHave(value("0"));  //How to verify that 0 is present in Read Only //TBD
+        }
+
+        //Thousand Separator
+        if (StringUtils.isNotEmpty(checkbox_thousandSeparator)) {
+            System.out.println("Verifying checkbox thousandSeparator");
+            $(inputField).shouldHave(value(numberField_defaultValueNumber)); //Thousand separator should have numberField_defaultValueNumber
+        }
+
+        //Allow Negative
+        if (StringUtils.isNotEmpty(checkbox_allowNegative)) {
+            System.out.println("Verifying checkbox allowNegative");
+            $(inputField).shouldHave(value(numberField_defaultValueNumber));
+        }
+
+        //Decimal scale value verify, that decimal places are cutted by configured amount of decimal places
+        if (StringUtils.isNotEmpty(numberfield_decimalScale)) {
+            //construct a number decimal value
+            Random r = new Random();
+            int integer = r.nextInt(100);
+            double decimal = r.nextDouble();
+            BigDecimal bd = new BigDecimal(integer + decimal);
+
+            //use uk number format b/c gui test user has uk locale actived per default
+            DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.UK);
+            df.setMaximumFractionDigits(Integer.parseInt(numberfield_decimalScale));
+            df.setRoundingMode(RoundingMode.DOWN);
+            df.setParseBigDecimal(true);
+            System.out.println("random bigdecmial: " + " .... " + bd.toString() + " .... " + df.format(bd));
+            //try to set a big decimal value with full amount of decimal places
+            selectAndClear(inputField).setValue(bd.toString()).pressTab();
+
+            //it should have only specified amount of decimal places in gui accepted
+            $(inputField).shouldHave(value(df.format(bd)));
+
+        }
+
+        //Allow leading zeroes:
+        if (StringUtils.isNotEmpty(checkbox_allowLeadingZeros)) {
+            System.out.println("Verifying allow leading zeros");
+            $(inputField).shouldHave(value(numberField_defaultValueNumber));
+        }
+
+        //Apply format
+        if (StringUtils.isNotEmpty(checkbox_applyFormatter)) {
+            System.out.println("Verifying apply formatter");
+            $(inputField).shouldHave(value(numberField_defaultValueNumber));
+        }
+
+        //Only Integer
+        if (StringUtils.isNotEmpty(checkbox_onlyInteger)) {
+            System.out.println("Verifying only integer");
+
+            //Positive scenario:
+            $(inputField).shouldHave(value(numberField_defaultValueNumber));
+
+            //Negative scenario:
+            String str = RandomStringUtils.randomAlphabetic(4);
+            $(inputField).setValue(str);
+            $(inputField).shouldNotHave(value(str));
+
+        }
+
+        //Min value
+        if (StringUtils.isNotEmpty(numberfield_minValue)) {
+            System.out.println("Verifying Min value");
+
+            //Positive scenario:
+            $(inputField).shouldHave(value(numberfield_minValue));
+
+            //Negative scenario:
+            //Error verification:
+            int int_numberfield_minValue = Integer.parseInt(numberfield_minValue);
+            int int_numberField_defaultValueNumber = Integer.parseInt(numberField_defaultValueNumber);
+
+            if (int_numberfield_minValue > int_numberField_defaultValueNumber) {
+                selectAndClear(By.id(NumberFieldOptionsIds.numberField_minValue.name()))
+                        .setValue(numberField_defaultValueNumber).sendKeys(Keys.TAB);
+                String errorStr = "The value " + int_numberField_defaultValueNumber + " is smaller than minimum value " + int_numberfield_minValue;
+
+                $("#numberField_defaultValueNumber-helper-text").should(exist).shouldHave(text(errorStr)); //Verify error shown
             }
+        }
 
-            //Read Only checkbox
-            if (StringUtils.isNotEmpty(checkbox_readOnly)) {
-                System.out.println("Verifying checkbox readOnly");
-                $(inputField).shouldHave(value("0"));  //How to verify that 0 is present in Read Only //TBD
-            }
+        //Max value
+        if (StringUtils.isNotEmpty(numberfield_maxValue)) {
+            System.out.println("Verifying Max value");
+            //Positive scenario:
+            $(inputField).shouldHave(value(numberfield_maxValue));
 
-            //Thousand Separator
-            if (StringUtils.isNotEmpty(checkbox_thousandSeparator)) {
-                System.out.println("Verifying checkbox thousandSeparator");
-                $(inputField).shouldHave(value(numberField_defaultValueNumber)); //Thousand separator should have numberField_defaultValueNumber
-            }
+            //Negative scenario:
+            //Error verification:
+            int int_numberfield_maxValue = Integer.parseInt(numberfield_maxValue);
+            int int_numberField_defaultValueNumber = Integer.parseInt(numberField_defaultValueNumber);
 
-            //Allow Negative
-            if (StringUtils.isNotEmpty(checkbox_allowNegative)) {
-                System.out.println("Verifying checkbox allowNegative");
-                $(inputField).shouldHave(value(numberField_defaultValueNumber));
-            }
+            if (int_numberfield_maxValue < int_numberField_defaultValueNumber) {
+                selectAndClear(By.id(NumberFieldOptionsIds.numberField_minValue.name()))
+                        .setValue(numberField_defaultValueNumber).sendKeys(Keys.TAB);
+                String errorStr = "The value " + int_numberField_defaultValueNumber + " is greater than maximun value " + int_numberfield_maxValue;
 
-            //Decimal scale value verify, that decimal places are cutted by configured amount of decimal places
-            if (StringUtils.isNotEmpty(numberfield_decimalScale)) {
-                //construct a number decimal value
-                Random r = new Random();
-                int integer = r.nextInt(100);
-                double decimal = r.nextDouble();
-                BigDecimal bd = new BigDecimal(integer + decimal);
+                $("#numberField_defaultValueNumber-helper-text").should(exist).shouldHave(text(errorStr)); //Verify error shown
 
-                //use uk number format b/c gui test user has uk locale actived per default
-                DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.UK);
-                df.setMaximumFractionDigits(Integer.parseInt(numberfield_decimalScale));
-                df.setRoundingMode(RoundingMode.DOWN);
-                df.setParseBigDecimal(true);
-                System.out.println("random bigdecmial: " + " .... " + bd.toString() + " .... " + df.format(bd));
-                //try to set a big decimal value with full amount of decimal places
-                selectAndClear(inputField).setValue(bd.toString()).pressTab();
-
-                //it should have only specified amount of decimal places in gui accepted
-                $(inputField).shouldHave(value(df.format(bd)));
-
-            }
-
-            //Allow leading zeroes:
-            if (StringUtils.isNotEmpty(checkbox_allowLeadingZeros)) {
-                System.out.println("Verifying allow leading zeros");
-                $(inputField).shouldHave(value(numberField_defaultValueNumber));
-            }
-
-            //Apply format
-            if (StringUtils.isNotEmpty(checkbox_applyFormatter)) {
-                System.out.println("Verifying apply formatter");
-                $(inputField).shouldHave(value(numberField_defaultValueNumber));
-            }
-
-            //Only Integer
-            if (StringUtils.isNotEmpty(checkbox_onlyInteger)) {
-                System.out.println("Verifying only integer");
-
-                //Positive scenario:
-                $(inputField).shouldHave(value(numberField_defaultValueNumber));
-
-                //Negative scenario:
-                String str = RandomStringUtils.randomAlphabetic(4);
-                $(inputField).setValue(str);
-                $(inputField).shouldNotHave(value(str));
-
-            }
-
-            //Min value
-            if (StringUtils.isNotEmpty(numberfield_minValue)) {
-                System.out.println("Verifying Min value");
-
-                //Positive scenario:
-                $(inputField).shouldHave(value(numberfield_minValue));
-
-                //Negative scenario:
-                //Error verification:
-                int int_numberfield_minValue = Integer.parseInt(numberfield_minValue);
-                int int_numberField_defaultValueNumber = Integer.parseInt(numberField_defaultValueNumber);
-
-                if (int_numberfield_minValue > int_numberField_defaultValueNumber) {
-                    selectAndClear(By.id(NumberFieldOptionsIds.numberField_minValue.name()))
-                            .setValue(numberField_defaultValueNumber).sendKeys(Keys.TAB);
-                    String errorStr = "The value " + int_numberField_defaultValueNumber + " is smaller than minimum value " + int_numberfield_minValue;
-
-                    $("#numberField_defaultValueNumber-helper-text").should(exist).shouldHave(text(errorStr)); //Verify error shown
-                }
-            }
-
-            //Max value
-            if (StringUtils.isNotEmpty(numberfield_maxValue)) {
-                System.out.println("Verifying Max value");
-                //Positive scenario:
-                $(inputField).shouldHave(value(numberfield_maxValue));
-
-                //Negative scenario:
-                //Error verification:
-                int int_numberfield_maxValue = Integer.parseInt(numberfield_maxValue);
-                int int_numberField_defaultValueNumber = Integer.parseInt(numberField_defaultValueNumber);
-
-                if (int_numberfield_maxValue < int_numberField_defaultValueNumber) {
-                    selectAndClear(By.id(NumberFieldOptionsIds.numberField_minValue.name()))
-                            .setValue(numberField_defaultValueNumber).sendKeys(Keys.TAB);
-                    String errorStr = "The value " + int_numberField_defaultValueNumber + " is greater than maximun value " + int_numberfield_maxValue;
-
-                    $("#numberField_defaultValueNumber-helper-text").should(exist).shouldHave(text(errorStr)); //Verify error shown
-
-                }
             }
         }
     }
+
 }
-
-
