@@ -87,11 +87,11 @@ public class FormComparisonTest extends BaseTest {
         $("#gridCompareForms .MuiCardContent-root > div:nth-child(1) #block-loc_en-GB-r_1-c_3").should(exist)
                 .$(byAttribute("aria-label", "Removed")).should(exist); //Verfiy the text field is marked as Removed
         $("#gridCompareForms div:nth-child(4) label:nth-child(4) input").should(exist)
-                .shouldHave(value("checkedRemoved")).click();
+                .shouldHave(value("checkedRemoved")).click(); //Click on Removed
         $("#gridCompareForms .MuiCardContent-root > div:nth-child(1) #block-loc_en-GB-r_1-c_3").should(exist)
                 .$(byAttribute("aria-label", "Removed")).shouldNot(exist); //Verfiy the text field is marked as Removed is vsibile or not
         $("#gridCompareForms div:nth-child(4) label:nth-child(4) input").should(exist)
-                .shouldHave(value("checkedRemoved")).click();
+                .shouldHave(value("checkedRemoved")).click(); //Click on Removed
 
         //Verifying Version 4.0
         $("#sourceFormSelect").shouldHave(value("Compare Test Forms 3.0"));
