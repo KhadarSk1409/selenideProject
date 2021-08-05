@@ -54,10 +54,11 @@ public class FormPublicationProcessWithTwoApproversTest extends BaseTest {
         $$(".MuiAutocomplete-popper li").findBy(text("GUI Tester 02guitester02@visualorbit.com")).click(); //Click on the selected user
         $("#sw_second_UserCanOverwrite").should(exist).click();
         $("#btnNext").should(exist).click(); //Click on Next
-        $("#designer_tab_Publications div:nth-child(9)").shouldHave(text("Ready and Save"));
-        $("#btnSave").should(exist).click(); //Click on Save
+        $("#designer_tab_Publications div:nth-child(9)").should(exist).shouldHave(text("Ready and Save"));
+        $("#btnSave").should(exist).shouldBe(enabled).click(); //Click on Save
         $("#btnFormDesignPublish").should(exist).click();
         $("#form-publish-dialog").$("#btnConfirm").should(exist).shouldBe(enabled).click();
+        $("#client-snackbar").should(appear).shouldHave(Condition.text("The form requires approval before publishing. It will be published once approved"));
 
         //Should login as GUI Tester 01
         shouldLogin(UserType.USER_01);
@@ -77,6 +78,8 @@ public class FormPublicationProcessWithTwoApproversTest extends BaseTest {
             }
         });
         $(table).shouldNotHave(Condition.attribute(actualFormName));
+        $("#client-snackbar").should(appear)
+                .shouldHave(Condition.text("Approval saved. Process requires additional approval and is therefore not yet complete. Form will be published as soon as all approvals are available."));
         $("#user").should(exist);
         $("#navMainDashboard").should(exist).click();
 
@@ -98,6 +101,8 @@ public class FormPublicationProcessWithTwoApproversTest extends BaseTest {
             }
         });
         $(taskTable).shouldNotHave(Condition.attribute(actualFormName));
+        $("#client-snackbar").should(appear)
+                .shouldHave(Condition.text("New form version was successfully published"));
         $("#user").should(exist);
         $("#navMainDashboard").should(exist).click();
 

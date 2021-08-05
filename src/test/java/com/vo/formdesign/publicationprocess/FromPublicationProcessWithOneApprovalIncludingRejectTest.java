@@ -53,6 +53,7 @@ public class FromPublicationProcessWithOneApprovalIncludingRejectTest extends Ba
         $("#btnSave").should(exist).shouldBe(enabled).click(); //Click on Save
         $("#btnFormDesignPublish").should(exist).click();
         $("#form-publish-dialog").$("#btnConfirm").should(exist).shouldBe(enabled).click();
+        $("#client-snackbar").should(appear).shouldHave(Condition.text("The form requires approval before publishing. It will be published once approved"));
         $("#user").should(exist);
         $("#navMainDashboard").should(exist).click();
         $("#btnCreateForm").should(exist);

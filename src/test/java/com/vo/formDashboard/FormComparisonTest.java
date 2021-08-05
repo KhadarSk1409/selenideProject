@@ -43,7 +43,7 @@ public class FormComparisonTest extends BaseTest {
         $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_1-c_1").should(exist)
                 .$(byAttribute("aria-label", "Edited")).should(appear); //Verfiy the 1st text field is marked as Edited
         $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_1-c_2").should(exist)
-                .$(byAttribute("aria-label", "New")).should(appear); ////Verfiy the 2nd text field is marked as Added
+                .$(byAttribute("aria-label", "New")).should(appear); //Verfiy the 2nd text field is marked as Added
         $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_1-c_1 #editedBtn_form-user-725dd927-78eb-4af8-9fa7-28ebd0ddbf8c")
                 .should(exist).click();
         $("#simple-popover").should(appear).shouldHave(Condition.text("EDITED"));
@@ -52,18 +52,14 @@ public class FormComparisonTest extends BaseTest {
                 .should(exist).click();
         $("#simple-popover").should(appear).shouldHave(Condition.text("NEW FIELD"));
         $("#simple-popover").should(exist).click();
-        $("#gridCompareForms div:nth-child(4) label:nth-child(1) input")
-                .shouldHave(value("checkedEdited")).should(exist).click(); //Click on Edited
+        $("#gridCompareForms input[value='checkedEdited']").should(exist).click(); //Click on Edited
         $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_1-c_1").should(exist)
                 .$(byAttribute("aria-label", "Edited")).shouldNot(appear); //Verfiy the 1st text field is marked Edited is visibile or not
-        $("#gridCompareForms div:nth-child(4) label:nth-child(3) input")
-                .shouldHave(value("checkedNew")).should(exist).click(); //Click on New
+        $("#gridCompareForms input[value='checkedNew']").should(exist).click(); //Click on New
         $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_1-c_2").should(exist)
                 .$(byAttribute("aria-label", "New")).shouldNot(appear); ////Verfiy the 2nd text field is marked as Added is visibile or not
-        $("#gridCompareForms div:nth-child(4) label:nth-child(1) input")
-                .shouldHave(value("checkedEdited")).should(exist).click(); //Click on Edited
-        $("#gridCompareForms div:nth-child(4) label:nth-child(3) input")
-                .shouldHave(value("checkedNew")).should(exist).click(); //Click on New
+        $("#gridCompareForms input[value='checkedEdited']").should(exist).click(); //Click on Edited
+        $("#gridCompareForms input[value='checkedNew']").should(exist).click(); //Click on New
 
         //Verifying Version 2.0
         $("#sourceFormSelect").shouldHave(value("Compare Test Forms 1.0"));
@@ -86,12 +82,10 @@ public class FormComparisonTest extends BaseTest {
         $("#btnFormDesignSave").should(exist).click();
         $("#gridCompareForms .MuiCardContent-root > div:nth-child(1) #block-loc_en-GB-r_1-c_3").should(exist)
                 .$(byAttribute("aria-label", "Removed")).should(exist); //Verfiy the text field is marked as Removed
-        $("#gridCompareForms div:nth-child(4) label:nth-child(4) input").should(exist)
-                .shouldHave(value("checkedRemoved")).click(); //Click on Removed
+        $("#gridCompareForms input[value='checkedRemoved']").should(exist).click(); //Click on Removed
         $("#gridCompareForms .MuiCardContent-root > div:nth-child(1) #block-loc_en-GB-r_1-c_3").should(exist)
                 .$(byAttribute("aria-label", "Removed")).shouldNot(exist); //Verfiy the text field is marked as Removed is vsibile or not
-        $("#gridCompareForms div:nth-child(4) label:nth-child(4) input").should(exist)
-                .shouldHave(value("checkedRemoved")).click(); //Click on Removed
+        $("#gridCompareForms input[value='checkedRemoved']").should(exist).click(); //Click on Removed
 
         //Verifying Version 4.0
         $("#sourceFormSelect").shouldHave(value("Compare Test Forms 3.0"));

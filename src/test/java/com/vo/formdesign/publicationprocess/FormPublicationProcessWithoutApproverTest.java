@@ -41,6 +41,8 @@ public class FormPublicationProcessWithoutApproverTest extends BaseTest {
         $("#btnSave").should(exist).click(); //Click on Save
         $("#btnFormDesignPublish").should(exist).click();
         $("#form-publish-dialog").$("#btnConfirm").should(exist).shouldBe(enabled).click();
+        $("#client-snackbar").should(appear)
+                .shouldHave(Condition.text("The form was published successfully"));
         $("#formDashboardHeaderLeft").should(appear);
         $("#btnCreateNewData").should(exist);
         $("#navMainDashboard").should(exist).click();

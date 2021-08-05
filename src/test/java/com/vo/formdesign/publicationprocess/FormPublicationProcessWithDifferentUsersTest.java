@@ -52,7 +52,7 @@ public class FormPublicationProcessWithDifferentUsersTest extends BaseTest {
         $("#btnSave").should(exist).click(); //Click on Save
         $("#btnFormDesignPublish").should(exist).click();
         $("#form-publish-dialog").$("#btnConfirm").should(exist).shouldBe(enabled).click();
-        $("#formDashboardHeaderLeft").should(exist);
+        $("#client-snackbar").should(appear).shouldHave(Condition.text("The form requires approval before publishing. It will be published once approved"));
         $("#user").should(exist);
         $("#navMainDashboard").should(exist).click();
 
@@ -73,6 +73,8 @@ public class FormPublicationProcessWithDifferentUsersTest extends BaseTest {
                 rowEl.$(".fa-check").closest("button").should(exist).shouldBe(enabled).click();
             }
         });
+        $("#client-snackbar").should(appear)
+                .shouldHave(Condition.text("New form version was successfully published"));
         $("#user").should(exist);
         $("#btnCreateForm").should(exist);
         $("#navMainDashboard").should(exist).click();
