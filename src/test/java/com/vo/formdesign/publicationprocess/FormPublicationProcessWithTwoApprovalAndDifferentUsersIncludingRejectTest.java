@@ -60,7 +60,7 @@ public class FormPublicationProcessWithTwoApprovalAndDifferentUsersIncludingReje
         $("#btnSave").should(exist).click(); //Click on Save
         $("#btnFormDesignPublish").should(exist).click();
         $("#form-publish-dialog").$("#btnConfirm").should(exist).shouldBe(enabled).click();
-
+        $("#client-snackbar").should(appear).shouldHave(Condition.text("The form requires approval before publishing. It will be published once approved"));
 
         //Login as GUI Tester 01 should review the form and approve
         shouldLogin(UserType.USER_01);
@@ -85,7 +85,8 @@ public class FormPublicationProcessWithTwoApprovalAndDifferentUsersIncludingReje
         $("#btnAcceptTask").should(exist).click(); //Click on Accept
        $("#data-approve-reject-dialog").$("#btnConfirm")
                 .should(exist).shouldBe(enabled).click(); //Click on confirm
-        // $("#formDashboardHeaderAppBar").should(appear);
+        $("#client-snackbar").should(appear)
+                .shouldHave(Condition.text("Approval saved. Process requires additional approval and is therefore not yet complete. Form will be published as soon as all approvals are available."));
         $("#navMainDashboard").should(exist).click();
 
         //Login as GUI Tester 02 should review the form and reject
@@ -113,7 +114,6 @@ public class FormPublicationProcessWithTwoApprovalAndDifferentUsersIncludingReje
                 .setValue("Form is being rejected"); //Enter the reason for rejection
         $("#data-approve-reject-dialog").$("#btnConfirm")
                 .should(exist).shouldBe(enabled).click(); //Click on confirm
-        // $("#formDashboardHeaderAppBar").should(appear);
         $("#navMainDashboard").should(exist).click();
 
         //Login as GUI Tester and verify the form state after rejection

@@ -39,7 +39,7 @@ public class FormPublicationProcessWithOneApprovalAndDifferentUsersIncludingReje
                 .should(exist).click(); //Should click on Configure publication process
         $("#ckbApprovalProcessRequired").should(exist).click();
         $("#btnNext").should(exist).click();
-        $("#rb_Basic_Approve_Form_Process").shouldBe(checked); //Publication with one approval should be checked
+        $("#rb_Basic_Approve_Form_Process").should(exist).shouldBe(checked); //Publication with one approval should be checked
         $("#btnNext").should(exist).click(); //Click on Next
         $("#ckb_first_tApproverFreeUserSelection").should(exist).click(); //Click on Free User Selection
         $("#fc_first_UserSelect").$("#selUser").should(exist).click(); //Click on SelUser to select the user
@@ -53,6 +53,7 @@ public class FormPublicationProcessWithOneApprovalAndDifferentUsersIncludingReje
         $("#btnSave").should(exist).shouldBe(enabled).click(); //Click on Save
         $("#btnFormDesignPublish").should(exist).click();
         $("#form-publish-dialog").$("#btnConfirm").should(exist).shouldBe(enabled).click();
+        $("#client-snackbar").should(appear).shouldHave(Condition.text("The form requires approval before publishing. It will be published once approved"));
         $("#user").should(exist);
         $("#navMainDashboard").should(exist).click();
         $("#btnCreateForm").should(exist);
@@ -83,7 +84,6 @@ public class FormPublicationProcessWithOneApprovalAndDifferentUsersIncludingReje
                 .setValue("Form is being rejected"); //Enter the reason for rejection
         $("#data-approve-reject-dialog").$("#btnConfirm")
                 .should(exist).shouldBe(enabled).click(); //Click on confirm
-        // $("#formDashboardHeaderAppBar").should(appear);
         $("#navMainDashboard").should(exist).click();
 
         //Login as GUI Tester and verify the form state after rejection

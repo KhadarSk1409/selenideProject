@@ -47,10 +47,11 @@ public class FormPublicationProcessWithOneApproverTest extends BaseTest {
         $$(".MuiAutocomplete-popper li").findBy(text("GUI Tester 01guitester01@visualorbit.com")).click(); //Click on the selected user
         $("#sw_first_UserCanOverwrite").should(exist).click();
         $("#btnNext").should(exist).click(); //Click on Next
-        $("#designer_tab_Publications div:nth-child(7)").shouldHave(text("Ready and Save"));
+        $("#designer_tab_Publications div:nth-child(7)").should(exist).shouldHave(text("Ready and Save"));
         $("#btnSave").should(exist).click(); //Click on Save
         $("#btnFormDesignPublish").should(exist).click();
         $("#form-publish-dialog").$("#btnConfirm").should(exist).shouldBe(enabled).click();
+        $("#client-snackbar").should(appear).shouldHave(Condition.text("The form requires approval before publishing. It will be published once approved"));
 
         //Should login as GUI Tester 01
         shouldLogin(UserType.USER_01);
@@ -70,6 +71,8 @@ public class FormPublicationProcessWithOneApproverTest extends BaseTest {
             }
         });
         $(table).shouldNotHave(Condition.attribute(actualFormName));
+        $("#client-snackbar").should(appear)
+                .shouldHave(Condition.text("New form version was successfully published"));
         $("#toDashboard").should(exist).click();
 
         //Verify the form approved by GUI Tester 01 is Published or not
