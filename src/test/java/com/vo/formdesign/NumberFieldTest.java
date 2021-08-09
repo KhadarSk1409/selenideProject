@@ -31,7 +31,6 @@ import static reusables.ReuseActions.createNewForm;
 @DisplayName("Number Field Creation Tests")
 public class NumberFieldTest extends BaseTest {
 
-    protected static ThreadLocal<String> formName = ThreadLocal.withInitial(() -> "Number Field Test Form-Design Auto Test " + BROWSER_CONFIG.get() + " " + System.currentTimeMillis());
 
     enum NumberFieldOptionsIds {
         textfield_label,
@@ -50,6 +49,21 @@ public class NumberFieldTest extends BaseTest {
         checkbox_allowNegative,
         checkbox_allowLeadingZeros,
         checkbox_onlyInteger;
+
+    }
+
+    protected static ThreadLocal<String> formName = ThreadLocal.withInitial(() -> "Number Field Test Form-Design Auto Test " + BROWSER_CONFIG.get() + " " + System.currentTimeMillis());
+
+    public static void main(String[] args) {
+        Random r = new Random();
+        int integer = r.nextInt(100);
+        double decimal = r.nextDouble();
+        BigDecimal bd = new BigDecimal(integer + decimal);
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.UK);
+        df.setMaximumFractionDigits(2);
+        df.setRoundingMode(RoundingMode.DOWN);
+        df.setParseBigDecimal(true);
+        System.out.println("random bigdecmial: " + " .... " + bd.toString() + " .... " + df.format(bd));
 
     }
 
@@ -98,8 +112,7 @@ public class NumberFieldTest extends BaseTest {
                                String checkbox_allowNegative,
                                String checkbox_allowLeadingZeros,
                                String checkbox_onlyInteger,
-                               String numberField_defaultValueNumber,
-                               String numberField_defaultValueNew
+                               String numberField_defaultValueNumber
     ) {
 
         String blockId = "#block-loc_en-GB-r_" + row + "-c_" + col;
@@ -135,7 +148,7 @@ public class NumberFieldTest extends BaseTest {
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(blockId).shouldHave(text(numberfield_label));
         }
-//
+
         //Help
         if (StringUtils.isNotEmpty(numberfield_help)) {
             // $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
@@ -263,15 +276,13 @@ public class NumberFieldTest extends BaseTest {
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
             $("#numberField_decimalScale").shouldHave(value(numberfield_decimalScale));
         }
-//
+
         //Enter Default value
         if (StringUtils.isNotEmpty(numberField_defaultValueNumber)) {
-            //  String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(NumberFieldOptionsIds.numberField_defaultValueNumber.name()))
                     .setValue(numberField_defaultValueNumber).sendKeys(Keys.TAB);
-            //  $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
-            if (StringUtils.isNotEmpty(numberField_defaultValueNew)) {
-                $("#numberField_defaultValueNumber").shouldHave(value(numberField_defaultValueNew));
+            if (StringUtils.isNotEmpty(numberfield_decimalScale)) {
+                $("#numberField_defaultValueNumber").shouldHave(value("1234.56"));
             } else {
                 $("#numberField_defaultValueNumber").shouldHave(value(numberField_defaultValueNumber));
             }
@@ -296,21 +307,21 @@ public class NumberFieldTest extends BaseTest {
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
             $("#numberField_minValue").shouldHave(value(numberfield_minValue));
 
-            }
+        }
 
         //Enter Maximum Value
         if (StringUtils.isNotEmpty(numberfield_maxValue)) {
             //Error verification:
             int int_numberfield_maxValue = Integer.parseInt(numberfield_maxValue);
-            int int_numberfield_moreThanMaxValue = int_numberfield_maxValue+1;
+            int int_numberfield_moreThanMaxValue = int_numberfield_maxValue + 1;
             String str_numberfield_maxValue = Integer.toString(int_numberfield_moreThanMaxValue);
 
-                selectAndClear(By.id(NumberFieldOptionsIds.numberField_maxValue.name()))
-                        .setValue(numberfield_maxValue).sendKeys(Keys.TAB);
-                selectAndClear(By.id(NumberFieldOptionsIds.numberField_defaultValueNumber.name())).setValue(str_numberfield_maxValue).sendKeys(Keys.TAB);
-                String errorStr = "The value "+str_numberfield_maxValue+" is greater than maximum value "+numberfield_maxValue;
+            selectAndClear(By.id(NumberFieldOptionsIds.numberField_maxValue.name()))
+                    .setValue(numberfield_maxValue).sendKeys(Keys.TAB);
+            selectAndClear(By.id(NumberFieldOptionsIds.numberField_defaultValueNumber.name())).setValue(str_numberfield_maxValue).sendKeys(Keys.TAB);
+            String errorStr = "The value " + str_numberfield_maxValue + " is greater than maximum value " + numberfield_maxValue;
 
-                $("#numberField_defaultValueNumber-helper-text").should(exist).shouldHave(text(errorStr)); //Verify error shown
+            $("#numberField_defaultValueNumber-helper-text").should(exist).shouldHave(text(errorStr)); //Verify error shown
 
             String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(NumberFieldOptionsIds.numberField_defaultValueNumber.name()))
@@ -318,8 +329,8 @@ public class NumberFieldTest extends BaseTest {
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
             $("#numberField_maxValue").shouldHave(value(numberfield_maxValue));
 
-            }
         }
+    }
 
 
     @Test
@@ -357,14 +368,12 @@ public class NumberFieldTest extends BaseTest {
                                      String checkbox_allowNegative,
                                      String checkbox_allowLeadingZeros,
                                      String checkbox_onlyInteger,
-                                     String numberField_defaultValueNumber,
-                                     String numberField_defaultValueNew
+                                     String numberField_defaultValueNumber
     ) throws ParseException {
 
         String blockStr = "#data_block-loc_en-GB-r_" + row + "-c_" + col;
         String labelInFillForm = blockStr + " .MuiFormLabel-root";
         String helpInFillForm = blockStr + " .MuiFormHelperText-root";
-        String defaultValueInFillForm = blockStr + " .MuiInputBase-input";
         String requiredFieldInFillForm = blockStr + " .MuiFormLabel-asterisk";
         String inputField = blockStr + " input";
 
@@ -391,28 +400,10 @@ public class NumberFieldTest extends BaseTest {
             $(helpInFillForm).shouldHave(text(numberfield_help));
         }
 
-        //Default value
-        if (StringUtils.isNotEmpty(numberField_defaultValueNumber)) {
-            System.out.println("Verifying default value: " + numberField_defaultValueNumber);
-            if(StringUtils.isNotEmpty(numberfield_minValue)){
-                $(defaultValueInFillForm).shouldHave(value(numberfield_minValue));
-        }
-            else if(StringUtils.isNotEmpty(numberfield_maxValue)){
-                $(defaultValueInFillForm).shouldHave(value(numberfield_maxValue));
-            }
-            else if(StringUtils.isNotEmpty(numberfield_decimalScale)){
-                $(defaultValueInFillForm).shouldHave(value(numberField_defaultValueNew));
-            }
-
-            else{
-                $(defaultValueInFillForm).shouldHave(value(numberField_defaultValueNumber));
-            }
-        }
 
         //Read Only checkbox
         if (StringUtils.isNotEmpty(checkbox_readOnly)) {
             System.out.println("Verifying checkbox readOnly");
-//             $(inputField).shouldBe(disabled); //Read only should be disabled
             $(inputField).shouldHave(value("0"));  //How to verify that 0 is present in Read Only //TBD
         }
 
@@ -429,19 +420,19 @@ public class NumberFieldTest extends BaseTest {
         }
 
         //Decimal scale value verify, that decimal places are cutted by configured amount of decimal places
-        if(StringUtils.isNotEmpty(numberfield_decimalScale)){
+        if (StringUtils.isNotEmpty(numberfield_decimalScale)) {
             //construct a number decimal value
             Random r = new Random();
             int integer = r.nextInt(100);
             double decimal = r.nextDouble();
-            BigDecimal bd = new BigDecimal(integer+decimal);
+            BigDecimal bd = new BigDecimal(integer + decimal);
 
             //use uk number format b/c gui test user has uk locale actived per default
             DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.UK);
             df.setMaximumFractionDigits(Integer.parseInt(numberfield_decimalScale));
             df.setRoundingMode(RoundingMode.DOWN);
             df.setParseBigDecimal(true);
-            System.out.println("random bigdecmial: " +  " .... " + bd.toString() + " .... " + df.format(bd));
+            System.out.println("random bigdecmial: " + " .... " + bd.toString() + " .... " + df.format(bd));
             //try to set a big decimal value with full amount of decimal places
             selectAndClear(inputField).setValue(bd.toString()).pressTab();
 
@@ -456,7 +447,7 @@ public class NumberFieldTest extends BaseTest {
             $(inputField).shouldHave(value(numberField_defaultValueNumber));
         }
 
-//        //Apply format
+        //Apply format
         if (StringUtils.isNotEmpty(checkbox_applyFormatter)) {
             System.out.println("Verifying apply formatter");
             $(inputField).shouldHave(value(numberField_defaultValueNumber));
@@ -517,19 +508,6 @@ public class NumberFieldTest extends BaseTest {
 
             }
         }
-    }
-
-    public static void main(String[] args) {
-        Random r = new Random();
-        int integer = r.nextInt(100);
-        double decimal = r.nextDouble();
-        BigDecimal bd = new BigDecimal(integer+decimal);
-        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.UK);
-        df.setMaximumFractionDigits(2);
-        df.setRoundingMode(RoundingMode.DOWN);
-        df.setParseBigDecimal(true);
-        System.out.println("random bigdecmial: " +  " .... " + bd.toString() + " .... " + df.format(bd));
-
     }
 
 }
