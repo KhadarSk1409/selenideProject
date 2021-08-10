@@ -1,4 +1,4 @@
-package com.vo.formDashboard;
+package com.vo.formVersionComparison;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
@@ -94,10 +94,31 @@ public class FormComparisionExtensionTest extends BaseTest {
         $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("Compare Test Forms 7.0"), 10000);
         $$(".MuiAutocomplete-popper li").findBy(text("Compare Test Forms 7.0")).click();
         $("#btnFormDesignSave").should(exist).click();
+
+        //Verifying all the labels are visible or not
+        // In Source Form Section
         $("#gridCompareForms .MuiCardContent-root > div:nth-child(1) #block-loc_en-GB-r_3-c_2").should(exist)
-                .shouldHave(Condition.text("Second Text Field")).should(exist);
+                .shouldHave(Condition.text("Second Text Field")).should(exist).$(byAttribute("aria-label", "Moved")).shouldNot(appear);
+        $("#gridCompareForms .MuiCardContent-root > div:nth-child(1) #block-loc_en-GB-r_3-c_2").should(exist)
+                .shouldHave(Condition.text("Second Text Field")).should(exist).$(byAttribute("aria-label", "Edited")).shouldNot(appear);
+        $("#gridCompareForms .MuiCardContent-root > div:nth-child(1) #block-loc_en-GB-r_3-c_2").should(exist)
+                .shouldHave(Condition.text("Second Text Field")).should(exist).$(byAttribute("aria-label", "Removed")).shouldNot(appear);
+        $("#gridCompareForms .MuiCardContent-root > div:nth-child(1) #block-loc_en-GB-r_3-c_2").should(exist)
+                .shouldHave(Condition.text("Second Text Field")).should(exist).$(byAttribute("aria-label", "New")).shouldNot(appear);
+        $("#gridCompareForms .MuiCardContent-root > div:nth-child(1) #block-loc_en-GB-r_3-c_2").should(exist)
+                .shouldHave(Condition.text("Second Text Field")).should(exist).$(byAttribute("aria-label", "Values")).shouldNot(appear);
+
+        // In Target Form Section
         $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_3-c_2").should(exist)
-                .shouldHave(Condition.text("Second Text Field")).should(exist);
+                .shouldHave(Condition.text("Second Text Field")).should(exist).$(byAttribute("aria-label", "Moved")).shouldNot(appear);;
+        $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_3-c_2").should(exist)
+                .shouldHave(Condition.text("Second Text Field")).should(exist).$(byAttribute("aria-label", "Edited")).shouldNot(appear);;
+        $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_3-c_2").should(exist)
+                .shouldHave(Condition.text("Second Text Field")).should(exist).$(byAttribute("aria-label", "Removed")).shouldNot(appear);;
+        $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_3-c_2").should(exist)
+                .shouldHave(Condition.text("Second Text Field")).should(exist).$(byAttribute("aria-label", "New")).shouldNot(appear);
+        $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_3-c_2").should(exist)
+                .shouldHave(Condition.text("Second Text Field")).should(exist).$(byAttribute("aria-label", "Values")).shouldNot(appear);
 
     }
 }
