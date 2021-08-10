@@ -33,6 +33,21 @@ public class CurrencyFieldTest extends BaseTest {
 
     protected static ThreadLocal<String> formName = ThreadLocal.withInitial(() -> "Currency Field Test Form-Design Auto Test " + BROWSER_CONFIG.get() + " " + System.currentTimeMillis());
 
+    private DecimalFormat getDecimalFormat(String textfield_decimalScale, String checkbox_thousandSeparator) {
+        DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.UK); //GUI Test user is per default in Locale UK
+        if(StringUtils.isNotEmpty(checkbox_thousandSeparator)) {
+            df.setGroupingUsed(true);
+        } else {
+            df.setGroupingUsed(false);
+        }
+        if(StringUtils.isNotEmpty(textfield_decimalScale)) {
+            df.setMaximumFractionDigits(Integer.parseInt(textfield_decimalScale));
+        }
+        df.setRoundingMode(RoundingMode.DOWN);
+        df.setParseBigDecimal(true);
+        return df;
+    }
+
     @Test
     @Order(1)
     @DisplayName("precondition")
@@ -94,6 +109,8 @@ public class CurrencyFieldTest extends BaseTest {
         $("#li-template-CurrencyField-05").should(appear).click();
         $("#formelement_properties_card").should(appear);
         $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
+
+        DecimalFormat df = getDecimalFormat(textfield_decimalScale, checkbox_thousandSeparator);
 
         if (colSpan != null && colSpan > 1) {
             int prevWidth = $(blockId).getRect().getWidth();
@@ -245,14 +262,10 @@ public class CurrencyFieldTest extends BaseTest {
             $(checkBoxId + " input").shouldBe(selected);
 
             //Verify the changed format:
-            int int_thousand_separator_default_value = Integer.parseInt(text_currencyField_defaultValueCurrency);
-            String thousand_separator_default_value1 = String.format("%,d\n", int_thousand_separator_default_value);
-            $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name())).shouldHave(value(thousand_separator_default_value1));
-
-            //Uncheck the checkbox
-            $(checkBoxId).shouldBe(visible).click();
-            $(checkBoxId + " input").shouldNotBe(selected);
-
+            if(StringUtils.isNotEmpty(text_currencyField_defaultValueCurrency)) {
+                $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name()))
+                        .shouldHave(value(df.format(new BigDecimal(text_currencyField_defaultValueCurrency))));
+            }
         }
 
 
@@ -301,7 +314,8 @@ public class CurrencyFieldTest extends BaseTest {
                 selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name()))
                         .setValue(text_currencyField_defaultValueCurrency).sendKeys(Keys.TAB); //Again set text_currencyField_defaultValueCurrency
             } else {
-                $("#numberField_defaultValueNumber").shouldHave(value(text_currencyField_defaultValueCurrency));
+                $("#numberField_defaultValueNumber")
+                        .shouldHave(value(df.format(new BigDecimal(text_currencyField_defaultValueCurrency))));
             }
         }
 
@@ -393,6 +407,8 @@ public class CurrencyFieldTest extends BaseTest {
         String requiredFieldInFillForm = blockStr + " .MuiFormLabel-asterisk";
         String inputField = blockStr + " input";
 
+        DecimalFormat df = getDecimalFormat(textfield_decimalScale, checkbox_thousandSeparator);
+
 
         //  Label
         if (StringUtils.isNotEmpty(currency_label)) {
@@ -419,7 +435,7 @@ public class CurrencyFieldTest extends BaseTest {
         //  Default value
         if (StringUtils.isNotEmpty(text_currencyField_defaultValueCurrency)) {
             System.out.println("Verifying text_currencyField_defaultValueCurrency");
-            $(inputField).shouldHave(value(text_currencyField_defaultValueCurrency));
+            $(inputField).shouldHave(value(df.format(new BigDecimal(text_currencyField_defaultValueCurrency))));
         }
 
         //    Decimal scale value verify, that decimal places are cutted by configured amount of decimal places
@@ -430,11 +446,6 @@ public class CurrencyFieldTest extends BaseTest {
             double decimal = r.nextDouble();
             BigDecimal bd = new BigDecimal(integer + decimal);
 
-            //use uk number format b/c gui test user has uk locale actived per default
-            DecimalFormat df = (DecimalFormat) NumberFormat.getNumberInstance(Locale.UK);
-            df.setMaximumFractionDigits(Integer.parseInt(textfield_decimalScale));
-            df.setRoundingMode(RoundingMode.DOWN);
-            df.setParseBigDecimal(true);
             System.out.println("random bigdecmial: " + " .... " + bd.toString() + " .... " + df.format(bd));
             //try to set a big decimal value with full amount of decimal places
             selectAndClear(inputField).setValue(bd.toString()).pressTab();
@@ -521,14 +532,12 @@ public class CurrencyFieldTest extends BaseTest {
         //Thousand Separator
         if (StringUtils.isNotEmpty(checkbox_thousandSeparator)) {
             System.out.println("Verifying checkbox thousandSeparator");
-            $(inputField).shouldHave(value(text_currencyField_defaultValueCurrency));
+            $(inputField).shouldHave(value(df.format(new BigDecimal(text_currencyField_defaultValueCurrency))));
 
             String strRandomInt = RandomStringUtils.randomNumeric(6);
             selectAndClear(inputField).setValue(strRandomInt).sendKeys(Keys.TAB); //Enter random value in Thosand Separator field
-            int int_thousand_separator_default_value = Integer.parseInt(strRandomInt);
-            String thousand_separator_default_value1 = String.format("%,d\n", int_thousand_separator_default_value);
 
-            $(inputField).shouldHave(value(thousand_separator_default_value1)); //Thousand separator should have numberField_defaultValueNumber
+            $(inputField).shouldHave(value(df.format(new BigDecimal(strRandomInt)))); //Thousand separator should have numberField_defaultValueNumber
         } //TBD - Thousand separator logic
 
 
