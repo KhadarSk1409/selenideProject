@@ -1,14 +1,12 @@
-package com.vo.formDashboard;
+package com.vo.formVersionComparison;
 
 import com.codeborne.selenide.Condition;
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
 
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byAttribute;
-import static com.codeborne.selenide.Selectors.byXpath;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Selenide.$$;
 
@@ -41,9 +39,9 @@ public class FormComparisonTest extends BaseTest {
         $$(".MuiAutocomplete-popper li").findBy(text("Compare Test Forms 1.0")).click();
         $("#btnFormDesignSave").should(exist).click();
         $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_1-c_1").should(exist)
-                .$(byAttribute("aria-label", "Edited")).should(appear); //Verfiy the 1st text field is marked as Edited
+                .$(byAttribute("aria-label", "Edited")).should(appear); //Verify the 1st text field is marked as Edited
         $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_1-c_2").should(exist)
-                .$(byAttribute("aria-label", "New")).should(appear); //Verfiy the 2nd text field is marked as Added
+                .$(byAttribute("aria-label", "New")).should(appear); //Verify the 2nd text field is marked as Added
         $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_1-c_1 #editedBtn_form-user-725dd927-78eb-4af8-9fa7-28ebd0ddbf8c")
                 .should(exist).click();
         $("#simple-popover").should(appear).shouldHave(Condition.text("EDITED"));
@@ -54,10 +52,10 @@ public class FormComparisonTest extends BaseTest {
         $("#simple-popover").should(exist).click();
         $("#gridCompareForms input[value='checkedEdited']").should(exist).click(); //Click on Edited
         $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_1-c_1").should(exist)
-                .$(byAttribute("aria-label", "Edited")).shouldNot(appear); //Verfiy the 1st text field is marked Edited is visibile or not
+                .$(byAttribute("aria-label", "Edited")).shouldNot(appear); //Verify the 1st text field is marked Edited is visible or not
         $("#gridCompareForms input[value='checkedNew']").should(exist).click(); //Click on New
         $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_1-c_2").should(exist)
-                .$(byAttribute("aria-label", "New")).shouldNot(appear); ////Verfiy the 2nd text field is marked as Added is visibile or not
+                .$(byAttribute("aria-label", "New")).shouldNot(appear); //Verify the 2nd text field is marked as Added is visible or not
         $("#gridCompareForms input[value='checkedEdited']").should(exist).click(); //Click on Edited
         $("#gridCompareForms input[value='checkedNew']").should(exist).click(); //Click on New
 
@@ -81,10 +79,10 @@ public class FormComparisonTest extends BaseTest {
         $$(".MuiAutocomplete-popper li").findBy(text("Compare Test Forms 3.0")).click();
         $("#btnFormDesignSave").should(exist).click();
         $("#gridCompareForms .MuiCardContent-root > div:nth-child(1) #block-loc_en-GB-r_1-c_3").should(exist)
-                .$(byAttribute("aria-label", "Removed")).should(exist); //Verfiy the text field is marked as Removed
+                .$(byAttribute("aria-label", "Removed")).should(exist); //Verify the text field is marked as Removed
         $("#gridCompareForms input[value='checkedRemoved']").should(exist).click(); //Click on Removed
         $("#gridCompareForms .MuiCardContent-root > div:nth-child(1) #block-loc_en-GB-r_1-c_3").should(exist)
-                .$(byAttribute("aria-label", "Removed")).shouldNot(exist); //Verfiy the text field is marked as Removed is vsibile or not
+                .$(byAttribute("aria-label", "Removed")).shouldNot(exist); //Verify the text field is marked as Removed is visible or not
         $("#gridCompareForms input[value='checkedRemoved']").should(exist).click(); //Click on Removed
 
         //Verifying Version 4.0
@@ -96,7 +94,7 @@ public class FormComparisonTest extends BaseTest {
         $$(".MuiAutocomplete-popper li").findBy(text("Compare Test Forms 4.0")).click();
         $("#btnFormDesignSave").should(exist).click();
         $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_1-c_1").should(exist)
-                .$(byAttribute("aria-label", "Edited")).should(appear); //Verfiy the text field is marked as Edited
+                .$(byAttribute("aria-label", "Edited")).should(appear); //Verify the text field is marked as Edited
 
         //Verifying Version 5.0
         $("#sourceFormSelect").shouldHave(value("Compare Test Forms 4.0"));
