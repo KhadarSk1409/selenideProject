@@ -125,6 +125,7 @@ public class CurrencyFieldTest extends BaseTest {
 
         //Label
         if (StringUtils.isNotEmpty(currency_label)) {
+            $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).should(exist);
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name()))
@@ -132,7 +133,7 @@ public class CurrencyFieldTest extends BaseTest {
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(blockId).shouldHave(text(currency_label));
         }
-
+//
         //Hide(disable) Label
         if (StringUtils.isNotEmpty(checkbox_disableLabel)) {
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).shouldHave(text(currency_label));
@@ -153,7 +154,6 @@ public class CurrencyFieldTest extends BaseTest {
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_help.name()))
                     .setValue(currency_help).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(currency_help));
         }
 
         //required
@@ -243,6 +243,8 @@ public class CurrencyFieldTest extends BaseTest {
                 $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name()))
                         .shouldHave(value(df.format(new BigDecimal(text_currencyField_defaultValueCurrency))));
             }
+
+            $(blockId).shouldHave(text(currency_label));
         }
 
         //Allow Negative checkbox
@@ -282,6 +284,7 @@ public class CurrencyFieldTest extends BaseTest {
             $("#numberField_decimalScale").shouldBe(disabled); //Decimal places
             $(checkBoxId).shouldBe(visible).click(); //Click Only integer checkbox again
             $(checkBoxId).shouldNotBe(checked);
+            $(blockId).shouldHave(text(currency_label));
         }
 
         //Enter Decimal Places
@@ -293,6 +296,7 @@ public class CurrencyFieldTest extends BaseTest {
                     .setValue(textfield_decimalScale).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
             $("#numberField_decimalScale").shouldHave(value(textfield_decimalScale));
+            $(blockId).shouldHave(text(currency_label));
         }
 
         //Enter Default value
@@ -318,22 +322,27 @@ public class CurrencyFieldTest extends BaseTest {
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name()))
                     .shouldHave(text(currency_label));
             int int_numberfield_minValue = Integer.parseInt(textfield_minValue);
-            int int_numberfield_lessThanminValue = int_numberfield_minValue - 1;
+            int int_numberfield_lessThanminValue = Integer.parseInt(text_currencyField_defaultValueCurrency);
             String str_numberfield_lessThanMinValue = Integer.toString(int_numberfield_lessThanminValue);
 
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_minValue.name())).should(exist);
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_minValue.name()))
                     .setValue(textfield_minValue).sendKeys(Keys.TAB);
+            $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_minValue.name())).shouldHave(value(textfield_minValue));
+
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name())).setValue(str_numberfield_lessThanMinValue).sendKeys(Keys.TAB);
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name())).shouldHave(value(str_numberfield_lessThanMinValue));
 
             String errorStr = "The value " + str_numberfield_lessThanMinValue + " is smaller than minimum value " + int_numberfield_minValue;
             $("#numberField_defaultValueNumber-helper-text").should(exist).shouldHave(text(errorStr)); //Verify error shown
+
+            //Set the allowable value again:
             String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name()))
                     .setValue(textfield_minValue).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
             $("#numberField_minValue").shouldHave(value(textfield_minValue));
+            $(blockId).shouldHave(text(currency_label));
         }
 
         //Enter Maximum Value
@@ -342,7 +351,7 @@ public class CurrencyFieldTest extends BaseTest {
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name()))
                     .shouldHave(text(currency_label));
             int int_numberfield_maxValue = Integer.parseInt(textfield_maxValue);
-            int int_numberfield_moreThanMaxValue = int_numberfield_maxValue + 1;
+            int int_numberfield_moreThanMaxValue = Integer.parseInt(text_currencyField_defaultValueCurrency);
             String str_numberfield_maxValue = Integer.toString(int_numberfield_moreThanMaxValue);
 
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_maxValue.name())).should(exist);
@@ -350,15 +359,17 @@ public class CurrencyFieldTest extends BaseTest {
                     .setValue(textfield_maxValue).sendKeys(Keys.TAB);
 
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name())).setValue(str_numberfield_maxValue).sendKeys(Keys.TAB);
-            String errorStr = "The value " + str_numberfield_maxValue + " is greater than maximum value " + textfield_maxValue;
+            String errorStr = "The value " + str_numberfield_maxValue + " is greater than maximum value " + int_numberfield_maxValue;
 
             $("#numberField_defaultValueNumber-helper-text").should(exist).shouldHave(text(errorStr)); //Verify error shown
 
+            //Set back the allowable value again:
             String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name()))
                     .setValue(textfield_maxValue).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
             $("#numberField_maxValue").shouldHave(value(textfield_maxValue));
+            $(blockId).shouldHave(text(currency_label));
         }
 
     }
@@ -372,7 +383,7 @@ public class CurrencyFieldTest extends BaseTest {
 
         $("#form-publish-dialog .MuiPaper-root").should(appear); //Publish confirmation dialog appears
         $("#form-publish-dialog #btnConfirm").should(exist).click(); //Click on Confirm button
-        $("#btnCreateNewData").waitUntil(exist, 40000).click(); //Fill form button on Launch screen
+        $("#btnCreateNewData").waitUntil(exist, 50000).click(); //Fill form button on Launch screen
         $("#dataContainer").should(appear); //Verify that the form details screen appears
 
     }
@@ -448,13 +459,6 @@ public class CurrencyFieldTest extends BaseTest {
                 $(currencies_block).shouldHave(value(currency_field));
             }
         }
-
-        //  Default value
-        if (StringUtils.isNotEmpty(text_currencyField_defaultValueCurrency)) {
-            System.out.println("Verifying text_currencyField_defaultValueCurrency: " + text_currencyField_defaultValueCurrency);
-            $(inputField).shouldHave(value(df.format(new BigDecimal(text_currencyField_defaultValueCurrency))));
-        }
-
 
         //Read Only checkbox
         if (StringUtils.isNotEmpty(checkbox_readOnly)) {
@@ -547,41 +551,43 @@ public class CurrencyFieldTest extends BaseTest {
             System.out.println("Verifying Min value for value: " + textfield_minValue);
 
             //Positive scenario:
-            $(inputField).shouldHave(value(textfield_minValue));
+            $(inputField).should(exist).shouldHave(value(textfield_minValue));
 
             //Negative scenario:
             //Error verification:
             int int_numberfield_minValue = Integer.parseInt(textfield_minValue);
-            int int_numberField_defaultValueNumber = Integer.parseInt(textfield_minValue) - 1;
+            int int_numberField_defaultValueNumber = Integer.parseInt(text_currencyField_defaultValueCurrency);
             String str_numberField_defaultValueNumber = Integer.toString(int_numberField_defaultValueNumber);
 
             if (int_numberfield_minValue > int_numberField_defaultValueNumber) {
-                selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_minValue.name()))
-                        .setValue(str_numberField_defaultValueNumber).sendKeys(Keys.TAB);
-                String errorStr = "The value " + int_numberField_defaultValueNumber + " is smaller than minimum value " + int_numberfield_minValue;
+                selectAndClear(inputField).setValue(str_numberField_defaultValueNumber).sendKeys(Keys.TAB);
+                $(inputField).shouldHave(value(str_numberField_defaultValueNumber));
+                String errorStr = "The value must be greater than " + textfield_minValue;
 
-                $("#numberField_defaultValueNumber-helper-text").should(exist).shouldHave(text(errorStr)); //Verify error shown
+                $(helpInFillForm).should(exist).shouldHave(text(errorStr)); //Verify error shown
             }
         }
 
         //Max value
         if (StringUtils.isNotEmpty(textfield_maxValue)) {
             System.out.println("Verifying Max value: " + textfield_maxValue);
+
             //Positive scenario:
             $(inputField).shouldHave(value(textfield_maxValue));
 
             //Negative scenario:
             //Error verification:
             int int_numberfield_maxValue = Integer.parseInt(textfield_maxValue);
-            int int_numberField_defaultValueNumber = int_numberfield_maxValue + 1;
+            int int_numberField_defaultValueNumber = Integer.parseInt(text_currencyField_defaultValueCurrency);
             String str_numberField_defaultValueNumber = Integer.toString(int_numberField_defaultValueNumber);
 
             if (int_numberfield_maxValue < int_numberField_defaultValueNumber) {
-                selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_minValue.name()))
-                        .setValue(str_numberField_defaultValueNumber).sendKeys(Keys.TAB);
-                String errorStr = "The value " + int_numberField_defaultValueNumber + " is greater than maximun value " + int_numberfield_maxValue;
+                selectAndClear(inputField).setValue(str_numberField_defaultValueNumber).sendKeys(Keys.TAB);
+                $(inputField).shouldHave(value(str_numberField_defaultValueNumber));
 
-                $("#numberField_defaultValueNumber-helper-text").should(exist).shouldHave(text(errorStr)); //Verify error shown
+                String errorStr = "The value must be less than " + textfield_maxValue;
+
+                $(helpInFillForm).should(exist).shouldHave(text(errorStr)); //Verify error shown
 
             }
 
