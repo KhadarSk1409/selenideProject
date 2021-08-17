@@ -15,6 +15,7 @@ public class ReuseActions extends BaseTest {
     public static Pair<String, String> createNewForm() {
         //Create New Form:
         $("#toDashboard").click(); //Go back to Dashboard
+        $("#navLibrary").should(exist).hover().click(); //Hover and click on Library
         $("#btnCreateForm").should(exist).click(); //Click on Create Form button
         $("#dlgFormFormWizard").should(appear); //Create Form wizard appears - Not working?
         String formTitle = RandomStringUtils.randomAlphanumeric(4);
