@@ -15,58 +15,45 @@ public class ExpandableCardsTest extends BaseTest {
     @DisplayName("Should Expand and Collapse My Tasks")
     @Order(1)
     public void shouldExpandAndCollapseMyTasks() {
-            $("#bpmRelatedTabsCard .vo-expand-collapse").click(); //Expands My Tasks
-            $("#bpmRelatedTabsCard .vo-expand-collapse").should(have(attribute("title", "Collapse")));
-            $("#bpmRelatedTabsCard").should(appear);
-            $("#usageStatistics").should(disappear);
-            $("#platformNews").should(disappear);
-            $("#lastUsedListCard").should(disappear);
-            $("#formRelatedTabsCard").should(disappear);
-            $("#bpmRelatedTabsCard .vo-expand-collapse").click(); //Collapse My Tasks
-            $("#bpmRelatedTabsCard .vo-expand-collapse").should(have(attribute("title", "Expand")));
-            $("#bpmRelatedTabsCard").should(appear);
             $("#usageStatistics").should(appear);
-            $("#platformNews").should(appear);
-            $("#lastUsedListCard").should(appear);
-            $("#formRelatedTabsCard").should(appear);
+            $("#tasksCard .vo-expand-collapse").click(); //Expands My Tasks
+            $("#tasksCard .vo-expand-collapse").should(have(attribute("title", "Collapse")));
+            $("#lastUsedListCard").should(disappear);
+            $(".fa-compress-arrows-alt").closest("button").should(exist).click(); //Collapse My Tasks
+            $("#tasksCard .vo-expand-collapse").should(have(attribute("title", "Expand")));
+            $("#tasksCard").should(appear);
+
     }
 
     @Test
-    @DisplayName("Should Expand and Collapse Last Submissions")
+    @DisplayName("Should Expand and Collapse Recently Worked")
     @Order(2)
-    public void shouldExpandAndCollapseLastSubmissions() {
+    public void shouldExpandAndCollapseRecentlyWorked() {
             $("#lastUsedListCard .vo-expand-collapse").click(); //Expands Last Submissions
             $("#lastUsedListCard .vo-expand-collapse").should(have(attribute("title", "Collapse")));
             $("#lastUsedListCard").should(appear);
-            $("#bpmRelatedTabsCard").should(disappear);
-            $("#formRelatedTabsCard").should(disappear);
-            $("#usageStatistics").should(disappear);
-            $("#platformNews").should(disappear);
+            $("#tasksCard").should(disappear);
             $("#lastUsedListCard .vo-expand-collapse").click(); //Collapse Last Submissions
             $("#lastUsedListCard .vo-expand-collapse").should(have(attribute("title", "Expand")));
-            $("#bpmRelatedTabsCard").should(appear);
-            $("#usageStatistics").should(appear);
-            $("#platformNews").should(appear);
-            $("#lastUsedListCard").should(appear);
-            $("#formRelatedTabsCard").should(appear);
+            $("#tasksCard").should(appear);
+
     }
     @Test
     @DisplayName("Should Expand and Collapse My Forms")
     @Order(3)
     public void shouldExpandAndCollapseMyForms() {
+            $("#navLibrary").should(exist).hover().click(); //Hover and click on Library
             $("#formRelatedTabsCard .vo-expand-collapse").click(); //Expands My Forms
             $("#formRelatedTabsCard .vo-expand-collapse").should(have(attribute("title", "Collapse")));
             $("#formRelatedTabsCard").should(appear);
-            $("#usageStatistics").should(disappear);
-            $("#platformNews").should(disappear);
-            $("#bpmRelatedTabsCard").should(disappear);
-            $("#lastUsedListCard").should(disappear);
+            $("#usageStatistics").shouldNot(exist);
+            $("#tasksCard").shouldNot(exist);
+            $("#lastUsedListCard").shouldNot(exist);
             $("#formRelatedTabsCard .vo-expand-collapse").click(); //Collapse My Forms
             $("#formRelatedTabsCard .vo-expand-collapse").should(have(attribute("title", "Expand")));
-            $("#bpmRelatedTabsCard").should(appear);
-            $("#usageStatistics").should(appear);
-            $("#platformNews").should(appear);
-            $("#lastUsedListCard").should(appear);
             $("#formRelatedTabsCard").should(appear);
+            $("#usageStatistics").shouldNot(exist);
+            $("#tasksCard").shouldNot(exist);
+            $("#lastUsedListCard").shouldNot(exist);
     }
 }

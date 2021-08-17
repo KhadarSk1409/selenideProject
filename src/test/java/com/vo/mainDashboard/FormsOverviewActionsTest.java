@@ -25,6 +25,8 @@ public class FormsOverviewActionsTest extends BaseTest {
     @DisplayName("Actions on Form Overview Table should be enabled or disabled depending on form state")
     @Order(1)
     public void IdentificationOfActionsInFormOverviewTable() {
+        $("#navLibrary").should(exist).hover().click(); //Hover and click on Library
+        $("#full-width-tab-3").should(exist).hover();
         SelenideElement table = $("#formRelatedTabsCard .MuiTableBody-root").shouldBe(visible);
         ElementsCollection rows = table.$$("tr");
         System.out.println(" Form Count is " + rows.size());
@@ -65,6 +67,7 @@ public class FormsOverviewActionsTest extends BaseTest {
     @DisplayName("Navigation Actions in Form Overview Table")
     @Order(2)
     public void formsNavigationActions() {
+        $("#navLibrary").should(exist).hover().click(); //Hover and click on Library
         SelenideElement table = $("#formRelatedTabsCard .MuiTableBody-root").shouldBe(visible);
 
         ElementsCollection rows = table.$$("tr");
@@ -91,11 +94,12 @@ public class FormsOverviewActionsTest extends BaseTest {
                 $("#formListTable").should(appear);
                 rowEl.$(".fa-pen").closest("button").shouldBe(enabled).click();//Click on Open form in form designer
                 $("#formtree_card").shouldBe(visible).shouldHave(text("Form structure"));
-                $("#toDashboard").click();
+                $("#navLibrary").should(exist).hover().click(); //Hover and click on Library
                 $("#formListTable").should(appear);
                 rowEl = getRow.apply(i);
                 rowEl.$(".fa-chart-area").closest("button").shouldBe(enabled).click();//Click on Open form dashboard
-                $("#toDashboard").click();
+                $("#navLibrary").should(exist).hover().click(); //Hover and click on Library
+
             } else if (formState.equals("Published/in draft") && createdBy.equals("GUI Tester")) {
                 rowEl.$(".fa-edit").closest("button").shouldBe(enabled).click(); //Click on Fill form
                 $("#cDataCardActions").shouldBe(visible);
@@ -103,19 +107,19 @@ public class FormsOverviewActionsTest extends BaseTest {
                 $("#formListTable").should(appear);
                 rowEl.$(".fa-pen").closest("button").shouldBe(enabled).click();//Click on Open form in form designer
                 $("#formtree_card").shouldBe(visible).shouldHave(text("Form structure"));
-                $("#toDashboard").click();
+                $("#navLibrary").should(exist).hover().click(); //Hover and click on Library
                 $("#formListTable").should(appear);
                 rowEl = getRow.apply(i);
                 rowEl.$(".fa-chart-area").closest("button").shouldBe(enabled).click();//Click on Open form dashboard
-                $("#toDashboard").click();
+                $("#navLibrary").should(exist).hover().click(); //Hover and click on Library
+
             } else {
                 rowEl.$(".fa-pen").closest("button").shouldBe(enabled).click();//Click on Open form in form designer
-                //Click Open form in form designer
                 $("#formtree_card").shouldBe(visible).shouldHave(text("Form structure"));
-                $("#toDashboard").click();
+                $("#navLibrary").should(exist).hover().click(); //Hover and click on Library
+
             }
         }
     }
-
 }
 

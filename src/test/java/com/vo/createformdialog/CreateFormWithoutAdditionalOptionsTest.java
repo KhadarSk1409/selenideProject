@@ -19,6 +19,7 @@ public class CreateFormWithoutAdditionalOptionsTest extends BaseTest {
     @DisplayName("Should open Create Form Wizard Dialog")
     @Order(1)
     public void createNewFormBtnFunctionality() {
+        $("#navLibrary").should(exist).hover().click(); //Hover and click on Library
         $("#btnCreateForm").should(exist).click();
         $("#dlgFormFormWizard").should(appear);
     }
@@ -87,7 +88,6 @@ public class CreateFormWithoutAdditionalOptionsTest extends BaseTest {
 
     }
 
-
     @Test
     @DisplayName("Verify the character limit for Title field is 80 characters and for Description field is 150 characters")
     @Order(6)
@@ -125,19 +125,15 @@ public class CreateFormWithoutAdditionalOptionsTest extends BaseTest {
         $("#wizard-createFormButton").should(exist).click(); //Click on create form btn in Wizard
         String formUrl = $("#formtree_card").should(exist).getWrappedDriver().getCurrentUrl();
         System.out.println("The url for Create form is: " + formUrl);
-
         String expectedUrl = Configuration.baseUrl + "/designer/" + idText;
         $("#formtree_card").getText().contains(expectedUrl); //Verify that user has navigated to the form creation page
         $("#toDashboard").click(); //Go back to Dashboard
-
+        $("#navLibrary").should(exist).hover().click(); //Hover and click on Library
         $("#btnCreateForm").should(exist).click(); //Click on Create Form button
         $("#dlgFormFormWizard").should(appear); //Create Form wizard appears
         $("#wizard-formId-helper-text").should(exist);
         selectAndClear("#wizard-formId").setValue(idText).sendKeys(TAB); //Set the id which was there for previous form
-
         $("#wizard-formId-helper-text").should(exist).shouldHave(text("The Id exists already")); //Error should be shown
 
     }
-
-
 }
