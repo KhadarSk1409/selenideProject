@@ -288,7 +288,7 @@ public abstract class BaseTest {
             $("#dlgFormFormWizard #selLabel ~ .MuiAutocomplete-endAdornment .MuiAutocomplete-popupIndicator").should(exist).click();
             $(".MuiAutocomplete-popper").should(appear);
             try {
-                $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("guitest"), 3000);
+                $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("guitest"), 5000);
                 $$(".MuiAutocomplete-popper li").findBy(text("guitest")).click();
             } catch (Throwable t) {
                 $("#dlgFormFormWizard #selLabel").setValue("guitest");
