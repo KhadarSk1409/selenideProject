@@ -499,7 +499,6 @@ public class NumberFieldTest extends BaseTest {
             String str = RandomStringUtils.randomAlphabetic(4);
             $(inputField).setValue(str);
             $(inputField).shouldNotHave(value(str));
-
         }
 
         //    Decimal scale value verify, that decimal places are cutted by configured amount of decimal places
