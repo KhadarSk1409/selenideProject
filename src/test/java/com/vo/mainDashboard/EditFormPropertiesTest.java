@@ -1,5 +1,6 @@
 package com.vo.mainDashboard;
 
+import com.codeborne.selenide.Condition;
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
 
@@ -23,7 +24,8 @@ public class EditFormPropertiesTest extends BaseTest {
     @Order(2)
     public void editFormProperties(){
         $("#formDashboardHeaderLeft").should(appear);
-        $("#btnEditFormDesign").should(exist).click();
+        $(".fa-ellipsis-v").closest("button").should(exist).click();
+        $("#optionsMenu ul li:nth-child(1)").should(exist).click(); //Click on Edit Form Design
         $("#formtree_card").should(exist);
         $("#formelement_properties_card").should(exist);
         $("#nav_button").should(exist).click();
@@ -32,7 +34,6 @@ public class EditFormPropertiesTest extends BaseTest {
         $("#selectFormIcon_dialog_content").should(appear);
 
         String iconName= $("#selectFormIcon_dialog_content span:nth-child(10)").getAttribute("title");
-        //System.out.println(iconName);
         $("#selectFormIcon_dialog_content span:nth-child(10)").click(); //Should add selected Icon
         $("#selFormLabelsControl").should(exist);
         $("#designer_tab_FormProperties").$("#selLabel").click(); //Should click on Label
@@ -47,22 +48,24 @@ public class EditFormPropertiesTest extends BaseTest {
         $("#root div:nth-child(2) div:nth-child(2) tr:nth-child(2) button:nth-child(1)").should(exist).click();
         $("#btnFormDesignPublish").click(); //Click on Publish
         $("#form-publish-dialog").$("#btnConfirm").click();
+        $("#client-snackbar").should(appear).shouldHave(Condition.text("The form was published successfully"));
 
         //Verify the selected options
         $("#toDashboard").click(); //Click on Launchpad
         open("/dashboard/sqJiKRUdB"); //Open the Form
         $("#formDashboardHeaderLeft").should(exist);
-        $("#btnEditFormDesign").should(exist).click(); //Click on Edit Form Design
+        $(".fa-ellipsis-v").closest("button").should(exist).click();
+        $("#optionsMenu ul li:nth-child(1) ").should(exist).click(); //Click on Edit Form Design
         $("#formtree_card .MuiIcon-root svg").shouldHave(attributeMatching("data-src", ".*"+iconName+".*"));
         $("#designer_formCardHeader button:nth-child(2)").shouldHave(text(newLang.toUpperCase()));
         $("#nav_button").should(exist).click();
-        $("#designer_panel_menu ul li:nth-child(8)").click();
+        $("#designer_panel_menu ul li:nth-child(8)").shouldHave(Condition.text("Form Properties")).click();
         $("#designer_tab_FormProperties tbody tr:nth-child(2)  button:nth-child(2)").click(); //Delete the selected language
         $("#designer_tab_FormProperties tbody tr:nth-child(2) button:nth-child(1)").click();
         $("#btnFormDesignPublish").click(); //Click on Publish
         $("#form-publish-dialog").$("#btnConfirm").click();
+        $("#client-snackbar").should(appear).shouldHave(Condition.text("The form was published successfully"));
         $("#formDashboardHeaderLeft").should(exist);
-        $("#btnEditFormDesign").should(exist);
 
     }
 }

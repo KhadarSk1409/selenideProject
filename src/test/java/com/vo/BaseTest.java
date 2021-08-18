@@ -335,6 +335,7 @@ public abstract class BaseTest {
 
     public static void deleteForm() {
         open("/dashboard");
+        $("#navLibrary").should(exist).hover().click(); //Hover and click on Library to navigate to formlist table
         if (!applySearchForTestForms()) {
             System.out.println("applySearchForTestForms returned false, exiting deletion");
             return;
