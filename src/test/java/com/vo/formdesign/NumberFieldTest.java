@@ -449,16 +449,15 @@ public class NumberFieldTest extends BaseTest {
                 $(inputField).shouldBe(disabled);
         }
 
-        //Apply format
-        if (StringUtils.isNotEmpty(checkbox_applyFormatter)) {
-            System.out.println("Verifying apply formatter");
-            $(inputField).shouldHave(value(numberField_defaultValueNumber));
-        }
+//        //Apply format
+//        if (StringUtils.isNotEmpty(checkbox_applyFormatter)) {
+//            System.out.println("Verifying apply formatter");
+//            $(inputField).shouldHave(value(numberField_defaultValueNumber));
+//        }
 
         //Thousand Separator
         if (StringUtils.isNotEmpty(checkbox_thousandSeparator)) {
             System.out.println("Verifying checkbox thousandSeparator for value: " + numberField_defaultValueNumber);
-            $(inputField).shouldHave(value(df.format(new BigDecimal(numberField_defaultValueNumber))));
 
             String strRandomInt = RandomStringUtils.randomNumeric(6);
             selectAndClear(inputField).setValue(strRandomInt).sendKeys(Keys.TAB); //Enter random value in Thosand Separator field
@@ -469,7 +468,6 @@ public class NumberFieldTest extends BaseTest {
         //Allow Negative
         if (StringUtils.isNotEmpty(checkbox_allowNegative)) {
             System.out.println("Verifying checkbox allowNegative");
-            $(inputField).shouldHave(value(numberField_defaultValueNumber));
 
             //Enter random negative number and verify that it works:
             String randomStr = RandomStringUtils.randomNumeric(4);
@@ -482,18 +480,15 @@ public class NumberFieldTest extends BaseTest {
 
         }
 
-        //Allow leading zeroes:
-        if (StringUtils.isNotEmpty(checkbox_allowLeadingZeros)) {
-            System.out.println("Verifying allow leading zeros");
-            $(inputField).shouldHave(value(numberField_defaultValueNumber));
-        }
+//        //Allow leading zeroes:
+//        if (StringUtils.isNotEmpty(checkbox_allowLeadingZeros)) {
+//            System.out.println("Verifying allow leading zeros");
+//            $(inputField).shouldHave(value(numberField_defaultValueNumber));
+//        }
 
         //Only Integer
         if (StringUtils.isNotEmpty(checkbox_onlyInteger)) {
             System.out.println("Verifying only integer");
-
-            //Positive scenario:
-            $(inputField).shouldHave(value(numberField_defaultValueNumber));
 
             //Negative scenario:
             String str = RandomStringUtils.randomAlphabetic(4);
@@ -524,9 +519,6 @@ public class NumberFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(numberfield_minValue)) {
             System.out.println("Verifying Min value");
 
-            //Positive scenario:
-            $(inputField).shouldHave(value(numberfield_minValue));
-
             //Negative scenario:
             //Error verification:
             int int_numberfield_minValue = Integer.parseInt(numberfield_minValue);
@@ -544,8 +536,6 @@ public class NumberFieldTest extends BaseTest {
         //Max value
         if (StringUtils.isNotEmpty(numberfield_maxValue)) {
             System.out.println("Verifying Max value");
-            //Positive scenario:
-            $(inputField).shouldHave(value(numberfield_maxValue));
 
             //Negative scenario:
             //Error verification:
