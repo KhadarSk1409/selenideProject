@@ -472,9 +472,13 @@ public class NumberFieldTest extends BaseTest {
             $(inputField).shouldHave(value(numberField_defaultValueNumber));
 
             //Enter random negative number and verify that it works:
-            String randomStr = RandomStringUtils.randomAlphabetic(4);
+            String randomStr = RandomStringUtils.randomNumeric(4);
             selectAndClear(inputField).setValue(randomStr).sendKeys(Keys.TAB);
             $(inputField).shouldHave(value(randomStr));
+
+            String randomStrNeg = "-"+randomStr; //Create random negative string
+            selectAndClear(inputField).setValue(randomStrNeg).sendKeys(Keys.TAB);
+            $(inputField).shouldHave(value(randomStrNeg));
 
         }
 
