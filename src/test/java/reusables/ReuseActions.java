@@ -17,7 +17,7 @@ public class ReuseActions extends BaseTest {
         $("#toDashboard").click(); //Go back to Dashboard
 
         //Click on More Details:
-        $("#usageStatistics .MuiBox-root:nth-child(7) .MuiBox-root").should(exist).click();
+        $("#usageStatistics .MuiBox-root:nth-child(8) .MuiBox-root").should(exist).click();
         $("#btnCreateForm").should(exist).click(); //Click on Create Form button
         $("#dlgFormFormWizard").should(appear); //Create Form wizard appears - Not working?
         String formTitle = RandomStringUtils.randomAlphanumeric(4);

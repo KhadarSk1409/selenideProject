@@ -11,6 +11,9 @@ import org.openqa.selenium.Keys;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -96,7 +99,7 @@ public class NumberFieldTest extends BaseTest {
                                String checkbox_allowLeadingZeros,
                                String checkbox_onlyInteger,
                                String numberField_defaultValueNumber
-    ) {
+    ) throws IOException {
 
         String blockId = "#block-loc_en-GB-r_" + row + "-c_" + col;
 
@@ -133,7 +136,7 @@ public class NumberFieldTest extends BaseTest {
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(blockId).shouldHave(text(numberfield_label));
         }
-
+//
         //Hide(disable) Label
         if (StringUtils.isNotEmpty(checkbox_disableLabel)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
@@ -178,22 +181,23 @@ public class NumberFieldTest extends BaseTest {
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
 
-            if (StringUtils.isEmpty(numberField_defaultValueNumber)) {
+          //  if (StringUtils.isEmpty(numberField_defaultValueNumber)) {
                 //When you don't have any value in Default value edit box and click on Read only checkbox it should show error
                 $("#numberField_defaultValueNumber-helper-text").should(exist).shouldHave(text("Must be set, if read only"));
 
                 //Uncheck the readonly checkbox
                 String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-                String checkBoxId1 = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_readOnly.name();
                 $(checkBoxId).shouldBe(visible).click();
                 $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
-                $(checkBoxId + " input").shouldNotBe(selected);
+                $(checkBoxId + " input").shouldNotBe(selected); //Uncheck the Read only checkbox
 
-                //Set the value as 0 in the Default value:
-                selectAndClear(By.id(NumberFieldOptionsIds.numberField_defaultValueNumber.name()))
-                        .setValue("0").sendKeys(Keys.TAB);
+                //Set the value in the Default value:
+                selectAndClear(By.id(NumberFieldTest.NumberFieldOptionsIds.numberField_defaultValueNumber.name()))
+                        .setValue("1").sendKeys(Keys.TAB);
+                $(By.id(NumberFieldTest.NumberFieldOptionsIds.numberField_defaultValueNumber.name())).shouldHave(value("1"));
 
-            }
+            $(checkBoxId).shouldBe(visible).click();
+            $(checkBoxId + " input").shouldBe(selected);
 
         }
 
@@ -203,8 +207,23 @@ public class NumberFieldTest extends BaseTest {
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_applyFormatter.name();
             $(checkBoxId).shouldBe(visible).click();
+
+            //Set the number in Default value:
+            selectAndClear(By.id(NumberFieldTest.NumberFieldOptionsIds.numberField_defaultValueNumber.name()))
+                    .setValue(numberField_defaultValueNumber).sendKeys(Keys.TAB); //Enter value
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
+
+            $(By.id(NumberFieldTest.NumberFieldOptionsIds.numberField_defaultValueNumber.name())).shouldHave(value(numberField_defaultValueNumber));
+
+            //Now apply format and verify
+            String applyFormatStr = df.format(new BigDecimal(numberField_defaultValueNumber));
+
+            //Set the number in Default value:
+            selectAndClear(By.id(NumberFieldTest.NumberFieldOptionsIds.numberField_defaultValueNumber.name()))
+                    .setValue(applyFormatStr).sendKeys(Keys.TAB); //Enter value
+
+            $(By.id(NumberFieldTest.NumberFieldOptionsIds.numberField_defaultValueNumber.name())).shouldHave(value(applyFormatStr));
         }
 
         //Thousand Separator checkbox check
@@ -250,15 +269,17 @@ public class NumberFieldTest extends BaseTest {
 
         //Only integer
         if (StringUtils.isNotEmpty(checkbox_onlyInteger)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            String checkBoxId = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_onlyInteger.name();
-            $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(checkBoxId + " input").shouldBe(selected);
+            if (StringUtils.isNotEmpty(checkbox_onlyInteger)) {
+                $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
+                String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+                String checkBoxId = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_onlyInteger.name();
+                $(checkBoxId).shouldBe(visible).click();
+                $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+                $(checkBoxId + " input").shouldBe(selected);
 
-            //here also check that after this is checked the Decimal places textfield should be disabled
-            $("#numberField_decimalScale").shouldBe(disabled); //Decimal places
+                //here also check that after this is checked the Decimal places textfield should be disabled
+                $("#numberField_decimalScale").shouldBe(disabled); //Decimal places
+            }
         }
 
         //Enter Decimal Places
@@ -425,14 +446,7 @@ public class NumberFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_readOnly)) {
             System.out.println("Verifying checkbox readOnly");
             System.out.println("Verifying for value: " + numberField_defaultValueNumber);
-            if (StringUtils.isEmpty(numberField_defaultValueNumber)) {
-                $(inputField).shouldHave(value("0"));
-            }
-
-            //Read only with Default
-            else {
                 $(inputField).shouldBe(disabled);
-            }
         }
 
         //Apply format
@@ -456,6 +470,12 @@ public class NumberFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_allowNegative)) {
             System.out.println("Verifying checkbox allowNegative");
             $(inputField).shouldHave(value(numberField_defaultValueNumber));
+
+            //Enter random negative number and verify that it works:
+            String randomStr = RandomStringUtils.randomAlphabetic(4);
+            selectAndClear(inputField).setValue(randomStr).sendKeys(Keys.TAB);
+            $(inputField).shouldHave(value(randomStr));
+
         }
 
         //Allow leading zeroes:
