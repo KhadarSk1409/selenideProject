@@ -67,7 +67,7 @@ public class CurrencyFieldTest extends BaseTest {
         $("#panel2a-header").should(exist).click(); //Advanced section dropdown
 
         //options for text field should exist:
-        Arrays.asList(CurrencyFieldTest.CurrencyFieldOptionsIds.values()).forEach(textFieldId -> $(By.id(textFieldId.name())).shouldBe(visible));
+        Arrays.asList(CurrencyFieldOptionsIds.values()).forEach(CurrencyFieldOptionsIds -> $(By.id(CurrencyFieldOptionsIds.name())).shouldBe(visible));
         $("#sel_control_currencies .selLabelChip").shouldHave(text("EUR"));
         $("#blockButtonDelete").shouldBe(visible).click();
         $("#li-template-CurrencyField-05").should(disappear);
@@ -125,7 +125,6 @@ public class CurrencyFieldTest extends BaseTest {
 
         //Label
         if (StringUtils.isNotEmpty(currency_label)) {
-            $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).should(exist);
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name()))
@@ -186,7 +185,6 @@ public class CurrencyFieldTest extends BaseTest {
 
         //Read only checkbox
         if (StringUtils.isNotEmpty(checkbox_readOnly)) {
-            $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).shouldHave(text(currency_label));
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + CurrencyFieldTest.CurrencyFieldOptionsIds.checkbox_readOnly.name();
@@ -194,35 +192,50 @@ public class CurrencyFieldTest extends BaseTest {
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
 
-            if (StringUtils.isEmpty(text_currencyField_defaultValueCurrency)) {
-                //When you don't have any value in Default value edit box and click on Read only checkbox it should show error
-                $("#numberField_defaultValueNumber-helper-text").should(exist).shouldHave(text("Must be set, if read only"));
+            //  if (StringUtils.isEmpty(text_currencyField_defaultValueCurrency)) {
+            //When you don't have any value in Default value edit box and click on Read only checkbox it should show error
+            $("#numberField_defaultValueNumber-helper-text").should(exist).shouldHave(text("Must be set, if read only"));
 
-                //Uncheck the readonly checkbox
-                String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-                String checkBoxId1 = "#" + CurrencyFieldTest.CurrencyFieldOptionsIds.checkbox_readOnly.name();
-                $(checkBoxId1).shouldBe(visible).click();
-                $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
-                $(checkBoxId + " input").shouldNotBe(selected);
-                //Set the value as 0 in the Default value:
-                selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name()))
-                        .setValue("0").sendKeys(Keys.TAB);
-            }
+            //Uncheck the readonly checkbox
+            String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $(checkBoxId).shouldBe(visible).click();
+            $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
+            $(checkBoxId + " input").shouldNotBe(selected); //Uncheck the Read only checkbox
+
+            //Set the value in the Default value:
+            selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name()))
+                    .setValue("1").sendKeys(Keys.TAB);
+            $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name())).shouldHave(value("1"));
+
+            $(checkBoxId).shouldBe(visible).click();
+            $(checkBoxId + " input").shouldBe(selected);
 
         }
 
 
-        //  Apply user format checkbox check
+        //Apply user format checkbox check
         if (StringUtils.isNotEmpty(checkbox_applyFormatter)) {
-            $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).shouldHave(text(currency_label));
-            selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name()))
-                    .setValue(currency_label).sendKeys(Keys.TAB); //Set Label as Read Only with Default value
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + CurrencyFieldTest.CurrencyFieldOptionsIds.checkbox_applyFormatter.name();
             $(checkBoxId).shouldBe(visible).click();
+
+            //Set the number in Default value:
+            selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name()))
+                    .setValue(text_currencyField_defaultValueCurrency).sendKeys(Keys.TAB); //Enter value
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
+
+            $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name())).shouldHave(value(text_currencyField_defaultValueCurrency));
+
+            //Now apply format and verify
+            String applyFormatStr = df.format(new BigDecimal(text_currencyField_defaultValueCurrency));
+
+            //Set the number in Default value:
+            selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name()))
+                    .setValue(applyFormatStr).sendKeys(Keys.TAB); //Enter value
+
+            $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name())).shouldHave(value(applyFormatStr));
         }
 
         //  Thousand Separator checkbox check
@@ -465,22 +478,15 @@ public class CurrencyFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_readOnly)) {
             System.out.println("Verifying checkbox readOnly");
             System.out.println("Verifying for value: " + text_currencyField_defaultValueCurrency);
-            if (StringUtils.isEmpty(text_currencyField_defaultValueCurrency)) {
-                $(inputField).shouldHave(value("0"));
-            }
-
-            //Read only with Default
-            else {
-                $(inputField).shouldBe(disabled);
-            }
+            $(inputField).shouldBe(disabled);
         }
 
-        //Apply user format
-        if (StringUtils.isNotEmpty(checkbox_applyFormatter)) {
-            System.out.println("Verifying apply formatter");
-            System.out.println("Value text_currencyField_defaultValueCurrency: " + text_currencyField_defaultValueCurrency);
-            $(inputField).shouldHave(value(text_currencyField_defaultValueCurrency));
-        }
+//        //Apply user format
+//        if (StringUtils.isNotEmpty(checkbox_applyFormatter)) {
+//            System.out.println("Verifying apply formatter");
+//            System.out.println("Value text_currencyField_defaultValueCurrency: " + text_currencyField_defaultValueCurrency);
+//            $(inputField).shouldHave(value(text_currencyField_defaultValueCurrency));
+//        }
 
         //Thousand Separator
         if (StringUtils.isNotEmpty(checkbox_thousandSeparator)) {
@@ -491,35 +497,39 @@ public class CurrencyFieldTest extends BaseTest {
             String strRandomInt = RandomStringUtils.randomNumeric(6);
             selectAndClear(inputField).setValue(strRandomInt).sendKeys(Keys.TAB); //Enter random value in Thosand Separator field
 
-            $(inputField).shouldHave(value(df.format(new BigDecimal(strRandomInt)))); //Thousand separator should have numberField_defaultValueNumber
+            $(inputField).shouldHave(value(df.format(new BigDecimal(strRandomInt)))); //Thousand separator should have text_currencyField_defaultValueCurrency
         }
 
 
         //Allow Negative
         if (StringUtils.isNotEmpty(checkbox_allowNegative)) {
-            System.out.println("Verifying label: " + currency_label);
-            System.out.println("Verifying checkbox allowNegative for value: " + text_currencyField_defaultValueCurrency);
-            $(inputField).shouldHave(value(text_currencyField_defaultValueCurrency));
-        }
+            System.out.println("Verifying checkbox allowNegative");
 
+            //Enter random negative number and verify that it works:
+            String randomStr = RandomStringUtils.randomNumeric(4);
+            selectAndClear(inputField).setValue(randomStr).sendKeys(Keys.TAB);
+            $(inputField).shouldHave(value(randomStr));
 
-        //Allow leading zeroes:
-        if (StringUtils.isNotEmpty(checkbox_allowLeadingZeros)) {
-            System.out.println("Verifying label: " + currency_label);
-            System.out.println("Verifying allow leading zeros for value: " + text_currencyField_defaultValueCurrency);
-            $(inputField).shouldHave(value(text_currencyField_defaultValueCurrency));
-            String str_checkbox_allowLeadingZeroes = "00" + text_currencyField_defaultValueCurrency;
-            selectAndClear(inputField).setValue(str_checkbox_allowLeadingZeroes).sendKeys(Keys.TAB);
-            $(inputField).shouldHave(value(str_checkbox_allowLeadingZeroes));
+            String randomStrNeg = "-" + randomStr; //Create random negative string
+            selectAndClear(inputField).setValue(randomStrNeg).sendKeys(Keys.TAB);
+            $(inputField).shouldHave(value(randomStrNeg));
+
         }
+//
+//        //Allow leading zeroes:
+//        if (StringUtils.isNotEmpty(checkbox_allowLeadingZeros)) {
+//            System.out.println("Verifying label: " + currency_label);
+//            System.out.println("Verifying allow leading zeros for value: " + text_currencyField_defaultValueCurrency);
+//            $(inputField).shouldHave(value(text_currencyField_defaultValueCurrency));
+//            String str_checkbox_allowLeadingZeroes = "00" + text_currencyField_defaultValueCurrency;
+//            selectAndClear(inputField).setValue(str_checkbox_allowLeadingZeroes).sendKeys(Keys.TAB);
+//            $(inputField).shouldHave(value(str_checkbox_allowLeadingZeroes));
+//        }
 
         //Only Integer
         if (StringUtils.isNotEmpty(checkbox_onlyInteger)) {
             System.out.println("Verifying label: " + currency_label);
             System.out.println("Verifying only integer: " + text_currencyField_defaultValueCurrency);
-
-            //Positive scenario:
-            $(inputField).shouldHave(value(text_currencyField_defaultValueCurrency));
 
             //Negative scenario:
             String str = RandomStringUtils.randomAlphabetic(4);
@@ -551,18 +561,15 @@ public class CurrencyFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(textfield_minValue)) {
             System.out.println("Verifying Min value for value: " + textfield_minValue);
 
-            //Positive scenario:
-            $(inputField).should(exist).shouldHave(value(textfield_minValue));
-
             //Negative scenario:
             //Error verification:
             int int_numberfield_minValue = Integer.parseInt(textfield_minValue);
-            int int_numberField_defaultValueNumber = Integer.parseInt(text_currencyField_defaultValueCurrency);
-            String str_numberField_defaultValueNumber = Integer.toString(int_numberField_defaultValueNumber);
+            int int_text_currencyField_defaultValueCurrency = Integer.parseInt(text_currencyField_defaultValueCurrency);
+            String str_text_currencyField_defaultValueCurrency = Integer.toString(int_text_currencyField_defaultValueCurrency);
 
-            if (int_numberfield_minValue > int_numberField_defaultValueNumber) {
-                selectAndClear(inputField).setValue(str_numberField_defaultValueNumber).sendKeys(Keys.TAB);
-                $(inputField).shouldHave(value(str_numberField_defaultValueNumber));
+            if (int_numberfield_minValue > int_text_currencyField_defaultValueCurrency) {
+                selectAndClear(inputField).setValue(str_text_currencyField_defaultValueCurrency).sendKeys(Keys.TAB);
+                $(inputField).shouldHave(value(str_text_currencyField_defaultValueCurrency));
                 String errorStr = "The value must be greater than " + textfield_minValue;
 
                 $(helpInFillForm).should(exist).shouldHave(text(errorStr)); //Verify error shown
@@ -573,18 +580,15 @@ public class CurrencyFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(textfield_maxValue)) {
             System.out.println("Verifying Max value: " + textfield_maxValue);
 
-            //Positive scenario:
-            $(inputField).shouldHave(value(textfield_maxValue));
-
             //Negative scenario:
             //Error verification:
             int int_numberfield_maxValue = Integer.parseInt(textfield_maxValue);
-            int int_numberField_defaultValueNumber = Integer.parseInt(text_currencyField_defaultValueCurrency);
-            String str_numberField_defaultValueNumber = Integer.toString(int_numberField_defaultValueNumber);
+            int int_text_currencyField_defaultValueCurrency = Integer.parseInt(text_currencyField_defaultValueCurrency);
+            String str_text_currencyField_defaultValueCurrency = Integer.toString(int_text_currencyField_defaultValueCurrency);
 
-            if (int_numberfield_maxValue < int_numberField_defaultValueNumber) {
-                selectAndClear(inputField).setValue(str_numberField_defaultValueNumber).sendKeys(Keys.TAB);
-                $(inputField).shouldHave(value(str_numberField_defaultValueNumber));
+            if (int_numberfield_maxValue < int_text_currencyField_defaultValueCurrency) {
+                selectAndClear(inputField).setValue(str_text_currencyField_defaultValueCurrency).sendKeys(Keys.TAB);
+                $(inputField).shouldHave(value(str_text_currencyField_defaultValueCurrency));
 
                 String errorStr = "The value must be less than " + textfield_maxValue;
 
