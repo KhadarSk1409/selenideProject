@@ -5,9 +5,8 @@ row,col,col+AF8-span,currency_label,currency_help,currency_field,disableLabel,re
 1,4,,Default Value,This is Help Text,,,,,,,,,,,,,1234567
 2,1,,Currencies,This is Help Text,"USD,CAD",,,,,,,,,,,,
 2,2,,Read Only,This is Help Text,,,,,,,X,,,,,,
-2,3,,Read Only With Default ,This is Help Text,,,,,,,X,,,,,,1234567
 2,4,,Text Currency,This is Help Text,,,,,,,,,,,,,1234567
-3,1,,Apply Format,This is Help Text,,,,,,,,X,,,,,12.34567
+3,1,,Apply Format,This is Help Text,,,,,,,,X,,,,,1234567
 3,2,,Thousand Separator,Help Text,,,,,,,,,X,,,,1234567
 3,3,,Allow Negative,Help Text,,,,,,,,,,X,,,-1234567
 3,4,,Allow Leading Zero,Help Text,,,,,,,,,,,X,,1234567
