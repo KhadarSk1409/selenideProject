@@ -1,4 +1,4 @@
-row,col,col+AF8-span,numberfield_label,numberfield_help,disableLabel,required,numberfield_decimalScale,numberfield_minValue,numberfield_maxValue,readOnly,applyFormatter,thousandSeparator,allowNegative,allowLeadingZeros,onlyInteger,numberField_defaultValueNumber
+row,col,col+AF8-span,label_text,help_text,disableLabel,required,numberfield_decimalScale,numberfield_minValue,numberfield_maxValue,readOnly,applyFormatter,thousandSeparator,allowNegative,allowLeadingZeros,onlyInteger,numberField_defaultValueNumber
 1,1,,Number Field Test,,,,,,,,,,,,,
 1,2,,Help TextNumberField,This is Help Text,X,,,,,,,,,,,
 1,3,,Required,,,X,,,,,,,,,,
