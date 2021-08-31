@@ -24,12 +24,13 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static java.lang.Integer.parseInt;
 import static reusables.ReuseActions.createNewForm;
+import static reusables.ReuseActionsFormCreation.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Formatted Tests")
 public class FormattedTextTest extends BaseTest {
 
-    enum FormattedTextIds {
+    public enum FormattedTextIds {
         textfield_label,
         checkbox_disableLabel,
         textfield_help,
@@ -42,30 +43,7 @@ public class FormattedTextTest extends BaseTest {
     @Order(1)
     @DisplayName("precondition")
     public void precondition() {
-        createNewForm();
-        $("#wizard-createFormButton").should(exist).click();
-        $("#btnFormDesignPublish").should(exist); //Verify that user has navigated to form design
-
-        String blockId = "#block-loc_en-GB-r_1-c_1";
-        String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Initial version
-        $(blockId).shouldBe(visible).click();
-
-        //Click on Show More
-        $("#template_basis_list").find(byText("Show More")).should(exist).click();
-
-        $("#li-template-RichTextEditor-05").should(appear).click();
-        $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-        $("#formelement_properties_card").should(appear);
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
-
-        $("#panel2a-header").should(exist).click(); //Advanced section dropdown
-
-        //options for text field should exist:
-        Arrays.asList(FormattedTextTest.FormattedTextIds.values()).forEach(textFieldId -> $(By.id(textFieldId.name())).shouldBe(visible));
-
-        $("#blockButtonDelete").shouldBe(visible).click();
-        $("#li-template-RadioGroupField-03").should(disappear);
-
+        navigateToFormDesign("Formatted Text");
     }
 
     @Order(2)
@@ -92,7 +70,7 @@ public class FormattedTextTest extends BaseTest {
         }
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $("#li-template-RichTextEditor-05").should(exist).click();
+        $("#li-template-RichTextEditor-06").should(exist).click();
         $("#formelement_properties_card").should(appear);
         $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
@@ -109,44 +87,23 @@ public class FormattedTextTest extends BaseTest {
 
         //Label
         if (StringUtils.isNotEmpty(text_label)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            $(By.id("textfield_label")).should(exist);
-            selectAndClear(By.id(FormattedTextTest.FormattedTextIds.textfield_label.name()))
-                    .setValue(text_label).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(text_label)).waitUntil(appears, 4000);
+            labelVerificationOnFormDesign(blockId,text_label);
         }
 
 
         //Help
         if (StringUtils.isNotEmpty(text_help)) {
-            $(By.id("textfield_help")).should(exist);
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(FormattedTextTest.FormattedTextIds.textfield_help.name()))
-                    .setValue(text_help).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(text_help)).waitUntil(appears, 4000);
+            helpVerificationOnFormDesign(blockId, text_help);
         }
 
         //Hide(disable) Label
         if (StringUtils.isNotEmpty(checkbox_disableLabel)) {
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            String checkBoxId = "#" + FormattedTextTest.FormattedTextIds.checkbox_disableLabel.name();
-            $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(checkBoxId + " input").shouldBe(selected);
-            $(blockId).shouldNotHave(value(checkbox_disableLabel)).waitUntil(appears, 4000);
+            hideLabelVerificationOnFormDesign(blockId, text_label);
         }
 
         //required
         if (StringUtils.isNotEmpty(checkbox_required)) {
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            String checkBoxId = "#" + FormattedTextTest.FormattedTextIds.checkbox_required.name();
-            $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(checkBoxId + " input").shouldBe(selected);
-            $(blockId).should(exist).shouldHave(text("*"));
+            requiredCheckboxVerificationOnFormDesign(blockId);
         }
 
         //Read only checkbox

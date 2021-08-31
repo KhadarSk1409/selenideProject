@@ -17,6 +17,7 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.executeJavaScript;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static reusables.ReuseActions.createNewForm;
+import static reusables.ReuseActionsFormCreation.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("TextField Creation Tests")
@@ -24,7 +25,7 @@ public class TextAreaFieldTest extends BaseTest {
 
     protected static ThreadLocal<String> formName = ThreadLocal.withInitial(() -> "TextField Form-Design Auto Test " + BROWSER_CONFIG.get() + " " + System.currentTimeMillis());
 
-    enum TextAreaFieldOptionsIds {
+    public enum TextAreaFieldOptionsIds {
         textfield_label,
         textfield_help,
         textfield_defaultValue,
@@ -41,24 +42,7 @@ public class TextAreaFieldTest extends BaseTest {
     @Order(1)
     @DisplayName("precondition")
     public void precondition() {
-        createNewForm();
-        $("#wizard-createFormButton").should(exist).click();
-        $("#btnFormDesignPublish").should(exist); //Verify that user has navigated to form design
-
-        String blockId = "#block-loc_en-GB-r_1-c_1"; //Need to change later as of now _1 is returning two results
-        String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Initial version
-        $(blockId).shouldBe(visible).click();
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
-        $("#li-template-TextareaField-05").should(exist).click();
-        $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-        $("#formelement_properties_card").should(exist);
-        $("#panel2a-header").should(exist).click(); //Advanced section dropdown
-
-        //options for text field area should exist:
-        Arrays.asList(TextAreaFieldOptionsIds.values()).forEach(textAreaFieldId -> $(By.id(textAreaFieldId.name())).shouldBe(visible));
-
-        $("#blockButtonDelete").shouldBe(visible).click();
-        $("#li-template-TextareaField-05").should(disappear);
+        navigateToFormDesign("Textarea Field");
     }
 
     @Order(2)
@@ -88,7 +72,7 @@ public class TextAreaFieldTest extends BaseTest {
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
         $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
-        $("#li-template-TextareaField-05").should(appear).click();
+        $("#li-template-TextareaField-06").should(appear).click();
         $("#formelement_properties_card").should(appear);
 
         if (colSpan != null && colSpan > 1) {
@@ -104,34 +88,22 @@ public class TextAreaFieldTest extends BaseTest {
 
         //Label
         if (StringUtils.isNotEmpty(textfield_label)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(TextAreaFieldOptionsIds.textfield_label.name()))
-                    .setValue(textfield_label).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(textfield_label));
+            labelVerificationOnFormDesign(blockId,textfield_label);
         }
 
         //disable Label
         if (StringUtils.isNotEmpty(checkbox_disableLabel)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            String checkBoxId = "#" + TextAreaFieldTest.TextAreaFieldOptionsIds.checkbox_disableLabel.name();
-            $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(checkBoxId + " input").shouldBe(selected);
-            $(blockId).shouldNotHave(text(textfield_label)); //Verify that the label is hidden for that block
+            hideLabelVerificationOnFormDesign(blockId, textfield_label);
         }
 
         //Help
         if (StringUtils.isNotEmpty(textfield_help)) {
-            // $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(TextAreaFieldOptionsIds.textfield_help.name()))
-                    .setValue(textfield_help).sendKeys(Keys.TAB);
+            helpVerificationOnFormDesign(blockId, textfield_label);
+        }
 
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(textfield_help));
+        //required
+        if (StringUtils.isNotEmpty(checkbox_required)) {
+            requiredCheckboxVerificationOnFormDesign(blockId);
         }
 
         //Default Value
@@ -145,16 +117,6 @@ public class TextAreaFieldTest extends BaseTest {
             $(By.id(TextAreaFieldOptionsIds.textfield_defaultValue.name())).shouldHave(value(textfield_defaultValue));
         }
 
-        //required
-        if (StringUtils.isNotEmpty(checkbox_required)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String checkBoxId = "#" + TextAreaFieldTest.TextAreaFieldOptionsIds.checkbox_required.name();
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text("*"));
-            $(checkBoxId + " input").shouldBe(selected);
-        }
 
         //only Alphabets
         if (StringUtils.isNotEmpty(property_onlyAlphabets)) {

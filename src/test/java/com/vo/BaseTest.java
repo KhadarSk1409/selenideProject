@@ -365,7 +365,7 @@ public abstract class BaseTest {
         return selectAndClear(By.cssSelector(cssSelector));
     }
 
-    protected static SelenideElement selectAndClear(By selector) {
+    public static SelenideElement selectAndClear(By selector) {
         $(selector).sendKeys(Keys.chord(Keys.CONTROL, Keys.COMMAND, "a"));
         $(selector).sendKeys(Keys.chord(Keys.DELETE));
         return $(selector).shouldBe(empty);

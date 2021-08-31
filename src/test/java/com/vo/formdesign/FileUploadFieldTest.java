@@ -22,12 +22,13 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static java.lang.Integer.parseInt;
 import static reusables.ReuseActions.createNewForm;
+import static reusables.ReuseActionsFormCreation.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("FileUploadField Tests")
 public class FileUploadFieldTest extends BaseTest {
 
-    enum FileUploadFieldIds {
+    public enum FileUploadFieldIds {
         textfield_label,
         checkbox_disableLabel,
         textfield_help,
@@ -41,33 +42,7 @@ public class FileUploadFieldTest extends BaseTest {
     @Order(1)
     @DisplayName("precondition")
     public void precondition() {
-        createNewForm();
-        $("#wizard-createFormButton").should(exist).click();
-        $("#btnFormDesignPublish").should(exist); //Verify that user has navigated to form design
-
-        String blockId = "#block-loc_en-GB-r_1-c_1"; //Need to change later as of now _1 is returning two results
-        String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Initial version
-        $(blockId).shouldBe(visible).click();
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
-
-        //Click on Show More
-        $("#template_basis_list").find(byText("Show More")).should(exist).click();
-
-        $("#li-template-FileUploadField-03").should(appear).click();
-        $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-        $("#formelement_properties_card").should(appear);
-
-        //Verify that default value in Label field is "File Upload Field"
-        $(By.id(FileUploadFieldTest.FileUploadFieldIds.textfield_label.name())).shouldHave(text("File Upload Field"));
-
-        $("#panel2a-header").should(exist).click(); //Advanced section dropdown
-
-        //options for text field should exist:
-        Arrays.asList(FileUploadFieldTest.FileUploadFieldIds.values()).forEach(fileUploadFieldId -> $(By.id(fileUploadFieldId.name())).shouldBe(visible));
-
-        $("#blockButtonDelete").shouldBe(visible).click();
-        $("#li-template-FileUploadField-03").should(disappear);
-
+        navigateToFormDesign("File Upload Field");
     }
 
     @Order(2)
@@ -96,49 +71,29 @@ public class FileUploadFieldTest extends BaseTest {
         }
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $("#li-template-FileUploadField-03").should(exist).click();
+        $("#li-template-FileUploadField-04").should(exist).click();
         $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
         $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
 
         //Label
         if (StringUtils.isNotEmpty(text_label)) {
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(FileUploadFieldTest.FileUploadFieldIds.textfield_label.name()))
-                    .setValue(text_label).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(By.id(FileUploadFieldTest.FileUploadFieldIds.textfield_label.name())).shouldHave(text(text_label)); //The Label
-            $(blockId).shouldHave(text(text_label));
+            labelVerificationOnFormDesign(blockId,text_label);
         }
 
         //Hide(disable) Label
         if (StringUtils.isNotEmpty(checkbox_disableLabel)) {
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            String checkBoxId = "#" + FileUploadFieldTest.FileUploadFieldIds.checkbox_disableLabel.name();
-            $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(checkBoxId + " input").shouldBe(selected);
-            $(blockId).shouldNotHave(value(checkbox_disableLabel)).waitUntil(appears, 4000);
+            hideLabelVerificationOnFormDesign(blockId, text_label);
         }
 
         //Help
         if (StringUtils.isNotEmpty(text_help)) {
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(FileUploadFieldTest.FileUploadFieldIds.textfield_help.name()))
-                    .setValue(text_help).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(text_help)).waitUntil(appears, 4000);
+            helpVerificationOnFormDesign(blockId, text_label);
         }
 
         //required
         if (StringUtils.isNotEmpty(checkbox_required)) {
-            String checkBoxId = "#" + FileUploadFieldTest.FileUploadFieldIds.checkbox_required.name();
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            $(checkBoxId).shouldBe(visible).click();
-            //$(checkBoxId + " input").shouldHave(value("true"));
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(checkBoxId + " input").shouldBe(selected);
-            $(blockId).should(exist).shouldHave(text("*"));
+            requiredCheckboxVerificationOnFormDesign(blockId);
         }
 
         //Maximum file size

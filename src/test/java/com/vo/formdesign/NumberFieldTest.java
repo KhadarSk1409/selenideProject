@@ -104,49 +104,22 @@ public class NumberFieldTest extends BaseTest {
 
         //Label
         if (StringUtils.isNotEmpty(label_text)) {
-//            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-//            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-//            selectAndClear(By.id(NumberFieldOptionsIds.textfield_label.name()))
-//                    .setValue(label_text).sendKeys(Keys.TAB);
-//            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-//            $(blockId).shouldHave(text(label_text));
             labelVerificationOnFormDesign(blockId,label_text);
         }
 //
         //Hide(disable) Label
         if (StringUtils.isNotEmpty(checkbox_disableLabel)) {
-//            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-//            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-//
-//            String checkBoxId = "#" + NumberFieldOptionsIds.checkbox_disableLabel.name();
-//            $(checkBoxId).shouldBe(visible).click();
-//            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-//            $(checkBoxId + " input").shouldBe(selected);
-//            $(blockId).shouldNotHave(value(label_text));
             hideLabelVerificationOnFormDesign(blockId, label_text);
         }
 
         //Help
         if (StringUtils.isNotEmpty(help_text)) {
-            // $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-//            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-//            selectAndClear(By.id(NumberFieldOptionsIds.textfield_help.name()))
-//                    .setValue(help_text).sendKeys(Keys.TAB);
-//            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-//            $(blockId).shouldHave(text(help_text));
             helpVerificationOnFormDesign(blockId, help_text);
         }
 
 
         //required
         if (StringUtils.isNotEmpty(checkbox_required)) {
-//            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-//            String checkBoxId = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_required.name();
-//            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-//            $(checkBoxId).shouldBe(visible).click();
-//            //$(checkBoxId + " input").shouldHave(value("true"));
-//            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-//            $(checkBoxId + " input").shouldBe(selected);
             requiredCheckboxVerificationOnFormDesign(blockId);
         }
 //

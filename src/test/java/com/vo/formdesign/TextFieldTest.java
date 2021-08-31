@@ -22,6 +22,7 @@ import static com.codeborne.selenide.Selenide.*;
 import static java.lang.Integer.parseInt;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static reusables.ReuseActions.createNewForm;
+import static reusables.ReuseActionsFormCreation.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("TextField Creation Tests")
@@ -29,7 +30,7 @@ public class TextFieldTest extends BaseTest {
 
     protected static ThreadLocal<String> formName = ThreadLocal.withInitial(() -> "TextField Form-Design Auto Test " + BROWSER_CONFIG.get() + " " + System.currentTimeMillis());
 
-    enum TextFieldOptionsIds {
+    public enum TextFieldOptionsIds {
         textfield_label,
         textfield_help,
         textfield_prefix,
@@ -49,25 +50,8 @@ public class TextFieldTest extends BaseTest {
     @Order(1)
     @DisplayName("precondition")
     public void precondition() {
-        createNewForm();
-        $("#wizard-createFormButton").should(exist).click();
-        $("#btnFormDesignPublish").should(exist); //Verify that user has navigated to form design
+        navigateToFormDesign("Text Field");
 
-        String blockId = "#block-loc_en-GB-r_1-c_1"; //Need to change later as of now _1 is returning two results
-        String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Initial version
-        $(blockId).shouldBe(visible).click();
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
-        $("#li-template-Textfield-04").should(appear).click();
-        $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-        $("#formelement_properties_card").should(appear);
-
-        $("#panel2a-header").should(exist).click(); //Advanced section dropdown
-
-        //options for text field should exist:
-        Arrays.asList(TextFieldOptionsIds.values()).forEach(textFieldId -> $(By.id(textFieldId.name())).shouldBe(visible));
-
-        $("#blockButtonDelete").shouldBe(visible).click();
-        $("#li-template-Textfield-04").should(disappear);
     }
 
     @Order(2)
@@ -99,7 +83,7 @@ public class TextFieldTest extends BaseTest {
         }
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $("#li-template-Textfield-04").should(appear).click();
+        $("#li-template-Textfield-05").should(appear).click();
         $("#formelement_properties_card").should(appear);
         $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
@@ -116,33 +100,22 @@ public class TextFieldTest extends BaseTest {
 
         //Label
         if (StringUtils.isNotEmpty(textfield_label)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(TextFieldOptionsIds.textfield_label.name()))
-                    .setValue(textfield_label).sendKeys(Keys.TAB);
-            $(By.id(TextFieldOptionsIds.textfield_label.name())).shouldHave(value(textfield_label));
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(textfield_label));
+            labelVerificationOnFormDesign(blockId,textfield_label);
         }
 
         //disable Label
         if (StringUtils.isNotEmpty(checkbox_disableLabel)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String checkBoxId = "#" + TextFieldOptionsIds.checkbox_disableLabel.name();
-            $(checkBoxId).shouldBe(visible).click();
-            $(checkBoxId + " input").shouldBe(selected);
-            $(blockId).shouldNotHave(text(textfield_label)); //Verify that the label is hidden for that block
+            hideLabelVerificationOnFormDesign(blockId, textfield_label);
         }
 
         //Help
         if (StringUtils.isNotEmpty(textfield_help)) {
-            // $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(TextFieldOptionsIds.textfield_help.name()))
-                    .setValue(textfield_help).sendKeys(Keys.TAB);
+            helpVerificationOnFormDesign(blockId, textfield_label);
+        }
 
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(textfield_help));
+        //required
+        if (StringUtils.isNotEmpty(checkbox_required)) {
+            requiredCheckboxVerificationOnFormDesign(blockId);
         }
 
         //Prefix
@@ -203,18 +176,6 @@ public class TextFieldTest extends BaseTest {
             $(By.id(TextFieldOptionsIds.prop_toggle_button_lowercase.name())).shouldBe(visible).click();
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(By.id(TextFieldOptionsIds.prop_toggle_button_lowercase.name())).shouldHave(attribute("aria-pressed", "true"));
-        }
-
-        //required
-        if (StringUtils.isNotEmpty(checkbox_required)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String checkBoxId = "#" + TextFieldOptionsIds.checkbox_required.name();
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            $(checkBoxId).shouldBe(visible).click();
-            //$(checkBoxId + " input").shouldHave(value("true"));
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text("*"));
-            $(checkBoxId + " input").shouldBe(selected);
         }
 
         //only Alphabets
