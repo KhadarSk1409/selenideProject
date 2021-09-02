@@ -49,7 +49,7 @@ public class DateFieldTest extends BaseTest {
     @Order(1)
     @DisplayName("precondition")
     public void precondition() {
-        navigateToFormDesign("Date Field");
+        navigateToFormDesign(FormField.DATE);
 
     }
 

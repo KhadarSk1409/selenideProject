@@ -42,7 +42,7 @@ public class FileUploadFieldTest extends BaseTest {
     @Order(1)
     @DisplayName("precondition")
     public void precondition() {
-        navigateToFormDesign("File Upload Field");
+        navigateToFormDesign(FormField.FILE_UPLOAD_FIELD);
     }
 
     @Order(2)

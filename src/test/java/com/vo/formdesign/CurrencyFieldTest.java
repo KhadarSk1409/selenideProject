@@ -54,7 +54,7 @@ public class CurrencyFieldTest extends BaseTest {
     @Order(1)
     @DisplayName("precondition")
     public void precondition() {
-        navigateToFormDesign("Currency Field");
+        navigateToFormDesign(FormField.CURRENCY);
     }
 
     @Order(2)
@@ -90,7 +90,7 @@ public class CurrencyFieldTest extends BaseTest {
         }
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $("#li-template-CurrencyField-05").should(appear).click();
+        $("#li-template-CurrencyField-06").should(appear).click();
         $("#formelement_properties_card").should(appear);
         $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 

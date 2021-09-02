@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import reusables.ReuseActionsFormCreation;
 
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Selenide.*;
@@ -46,7 +47,7 @@ public class TimeFieldTest extends BaseTest {
     @Order(1)
     @DisplayName("precondition")
     public void precondition() {
-        navigateToFormDesign("Time Field");
+        navigateToFormDesign(FormField.TIME_FIELD);
     }
 
     @Order(2)

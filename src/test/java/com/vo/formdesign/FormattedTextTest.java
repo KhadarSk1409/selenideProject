@@ -43,7 +43,7 @@ public class FormattedTextTest extends BaseTest {
     @Order(1)
     @DisplayName("precondition")
     public void precondition() {
-        navigateToFormDesign("Formatted Text");
+        navigateToFormDesign(FormField.FORMATTED_TEXT);
     }
 
     @Order(2)

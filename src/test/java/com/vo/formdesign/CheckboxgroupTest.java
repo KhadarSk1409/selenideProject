@@ -44,7 +44,7 @@ public class CheckboxgroupTest extends BaseTest {
     @Order(1)
     @DisplayName("precondition")
     public void precondition() {
-        navigateToFormDesign("Checkbox Group");
+        navigateToFormDesign(FormField.CHECKBOX_DISABLE_LABEL);
     }
 
     @Order(2)

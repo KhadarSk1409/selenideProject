@@ -41,7 +41,7 @@ public class RadioGroupTest extends BaseTest {
     @Order(1)
     @DisplayName("precondition")
     public void precondition() {
-        navigateToFormDesign("Radio Group");
+        navigateToFormDesign(FormField.RADIO_GROUP);
 
     }
 

@@ -42,7 +42,7 @@ public class TextAreaFieldTest extends BaseTest {
     @Order(1)
     @DisplayName("precondition")
     public void precondition() {
-        navigateToFormDesign("Textarea Field");
+        navigateToFormDesign(FormField.TEXTAREA_FIELD);
     }
 
     @Order(2)
@@ -110,6 +110,7 @@ public class TextAreaFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(textfield_defaultValue)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $("#panel2a-header").should(exist).click(); //Advanced section dropdown
             selectAndClear(By.id(TextAreaFieldOptionsIds.textfield_defaultValue.name()))
                     .setValue(textfield_defaultValue).sendKeys(Keys.TAB);
             //TODO check appearance on designer

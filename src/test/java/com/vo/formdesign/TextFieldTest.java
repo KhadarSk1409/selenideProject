@@ -50,7 +50,7 @@ public class TextFieldTest extends BaseTest {
     @Order(1)
     @DisplayName("precondition")
     public void precondition() {
-        navigateToFormDesign("Text Field");
+        navigateToFormDesign(FormField.TEXTFIELD);
 
     }
 

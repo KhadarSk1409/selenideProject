@@ -47,7 +47,7 @@ public class NumberFieldTest extends BaseTest {
     @Order(1)
     @DisplayName("precondition")
     public void precondition() {
-        navigateToFormDesign("Number Field");
+        navigateToFormDesign(FormField.NUMBER);
     }
 
     @Order(2)
@@ -84,7 +84,7 @@ public class NumberFieldTest extends BaseTest {
 
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $("#li-template-NumberField-04").should(appear).click();
+        $("#li-template-NumberField-05").should(appear).click();
         $("#formelement_properties_card").should(appear);
         $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 

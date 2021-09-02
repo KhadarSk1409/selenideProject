@@ -3,6 +3,7 @@ package com.vo.formdesign;
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
+import reusables.ReuseActionsFormCreation;
 
 import java.util.stream.IntStream;
 
@@ -21,7 +22,7 @@ public class TextFieldBlockActionsTest extends BaseTest {
     @DisplayName("Open Form Designer Block Actions form")
     @Order(1)
     public void openFormDesigner() {
-        navigateToFormDesign("TextField BlockActions");
+        navigateToFormDesign(ReuseActionsFormCreation.FormField.TEXTFIELD_BLOCKACTIONS);
     }
 
     @Test

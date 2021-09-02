@@ -44,7 +44,7 @@ public class EmailFieldTest extends BaseTest {
     @Order(1)
     @DisplayName("precondition")
     public void precondition() {
-        navigateToFormDesign("Email Field");
+        navigateToFormDesign(FormField.EMAIL);
     }
 
     @Order(2)

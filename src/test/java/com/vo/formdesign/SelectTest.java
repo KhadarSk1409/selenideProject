@@ -42,7 +42,7 @@ public class SelectTest extends BaseTest {
     @Order(1)
     @DisplayName("precondition")
     public void precondition() {
-        navigateToFormDesign("Select Test");
+        navigateToFormDesign(FormField.SELECT_TEST);
 
     }
 

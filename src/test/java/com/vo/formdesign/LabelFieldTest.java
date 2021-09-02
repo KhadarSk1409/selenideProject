@@ -7,6 +7,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import reusables.ReuseActionsFormCreation;
+
 import static com.codeborne.selenide.Selenide.executeJavaScript;
 import java.util.Arrays;
 import java.util.stream.IntStream;
@@ -31,7 +33,7 @@ public class LabelFieldTest extends BaseTest {
     @Order(1)
     @DisplayName("precondition")
     public void precondition() {
-        navigateToFormDesign("Label Field");
+        navigateToFormDesign(ReuseActionsFormCreation.FormField.LABEL_FIELD);
 
     }
 
