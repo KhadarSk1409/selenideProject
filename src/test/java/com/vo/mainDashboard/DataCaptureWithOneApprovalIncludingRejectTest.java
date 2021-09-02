@@ -27,9 +27,8 @@ import static com.codeborne.selenide.Selenide.$;
     @DisplayName("Data Capture with One approval should create a Form Fill Task and verify reject process")
     @Order(2)
     public void dataCaptureWithOneApprovalAndReject() {
-        $("#formDashboardHeaderLeft").should(appear);
-        $(".fa-ellipsis-v").closest(("button")).shouldBe(enabled).click();
-        $("#optionsMenu ul li:nth-child(3)").should(exist).shouldHave(Condition.text("Data Capture")).click();
+        $("#formDashboardHeaderAppBar .btnMoreOptionsMenu").should(exist).shouldBe(enabled).click();
+        $("#optionsMenu ul li:nth-child(4)").should(exist).shouldHave(Condition.text("Data Capture")).click();
         $("#selUser").should(appear);
         $("#selUser ~ .MuiAutocomplete-endAdornment .MuiAutocomplete-popupIndicator").should(exist).click();
         $(".MuiAutocomplete-popper").should(appear);
@@ -37,43 +36,53 @@ import static com.codeborne.selenide.Selenide.$;
         $$(".MuiAutocomplete-popper li").findBy(text("GUI Tester")).click();
         $("#selUser").should(exist).click();
         $("#btnStartProcess").should(exist).click(); //Start Data Capture Process
-        $("#gridItemTasks").should(exist);
-        $(".MuiCardContent-root div[class*='MuiPaper-rounded']:nth-of-type(1)").should(appear);
-        $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).should(exist).click();
-        $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Progress")); //Verify the Data Capture state
+        $("#client-snackbar").should(appear)
+                .shouldHave(Condition.text("Started Data Capture process for the form: DATA-CAPTURE-WITH-ONE-PROCESS and version 1.0"));
+        $("#tabDataCapture").should(exist).click(); //Click on Data Capture
+        $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("In Progress")); //Verify the Data Capture state
         String formDataCaptureId= $("#tasksCard tbody tr:nth-of-type(2)").should(exist).getAttribute("id");
-        $("#gridItemTasks").should(exist);
-        $("#FormDashboardTasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
-                .should(exist).$(".fa-edit").closest("button").should(exist).click();
+        $$("#gridItemUserDataList .MuiTab-root").findBy(text("My Tasks")).click();
+        $("#gridItemUserDataList").should(exist);
+        $("#tabMyTasks").should(exist).click(); //Click on My Tasks
+        $("#tasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId )).should(exist)
+                .$(".buttonFillForm").should(exist).shouldBe(enabled).click(); //Click on Fill Form
         $("#data-card-dialog_actions").should(appear);
         $("#dataContainer").should(exist);
-        $("#textField_form-user-cd4b7447-4047-4b50-9495-2fd44a9f2321").should(exist);
-        $("#textField_form-user-cd4b7447-4047-4b50-9495-2fd44a9f2321").setValue("TEST"); //Enter some text in the Text field
-        $("#btnAcceptTask").should(exist).click();
-        $("#data-approve-reject-dialog").$("#btnConfirm").should(exist).click();
-        $("#FormDashboardTasksCard .MuiCardContent-root").should(exist);
-        $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Approval"));
-        $("#FormDashboardTasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
-                .should(exist).$(".fa-eye").closest("button").should(exist).click();
+        $("#textField_form-user-789e1199-464b-4ee2-8afc-50f678947fa7").should(exist);
+        $("#textField_form-user-789e1199-464b-4ee2-8afc-50f678947fa7").setValue("TEST");
+        $("#btnAcceptTask").click();
+        $("#data-approve-reject-dialog").$("#btnConfirm").click();
+        $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).click();
+        $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Approval")); //Verify the Data Capture state as In Approval
+        $("#gridItemUserDataList").should(exist);
+        $("#tabMyTasks").should(exist).click(); //Click on My Tasks
+        $("#tasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId )).should(exist)
+                .$(".buttonPreview").should(exist).click(); //Click on Preview
         $("#data-card-dialog_actions").should(appear).$("#btnRejectDataTask").click(); //Click on Reject
         $("#textfield_RejectReason").should(appear).setValue("Form is being Rejected"); //Comment for Rejection
         $("#data-approve-reject-dialog").$("#btnConfirm").should(exist).click();
-        $("#FormDashboardTasksCard .MuiCardContent-root").should(exist);
-        $("#FormDashboardTasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
-                .should(exist).$(".fa-edit").should(exist).closest("button").click();
+        $("#gridItemUserDataList").should(exist);
+        $("#tabDataCapture").should(exist).click(); //Click on Data Capture
+        $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("In Progress")); //Verify the Data Capture state
+        $("#tabMyTasks").should(exist).click(); //Click on My Tasks
+        $("#tasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId )).should(exist)
+                .$(".buttonFillForm").should(exist).shouldBe(enabled).click(); //Click on Fill Form
         $("#dataContainer").should(exist);
-        $("#textField_form-user-cd4b7447-4047-4b50-9495-2fd44a9f2321").should(exist);
-        $("#textField_form-user-cd4b7447-4047-4b50-9495-2fd44a9f2321").setValue(" Approved ");
+        $("#textField_form-user-789e1199-464b-4ee2-8afc-50f678947fa7").should(exist);
+        $("#textField_form-user-789e1199-464b-4ee2-8afc-50f678947fa7").setValue(" Approved ");
         $("#btnAcceptTask").should(exist).click();
-        $("#selUser").should(exist);
         $("#data-approve-reject-dialog").$("#btnConfirm").should(exist).click();
-        $("#FormDashboardTasksCard .MuiCardContent-root").should(exist);
-        $("#FormDashboardTasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
-                .should(exist).$(".fa-eye").closest("button").should(exist).click();
+        $("#tabDataCapture").should(exist).click(); //Click on Data Capture
+        $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Approval")); //Verify the Data Capture state as In Approval
+        $("#gridItemUserDataList").should(exist);
+        $("#tabMyTasks").should(exist).click(); //Click on My Tasks
+        $("#tasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId )).should(exist)
+                .$(".buttonPreview").should(exist).click(); //Click on Preview
+        $("#data-card-dialog_actions").should(appear);
         $("#btnAcceptTask").should(exist).click();
-        $("#selUser").should(exist);
         $("#data-approve-reject-dialog").$("#btnConfirm").should(exist).click();
-        $("#FormDashboardTasksCard .MuiCardContent-root").should(exist);
+        $("#gridItemUserDataList").should(exist);
+        $("#tabDataCapture").should(exist).click(); //Click on Data Capture
         $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("Completed"));
 
     }

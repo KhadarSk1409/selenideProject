@@ -26,7 +26,7 @@ public class FormsOverviewActionsTest extends BaseTest {
     @Order(1)
     public void IdentificationOfActionsInFormOverviewTable() {
         $("#navLibrary").should(exist).hover().click(); //Hover and click on Library
-        $("#full-width-tab-3").should(exist).hover();
+        $("#tabDataCapture").should(exist).hover();
         SelenideElement table = $("#formRelatedTabsCard .MuiTableBody-root").shouldBe(visible);
         ElementsCollection rows = table.$$("tr");
         System.out.println(" Form Count is " + rows.size());
@@ -68,6 +68,7 @@ public class FormsOverviewActionsTest extends BaseTest {
     @Order(2)
     public void formsNavigationActions() {
         $("#navLibrary").should(exist).hover().click(); //Hover and click on Library
+        $("#tabDataCapture").should(exist).hover();
         SelenideElement table = $("#formRelatedTabsCard .MuiTableBody-root").shouldBe(visible);
 
         ElementsCollection rows = table.$$("tr");

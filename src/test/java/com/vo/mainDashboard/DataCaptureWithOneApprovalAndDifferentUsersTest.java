@@ -17,20 +17,19 @@ import static com.vo.BaseTest.shouldLogin;
 public class DataCaptureWithOneApprovalAndDifferentUsersTest extends BaseTest {
 
         @Test
-        @DisplayName("Open At Form Approval with One Approver")
+        @DisplayName("Open the Data Capture with one approval by different users")
         @Order(1)
         public void openFormDashboard() {
 
-            open("/dashboard/ASdii60Gt");
+            open("/dashboard/DataCapture-OneApproval-Different-Users");
         }
 
     @Test
     @DisplayName("Data Capture with One Approval should create a Form Fill Task with Different Users")
     @Order(2)
     public void dataCaptureProcessWithOneApprovalByDifferentUsers() {
-        $("#formDashboardHeaderLeft").should(appear);
-        $(".fa-ellipsis-v").closest(("button")).shouldBe(enabled).click();
-        $("#optionsMenu ul li:nth-child(3)").should(exist).shouldHave(Condition.text("Data Capture")).click();
+        $("#formDashboardHeaderAppBar .btnMoreOptionsMenu").should(exist).shouldBe(enabled).click();
+        $("#optionsMenu ul li:nth-child(4)").should(exist).shouldHave(Condition.text("Data Capture")).click();
         $("#selUser").should(appear);
         $("#selUser ~ .MuiAutocomplete-endAdornment .MuiAutocomplete-popupIndicator").should(exist).click();
         $(".MuiAutocomplete-popper").should(appear);
@@ -38,36 +37,43 @@ public class DataCaptureWithOneApprovalAndDifferentUsersTest extends BaseTest {
         $$(".MuiAutocomplete-popper li").findBy(text("GUI Tester 01")).click(); //Click on GUI Tester 01
         $("#selUser").click();
         $("#btnStartProcess").click(); //Start Data Capture Process
-        $("#gridItemTasks").should(exist);
-        $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).click();
+        $("#client-snackbar").should(appear)
+                .shouldHave(Condition.text("Started Data Capture process for the form: DataCapture-OneApproval-Different-Users and version 1.0"));
+        $("#gridItemUserDataList").should(exist);
+        $("#tabDataCapture").should(exist).click(); //Click on Data Capture
         $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("In Progress")); //Verify the Data Capture state
         String formDataCaptureId= $("#tasksCard tbody tr:nth-of-type(2)").should(exist).getAttribute("id");
 
         //Should Login as GUI TESTER 01
         shouldLogin(BaseTest.UserType.USER_01);
-        open("/dashboard/ASdii60Gt");
+        open("/dashboard/DataCapture-OneApproval-Different-Users");
         $("#formDashboardHeaderAppBar").should(exist);
-        $("#FormDashboardTasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
-                .should(exist).$(".fa-edit").closest("button").click();
+        $("#gridItemUserDataList").should(exist);
+        $("#tabMyTasks").should(exist).click(); //Click on My Tasks
+        $("#tasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId )).should(exist)
+                .$(".buttonFillForm").should(exist).shouldBe(enabled).click(); //Click on Fill Form
         $("#data-card-dialog_actions").should(appear);
         $("#dataContainer").should(exist);
-        $("#textField_form-user-fbea34a0-bf35-45eb-9f42-d586230f9cf6").should(exist);
-        $("#textField_form-user-fbea34a0-bf35-45eb-9f42-d586230f9cf6").setValue("TEST");
+        $("#textField_form-user-9caeaef6-f2e0-4ad5-adbd-ebef22be653e").should(exist);
+        $("#textField_form-user-9caeaef6-f2e0-4ad5-adbd-ebef22be653e").setValue("TEST");
         $("#btnAcceptTask").click();
         $("#data-approve-reject-dialog").$("#btnConfirm").click();
 
         //Should Login as GUI TESTER 02
         shouldLogin(BaseTest.UserType.USER_02);
-        open("/dashboard/ASdii60Gt");
+        open("/dashboard/DataCapture-OneApproval-Different-Users");
         $("#formDashboardHeaderAppBar").should(exist);
-        $("#FormDashboardTasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
-                .should(exist).$(".fa-check").closest("button").click();
+        $("#gridItemUserDataList").should(exist);
+        $("#tabMyTasks").should(exist).click(); //Click on My Tasks
+        $("#tasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId )).should(exist)
+                .$(".buttonQuickApprove").waitUntil(appears,10000).click(); //Click on Fill Form
 
         //Should Login as GUI Tester
         shouldLogin(BaseTest.UserType.MAIN_TEST_USER);
-        open("/dashboard/ASdii60Gt");
+        open("/dashboard/DataCapture-OneApproval-Different-Users");
         $("#formDashboardHeaderAppBar").should(exist);
-        $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).click();
+        $("#gridItemUserDataList").should(exist);
+        $("#tabDataCapture").should(exist).click(); //Click on Data Capture
         $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("Completed"));
 
     }
