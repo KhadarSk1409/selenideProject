@@ -20,12 +20,13 @@ import java.util.stream.IntStream;
 
 import static com.codeborne.selenide.Condition.*;
 import static reusables.ReuseActions.createNewForm;
+import static reusables.ReuseActionsFormCreation.*;
 
 public class DateFieldTest extends BaseTest {
 
     protected static ThreadLocal<String> formName = ThreadLocal.withInitial(() -> "Date Field Test Form-Design Auto Test " + BROWSER_CONFIG.get() + " " + System.currentTimeMillis());
 
-    enum DateFieldOptionsIds {
+    public enum DateFieldOptionsIds {
         textfield_label,
         textfield_help,
         checkbox_disableLabel,
@@ -48,24 +49,8 @@ public class DateFieldTest extends BaseTest {
     @Order(1)
     @DisplayName("precondition")
     public void precondition() {
-        createNewForm();
-        $("#wizard-createFormButton").should(exist).click();
-        $("#btnFormDesignPublish").should(exist); //Verify that user has navigated to form design
+        navigateToFormDesign(FormField.DATE);
 
-        String blockId = "#block-loc_en-GB-r_1-c_1"; //Need to change later as of now _1 is returning two results
-        String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Initial version
-        $(blockId).shouldBe(visible).click();
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
-        $("#li-template-DateField-03").should(appear).click(); //li-template-DateField-03
-        $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-        $("#formelement_properties_card").should(appear);
-
-        $("#panel2a-header").should(exist).click(); //Advanced section dropdown
-
-        //options for text field should exist:
-        Arrays.asList(DateFieldTest.DateFieldOptionsIds.values()).forEach(textFieldId -> $(By.id(textFieldId.name())).shouldBe(visible));
-        $("#blockButtonDelete").shouldBe(visible).click();
-        $("#li-template-DateField-03").should(disappear);
     }
 
     @Order(2)
@@ -100,7 +85,7 @@ public class DateFieldTest extends BaseTest {
         }
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $("#li-template-DateField-03").should(appear).click();
+        $("#li-template-DateField-04").should(appear).click();
         $("#formelement_properties_card").should(appear);
         $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
@@ -117,45 +102,23 @@ public class DateFieldTest extends BaseTest {
 
         //Label
         if (StringUtils.isNotEmpty(text_label)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(DateFieldTest.DateFieldOptionsIds.textfield_label.name()))
-                    .setValue(text_label).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(text_label)).waitUntil(appears, 4000);
+            labelVerificationOnFormDesign(blockId, text_label);
 
         }
 
         //Hide(disable) Label
         if (StringUtils.isNotEmpty(checkbox_disableLabel)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            String checkBoxId = "#" + DateFieldTest.DateFieldOptionsIds.checkbox_disableLabel.name();
-            $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(checkBoxId + " input").shouldBe(selected);
-            $(blockId).shouldNotHave(value(text_label)).waitUntil(appears, 4000);
+            hideLabelVerificationOnFormDesign(blockId, text_label);
         }
 
         //Help
         if (StringUtils.isNotEmpty(text_help)) {
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(DateFieldTest.DateFieldOptionsIds.textfield_help.name()))
-                    .setValue(text_help).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(text_help)).waitUntil(appears, 4000);
+            helpVerificationOnFormDesign(blockId, text_help);
         }
 
         //required
         if (StringUtils.isNotEmpty(checkbox_required)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String checkBoxId = "#" + DateFieldTest.DateFieldOptionsIds.checkbox_required.name();
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            $(checkBoxId).shouldBe(visible).click();
-            //$(checkBoxId + " input").shouldHave(value("true"));
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(checkBoxId + " input").shouldBe(selected);
-            $(blockId).shouldHave(text("Required"));
+            requiredCheckboxVerificationOnFormDesign(blockId);
         }
 
         //Select Date radioBtn

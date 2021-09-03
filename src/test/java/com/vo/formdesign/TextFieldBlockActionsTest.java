@@ -3,6 +3,7 @@ package com.vo.formdesign;
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
+import reusables.ReuseActionsFormCreation;
 
 import java.util.stream.IntStream;
 
@@ -11,6 +12,7 @@ import static com.codeborne.selenide.Condition.appear;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 import static reusables.ReuseActions.createNewForm;
+import static reusables.ReuseActionsFormCreation.navigateToFormDesign;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Verify the Text Field element block actions")
@@ -20,17 +22,7 @@ public class TextFieldBlockActionsTest extends BaseTest {
     @DisplayName("Open Form Designer Block Actions form")
     @Order(1)
     public void openFormDesigner() {
-        createNewForm();
-        $("#wizard-createFormButton").should(exist).click();
-        $("#btnFormDesignPublish").should(exist); //Verify that user has navigated to form design
-
-        String blockId = "#block-loc_en-GB-r_1-c_1"; //Need to change later as of now _1 is returning two results
-        String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Initial version
-        $(blockId).shouldBe(visible).click();
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
-        $("#li-template-Textfield-04").should(appear).click();
-        $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-        $("#formelement_properties_card").should(appear);
+        navigateToFormDesign(ReuseActionsFormCreation.FormField.TEXTFIELD_BLOCKACTIONS);
     }
 
     @Test

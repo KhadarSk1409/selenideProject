@@ -22,12 +22,13 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static java.lang.Integer.parseInt;
 import static reusables.ReuseActions.createNewForm;
+import static reusables.ReuseActionsFormCreation.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Radiogroup Tests")
 public class RadioGroupTest extends BaseTest {
 
-    enum RadiogroupIds {
+    public enum RadiogroupIds {
         textfield_label,
         checkbox_disableLabel,
         textfield_help,
@@ -40,31 +41,8 @@ public class RadioGroupTest extends BaseTest {
     @Order(1)
     @DisplayName("precondition")
     public void precondition() {
-        createNewForm();
-        $("#wizard-createFormButton").should(exist).click();
-        $("#btnFormDesignPublish").should(exist); //Verify that user has navigated to form design
-        String blockId = "#block-loc_en-GB-r_1-c_1"; //Need to change later as of now _1 is returning two results
-        String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Initial version
-        $(blockId).shouldBe(visible).click();
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
+        navigateToFormDesign(FormField.RADIO_GROUP);
 
-        //Click on Show More
-        $("#template_basis_list").find(byText("Show More")).should(exist).click();
-
-        $("#li-template-RadioGroupField-03").should(appear).click();
-        $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-        $("#formelement_properties_card").should(appear);
-
-        $("#panel2a-header").should(exist).click(); //Advanced section dropdown
-
-        //options for text field should exist:
-        Arrays.asList(RadioGroupTest.RadiogroupIds.values()).forEach(textFieldId -> $(By.id(textFieldId.name())).shouldBe(visible));
-
-        //Verify that initial value in Direction dropdown is Horizontal
-        $("#property_select_direction").should(exist).shouldHave(text("Horizontal"));
-
-        $("#blockButtonDelete").shouldBe(visible).click();
-        $("#li-template-RadioGroupField-03").should(disappear);
     }
 
     @Order(2)
@@ -91,7 +69,7 @@ public class RadioGroupTest extends BaseTest {
         }
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $("#li-template-RadioGroupField-03").should(appear).click();
+        $("#li-template-RadioGroupField-04").should(appear).click();
         $("#formelement_properties_card").should(appear);
         $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
@@ -108,22 +86,23 @@ public class RadioGroupTest extends BaseTest {
 
         //Label
         if (StringUtils.isNotEmpty(text_label)) {
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            selectAndClear(By.id(RadioGroupTest.RadiogroupIds.textfield_label.name()))
-                    .setValue(text_label).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(text_label));
+            labelVerificationOnFormDesign(blockId,text_label);
         }
 
 
         //Help
         if (StringUtils.isNotEmpty(text_help)) {
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(RadioGroupTest.RadiogroupIds.textfield_help.name()))
-                    .setValue(text_help).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(text_help)).waitUntil(appears, 4000);
+            helpVerificationOnFormDesign(blockId, text_help);
+        }
+
+        //Hide(disable) Label
+        if (StringUtils.isNotEmpty(disableLabel)) {
+            hideLabelVerificationOnFormDesign(blockId, text_label);
+        }
+
+        //required
+        if (StringUtils.isNotEmpty(checkbox_required)) {
+            requiredCheckboxVerificationOnFormDesign(blockId);
         }
 
         //Values
@@ -185,27 +164,6 @@ public class RadioGroupTest extends BaseTest {
             }
         }
 
-        //Hide(disable) Label
-        if (StringUtils.isNotEmpty(disableLabel)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            String checkBoxId = "#" + RadioGroupTest.RadiogroupIds.checkbox_disableLabel.name();
-            $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(checkBoxId + " input").shouldBe(selected);
-            $(blockId).shouldNotHave(value(disableLabel)).waitUntil(appears, 4000);
-        }
-
-        //required
-        if (StringUtils.isNotEmpty(checkbox_required)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String checkBoxId = "#" + RadioGroupTest.RadiogroupIds.checkbox_required.name();
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(checkBoxId + " input").shouldBe(selected);
-            $(blockId).should(exist).shouldHave(text("*"));
-        }
 
         //Other values:
         if (StringUtils.isNotEmpty(checkbox_other_values)) {

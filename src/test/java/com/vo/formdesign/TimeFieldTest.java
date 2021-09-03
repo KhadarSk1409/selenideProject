@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import reusables.ReuseActionsFormCreation;
 
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Selenide.*;
@@ -20,12 +21,13 @@ import java.util.stream.IntStream;
 
 import static com.codeborne.selenide.Condition.*;
 import static reusables.ReuseActions.createNewForm;
+import static reusables.ReuseActionsFormCreation.*;
 
 public class TimeFieldTest extends BaseTest {
 
     protected static ThreadLocal<String> formName = ThreadLocal.withInitial(() -> "Time Field Test Form-Design Auto Test " + BROWSER_CONFIG.get() + " " + System.currentTimeMillis());
 
-    enum TimeFieldOptionsIds {
+    public enum TimeFieldOptionsIds {
         textfield_label,
         checkbox_disableLabel,
         textfield_help,
@@ -45,23 +47,7 @@ public class TimeFieldTest extends BaseTest {
     @Order(1)
     @DisplayName("precondition")
     public void precondition() {
-        createNewForm();
-        $("#wizard-createFormButton").should(exist).click();
-        $("#btnFormDesignPublish").should(exist); //Verify that user has navigated to form design
-
-        String blockId = "#block-loc_en-GB-r_1-c_1"; //Need to change later as of now _1 is returning two results
-        String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Initial version
-        $(blockId).shouldBe(visible).click();
-        $("#li-template-TimeField-03").should(appear).click(); //li-template-TimeField-03
-        $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-        $("#formelement_properties_card").should(appear);
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
-        $("#panel2a-header").should(exist).click(); //Advanced section dropdown
-
-        //options for text field should exist:
-        Arrays.asList(TimeFieldTest.TimeFieldOptionsIds.values()).forEach(textFieldId -> $(By.id(textFieldId.name())).shouldBe(visible));
-        $("#blockButtonDelete").shouldBe(visible).click();
-        $("#li-template-TimeField-03").should(disappear);
+        navigateToFormDesign(FormField.TIME_FIELD);
     }
 
     @Order(2)
@@ -93,7 +79,7 @@ public class TimeFieldTest extends BaseTest {
         }
         String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $("#li-template-TimeField-03").should(appear).click();
+        $("#li-template-TimeField-04").should(appear).click();
         $("#formelement_properties_card").should(appear);
         $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
@@ -110,45 +96,23 @@ public class TimeFieldTest extends BaseTest {
 
         //Label
         if (StringUtils.isNotEmpty(timefield_label)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(TimeFieldTest.TimeFieldOptionsIds.textfield_label.name()))
-                    .setValue(timefield_label).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(timefield_label)).waitUntil(appears, 4000);
+            labelVerificationOnFormDesign(blockId,timefield_label);
 
         }
 
         //Hide(disable) Label
         if (StringUtils.isNotEmpty(checkbox_disableLabel)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            String checkBoxId = "#" + TimeFieldTest.TimeFieldOptionsIds.checkbox_disableLabel.name();
-            $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(checkBoxId + " input").shouldBe(selected);
-            $(blockId).shouldNotHave(value(timefield_label)).waitUntil(appears, 4000);
+            hideLabelVerificationOnFormDesign(blockId, timefield_label);
         }
 
         //Help
         if (StringUtils.isNotEmpty(timefield_help)) {
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            selectAndClear(By.id(TimeFieldTest.TimeFieldOptionsIds.textfield_help.name()))
-                    .setValue(timefield_help).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(blockId).shouldHave(text(timefield_help)).waitUntil(appears, 4000);
+            helpVerificationOnFormDesign(blockId, timefield_label);
         }
 
         //required
         if (StringUtils.isNotEmpty(checkbox_required)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String checkBoxId = "#" + TimeFieldTest.TimeFieldOptionsIds.checkbox_required.name();
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            $(checkBoxId).shouldBe(visible).click();
-            //$(checkBoxId + " input").shouldHave(value("true"));
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(checkBoxId + " input").shouldBe(selected);
-            $(blockId).shouldHave(text("Required"));
+            requiredCheckboxVerificationOnFormDesign(blockId);
         }
 
         //Hour Minute Second radioBtn
