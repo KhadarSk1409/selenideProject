@@ -200,10 +200,10 @@ public abstract class BaseTest {
 
     public static void shouldLogin(UserType targetUser) {
         if(Boolean.TRUE.equals(ALREADY_LOGGED_IN.get()) && targetUser != CURRENT_USER.get()) {
-            //logout current user is logging out
-            $("#user").click();
-            $("#user p").click();
-            $("#btnYesLogout").should(appear).click();
+            //logging out Current User
+            $("#btnUserSettingsPopover").click(); //Click on User Settings Popover
+            $("#userLogout").should(exist).click(); //Click on Logout
+            $("#btnYesLogout").should(appear).click(); //Logout Confirmation
             boolean presenceOfPickAnAccount = $("#loginHeader").is(exist);
             if (presenceOfPickAnAccount) {
                 $(byText(CURRENT_USER.get().userEmail())).shouldBe(visible).click();

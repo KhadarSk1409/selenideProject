@@ -24,7 +24,7 @@ public class FormDesignerConfigurePermissionsTest extends BaseTest {
     @Order(2)
     public void configureFormPermissions() {
         $("#formDashboardHeaderLeft").should(appear);
-        $(".fa-ellipsis-v").closest("button").should(exist).click();
+        $("#formDashboardHeaderAppBar .btnMoreOptionsMenu").should(exist).click();
         $("#optionsMenu ul li:nth-child(1) ").should(exist).click(); //Click on Edit Form Design
         $("#formtree_card").should(exist);
         $("#formelement_properties_card").should(exist);
@@ -50,7 +50,7 @@ public class FormDesignerConfigurePermissionsTest extends BaseTest {
         $("#toDashboard").click(); //Click on Launchpad
         open("/dashboard/sqJiKRUdB");//Open the Form
         $("#formDashboardHeaderLeft").should(exist);
-        $(".fa-ellipsis-v").closest("button").should(exist).click();
+        $("#formDashboardHeaderAppBar .btnMoreOptionsMenu").should(exist).click();
         $("#optionsMenu ul li:nth-child(1) ").should(exist).click(); //Click on Edit Form Design
         $("#nav_button").should(exist).click();
         $("#designer_panel_menu ul li:nth-child(5)").click(); //Should click on Configure permissions

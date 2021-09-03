@@ -19,7 +19,7 @@ public class ExpandableCardsTest extends BaseTest {
             $("#tasksCard .vo-expand-collapse").click(); //Expands My Tasks
             $("#tasksCard .vo-expand-collapse").should(have(attribute("title", "Collapse")));
             $("#lastUsedListCard").should(disappear);
-            $(".fa-compress-arrows-alt").closest("button").should(exist).click(); //Collapse My Tasks
+            $("#tasksCard .vo-expand-collapse").should(exist).click(); //Collapse My Tasks
             $("#tasksCard .vo-expand-collapse").should(have(attribute("title", "Expand")));
             $("#tasksCard").should(appear);
 
