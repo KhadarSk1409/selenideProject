@@ -30,15 +30,16 @@ public class FormPublicationProcessWithoutApproverTest extends BaseTest {
         $("#wizard-createFormButton").should(exist).shouldBe(enabled).click(); //Click on Create Form
         $("#formDashboardHeaderLeft").should(appear);
         $("#block-loc_en-GB-r_1-c_1").should(exist).click(); //Click on + to add a field
-        $("#template_card").should(appear).$("#li-template-Textfield-04").click(); //Add one field
+        $("#template_card").should(appear).$("#li-template-Textfield-05").click(); //Add one field
         $("#formtree_card").should(exist);
         $("#formelement_properties_card").should(exist);
         $("#nav_button").should(exist).click();
         $("#designer_panel_menu ul").$(byText("Configure publication process"))
                 .should(exist).click(); //Should click on Configure publication process
         $("#btnNext").should(exist).click(); //Click on Next
-        $("#designer_tab_Publications div:nth-child(3)").shouldHave(text("Ready and Save"));
-        $("#btnSave").should(exist).click(); //Click on Save
+        String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch version before publishing
+        $("#btnSave").should(exist).shouldBe(enabled).click(); //Click on Save
+        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version previous version is not present
         $("#btnFormDesignPublish").should(exist).click();
         $("#form-publish-dialog").$("#btnConfirm").should(exist).shouldBe(enabled).click();
         $("#client-snackbar").should(appear)
@@ -46,10 +47,11 @@ public class FormPublicationProcessWithoutApproverTest extends BaseTest {
         $("#formDashboardHeaderLeft").should(appear);
         $("#btnCreateNewData").should(exist);
         $("#navMainDashboard").should(exist).click();
+        $("#btnLibrary").should(exist).hover().click();
+        $("#tabDataCapture").should(exist).hover();
 
         //Verify the created form is published or not
         SelenideElement formListTable = $("#formListTable .MuiTableBody-root").shouldBe(visible);
-
         ElementsCollection formRows = formListTable.$$("tr");
         System.out.println(" Form Count is " + formRows.size());
 

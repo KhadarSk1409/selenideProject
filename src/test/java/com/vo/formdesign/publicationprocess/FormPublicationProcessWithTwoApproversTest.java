@@ -12,6 +12,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selectors.byAttribute;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
@@ -30,7 +31,7 @@ public class FormPublicationProcessWithTwoApproversTest extends BaseTest {
         $("#wizard-createFormButton").should(exist).shouldBe(enabled).click(); //Click on Create Form
         $("#formDashboardHeaderLeft").should(appear);
         $("#block-loc_en-GB-r_1-c_1").should(exist).click(); //Click on + to add a field
-        $("#template_card").should(appear).$("#li-template-Textfield-04").click(); //Add one field
+        $("#template_card").should(appear).$("#li-template-Textfield-05").click(); //Add one field
         $("#formtree_card").should(exist);
         $("#formelement_properties_card").should(exist);
         $("#nav_button").should(exist).click();
@@ -46,68 +47,43 @@ public class FormPublicationProcessWithTwoApproversTest extends BaseTest {
         $(".MuiAutocomplete-popper").should(appear);
         $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("GUI Tester 01guitester01@visualorbit.com"), 5000);
         $$(".MuiAutocomplete-popper li").findBy(text("GUI Tester 01guitester01@visualorbit.com")).click(); //Click on the selected user
-        $("#sw_first_UserCanOverwrite").should(exist).click();
+        $("#sw_first_UserCanOverwrite").should(exist).shouldBe(enabled).click();
         $("#btnNext").should(exist).click(); //Click on Next
         $("#fc_second_UserSelect").$("#selUser").should(exist).click(); //Click on SelUser to select the user
         $(".MuiAutocomplete-popper").should(appear);
         $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("GUI Tester 02guitester02@visualorbit.com"), 5000);
         $$(".MuiAutocomplete-popper li").findBy(text("GUI Tester 02guitester02@visualorbit.com")).click(); //Click on the selected user
-        $("#sw_second_UserCanOverwrite").should(exist).click();
+        $("#sw_second_UserCanOverwrite").should(exist).shouldBe(enabled).click();
         $("#btnNext").should(exist).click(); //Click on Next
-        $("#designer_tab_Publications div:nth-child(9)").should(exist).shouldHave(text("Ready and Save"));
+        String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch version before publishing
         $("#btnSave").should(exist).shouldBe(enabled).click(); //Click on Save
+        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version previous version is not present
         $("#btnFormDesignPublish").should(exist).click();
         $("#form-publish-dialog").$("#btnConfirm").should(exist).shouldBe(enabled).click();
         $("#client-snackbar").should(appear).shouldHave(Condition.text("The form requires approval before publishing. It will be published once approved"));
 
         //Should login as GUI Tester 01
         shouldLogin(UserType.USER_01);
-        SelenideElement table = $("#tasksCard .MuiTableBody-root").shouldBe(visible);
-        ElementsCollection rows = table.$$("tr");
-        System.out.println(" Tasks Count is " + rows.size());
-
-        if (rows.size() == 0) {
-            System.out.println("No Tasks available");
-            return;
-        }
-        rows.forEach(rowEl -> {
-            String form = rowEl.$("td:nth-child(3)").getText();
-
-            if (form.equals(actualFormName)) {
-                rowEl.$(".fa-check").closest("button").should(exist).shouldBe(enabled).click();
-            }
-        });
-        $(table).shouldNotHave(Condition.attribute(actualFormName));
+        $("#tasksCard").should(exist);
+        $("#tasksCard").find(byAttribute("data-form-name", actualFormName )).should(exist)
+                .$(".buttonQuickApprove").should(exist).click(); //Click on quick approve
+        $("#tasksCard").find(byAttribute("data-form-name", actualFormName )).waitUntil(disappear, 10000);
         $("#client-snackbar").should(appear)
                 .shouldHave(Condition.text("Approval saved. Process requires additional approval and is therefore not yet complete. Form will be published as soon as all approvals are available."));
-        $("#user").should(exist);
-        $("#navMainDashboard").should(exist).click();
 
         //Should login as GUI Tester 02
         shouldLogin(UserType.USER_02);
-        SelenideElement taskTable = $("#tasksCard .MuiTableBody-root").shouldBe(visible);
-        ElementsCollection taskRows = taskTable.$$("tr");
-        System.out.println(" Tasks Count is " + taskRows.size());
-
-        if (rows.size() == 0) {
-            System.out.println("No Tasks available");
-            return;
-        }
-        rows.forEach(rowEl -> {
-            String form = rowEl.$("td:nth-child(3)").getText();
-
-            if (form.equals(actualFormName)) {
-                rowEl.$(".fa-check").closest("button").should(exist).shouldBe(enabled).click();
-            }
-        });
-        $(taskTable).shouldNotHave(Condition.attribute(actualFormName));
+        $("#tasksCard").should(exist);
+        $("#tasksCard").find(byAttribute("data-form-name", actualFormName )).should(exist)
+                .$(".buttonQuickApprove").should(exist).click(); //Click on quick approve
+        $("#tasksCard").find(byAttribute("data-form-name", actualFormName )).waitUntil(disappear, 10000);
         $("#client-snackbar").should(appear)
                 .shouldHave(Condition.text("New form version was successfully published"));
-        $("#user").should(exist);
-        $("#navMainDashboard").should(exist).click();
 
         //Verify the form approved is Published or not
         shouldLogin(UserType.MAIN_TEST_USER); //Should login as GUI Tester
+        $("#navLibrary").should(exist).hover().click(); //Hover and click on Library to navigate to formlist table
+        $("#tabDataCapture").should(exist).hover();
         SelenideElement formListTable = $("#formListTable .MuiTableBody-root").shouldBe(visible);
         ElementsCollection formRows = formListTable.$$("tr");
         System.out.println(" Form Count is " + formRows.size());
