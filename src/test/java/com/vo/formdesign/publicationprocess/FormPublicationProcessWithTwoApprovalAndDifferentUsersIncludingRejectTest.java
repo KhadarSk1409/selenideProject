@@ -13,9 +13,9 @@ import org.junit.jupiter.api.TestMethodOrder;
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Condition.exist;
+import static com.codeborne.selenide.Selectors.byAttribute;
 import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
+import static com.codeborne.selenide.Selenide.*;
 import static reusables.ReuseActions.createNewForm;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -32,7 +32,7 @@ public class FormPublicationProcessWithTwoApprovalAndDifferentUsersIncludingReje
         $("#wizard-createFormButton").should(exist).shouldBe(enabled).click(); //Click on Create Form
         $("#formDashboardHeaderLeft").should(appear);
         $("#block-loc_en-GB-r_1-c_1").should(exist).click(); //Click on + to add a field
-        $("#template_card").should(appear).$("#li-template-Textfield-04").click(); //Add one field
+        $("#template_card").should(appear).$("#li-template-Textfield-05").click(); //Add one field
         $("#formtree_card").should(exist);
         $("#formelement_properties_card").should(exist);
         $("#nav_button").should(exist).click();
@@ -48,42 +48,31 @@ public class FormPublicationProcessWithTwoApprovalAndDifferentUsersIncludingReje
         $(".MuiAutocomplete-popper").should(appear);
         $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("GUI Tester 01guitester01@visualorbit.com"), 5000);
         $$(".MuiAutocomplete-popper li").findBy(text("GUI Tester 01guitester01@visualorbit.com")).click(); //Click on the selected user
-        $("#sw_first_UserCanOverwrite").should(exist).click();
+        $("#sw_first_UserCanOverwrite").should(exist).shouldBe(enabled).click();
+        $("#sw_first_UserCanOverwrite").shouldHave(Condition.value("false"));
         $("#btnNext").should(exist).click(); //Click on Next
         $("#fc_second_UserSelect").$("#selUser").should(exist).click(); //Click on SelUser to select the user
         $(".MuiAutocomplete-popper").should(appear);
         $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("GUI Tester 02guitester02@visualorbit.com"), 5000);
         $$(".MuiAutocomplete-popper li").findBy(text("GUI Tester 02guitester02@visualorbit.com")).click(); //Click on the selected user
-        $("#sw_second_UserCanOverwrite").should(exist).click();
+        $("#sw_second_UserCanOverwrite").should(exist).shouldBe(enabled).click();
         $("#btnNext").should(exist).click(); //Click on Next
-        $("#designer_tab_Publications div:nth-child(9)").shouldHave(text("Ready and Save"));
+        String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch version before publishing
         $("#btnSave").should(exist).click(); //Click on Save
+        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version previous version is not present
         $("#btnFormDesignPublish").should(exist).click();
-        $("#form-publish-dialog").$("#btnConfirm").should(exist).shouldBe(enabled).click();
+        $("#form-publish-dialog #btnConfirm").should(exist).shouldBe(enabled).click();
         $("#client-snackbar").should(appear).shouldHave(Condition.text("The form requires approval before publishing. It will be published once approved"));
 
         //Login as GUI Tester 01 should review the form and approve
         shouldLogin(UserType.USER_01);
-        SelenideElement taskTable = $("#tasksCard .MuiTableBody-root").shouldBe(visible);
-        ElementsCollection taskRows = taskTable.$$("tr");
-        System.out.println(" Tasks Count is " + taskRows.size());
-
-        if (taskRows.size() == 0) {
-            System.out.println("No Tasks available");
-            return;
-        }
-        taskRows.forEach(rowEl -> {
-            String form = rowEl.$("td:nth-child(3)").getText();
-            System.out.println(form);
-
-            if (form.equals(actualFormName)) {
-                rowEl.$(".fa-eye").closest("button").should(exist).shouldBe(enabled).click(); //Click on View the task
-            }
-        });
+        $("#tasksCard").should(exist);
+        $("#tasksCard").find(byAttribute("data-form-name", actualFormName )).should(exist)
+                .$(".buttonPreview").should(exist).click(); //Click on quick preview
         $("#dashboard-data-card-dialog_actions").should(appear);
         $("#btnViewForm").should(exist).click(); //Click on Review Changes
-        $("#btnAcceptTask").should(exist).click(); //Click on Accept
-       $("#data-approve-reject-dialog").$("#btnConfirm")
+        $("#btnAcceptTask").should(exist).shouldBe(enabled).click(); //Click on Accept
+        $("#data-approve-reject-dialog").$("#btnConfirm")
                 .should(exist).shouldBe(enabled).click(); //Click on confirm
         $("#client-snackbar").should(appear)
                 .shouldHave(Condition.text("Approval saved. Process requires additional approval and is therefore not yet complete. Form will be published as soon as all approvals are available."));
@@ -91,22 +80,9 @@ public class FormPublicationProcessWithTwoApprovalAndDifferentUsersIncludingReje
 
         //Login as GUI Tester 02 should review the form and reject
         shouldLogin(UserType.USER_02);
-        SelenideElement tasksTable = $("#tasksCard .MuiTableBody-root").shouldBe(visible);
-        ElementsCollection tasksRows = tasksTable.$$("tr");
-        System.out.println(" Tasks Count is " + taskRows.size());
-
-        if (tasksRows.size() == 0) {
-            System.out.println("No Tasks available");
-            return;
-        }
-        tasksRows.forEach(rowEl -> {
-            String form = rowEl.$("td:nth-child(3)").getText();
-            System.out.println(form);
-
-            if (form.equals(actualFormName)) {
-                rowEl.$(".fa-eye").closest("button").should(exist).shouldBe(enabled).click(); //Click on View the task
-            }
-        });
+        $("#tasksCard").should(exist);
+        $("#tasksCard").find(byAttribute("data-form-name", actualFormName )).should(exist)
+                .$(".buttonPreview").should(exist).click(); //Click on quick preview
         $("#dashboard-data-card-dialog_actions").should(appear);
         $("#btnViewForm").should(exist).click(); //Click on Review Changes
         $("#btnRejectTask").should(exist).click(); //Click on Reject
@@ -118,6 +94,8 @@ public class FormPublicationProcessWithTwoApprovalAndDifferentUsersIncludingReje
 
         //Login as GUI Tester and verify the form state after rejection
         shouldLogin(UserType.MAIN_TEST_USER);
+        $("#navLibrary").should(exist).hover().click(); //Hover and click on Library to navigate to formlist table
+        $("#tabDataCapture").should(exist).hover();
         SelenideElement formListTable = $("#formListTable .MuiTableBody-root").shouldBe(visible);
         ElementsCollection formRows = formListTable.$$("tr");
         System.out.println(" Form Count is " + formRows.size());

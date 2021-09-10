@@ -13,6 +13,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selectors.byAttribute;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static reusables.ReuseActions.createNewForm;
@@ -23,7 +24,7 @@ public class FromPublicationProcessWithOneApprovalIncludingRejectTest extends Ba
 
     @Test
     @DisplayName("Create a from and publish with one approval and verify Reject process")
-    public void formPublicationWithOneApproverIncludingReject() throws InterruptedException {
+    public void formPublicationWithOneApproverIncludingReject() {
 
         Pair<String, String> formName=createNewForm();
         String actualFormName= formName.getKey();
@@ -31,7 +32,7 @@ public class FromPublicationProcessWithOneApprovalIncludingRejectTest extends Ba
         $("#wizard-createFormButton").should(exist).shouldBe(enabled).click(); //Click on Create Form
         $("#formDashboardHeaderLeft").should(appear);
         $("#block-loc_en-GB-r_1-c_1").should(exist).click(); //Click on + to add a field
-        $("#template_card").should(appear).$("#li-template-Textfield-04").click(); //Add one field
+        $("#template_card").should(appear).$("#li-template-Textfield-05").click(); //Add one field
         $("#formtree_card").should(exist);
         $("#formelement_properties_card").should(exist);
         $("#nav_button").should(exist).click();
@@ -49,15 +50,14 @@ public class FromPublicationProcessWithOneApprovalIncludingRejectTest extends Ba
         $$(".MuiAutocomplete-popper li").findBy(text("GUI Testerguitester@visualorbit.com")).click(); //Click on the selected user
         $("#sw_first_UserCanOverwrite").should(exist).click();
         $("#btnNext").should(exist).click(); //Click on Next
-        $("#designer_tab_Publications div:nth-child(7)").shouldHave(text("Ready and Save"));
+        String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch version before publishing
         $("#btnSave").should(exist).shouldBe(enabled).click(); //Click on Save
+        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version previous version is not present
         $("#btnFormDesignPublish").should(exist).click();
         $("#form-publish-dialog").$("#btnConfirm").should(exist).shouldBe(enabled).click();
         $("#client-snackbar").should(appear).shouldHave(Condition.text("The form requires approval before publishing. It will be published once approved"));
-        $("#user").should(exist);
-        $("#navMainDashboard").should(exist).click();
-        $("#btnCreateForm").should(exist);
-        $("#formRelatedTabsCard").should(appear);
+        $("#btnLibrary").should(exist).hover().click(); //Hover and click on Library to navigate to formlist table
+        $("#tabDataCapture").should(exist).hover();
 
         //Verify the initial state of created form should be in draft
         SelenideElement formListTable = $("#formListTable .MuiTableBody-root").shouldBe(visible);
@@ -74,27 +74,12 @@ public class FromPublicationProcessWithOneApprovalIncludingRejectTest extends Ba
                 rowEl.$("td:nth-child(3)").shouldHave(Condition.text("in draft"));
             }
         });
+
         //Reviewing the task assigned before approve or reject
-        Thread.sleep(5000);
-        $("#user").should(exist);
         $("#navMainDashboard").should(exist).click();
         $("#tasksCard").should(exist);
-        SelenideElement taskTable = $("#tasksCard .MuiTableBody-root").shouldBe(visible);
-        ElementsCollection taskRows = taskTable.$$("tr");
-        System.out.println(" Tasks Count is " + taskRows.size());
-
-        if (taskRows.size() == 0) {
-            System.out.println("No Tasks available");
-            return;
-        }
-        taskRows.forEach(rowEl -> {
-            String form = rowEl.$("td:nth-child(3)").getText();
-            System.out.println(form);
-
-            if (form.equals(actualFormName)) {
-                rowEl.$(".fa-eye").closest("button").should(exist).shouldBe(enabled).click(); //Click on View the task
-            }
-        });
+        $("#tasksCard").find(byAttribute("data-form-name", actualFormName )).should(exist)
+                .$(".buttonPreview").should(exist).click(); //Click on quick preview
         $("#dashboard-data-card-dialog_actions").should(appear);
         $("#btnViewForm").should(exist).click(); //Click on Review Changes
         $("#btnRejectTask").should(exist).click(); //Click on Reject
@@ -102,19 +87,20 @@ public class FromPublicationProcessWithOneApprovalIncludingRejectTest extends Ba
                 .setValue("Form is being rejected"); //Enter the reason for rejection
         $("#data-approve-reject-dialog").$("#btnConfirm")
                 .should(exist).shouldBe(enabled).click(); //Click on confirm
-       // $("#formDashboardHeaderAppBar").should(appear);
         $("#navMainDashboard").should(exist).click();
+        $("#btnLibrary").should(exist).hover().click(); //Hover and click on Library to navigate to formlist table
 
         //Verify the final form state is in draft or not as the form is rejected
+        $("#tabDataCapture").should(exist).hover();
         SelenideElement formsListTable = $("#formListTable .MuiTableBody-root").shouldBe(visible);
-        ElementsCollection formrows = formListTable.$$("tr");
-        System.out.println(" Form Count is " + formRows.size());
+        ElementsCollection formListRows = formListTable.$$("tr");
+        System.out.println(" Form Count is " + formListRows.size());
 
-        if (formrows.size() == 0) {
+        if (formListRows.size() == 0) {
             System.out.println("No Forms available");
             return;
         }
-        formRows.forEach(rowEl -> {
+        formListRows.forEach(rowEl -> {
             String finalFormName = rowEl.$("td:nth-child(2)").getText();
             if (finalFormName.equals(actualFormName)) {
                 rowEl.$("td:nth-child(3)").shouldHave(Condition.text("in draft"));
