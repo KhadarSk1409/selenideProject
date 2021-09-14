@@ -47,8 +47,8 @@ public class DataCaptureWithTwoApproversIncludingRejectTest extends BaseTest {
                     .should(exist).$(".buttonFillForm").waitUntil(appears,10000).click();
             $("#data-card-dialog_actions").should(appear);
             $("#dataContainer").should(exist);
-            $("#textField_form-user-8210db0d-bed5-4657-805f-5e5b0c51ac7e").should(exist);
-            $("#textField_form-user-8210db0d-bed5-4657-805f-5e5b0c51ac7e").setValue("TEST");
+            $("#textField_form-user-343baf17-ff5e-42db-a382-77df0216a7f3").should(exist);
+            $("#textField_form-user-343baf17-ff5e-42db-a382-77df0216a7f3").setValue("TEST");
             $("#btnAcceptTask").should(exist).click();
             $("#data-approve-reject-dialog").$("#btnConfirm").should(exist).click();
             $("#gridItemUserDataList").should(exist);
@@ -57,7 +57,7 @@ public class DataCaptureWithTwoApproversIncludingRejectTest extends BaseTest {
             $("#gridItemUserDataList").should(exist);
             $("#tabMyTasks").should(exist).click(); //Click on My Tasks
             $("#tasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
-                    .should(exist).$(".buttonPreview").waitUntil(appears,10000).click(); //Click on Preview
+                    .should(exist).$(".buttonPreview").waitUntil(appears,15000).click(); //Click on Preview
             $("#data-card-dialog_actions").should(appear).$("#btnAcceptTask").click(); //Click on Accept
             $("#data-approve-reject-dialog").$("#btnConfirm").shouldBe(enabled).click();
             $("#gridItemUserDataList").should(exist);
@@ -66,16 +66,17 @@ public class DataCaptureWithTwoApproversIncludingRejectTest extends BaseTest {
             $("#gridItemUserDataList").should(exist);
             $("#tabMyTasks").should(exist).click(); //Click on My Tasks
             $("#tasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
-                    .should(exist).$(".buttonPreview").waitUntil(appears,10000).click(); //Click on Preview
+                    .should(exist).$(".buttonPreview").waitUntil(appears,15000).click(); //Click on Preview
             $("#data-card-dialog_actions").should(appear).$("#btnRejectDataTask").click(); //Click on Reject
             $("#textfield_RejectReason").should(appear).setValue("Form is being Rejected"); //Comment for Rejection
             $("#data-approve-reject-dialog").$("#btnConfirm").should(exist).click(); //Click on Confirm
             $("#gridItemUserDataList").should(exist);
             $("#tabMyTasks").should(exist).click(); //Click on My Tasks
             $("#tasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
-                    .should(exist).$(".buttonPreview").waitUntil(appears,10000).click(); //Click on Preview
+                    .should(exist).$(".buttonPreview").waitUntil(appears,15000).click(); //Click on Preview
             $("#dataContainer").should(exist);
-            $("#textField_form-user-8210db0d-bed5-4657-805f-5e5b0c51ac7e").should(exist);
+            $("#textField_form-user-343baf17-ff5e-42db-a382-77df0216a7f3").should(exist);
+            //$("#textField_form-user-343baf17-ff5e-42db-a382-77df0216a7f3").setValue(" Verified");
             $("#btnAcceptTask").should(exist).click(); //Click on Accept
             $("#data-approve-reject-dialog").$("#btnConfirm").click();
             $("#tabDataCapture").should(exist).click(); //Click on Data Capture
@@ -83,9 +84,9 @@ public class DataCaptureWithTwoApproversIncludingRejectTest extends BaseTest {
             $("#gridItemUserDataList").should(exist);
             $("#tabMyTasks").should(exist).click(); //Click on My Tasks
             $("#tasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
-                    .should(exist).$(".buttonPreview").waitUntil(appears,10000).click(); //Click on Preview
+                    .should(exist).$(".buttonPreview").waitUntil(appears,15000).click(); //Click on Preview
             $("#dataContainer").should(exist);
-            $("#textField_form-user-8210db0d-bed5-4657-805f-5e5b0c51ac7e").should(exist);
+            $("#textField_form-user-343baf17-ff5e-42db-a382-77df0216a7f3").should(exist);
             $("#btnAcceptTask").should(exist).click(); //Click on Accept
             $("#data-approve-reject-dialog").$("#btnConfirm").click();
             $("#gridItemUserDataList").should(exist);

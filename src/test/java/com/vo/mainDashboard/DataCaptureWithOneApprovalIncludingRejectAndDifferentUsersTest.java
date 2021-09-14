@@ -18,7 +18,7 @@ public class DataCaptureWithOneApprovalIncludingRejectAndDifferentUsersTest exte
     @Order(1)
     public void openFormDashboard() {
 
-        open("/dashboard/DataCapture-OneApproval-Including-Reject-Different-Users");
+        open("/dashboard/Data-Capture-One-Approval-Including-Reject-Different-Users");
     }
 
     @Test
@@ -35,7 +35,7 @@ public class DataCaptureWithOneApprovalIncludingRejectAndDifferentUsersTest exte
         $("#selUser").click();
         $("#btnStartProcess").click(); //Start Data Capture Process
         $("#client-snackbar").should(appear)
-                .shouldHave(Condition.text("Started Data Capture process for the form: DataCapture-OneApproval-Including-Reject-Different-Users and version 1.0"));
+                .shouldHave(Condition.text("Started Data Capture process for the form: Data-Capture-One-Approval-Including-Reject-Different-Users and version 1.0"));
         $("#gridItemUserDataList").should(exist);
         $("#tabDataCapture").should(exist).click(); //Click on Data Capture
         $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("In Progress")); //Verify the Data Capture state
@@ -43,21 +43,21 @@ public class DataCaptureWithOneApprovalIncludingRejectAndDifferentUsersTest exte
 
         //Should Login as GUI TESTER 01
         shouldLogin(BaseTest.UserType.USER_01);
-        open("/dashboard/DataCapture-OneApproval-Including-Reject-Different-Users");
+        open("/dashboard/Data-Capture-One-Approval-Including-Reject-Different-Users");
         $("#formDashboardHeaderLeft").should(appear);
         $("#gridItemUserDataList").should(exist);
         $("#tabMyTasks").should(exist).click(); //Click on My Tasks
         $("#tasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId )).should(exist)
                 .$(".buttonFillForm").should(exist).shouldBe(enabled).click(); //Click on Fill Form
         $("#dataContainer").should(exist);
-        $("#textField_form-user-a634c0ef-35ad-4259-9540-764f1e9030da").should(exist);
-        $("#textField_form-user-a634c0ef-35ad-4259-9540-764f1e9030da").setValue("TEST");
+        $("#textField_form-user-72e58e22-8937-4065-9523-1198120ab953").should(exist);
+        $("#textField_form-user-72e58e22-8937-4065-9523-1198120ab953").setValue("TEST");
         $("#btnAcceptTask").should(exist).click();
         $("#data-approve-reject-dialog").$("#btnConfirm").shouldBe(enabled).click(); //Click on Confirm
 
         //Should Login as GUI TESTER 02
         shouldLogin(BaseTest.UserType.USER_02);
-        open("/dashboard/DataCapture-OneApproval-Including-Reject-Different-Users");
+        open("/dashboard/Data-Capture-One-Approval-Including-Reject-Different-Users");
         $("#formDashboardHeaderLeft").should(appear);
         $("#gridItemUserDataList").should(exist);
         $("#tabMyTasks").should(exist).click(); //Click on My Tasks
@@ -69,7 +69,7 @@ public class DataCaptureWithOneApprovalIncludingRejectAndDifferentUsersTest exte
 
         //Should Login as GUI TESTER 01
         shouldLogin(BaseTest.UserType.USER_01);
-        open("/dashboard/DataCapture-OneApproval-Including-Reject-Different-Users");
+        open("/dashboard/Data-Capture-One-Approval-Including-Reject-Different-Users");
         $("#formDashboardHeaderLeft").should(appear);
         $("#gridItemUserDataList").should(exist);
         $("#tabMyTasks").should(exist).click(); //Click on My Tasks
@@ -77,14 +77,14 @@ public class DataCaptureWithOneApprovalIncludingRejectAndDifferentUsersTest exte
                 .$(".buttonFillForm").should(exist).shouldBe(enabled).click(); //Click on Fill Form
         $("#data-card-dialog_actions").should(appear);
         $("#dataContainer").should(exist);
-        $("#textField_form-user-a634c0ef-35ad-4259-9540-764f1e9030da").should(exist);
-        $("#textField_form-user-a634c0ef-35ad-4259-9540-764f1e9030da").setValue(" VERIFIED");
+        $("#textField_form-user-72e58e22-8937-4065-9523-1198120ab953").should(exist);
+        $("#textField_form-user-72e58e22-8937-4065-9523-1198120ab953").setValue(" VERIFIED");
         $("#btnAcceptTask").should(exist).click();
         $("#data-approve-reject-dialog").$("#btnConfirm").shouldBe(enabled).click();
 
         //Should Login as GUI TESTER 02
         shouldLogin(BaseTest.UserType.USER_02);
-        open("/dashboard/DataCapture-OneApproval-Including-Reject-Different-Users");
+        open("/dashboard/Data-Capture-One-Approval-Including-Reject-Different-Users");
         $("#formDashboardHeaderLeft").should(appear);
         $("#gridItemUserDataList").should(exist);
         $("#tabMyTasks").should(exist).click(); //Click on My Tasks
@@ -95,7 +95,7 @@ public class DataCaptureWithOneApprovalIncludingRejectAndDifferentUsersTest exte
 
         //Should Login as GUI Tester
         shouldLogin(BaseTest.UserType.MAIN_TEST_USER);
-        open("/dashboard/DataCapture-OneApproval-Including-Reject-Different-Users");
+        open("/dashboard/Data-Capture-One-Approval-Including-Reject-Different-Users");
         $("#formDashboardHeaderAppBar").should(exist);
         $("#gridItemUserDataList").should(exist);
         $("#tabDataCapture").should(exist).click(); //Click on Data Capture

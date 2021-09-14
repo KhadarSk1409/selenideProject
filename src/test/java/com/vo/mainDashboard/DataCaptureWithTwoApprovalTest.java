@@ -46,8 +46,8 @@ public class DataCaptureWithTwoApprovalTest extends BaseTest {
                 .$(".buttonFillForm").should(exist).shouldBe(enabled).click(); //Click on Fill Form
         $("#data-card-dialog_actions").should(appear);
         $("#dataContainer").should(exist);
-        $("#textField_form-user-8210db0d-bed5-4657-805f-5e5b0c51ac7e").should(exist);
-        $("#textField_form-user-8210db0d-bed5-4657-805f-5e5b0c51ac7e").setValue("TEST");
+        $("#textField_form-user-343baf17-ff5e-42db-a382-77df0216a7f3").should(exist);
+        $("#textField_form-user-343baf17-ff5e-42db-a382-77df0216a7f3").setValue("TEST");
         $("#btnAcceptTask").should(exist).click();
         $("#data-approve-reject-dialog").$("#btnConfirm").should(exist).click();
         $("#gridItemUserDataList").should(exist);
