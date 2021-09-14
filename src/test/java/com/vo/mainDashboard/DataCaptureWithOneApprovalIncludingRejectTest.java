@@ -48,8 +48,8 @@ import static com.codeborne.selenide.Selenide.$;
                 .$(".buttonFillForm").should(exist).shouldBe(enabled).click(); //Click on Fill Form
         $("#data-card-dialog_actions").should(appear);
         $("#dataContainer").should(exist);
-        $("#textField_form-user-789e1199-464b-4ee2-8afc-50f678947fa7").should(exist);
-        $("#textField_form-user-789e1199-464b-4ee2-8afc-50f678947fa7").setValue("TEST");
+        $("#textField_form-user-9a32f0df-fe26-4fa1-924a-c8d1eacdac91").should(exist);
+        $("#textField_form-user-9a32f0df-fe26-4fa1-924a-c8d1eacdac91").setValue("TEST");
         $("#btnAcceptTask").click();
         $("#data-approve-reject-dialog").$("#btnConfirm").click();
         $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).click();
@@ -68,8 +68,8 @@ import static com.codeborne.selenide.Selenide.$;
         $("#tasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId )).should(exist)
                 .$(".buttonFillForm").should(exist).shouldBe(enabled).click(); //Click on Fill Form
         $("#dataContainer").should(exist);
-        $("#textField_form-user-789e1199-464b-4ee2-8afc-50f678947fa7").should(exist);
-        $("#textField_form-user-789e1199-464b-4ee2-8afc-50f678947fa7").setValue(" Approved ");
+        $("#textField_form-user-9a32f0df-fe26-4fa1-924a-c8d1eacdac91").should(exist);
+        $("#textField_form-user-9a32f0df-fe26-4fa1-924a-c8d1eacdac91").setValue(" Approved ");
         $("#btnAcceptTask").should(exist).click();
         $("#data-approve-reject-dialog").$("#btnConfirm").should(exist).click();
         $("#tabDataCapture").should(exist).click(); //Click on Data Capture

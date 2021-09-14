@@ -52,8 +52,8 @@ public class DataCaptureWithOneApprovalTest extends BaseTest {
                 .$(".buttonFillForm").should(exist).shouldBe(enabled).click(); //Click on Fill Form
         $("#data-card-dialog_actions").should(appear);
         $("#dataContainer").should(exist);
-        $("#textField_form-user-789e1199-464b-4ee2-8afc-50f678947fa7").should(exist);
-        $("#textField_form-user-789e1199-464b-4ee2-8afc-50f678947fa7").setValue("TEST");
+        $("#textField_form-user-9a32f0df-fe26-4fa1-924a-c8d1eacdac91").should(exist);
+        $("#textField_form-user-9a32f0df-fe26-4fa1-924a-c8d1eacdac91").setValue("TEST");
         $("#btnAcceptTask").click();
         $("#data-approve-reject-dialog").$("#btnConfirm").click();
         $("#gridItemUserDataList").should(exist);
