@@ -14,9 +14,8 @@ import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Selenide.$$;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.text.ParseException;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import static com.codeborne.selenide.Condition.*;
@@ -51,22 +50,23 @@ public class TimeFieldTest extends BaseTest {
     }
 
     @Order(2)
-    @DisplayName("createNewFormulaDesignForDateFields")
+    @DisplayName("createNewFormulaDesignForTimeFields")
     @ParameterizedTest
     @CsvFileSource(resources = "/time_field_test_data.csv", numLinesToSkip = 1)
     public void allTimeField(Integer row, Integer col, Integer colSpan,
                              String timefield_label,
                              String timefield_help,
                              String checkbox_disableLabel,
+                             String time_defaultValueTime,
                              String checkbox_required,
 
-                             String radioBtn_hrMinSec_hrMinSec,
-                             String radio_hrMin_hrMin,
-                             String radio_hour_hour,
-                             String time_defaultValueTime,
+                             String radioBtn_hrMinSec,
+                             String radio_hrMin,
+                             String radio_minSec,
+                             String radio_hour,
 
                              String checkbox_readOnly,
-                             String checkbox_ampm
+                             String checkbox_24hr
 
     ) throws InterruptedException {
 
@@ -96,7 +96,7 @@ public class TimeFieldTest extends BaseTest {
 
         //Label
         if (StringUtils.isNotEmpty(timefield_label)) {
-            labelVerificationOnFormDesign(blockId,timefield_label);
+            labelVerificationOnFormDesign(blockId, timefield_label);
 
         }
 
@@ -107,7 +107,7 @@ public class TimeFieldTest extends BaseTest {
 
         //Help
         if (StringUtils.isNotEmpty(timefield_help)) {
-            helpVerificationOnFormDesign(blockId, timefield_label);
+            helpVerificationOnFormDesign(blockId, timefield_help);
         }
 
         //required
@@ -116,7 +116,7 @@ public class TimeFieldTest extends BaseTest {
         }
 
         //Hour Minute Second radioBtn
-        if (StringUtils.isNotEmpty(radioBtn_hrMinSec_hrMinSec)) {
+        if (StringUtils.isNotEmpty(radioBtn_hrMinSec)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             String radioBtnId = "#" + TimeFieldTest.TimeFieldOptionsIds.prop_hourMinuteSecond_hourMinuteSecond.name();
@@ -126,17 +126,15 @@ public class TimeFieldTest extends BaseTest {
         }
 
         //Hour Minute radioBtn
-        if (StringUtils.isNotEmpty(radio_hrMin_hrMin)) {
+        if (StringUtils.isNotEmpty(radio_hrMin)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             String radioBtnId = "#" + TimeFieldTest.TimeFieldOptionsIds.prop_hourMinute_hourMinute.name();
             $(radioBtnId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(radioBtnId + " input").shouldBe(selected);
         }
 
         //Minute Second radioBtn
-        if (StringUtils.isNotEmpty(radio_hour_hour)) {
+        if (StringUtils.isNotEmpty(radio_minSec)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             String radioBtnId = "#" + TimeFieldTest.TimeFieldOptionsIds.prop_minuteSecond_minuteSecond.name();
@@ -147,7 +145,7 @@ public class TimeFieldTest extends BaseTest {
 
 
         //Hour radioBtn
-        if (StringUtils.isNotEmpty(radio_hour_hour)) {
+        if (StringUtils.isNotEmpty(radio_hour)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             String radioBtnId = "#" + TimeFieldTest.TimeFieldOptionsIds.prop_hour_hour.name();
@@ -164,6 +162,8 @@ public class TimeFieldTest extends BaseTest {
                     .setValue(time_defaultValueTime).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $("#time_defaultValueTime").shouldHave(value(time_defaultValueTime));
+
+
         }
 
         //Read only checkbox check
@@ -175,13 +175,25 @@ public class TimeFieldTest extends BaseTest {
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
 
+            //Verify Read Only with Default:
             if (StringUtils.isNotEmpty(time_defaultValueTime)) {
+                selectAndClear(By.id(TimeFieldTest.TimeFieldOptionsIds.time_defaultValueTime.name()))
+                        .setValue(time_defaultValueTime).sendKeys(Keys.TAB);
+                $("#time_defaultValueTime").shouldHave(value(time_defaultValueTime));
+            } else {
                 $("#time_defaultValueTime-helper-text").should(exist).shouldHave(text("Must be set, if read only")); //Verify the error shown when read only checkbox is checked wihtout any value in default value field
+
+                //Set some value in Default value
+                selectAndClear(By.id(TimeFieldTest.TimeFieldOptionsIds.time_defaultValueTime.name()))
+                        .setValue("01:00").sendKeys(Keys.TAB);
+                $("#time_defaultValueTime").shouldHave(value("01:00"));
             }
+            $(checkBoxId).shouldBe(visible).click();
+            $(checkBoxId + " input").shouldNotBe(selected);
         }
 
         //Verify 12h/24h checkbox for hour selection
-        if (StringUtils.isNotEmpty(checkbox_ampm)) {
+        if (StringUtils.isNotEmpty(checkbox_24hr)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + TimeFieldTest.TimeFieldOptionsIds.checkbox_ampm.name();
@@ -190,4 +202,118 @@ public class TimeFieldTest extends BaseTest {
             $(checkBoxId + " input").shouldBe(selected);
         }
     }
+
+    @Test
+    @Order(3)
+    @DisplayName("publish and open FormPage")
+    public void publishAndOpenFormPage() {
+        //Click on publish button, wait until form dashboard opens and click on fill form
+        $("#btnFormDesignPublish").should(exist).click();
+
+        $("#form-publish-dialog .MuiPaper-root").should(appear); //Publish confirmation dialog appears
+        $("#form-publish-dialog  #btnConfirm").should(exist).click(); //Fill form button on Launch screen
+        $("#btnCreateNewData").should(exist).click();
+        $("#dataContainer").should(appear); //Verify that the form details screen appears
+
+    }
+
+    @Order(4)
+    @DisplayName("verify fields on form")
+    @ParameterizedTest
+    @CsvFileSource(resources = "/time_field_test_data.csv", numLinesToSkip = 1)
+    public void verifyFieldsOnForm(Integer row, Integer col, Integer colSpan,
+                                   String timefield_label,
+                                   String timefield_help,
+                                   String checkbox_disableLabel,
+                                   String time_defaultValueTime,
+                                   String checkbox_required,
+
+                                   String radioBtn_hrMinSec,
+                                   String radio_hrMin,
+                                   String radio_minSec,
+                                   String radio_hour,
+
+                                   String checkbox_readOnly,
+                                   String checkbox_24hr
+    ) throws ParseException {
+
+        String blockStr = "#data_block-loc_en-GB-r_" + row + "-c_" + col;
+        String labelInFillForm = blockStr + " .MuiFormLabel-root";
+        String helpInFillForm = blockStr + " .MuiFormHelperText-root";
+        String requiredFieldInFillForm = blockStr + " .MuiFormLabel-asterisk";
+        String inputField = blockStr + " input";
+
+
+        //Label
+        if (StringUtils.isNotEmpty(timefield_label)) {
+            System.out.println("Verifying label: " + timefield_label);
+            if (StringUtils.isNotEmpty(checkbox_disableLabel)) {
+                $(labelInFillForm).shouldNotHave(text(timefield_label)); //Verify that Label should not appear on the form - hide label
+            } else {
+                $(labelInFillForm).shouldHave(text(timefield_label)); //Verify that Label appears on the form
+            }
+        }
+
+        //required
+        if (StringUtils.isNotEmpty(checkbox_required)) {
+            System.out.println("Verifying required: *");
+            $(requiredFieldInFillForm).shouldHave(text("*"));
+        }
+
+        //Help
+        if (StringUtils.isNotEmpty(timefield_help)) {
+            System.out.println("Verifying help: " + timefield_help);
+            $(helpInFillForm).shouldHave(text(timefield_help));
+        }
+
+
+        //Default value
+        if (StringUtils.isNotEmpty(time_defaultValueTime)) {
+            System.out.println("Verifying default value: " + time_defaultValueTime);
+            $(inputField).shouldHave(value(time_defaultValueTime));
+        }
+
+
+//        //Read Only checkbox
+//        if (StringUtils.isNotEmpty(checkbox_readOnly)) {
+//            System.out.println("Verifying checkbox readOnly");
+//            System.out.println("Verifying for value: " + time_defaultValueTime);
+//            $(inputField).shouldBe(disabled);
+//        }
+
+        //Verify on Fill form radioBtn_hrMinSec_hrMinSec
+        if (StringUtils.isNotEmpty(radioBtn_hrMinSec)) {
+            System.out.println("Verifying radioBtn_hrMinSec_hrMinSec field");
+
+            selectAndClear(inputField).setValue("01:05").sendKeys(Keys.TAB); //Enter hour and minutes values
+            $(blockStr + " .MuiFormHelperText-root").shouldHave(text("Invalid Time Format")); //Verify the error shown when user enters Inavlid time format
+        }
+
+        //Verify on Fill form radio_hrMin_hrMin
+        if (StringUtils.isNotEmpty(radio_hrMin)) {
+            System.out.println("Verifying radioBtn_hrMin field");
+
+            selectAndClear(inputField).setValue("01").sendKeys(Keys.TAB); //Enter hour value
+            $(blockStr + " .MuiFormHelperText-root").shouldHave(text("Invalid Time Format")); //Verify the error shown when user enters Inavlid time format
+        }
+
+        //Verify radio_minSec
+        if (StringUtils.isNotEmpty(radio_minSec)) {
+            System.out.println("Verifying radio_minSec field");
+
+            selectAndClear(inputField).setValue("01").sendKeys(Keys.TAB); //Enter hour value
+            $(blockStr + " .MuiFormHelperText-root").shouldHave(text("Invalid Time Format")); //Verify the error shown when user enters Inavlid time format
+
+        }
+
+        //Verify radio_hour
+        if (StringUtils.isNotEmpty(radio_hour)) {
+            System.out.println("Verifying radio_hour field");
+
+            selectAndClear(inputField).setValue("01:00").sendKeys(Keys.TAB);
+            $(inputField).shouldHave(value("01"));
+        }
+
+    }
+
 }
