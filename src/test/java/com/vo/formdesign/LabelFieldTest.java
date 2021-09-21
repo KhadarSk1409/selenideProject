@@ -10,8 +10,10 @@ import org.openqa.selenium.Keys;
 import reusables.ReuseActionsFormCreation;
 
 import static com.codeborne.selenide.Selenide.executeJavaScript;
+
 import java.util.Arrays;
 import java.util.stream.IntStream;
+
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static reusables.ReuseActions.createNewForm;
@@ -77,8 +79,38 @@ public class LabelFieldTest extends BaseTest {
                     .setValue(textfield_value).sendKeys(Keys.TAB);
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(blockId + " input").shouldHave(value(textfield_value));
-          //  labelVerificationOnFormDesign(blockId,textfield_value);
+            //  labelVerificationOnFormDesign(blockId,textfield_value);
+        }
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("publish and open FormPage")
+    public void publishAndOpenFormPage() {
+        //Click on publish button, wait until form dashboard opens and click on fill form
+        $("#btnFormDesignPublish").should(exist).click();
+
+        $("#form-publish-dialog .MuiPaper-root").should(appear); //Publish confirmation dialog appears
+        $("#form-publish-dialog #btnConfirm").should(exist).click(); //Click on Confirm button
+        $("#btnCreateNewData").waitUntil(exist, 50000).click(); //Fill form button on Launch screen
+        $("#dataContainer").should(appear); //Verify that the form details screen appears
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("verify fill form for Label field")
+    @ParameterizedTest
+    @CsvFileSource(resources = "/label_field_test_data.csv", numLinesToSkip = 1)
+    public void verifyFillFormForLabelField(Integer row, Integer col, Integer colSpan, String textfield_value) throws InterruptedException {
+
+        String blockStr = "#data_block-loc_en-GB-r_" + row + "-c_" + col;
+        String labelInFillForm = blockStr + " .MuiFormLabel-root";
+
+        if (StringUtils.isNotEmpty(textfield_value)) {
+            $(labelInFillForm).shouldHave(text(textfield_value)); //Verify that Label appears on the form
+
         }
     }
 
 }
+
