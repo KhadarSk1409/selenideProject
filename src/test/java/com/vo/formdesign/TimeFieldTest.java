@@ -287,6 +287,19 @@ public class TimeFieldTest extends BaseTest {
 
             selectAndClear(inputField).setValue("01:05").sendKeys(Keys.TAB); //Enter hour and minutes values
             $(blockStr + " .MuiFormHelperText-root").shouldHave(text("Invalid Time Format")); //Verify the error shown when user enters Inavlid time format
+
+            selectAndClear(inputField).setValue("23:59:59").sendKeys(Keys.TAB); //Enter hour, minutes and seconds values
+            $(inputField).shouldHave(value("23:59:59"));
+
+            selectAndClear(inputField).setValue("00:59:59").sendKeys(Keys.TAB); //Enter hour, minutes and seconds values
+            $(inputField).shouldHave(value("00:59:59"));
+
+            selectAndClear(inputField).setValue("00:60:59").sendKeys(Keys.TAB); //Enter hour, minutes and seconds values
+            $(blockStr + " .MuiFormHelperText-root").shouldHave(text("Invalid Time Format")); //Verify the error shown when user enters Inavlid time format
+
+            selectAndClear(inputField).setValue("00:00:60").sendKeys(Keys.TAB); //Enter hour, minutes and seconds values
+            $(blockStr + " .MuiFormHelperText-root").shouldHave(text("Invalid Time Format")); //Verify the error shown when user enters Inavlid time format
+
         }
 
         //Verify on Fill form radio_hrMin_hrMin
@@ -295,6 +308,15 @@ public class TimeFieldTest extends BaseTest {
 
             selectAndClear(inputField).setValue("01").sendKeys(Keys.TAB); //Enter hour value
             $(blockStr + " .MuiFormHelperText-root").shouldHave(text("Invalid Time Format")); //Verify the error shown when user enters Inavlid time format
+
+            selectAndClear(inputField).setValue("00:00").sendKeys(Keys.TAB); //Enter valid boundry value
+            $(inputField).shouldHave(value("00:00"));
+
+            selectAndClear(inputField).setValue("23:60").sendKeys(Keys.TAB); //Enter invalid boundry value
+            $(blockStr + " .MuiFormHelperText-root").shouldHave(text("Invalid Time Format")); //Verify the error shown when user enters Inavlid time format
+
+            selectAndClear(inputField).setValue("12:59").sendKeys(Keys.TAB);
+            $(inputField).shouldHave(value("12:59"));
         }
 
         //Verify radio_minSec
@@ -304,6 +326,19 @@ public class TimeFieldTest extends BaseTest {
             selectAndClear(inputField).setValue("01").sendKeys(Keys.TAB); //Enter hour value
             $(blockStr + " .MuiFormHelperText-root").shouldHave(text("Invalid Time Format")); //Verify the error shown when user enters Inavlid time format
 
+            selectAndClear(inputField).setValue("59:59").sendKeys(Keys.TAB); //Enter hour min value
+            $(inputField).shouldHave(value("59:59"));
+
+            selectAndClear(inputField).setValue("00:00").sendKeys(Keys.TAB); //Enter hour min value
+            $(inputField).shouldHave(value("00:00"));
+
+            selectAndClear(inputField).setValue("60:00").sendKeys(Keys.TAB); //Enter hour min value
+            $(blockStr + " .MuiFormHelperText-root").shouldHave(text("Invalid Time Format")); //Verify the error shown when user enters Inavlid time format
+
+            selectAndClear(inputField).setValue("00:60").sendKeys(Keys.TAB); //Enter hour min value
+            $(blockStr + " .MuiFormHelperText-root").shouldHave(text("Invalid Time Format")); //Verify the error shown when user enters Inavlid time format
+
+
         }
 
         //Verify radio_hour
@@ -312,6 +347,16 @@ public class TimeFieldTest extends BaseTest {
 
             selectAndClear(inputField).setValue("01:00").sendKeys(Keys.TAB);
             $(inputField).shouldHave(value("01"));
+
+            selectAndClear(inputField).setValue("00").sendKeys(Keys.TAB);
+            $(inputField).shouldHave(value("00"));
+
+            selectAndClear(inputField).setValue("24").sendKeys(Keys.TAB);
+            $(inputField).shouldHave(value("00")); //Verify that when user enters 24, it is converted in 00
+
+            selectAndClear(inputField).setValue("25").sendKeys(Keys.TAB);
+            $(blockStr + " .MuiFormHelperText-root").shouldHave(text("Invalid Time Format")); //Verify the error shown when user enters Inavlid time format
+
         }
 
     }
