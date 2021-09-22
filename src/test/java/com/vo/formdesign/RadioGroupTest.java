@@ -1,9 +1,11 @@
 package com.vo.formdesign;
 
 import com.codeborne.selenide.CollectionCondition;
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.commands.PressEnter;
 import com.vo.BaseTest;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -183,4 +185,86 @@ public class RadioGroupTest extends BaseTest {
         }
 
     }
+
+    @Test
+    @Order(3)
+    @DisplayName("Publish and open the FormPage")
+    public void publishAndOpenFormPage() {
+        //Click on publish button, wait until form dashboard opens and click on fill form
+        $("#btnFormDesignPublish").should(exist).click();
+        $("#form-publish-dialog .MuiPaper-root").should(appear); //Publish confirmation dialog appears
+        $("#form-publish-dialog  #btnConfirm").should(exist).click(); //Click on Confirm button
+        $("#btnCreateNewData").should(exist).click(); //Fill form button on Launch screen
+        $("#dataContainer").should(appear); //Verify that the form details screen appears
+
+    }
+
+    @Order(4)
+    @DisplayName("Verify fields on the form")
+    @ParameterizedTest
+    @CsvFileSource(resources = "/radiogroup_field_test_data.csv", numLinesToSkip = 1)
+    public void verifyFieldsOnForm(Integer row, Integer col, Integer colSpan,
+                                   String text_label,
+                                   String text_help,
+                                   String edit_values,
+                                   String preselection_value,
+                                   String disableLabel,
+                                   String checkbox_required,
+                                   String checkbox_other_values,
+                                   String dropdown_direction) {
+
+        {
+            String blockStr = "#data_block-loc_en-GB-r_" + row + "-c_" + col;
+            String labelInFillForm = blockStr + " .MuiFormLabel-root";
+            String helpInFillForm = blockStr + " .MuiFormHelperText-root";
+            String valuesInFillForm = blockStr + " .MuiFormGroup-row";
+            String requiredFieldInFillForm = blockStr + " .MuiFormLabel-asterisk";
+            String otherValuesInFillForm = blockStr  + " .MuiFormControlLabel-root:nth-of-type(4)";
+            String otherOptionsInFillForm = blockStr  + " .MuiFormControlLabel-root:nth-of-type(1)";
+            String inputField = blockStr + " .MuiInputBase-input";
+
+            //Label
+            if (StringUtils.isNotEmpty(text_label)) {
+                System.out.println("Verifying label: " + text_label);
+                if (StringUtils.isNotEmpty(disableLabel)) {
+                    $(labelInFillForm).shouldNotHave(text(text_label)); //Verify that Label should not appear on the form - hide label
+                } else {
+                    $(labelInFillForm).shouldHave(text(text_label)); //Verify that Label appears on the form
+                }
+            }
+
+            //required
+            if (StringUtils.isNotEmpty(checkbox_required)) {
+                System.out.println("Verifying required: *");
+                $(requiredFieldInFillForm).shouldHave(text("*"));
+            }
+
+            //Help
+            if (StringUtils.isNotEmpty(text_help)) {
+                System.out.println("Verifying help: " + text_help);
+                $(helpInFillForm).shouldHave(text(text_help));
+            }
+            //Values
+            if (StringUtils.isNotEmpty(edit_values)) {
+                String[] strEditValues = edit_values.split(",");
+                System.out.println("Verifying edited values: " + edit_values);
+                $(valuesInFillForm).shouldHave(text(strEditValues[0]));
+                $(valuesInFillForm).shouldHave(text(strEditValues[1]));
+            }
+
+            //Other values:
+            String randomText = (RandomStringUtils.randomAlphanumeric(10));
+            if (StringUtils.isNotEmpty(checkbox_other_values)) {
+                System.out.println("Verifying other values: " + checkbox_other_values);
+                $(otherValuesInFillForm).should(exist).click(); //Other values should be checked and input field should be enabled
+                $(inputField).setValue(randomText).pressTab(); //Enter some random text into the input field
+                $(inputField).shouldHave(value(randomText));
+
+                //if other options are checked, input field should be disabled and user should not be able to enter the text
+                $(otherOptionsInFillForm).should(exist).click(); //Click on Option 1
+                $(inputField).shouldBe(disabled);
+            }
+        }
+    }
 }
+
