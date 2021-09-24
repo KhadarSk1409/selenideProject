@@ -16,6 +16,7 @@ import org.openqa.selenium.Keys;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -23,6 +24,7 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static java.lang.Integer.parseInt;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static reusables.ReuseActions.createNewForm;
 import static reusables.ReuseActionsFormCreation.*;
 
@@ -83,7 +85,7 @@ public class RadioGroupTest extends BaseTest {
                 $("#formMinorversion").shouldNotHave(text(initialVerNumStr1));
             });
             int currWidth = $(blockId).getRect().getWidth();
-            Assertions.assertEquals(colSpan, currWidth / prevWidth, "block column span should be " + colSpan);
+            assertEquals(colSpan, currWidth / prevWidth, "block column span should be " + colSpan);
         }
 
         //Label
@@ -219,8 +221,8 @@ public class RadioGroupTest extends BaseTest {
             String helpInFillForm = blockStr + " .MuiFormHelperText-root";
             String valuesInFillForm = blockStr + " .MuiFormGroup-row";
             String requiredFieldInFillForm = blockStr + " .MuiFormLabel-asterisk";
-            String otherValuesInFillForm = blockStr  + " .MuiFormControlLabel-root:nth-of-type(4)";
-            String otherOptionsInFillForm = blockStr  + " .MuiFormControlLabel-root:nth-of-type(1)";
+            String otherValuesInFillForm = blockStr + " .MuiFormControlLabel-root:nth-of-type(4)";
+            String otherOptionsInFillForm = blockStr + " .MuiFormControlLabel-root:nth-of-type(1)";
             String inputField = blockStr + " .MuiInputBase-input";
 
             //Label
@@ -244,12 +246,21 @@ public class RadioGroupTest extends BaseTest {
                 System.out.println("Verifying help: " + text_help);
                 $(helpInFillForm).shouldHave(text(text_help));
             }
+
             //Values
-            if (StringUtils.isNotEmpty(edit_values)) {
-                String[] strEditValues = edit_values.split(",");
-                System.out.println("Verifying edited values: " + edit_values);
-                $(valuesInFillForm).shouldHave(text(strEditValues[0]));
-                $(valuesInFillForm).shouldHave(text(strEditValues[1]));
+                if (StringUtils.isNotEmpty(edit_values)) {
+                    System.out.println("Verifying edited values: " + edit_values);
+                    String[] strEditValues = edit_values.split(",");
+                    Arrays.asList(strEditValues).forEach(s ->$(valuesInFillForm).shouldHave(text(s)));
+                }
+
+            //Preselection values
+            if (StringUtils.isNotEmpty(preselection_value)) {
+                System.out.println("Verifying Preselection value: " + preselection_value);
+                String[] preSelectedValues = edit_values.split(",");
+                int i=(Arrays.asList(preSelectedValues).indexOf(preselection_value))+1;
+                String selectedValue = blockStr + " .MuiFormGroup-row label:nth-child("+i+") input";
+                Arrays.asList(preSelectedValues).forEach(s ->$(selectedValue).shouldBe(checked));
             }
 
             //Other values:
@@ -263,6 +274,15 @@ public class RadioGroupTest extends BaseTest {
                 //if other options are checked, input field should be disabled and user should not be able to enter the text
                 $(otherOptionsInFillForm).should(exist).click(); //Click on Option 1
                 $(inputField).shouldBe(disabled);
+            }
+
+            //Dropdown direction
+            if (StringUtils.isNotEmpty(dropdown_direction)) {
+                System.out.println("Verifying direction: " + dropdown_direction);
+                String columnSpan = $(blockStr).getAttribute("data-colspan");
+                if (columnSpan != null) {
+                    $(blockStr).shouldHave(attribute("data-colspan", columnSpan));
+                }
             }
         }
     }
