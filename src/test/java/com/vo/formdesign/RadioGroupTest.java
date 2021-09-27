@@ -225,7 +225,7 @@ public class RadioGroupTest extends BaseTest {
             String otherValuesInFillForm = blockStr + " .MuiFormControlLabel-root:nth-of-type(4)";
             String otherOptionsInFillForm = blockStr + " .MuiFormControlLabel-root:nth-of-type(1)";
             String dropDownDirectionInFillForm = blockStr + " .MuiFormGroup-root";
-            String expandedBlock = ".MuiFormGroup-row";
+           // String expandedBlock = ".MuiFormGroup-row";
             String inputField = blockStr + " .MuiInputBase-input";
 
             //Label
@@ -282,8 +282,12 @@ public class RadioGroupTest extends BaseTest {
             //Dropdown direction
             if (StringUtils.isNotEmpty(dropdown_direction)) {
                 System.out.println("Verifying direction: " + dropdown_direction);
-                if (dropdown_direction.equals("vertical"))
-                    $(dropDownDirectionInFillForm).$(byClassName(expandedBlock)).shouldNot(exist);
+                if (dropdown_direction.equals("horizontal")) {
+                    $(dropDownDirectionInFillForm).shouldHave(cssClass("MuiFormGroup-row"));
+                }else{
+                    $(dropDownDirectionInFillForm).shouldNotHave(cssClass("MuiFormGroup-row"));
+
+                }
             }
         }
     }
