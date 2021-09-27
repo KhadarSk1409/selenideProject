@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selectors.byClassName;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static java.lang.Integer.parseInt;
@@ -223,6 +224,8 @@ public class RadioGroupTest extends BaseTest {
             String requiredFieldInFillForm = blockStr + " .MuiFormLabel-asterisk";
             String otherValuesInFillForm = blockStr + " .MuiFormControlLabel-root:nth-of-type(4)";
             String otherOptionsInFillForm = blockStr + " .MuiFormControlLabel-root:nth-of-type(1)";
+            String dropDownDirectionInFillForm = blockStr + " .MuiFormGroup-root";
+            String expandedBlock = ".MuiFormGroup-row";
             String inputField = blockStr + " .MuiInputBase-input";
 
             //Label
@@ -279,12 +282,11 @@ public class RadioGroupTest extends BaseTest {
             //Dropdown direction
             if (StringUtils.isNotEmpty(dropdown_direction)) {
                 System.out.println("Verifying direction: " + dropdown_direction);
-                String columnSpan = $(blockStr).getAttribute("data-colspan");
-                if (columnSpan != null) {
-                    $(blockStr).shouldHave(attribute("data-colspan", columnSpan));
-                }
+                if (dropdown_direction.equals("vertical"))
+                    $(dropDownDirectionInFillForm).$(byClassName(expandedBlock)).shouldNot(exist);
             }
         }
     }
 }
+
 
