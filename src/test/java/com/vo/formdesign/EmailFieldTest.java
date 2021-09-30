@@ -6,6 +6,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 
 import java.util.stream.IntStream;
 
@@ -28,7 +29,7 @@ public class EmailFieldTest extends BaseTest {
         checkbox_required,
         textfield_defaultValueEmail,
         checkbox_readOnly,
-        checkbox_multiple
+        checkbox_multiple;
     }
 
     @Test
@@ -55,7 +56,7 @@ public class EmailFieldTest extends BaseTest {
     ) {
         String blockId = "#block-loc_en-GB-r_" + row + "-c_" + col;
 
-        // create new block, if it does not exist
+        //create new block, if not exist
         if (!$(blockId).exists()) {
             String prevBlockId = "#block-loc_en-GB-r_" + (row - 1) + "-c_" + col;
             $(prevBlockId + " .add-row").shouldBe(visible).click();
@@ -80,7 +81,7 @@ public class EmailFieldTest extends BaseTest {
 
         //Label
         if (StringUtils.isNotEmpty(label_text)) {
-            labelVerificationOnFormDesign(blockId, label_text);
+            labelVerificationOnFormDesign(blockId,label_text);
         }
 
         //Help
@@ -100,15 +101,15 @@ public class EmailFieldTest extends BaseTest {
 
         //Default Value
         if (StringUtils.isNotEmpty(textfield_defaultValue)) {
-            $(blockId).$(".fa-pen").closest("button").click(); //Click on Edit
+            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(EmailFieldTest.EmailFielsIds.textfield_defaultValueEmail.name()))
-                    .setValue(textfield_defaultValue).sendKeys(TAB);
+                    .setValue(textfield_defaultValue).sendKeys(Keys.TAB);
             //TODO check appearance on designer
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(By.id(EmailFieldTest.EmailFielsIds.textfield_defaultValueEmail.name())).shouldHave(value(textfield_defaultValue));
 
-            //Verify the error shown for invalid textfield_defaultValue
+            //Verify the error shown for invalid textfield_defaultValue:
             if (StringUtils.isNotEmpty(invalid_email)) {
                 String invalidEmail = "Invalid email address: " + textfield_defaultValue;
                 $("#textfield_defaultValueEmail-helper-text").shouldHave(text(invalidEmail)); //Verify the error
@@ -121,7 +122,7 @@ public class EmailFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_readOnly)) {
             $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            String checkBoxId = "#" + EmailFielsIds.checkbox_readOnly.name();
+            String checkBoxId = "#" + EmailFieldTest.EmailFielsIds.checkbox_readOnly.name();
             $(checkBoxId).shouldBe(visible).click();
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
@@ -133,7 +134,7 @@ public class EmailFieldTest extends BaseTest {
             }
         }
 
-        //Allow Multiple
+        //Allow Multiple:
         if (StringUtils.isNotEmpty(checkbox_allow_multiple)) {
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + EmailFieldTest.EmailFielsIds.checkbox_multiple.name();
