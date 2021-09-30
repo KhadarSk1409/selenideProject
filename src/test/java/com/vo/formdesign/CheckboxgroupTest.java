@@ -342,20 +342,25 @@ public class CheckboxgroupTest extends BaseTest {
 
         //edit_values
         if (StringUtils.isNotEmpty(edit_values)) {
-            String[] values1 = edit_values.split(",");
-            for (int i = 1; i <= values1.length; i++) {
-                // String strCheckbox = "#data_block-loc_en-GB-r_4-c_2 .MuiCheckbox-root:nth-child("+i+")";
-                // $(strCheckbox).shouldBe(checked);
+//            String[] values1 = edit_values.split(",");
+//            for (int i = 1; i <= values1.length; i++) {
+//                // String strCheckbox = "#data_block-loc_en-GB-r_4-c_2 .MuiCheckbox-root:nth-child("+i+")";
+//                // $(strCheckbox).shouldBe(checked);
 
                 if (!(StringUtils.isNotEmpty(preselection_value))) {
+                    String[] values1 = edit_values.split(",");
+                    for (int i = 1; i <= values1.length; i++) {
+                        // String strCheckbox = "#data_block-loc_en-GB-r_4-c_2 .MuiCheckbox-root:nth-child("+i+")";
+                        // $(strCheckbox).shouldBe(checked);
 
-                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").shouldNotBe(checked);
+                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").shouldNotBe(checked);
 
-                    //Check the chekbox
-                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").click();
-                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").shouldBe(checked);
-                } else {
-
+                        //Check the chekbox
+                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").click();
+                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").shouldBe(checked);
+                    }
+                }
+                else {
 
                     //preselection_value
                     String[] values2 = preselection_value.split(",");
@@ -368,14 +373,17 @@ public class CheckboxgroupTest extends BaseTest {
                     }
                 }
             }
-        }
+
 
 
                 //checkbox_globalSelection
                 if (StringUtils.isNotEmpty(checkbox_globalSelection)) {
-                    String[] valuesStr3 = preselection_value.split(",");
-                    for (int k = 1; k <= valuesStr3.length; k++) {
-                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") input").shouldNotBe(checked);
+
+                    List<SelenideElement> checkBoxes = $$(blockStr+" .MuiCheckbox-root"); //fetch number of checkboxes
+
+
+                    for (int k = 1; k <= checkBoxes.size(); k++) {
+                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child("+k+") .MuiCheckbox-root").shouldNotBe(checked);
                     }
 
                     //Verify switch for All select Deselect and Allow select/Deselect all
@@ -385,16 +393,16 @@ public class CheckboxgroupTest extends BaseTest {
                     $(blockStr).find(" .MuiSwitch-input").shouldBe(checked);
 
                     //Verify that all check boxes get checked
-                    for (int k = 1; k <= valuesStr3.length; k++) {
-                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") input").shouldBe(checked);
+                    for (int k = 1; k <= checkBoxes.size(); k++) {
+                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child("+k+") .MuiCheckbox-root").shouldBe(checked);
                     }
 
                     $(blockStr).find(" .MuiSwitch-input").click();
                     $(blockStr).find(" .MuiSwitch-input").shouldBe(checked);
 
-                    //Verify that all check boxes get checked
-                    for (int k = 1; k <= valuesStr3.length; k++) {
-                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") input").shouldNotBe(checked);
+                    //Verify that all check boxes get unchecked
+                    for (int k = 1; k <= checkBoxes.size(); k++) {
+                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child("+k+") .MuiCheckbox-root").shouldNotBe(checked);
                     }
 
                 }
@@ -404,12 +412,8 @@ public class CheckboxgroupTest extends BaseTest {
                     //Verify that Other values checkbox is not checked:
                     $("#chwckboxgroup_other").shouldNotBe(checked);
 
-                    //Verify that other values edit box is disabled:
-                  //  $(blockStr).find(" .MuiInputBase-root").shouldBe(disabled);
-
                     //Now click the checkbox and enable the edit box
                     $("#chwckboxgroup_other").click();
-                    $(blockStr).find(" .MuiInputBase-root").shouldBe(enabled);
 
                     $(blockStr).find(" .MuiInputBase-root").setValue(RandomStringUtils.randomAlphanumeric(6)).sendKeys(Keys.TAB);
                 }
