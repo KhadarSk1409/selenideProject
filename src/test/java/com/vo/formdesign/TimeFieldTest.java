@@ -338,7 +338,6 @@ public class TimeFieldTest extends BaseTest {
             selectAndClear(inputField).setValue("00:60").sendKeys(Keys.TAB); //Enter hour min value
             $(blockStr + " .MuiFormHelperText-root").shouldHave(text("Invalid Time Format")); //Verify the error shown when user enters Inavlid time format
 
-
         }
 
         //Verify radio_hour

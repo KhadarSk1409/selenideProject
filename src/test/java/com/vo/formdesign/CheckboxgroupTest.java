@@ -4,6 +4,7 @@ import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.commands.PressEnter;
 import com.vo.BaseTest;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -92,7 +93,7 @@ public class CheckboxgroupTest extends BaseTest {
 
         //Label
         if (StringUtils.isNotEmpty(text_label)) {
-            labelVerificationOnFormDesign(blockId,text_label);
+            labelVerificationOnFormDesign(blockId, text_label);
         }
 
 
@@ -172,6 +173,7 @@ public class CheckboxgroupTest extends BaseTest {
             }
         }
 
+
         //Allow select:
         if (StringUtils.isNotEmpty(checkbox_globalSelection)) {
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
@@ -203,10 +205,23 @@ public class CheckboxgroupTest extends BaseTest {
 
             int int_text_numberField_minCount = parseInt(text_numberField_minCount);
 
+            String errorMinCount1 = "The values count " + rowsCount + " is less than minimum count " + text_numberField_minCount;
+            //$("#panel1a-content div:nth-child(5) p.Mui-error").should(exist).shouldNotHave(text(errorMinCount1));
+
+
             //Verify that if the Min count is less than rowCount, then error should be shown
-            if(int_text_numberField_minCount < rowsCount){
-                String errorMinCount1 = "The values count "+rowsCount+" is less than minimum count "+text_numberField_minCount;
+            // if (int_text_numberField_minCount < rowsCount) {
+            if (int_text_numberField_minCount > rowsCount) {
+                // String errorMinCount1 = "The values count " + rowsCount + " is less than minimum count " + text_numberField_minCount;
                 $("#panel1a-content div:nth-child(5) p.Mui-error").should(exist).shouldHave(text(errorMinCount1));
+
+                String strRowsCount = Integer.toString(rowsCount);
+                selectAndClear(By.id(CheckboxgroupTest.CheckboxgroupIds.numberField_minCount.name()))
+                        .setValue(strRowsCount).sendKeys(Keys.TAB);
+                $("#numberField_minCount").shouldHave(value(strRowsCount));
+
+                //    $("#panel1a-content div:nth-child(5) p.Mui-error").should(exist).shouldNotHave(text(errorMinCount1));
+
             }
 
         }
@@ -221,15 +236,26 @@ public class CheckboxgroupTest extends BaseTest {
             $("#numberField_maxCount").shouldHave(value(text_numberField_maxCount)).waitUntil(appears, 4000);
 
             //Verify that if Max count is less than Min count, relevant errors should be shown:
-            if(StringUtils.isNotEmpty(text_numberField_minCount)) {
+            if (StringUtils.isNotEmpty(text_numberField_minCount)) {
                 int int_text_numberField_minCount = parseInt(text_numberField_minCount);
                 int int_text_numberField_maxCount = parseInt(text_numberField_maxCount);
-                if(int_text_numberField_minCount > int_text_numberField_maxCount){
-                    String errorMaxCount1 = "The maximum value "+text_numberField_maxCount+" is less than minimum value "+text_numberField_minCount;
+                if (int_text_numberField_minCount > int_text_numberField_maxCount) {
+                    String errorMaxCount1 = "The maximum value " + text_numberField_maxCount + " is less than minimum value " + text_numberField_minCount;
                     $("#panel1a-content div:nth-child(5) p.Mui-error").should(exist).shouldHave(text(errorMaxCount1));
 
-                    String errorMaxCount2 = "The maximum value "+text_numberField_maxCount+" is less than minimum value "+text_numberField_minCount;
+                    String errorMaxCount2 = "The maximum value " + text_numberField_maxCount + " is less than minimum value " + text_numberField_minCount;
                     $("#panel2a-content div:nth-child(5) p.Mui-error").should(exist).shouldHave(text(errorMaxCount2));
+
+                    //Reset max value to valid value
+                    int int_maxValue1 = int_text_numberField_minCount + 1;
+                    String strMaxValue1 = Integer.toString(int_maxValue1);
+
+                    selectAndClear(By.id(CheckboxgroupIds.numberField_maxCount.name()))
+                            .setValue(strMaxValue1).sendKeys(Keys.TAB);
+                    $("#numberField_maxCount").shouldHave(value(strMaxValue1));
+
+                    //     $("#panel2a-content div:nth-child(5) p.Mui-error").should(exist).shouldNotHave(text(errorMaxCount2));
+
                 }
             }
 
@@ -253,4 +279,147 @@ public class CheckboxgroupTest extends BaseTest {
         }
 
     }
-}
+
+
+    @Test
+    @Order(3)
+    @DisplayName("publish and open FormPage")
+    public void publishAndOpenFormPage() {
+        //Click on publish button, wait until form dashboard opens and click on fill form
+        $("#btnFormDesignPublish").should(exist).click();
+
+        $("#form-publish-dialog .MuiPaper-root").should(appear); //Publish confirmation dialog appears
+        $("#form-publish-dialog #btnConfirm").should(exist).click(); //Click on Confirm button
+        $("#btnCreateNewData").waitUntil(exist, 50000).click(); //Fill form button on Launch screen
+        $("#dataContainer").should(appear); //Verify that the form details screen appears
+
+    }
+
+    @Order(4)
+    @DisplayName("verify fill form for checkboxgroup fields")
+    @ParameterizedTest
+    @CsvFileSource(resources = "/checkboxgroup_field_test_data.csv", numLinesToSkip = 1)
+    public void checkboxgroupFillFormField(Integer row, Integer col, Integer colSpan,
+                                           String text_label,
+                                           String text_help,
+                                           String edit_values,
+                                           String preselection_value,
+                                           String disableLabel,
+                                           String checkbox_required,
+                                           String checkbox_globalSelection,
+                                           String text_numberField_minCount,
+                                           String text_numberField_maxCount,
+                                           String checkbox_other_values,
+                                           String dropdown_direction) {
+
+        String blockStr = "#data_block-loc_en-GB-r_" + row + "-c_" + col;
+        String labelInFillForm = blockStr + " .MuiFormLabel-root";
+        String helpInFillForm = blockStr + " .MuiFormHelperText-root";
+        String requiredFieldInFillForm = blockStr + " .MuiFormLabel-asterisk";
+        String inputField = blockStr + " input";
+
+        //  Label
+        if (StringUtils.isNotEmpty(text_label)) {
+            System.out.println("Verifying label: " + text_label);
+            if (StringUtils.isNotEmpty(disableLabel)) {
+                $(labelInFillForm).shouldNotHave(text(text_label)); //Verify that Label should not appear on the form - hide label
+            } else {
+                $(labelInFillForm).shouldHave(text(text_label)); //Verify that Label appears on the form
+            }
+        }
+
+        //Help
+        if (StringUtils.isNotEmpty(text_help)) {
+            System.out.println("Verifying help: " + text_help);
+            $(helpInFillForm).shouldHave(text(text_help));
+        }
+
+        //  required
+        if (StringUtils.isNotEmpty(checkbox_required)) {
+            System.out.println("Verifying required: *");
+            $(requiredFieldInFillForm).shouldHave(text("*"));
+        }
+
+        //edit_values
+        if (StringUtils.isNotEmpty(edit_values)) {
+            String[] values1 = edit_values.split(",");
+            for (int i = 1; i <= values1.length; i++) {
+                // String strCheckbox = "#data_block-loc_en-GB-r_4-c_2 .MuiCheckbox-root:nth-child("+i+")";
+                // $(strCheckbox).shouldBe(checked);
+
+                if (!(StringUtils.isNotEmpty(preselection_value))) {
+
+                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").shouldNotBe(checked);
+
+                    //Check the chekbox
+                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").click();
+                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").shouldBe(checked);
+                } else {
+
+
+                    //preselection_value
+                    String[] values2 = preselection_value.split(",");
+                    for (int j = 1; j <= values2.length; j++) {
+                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + j + ") input").shouldBe(checked);
+
+                        //Uncheck the checkbox:
+                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + j + ") input").click();
+                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + j + ") input").shouldNotBe(checked);
+                    }
+                }
+            }
+        }
+
+
+                //checkbox_globalSelection
+                if (StringUtils.isNotEmpty(checkbox_globalSelection)) {
+                    String[] valuesStr3 = preselection_value.split(",");
+                    for (int k = 1; k <= valuesStr3.length; k++) {
+                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") input").shouldNotBe(checked);
+                    }
+
+                    //Verify switch for All select Deselect and Allow select/Deselect all
+                    $(blockStr).find(" .MuiSwitch-input").shouldNotBe(checked);
+
+                    $(blockStr).find(" .MuiSwitch-input").click();
+                    $(blockStr).find(" .MuiSwitch-input").shouldBe(checked);
+
+                    //Verify that all check boxes get checked
+                    for (int k = 1; k <= valuesStr3.length; k++) {
+                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") input").shouldBe(checked);
+                    }
+
+                    $(blockStr).find(" .MuiSwitch-input").click();
+                    $(blockStr).find(" .MuiSwitch-input").shouldBe(checked);
+
+                    //Verify that all check boxes get checked
+                    for (int k = 1; k <= valuesStr3.length; k++) {
+                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") input").shouldNotBe(checked);
+                    }
+
+                }
+
+                if (StringUtils.isNotEmpty(checkbox_other_values)) {
+
+                    //Verify that Other values checkbox is not checked:
+                    $("#chwckboxgroup_other").shouldNotBe(checked);
+
+                    //Verify that other values edit box is disabled:
+                  //  $(blockStr).find(" .MuiInputBase-root").shouldBe(disabled);
+
+                    //Now click the checkbox and enable the edit box
+                    $("#chwckboxgroup_other").click();
+                    $(blockStr).find(" .MuiInputBase-root").shouldBe(enabled);
+
+                    $(blockStr).find(" .MuiInputBase-root").setValue(RandomStringUtils.randomAlphanumeric(6)).sendKeys(Keys.TAB);
+                }
+
+
+            }
+
+        }
+
+
+
+
+
