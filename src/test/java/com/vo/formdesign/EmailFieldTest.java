@@ -76,13 +76,13 @@ public class EmailFieldTest extends BaseTest {
             });
             int currWidth = $(blockId).getRect().getWidth();
             Assertions.assertEquals(colSpan, currWidth / prevWidth, "block column span should be " + colSpan);
-
         }
 
         //Label
         if (StringUtils.isNotEmpty(label_text)) {
             labelVerificationOnFormDesign(blockId,label_text);
         }
+
 
         //Help
         if (StringUtils.isNotEmpty(help_text)) {
@@ -113,6 +113,7 @@ public class EmailFieldTest extends BaseTest {
             if (StringUtils.isNotEmpty(invalid_email)) {
                 String invalidEmail = "Invalid email address: " + textfield_defaultValue;
                 $("#textfield_defaultValueEmail-helper-text").shouldHave(text(invalidEmail)); //Verify the error
+
                 selectAndClear(By.id(EmailFieldTest.EmailFielsIds.textfield_defaultValueEmail.name()))
                         .setValue("").sendKeys(TAB); //Error has to be fixed, so form can be published
             }
