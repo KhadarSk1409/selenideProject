@@ -206,21 +206,16 @@ public class CheckboxgroupTest extends BaseTest {
             int int_text_numberField_minCount = parseInt(text_numberField_minCount);
 
             String errorMinCount1 = "The values count " + rowsCount + " is less than minimum count " + text_numberField_minCount;
-            //$("#panel1a-content div:nth-child(5) p.Mui-error").should(exist).shouldNotHave(text(errorMinCount1));
 
 
             //Verify that if the Min count is less than rowCount, then error should be shown
-            // if (int_text_numberField_minCount < rowsCount) {
             if (int_text_numberField_minCount > rowsCount) {
-                // String errorMinCount1 = "The values count " + rowsCount + " is less than minimum count " + text_numberField_minCount;
                 $("#panel1a-content div:nth-child(5) p.Mui-error").should(exist).shouldHave(text(errorMinCount1));
 
                 String strRowsCount = Integer.toString(rowsCount);
                 selectAndClear(By.id(CheckboxgroupTest.CheckboxgroupIds.numberField_minCount.name()))
                         .setValue(strRowsCount).sendKeys(Keys.TAB);
                 $("#numberField_minCount").shouldHave(value(strRowsCount));
-
-                //    $("#panel1a-content div:nth-child(5) p.Mui-error").should(exist).shouldNotHave(text(errorMinCount1));
 
             }
 
@@ -253,8 +248,6 @@ public class CheckboxgroupTest extends BaseTest {
                     selectAndClear(By.id(CheckboxgroupIds.numberField_maxCount.name()))
                             .setValue(strMaxValue1).sendKeys(Keys.TAB);
                     $("#numberField_maxCount").shouldHave(value(strMaxValue1));
-
-                    //     $("#panel2a-content div:nth-child(5) p.Mui-error").should(exist).shouldNotHave(text(errorMaxCount2));
 
                 }
             }
@@ -317,6 +310,7 @@ public class CheckboxgroupTest extends BaseTest {
         String helpInFillForm = blockStr + " .MuiFormHelperText-root";
         String requiredFieldInFillForm = blockStr + " .MuiFormLabel-asterisk";
         String inputField = blockStr + " input";
+        String dropDownDirectionInFillForm = blockStr + " .MuiFormGroup-root";
 
         //  Label
         if (StringUtils.isNotEmpty(text_label)) {
@@ -342,86 +336,87 @@ public class CheckboxgroupTest extends BaseTest {
 
         //edit_values
         if (StringUtils.isNotEmpty(edit_values)) {
-//            String[] values1 = edit_values.split(",");
-//            for (int i = 1; i <= values1.length; i++) {
-//                // String strCheckbox = "#data_block-loc_en-GB-r_4-c_2 .MuiCheckbox-root:nth-child("+i+")";
-//                // $(strCheckbox).shouldBe(checked);
+            String[] values1 = edit_values.split(",");
+            for (int i = 1; i <= values1.length; i++) {
 
                 if (!(StringUtils.isNotEmpty(preselection_value))) {
-                    String[] values1 = edit_values.split(",");
-                    for (int i = 1; i <= values1.length; i++) {
-                        // String strCheckbox = "#data_block-loc_en-GB-r_4-c_2 .MuiCheckbox-root:nth-child("+i+")";
-                        // $(strCheckbox).shouldBe(checked);
 
-                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").shouldNotBe(checked);
+                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").shouldNotBe(checked);
 
-                        //Check the chekbox
-                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").click();
-                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").shouldBe(checked);
-                    }
-                }
-                else {
+                    //Check the chekbox
+                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").click();
+                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").shouldBe(checked);
+                } else {
 
                     //preselection_value
-                    String[] values2 = preselection_value.split(",");
-                    for (int j = 1; j <= values2.length; j++) {
-                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + j + ") input").shouldBe(checked);
+                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").shouldBe(checked);
 
-                        //Uncheck the checkbox:
-                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + j + ") input").click();
-                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + j + ") input").shouldNotBe(checked);
-                    }
+                    //Uncheck the checkbox:
+                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").click();
+                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").shouldNotBe(checked);
                 }
             }
+        }
 
 
+        //checkbox_globalSelection
+        if (StringUtils.isNotEmpty(checkbox_globalSelection)) {
 
-                //checkbox_globalSelection
-                if (StringUtils.isNotEmpty(checkbox_globalSelection)) {
-
-                    List<SelenideElement> checkBoxes = $$(blockStr+" .MuiCheckbox-root"); //fetch number of checkboxes
-
-
-                    for (int k = 1; k <= checkBoxes.size(); k++) {
-                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child("+k+") .MuiCheckbox-root").shouldNotBe(checked);
-                    }
-
-                    //Verify switch for All select Deselect and Allow select/Deselect all
-                    $(blockStr).find(" .MuiSwitch-input").shouldNotBe(checked);
-
-                    $(blockStr).find(" .MuiSwitch-input").click();
-                    $(blockStr).find(" .MuiSwitch-input").shouldBe(checked);
-
-                    //Verify that all check boxes get checked
-                    for (int k = 1; k <= checkBoxes.size(); k++) {
-                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child("+k+") .MuiCheckbox-root").shouldBe(checked);
-                    }
-
-                    $(blockStr).find(" .MuiSwitch-input").click();
-                    $(blockStr).find(" .MuiSwitch-input").shouldBe(checked);
-
-                    //Verify that all check boxes get unchecked
-                    for (int k = 1; k <= checkBoxes.size(); k++) {
-                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child("+k+") .MuiCheckbox-root").shouldNotBe(checked);
-                    }
-
-                }
-
-                if (StringUtils.isNotEmpty(checkbox_other_values)) {
-
-                    //Verify that Other values checkbox is not checked:
-                    $("#chwckboxgroup_other").shouldNotBe(checked);
-
-                    //Now click the checkbox and enable the edit box
-                    $("#chwckboxgroup_other").click();
-
-                    $(blockStr).find(" .MuiInputBase-root").setValue(RandomStringUtils.randomAlphanumeric(6)).sendKeys(Keys.TAB);
-                }
+            List<SelenideElement> checkBoxes = $$(blockStr + " .MuiCheckbox-root"); //fetch number of checkboxes
 
 
+            for (int k = 1; k <= checkBoxes.size(); k++) {
+                $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") .MuiCheckbox-root").shouldNotBe(checked);
+            }
+
+            //Verify switch for All select Deselect and Allow select/Deselect all
+            $(blockStr).find(" .MuiSwitch-input").shouldNotBe(checked);
+
+            $(blockStr).find(" .MuiSwitch-input").click();
+            $(blockStr).find(" .MuiSwitch-input").shouldBe(checked);
+
+            //Verify that all check boxes get checked
+            for (int k = 1; k <= checkBoxes.size(); k++) {
+                $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") .MuiCheckbox-root").shouldBe(checked);
+            }
+
+            $(blockStr).find(" .MuiSwitch-input").click();
+            $(blockStr).find(" .MuiSwitch-input").shouldBe(checked);
+
+            //Verify that all check boxes get unchecked
+            for (int k = 1; k <= checkBoxes.size(); k++) {
+                $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") .MuiCheckbox-root").shouldNotBe(checked);
             }
 
         }
+
+        if (StringUtils.isNotEmpty(checkbox_other_values)) {
+
+            //Verify that Other values checkbox is not checked:
+            $("#chwckboxgroup_other").shouldNotBe(checked);
+
+            //Now click the checkbox and enable the edit box
+            $("#chwckboxgroup_other").click();
+
+            $(blockStr).find(" .MuiInputBase-root").setValue(RandomStringUtils.randomAlphanumeric(6)).sendKeys(Keys.TAB);
+        }
+
+
+        //Dropdown direction
+        if (StringUtils.isNotEmpty(dropdown_direction)) {
+            System.out.println("Verifying direction: " + dropdown_direction);
+            if (dropdown_direction.equals("horizontal")) {
+                $(dropDownDirectionInFillForm).shouldHave(cssClass("MuiFormGroup-row"));
+            } else {
+                $(dropDownDirectionInFillForm).shouldNotHave(cssClass("MuiFormGroup-row"));
+
+            }
+
+
+        }
+
+    }
+}
 
 
 
