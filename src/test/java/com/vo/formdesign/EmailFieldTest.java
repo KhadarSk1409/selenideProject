@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
+import java.io.FileInputStream;
 import java.util.stream.IntStream;
 
 import static com.codeborne.selenide.Condition.*;
@@ -209,9 +210,29 @@ public class EmailFieldTest extends BaseTest {
             System.out.println("Verify readonly");
             $(inputField).shouldBe(disabled);
         } else {
-            // just to verify any valid user input
-            selectAndClear(inputField).setValue("test@example.com").pressTab();
-            $(inputField).shouldHave(value("test@example.com"));
+            System.out.println("Verify not readonly");
+            $(inputField).shouldBe(enabled);
+
+            // Allow Multiple only tested when readonly = False
+            if (StringUtils.isNotEmpty(checkbox_allow_multiple)) {
+
+                // Allow Multiple
+                System.out.println("Verify allow multiple");
+                $(inputField).setValue("e1@em.co, e2@em.co, e3@em.co").sendKeys(TAB);
+
+                // should not throw error, since allow multiple is enabled
+                $(helpInFillForm).shouldNotHave(text("Invalid email adress. Only single Email is allowed."));
+
+            } else {
+
+                // Don't allow multiple
+                System.out.println("Verify do not allow multiple");
+                $(inputField).setValue("e1@em.co, e2@em.co, e3@em.co").sendKeys(TAB);
+
+                // verify error, since allow multiple is disabled
+                $(helpInFillForm).shouldHave(text("Invalid email adress. Only single Email is allowed."));
+                selectAndClear(inputField);
+            }
         }
 
         if (StringUtils.isNotEmpty(invalid_email)) {
@@ -219,26 +240,6 @@ public class EmailFieldTest extends BaseTest {
             $(inputField).setValue(textfield_defaultValue).sendKeys(TAB);
             // verify error
             $(helpInFillForm).shouldHave(text("Invalid email adress: " + textfield_defaultValue));
-        }
-
-        if (StringUtils.isNotEmpty(checkbox_allow_multiple)) {
-
-            // Allow Multiple
-            System.out.println("Verify allow multiple");
-            $(inputField).setValue("e1@em.co, e2@em.co, e3@em.co").sendKeys(TAB);
-
-            // should not throw error, since allow multiple is enabled
-            $(helpInFillForm).shouldNotHave(text("Invalid email adress. Only single Email is allowed.")); // fix typo
-
-        } else { // if allow multiple is false and readonly verify error for putting in multiple values
-
-            // Don't allow multiple
-            System.out.println("Verify do not allow multiple");
-            $(inputField).setValue("e1@em.co, e2@em.co, e3@em.co").sendKeys(TAB);
-
-            // verify error, since allow multiple is disabled
-            $(helpInFillForm).shouldHave(text("Invalid email adress. Only single Email is allowed."));
-            selectAndClear(inputField);
         }
     }
 }

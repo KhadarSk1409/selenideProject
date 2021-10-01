@@ -3,6 +3,5 @@ row,col,col+AF8-span,text_label,checkbox_disableLabel,text_help,invalid_email,ch
 1,2,,Help Text,X,This is Help Text,,,,,
 2,2,,Checkbox required,,,,X,,,
 2,3,,Valid email values,,,,,"a@b.com, qwe@123@.com",,
-2,4,,Invalid email value,,,X,,abc,,
 3,2,,ReadOnly,,,,,xyz@abc.com,X,
 3,3,,Allow Multiple,,,,,,,X
