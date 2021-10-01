@@ -1,6 +1,7 @@
 package com.vo.formdesign;
 
 import com.codeborne.selenide.CollectionCondition;
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.commands.PressEnter;
 import com.vo.BaseTest;
@@ -14,13 +15,16 @@ import org.openqa.selenium.Keys;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
 import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selectors.byClassName;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static java.lang.Integer.parseInt;
+import static java.lang.Integer.valueOf;
 import static reusables.ReuseActions.createNewForm;
 import static reusables.ReuseActionsFormCreation.*;
 
@@ -89,7 +93,7 @@ public class SelectTest extends BaseTest {
 
         //Label
         if (StringUtils.isNotEmpty(text_label)) {
-            labelVerificationOnFormDesign(blockId,text_label);
+            labelVerificationOnFormDesign(blockId, text_label);
         }
 
 
@@ -168,7 +172,6 @@ public class SelectTest extends BaseTest {
             }
         }
 
-
         //Allow Multiple:
         if (StringUtils.isNotEmpty(checkbox_allow_multiple)) {
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
@@ -213,12 +216,11 @@ public class SelectTest extends BaseTest {
                 String errorMinCount1 = "The values count " + rowsCount + " is less than minimum count " + text_numberField_minCount;
                 $("#panel1a-content div:nth-child(5) p.Mui-error").should(exist).shouldHave(text(errorMinCount1));
             }
-
         }
 
         //Enter Maximum Value
         if (StringUtils.isNotEmpty(text_numberField_maxCount)) {
-            if(!($(By.id(SelectTest.SelectIds.numberField_maxCount.name())).isEnabled())){
+            if (!($(By.id(SelectTest.SelectIds.numberField_maxCount.name())).isEnabled())) {
                 $("#checkbox_multiple").click();
             }
 
@@ -241,12 +243,140 @@ public class SelectTest extends BaseTest {
                     $("#panel1a-content div:nth-child(5) p.Mui-error").should(exist).shouldHave(text(errorMaxCount1));
 
                     String errorMaxCount2 = "The maximum value " + text_numberField_maxCount + " is less than minimum value " + text_numberField_minCount;
-                    $("#panel2a-content div:nth-child(5) p.Mui-error").should(exist).shouldHave(text(errorMaxCount2));
+                    $("#panel1a-content div:nth-child(5) p.Mui-error").should(exist).shouldHave(text(errorMaxCount2));
+
+                    //After verifying the error message, the max count value will be changed so that it is valid and errors will not appear
+                    selectAndClear(By.id(SelectTest.SelectIds.numberField_maxCount.name()))
+                            .setValue(String.valueOf(int_text_numberField_minCount)).sendKeys(Keys.TAB);
+                    $("#numberField_maxCount").shouldHave(Condition.value(String.valueOf(int_text_numberField_minCount)));
                 }
             }
+        }
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("Publish and open the FormPage")
+    public void publishAndOpenFormPage() {
+        //Click on publish button, wait until form dashboard opens and click on fill form
+        $("#btnFormDesignPublish").should(exist).click();
+        $("#form-publish-dialog .MuiPaper-root").should(appear); //Publish confirmation dialog appears
+        $("#form-publish-dialog  #btnConfirm").should(exist).click(); //Click on Confirm button
+        $("#btnCreateNewData").should(exist).click(); //Fill form button on Launch screen
+        $("#dataContainer").should(appear); //Verify that the form details screen appears
+    }
+
+    @Order(4)
+    @DisplayName("Verify fields on the form")
+    @ParameterizedTest
+    @CsvFileSource(resources = "/select_field_test_data.csv", numLinesToSkip = 1)
+    public void verifyFieldsOnForm(Integer row, Integer col, Integer colSpan,
+                                   String text_label,
+                                   String text_help,
+                                   String disableLabel,
+                                   String edit_values,
+                                   String preselection_value,
+                                   String checkbox_required,
+                                   String checkbox_allow_multiple,
+                                   String text_numberField_minCount,
+                                   String text_numberField_maxCount) {
+
+        String blockStr = "#data_block-loc_en-GB-r_" + row + "-c_" + col;
+        String labelInFillForm = blockStr + " .MuiFormLabel-root";
+        String helpInFillForm = blockStr + " .MuiFormHelperText-root";
+        String valuesInFillForm = blockStr + " .MuiTextField-root input";
+        String requiredFieldInFillForm = blockStr + " .MuiFormLabel-asterisk";
+        String ClickOnDropDownInFillForm = blockStr + " .MuiAutocomplete-endAdornment .MuiAutocomplete-popupIndicator";
+        String inputInFillForm = blockStr + " input";
+
+        //Label
+        if (StringUtils.isNotEmpty(text_label)) {
+            System.out.println("Verifying label: " + text_label);
+            if (StringUtils.isNotEmpty(disableLabel)) {
+                $(labelInFillForm).shouldNotHave(text(text_label)); //Verify that Label should not appear on the form - hide label
+            } else {
+                $(labelInFillForm).shouldHave(text(text_label)); //Verify that Label appears on the form
+            }
+        }
+
+        //Help
+        if (StringUtils.isNotEmpty(text_help)) {
+            System.out.println("Verifying help: " + text_help);
+            $(helpInFillForm).shouldHave(text(text_help));
+        }
+
+        //Values
+        if (StringUtils.isNotEmpty(edit_values)) {
+            System.out.println("Verifying edited values: " + edit_values);
+            String[] strEditValues = edit_values.split(",");
+            Arrays.asList(strEditValues).forEach(s -> $(ClickOnDropDownInFillForm).should(exist).click());
+            $(valuesInFillForm).should(exist);
 
         }
 
+        //Preselection values
+        if (StringUtils.isNotEmpty(preselection_value)) {
+            System.out.println("Verifying Preselection value: " + preselection_value);
+            String[] preSelectedValues = edit_values.split(",");
+            int i = (Arrays.asList(preSelectedValues).indexOf(preselection_value));
+            String selectedValue = blockStr + " .MuiTextField-root input:nth-child(" + (i + 2) + ")";
+            Arrays.asList(preSelectedValues).forEach(s -> $(selectedValue).should(exist));
+        }
 
+        //required
+        if (StringUtils.isNotEmpty(checkbox_required)) {
+            System.out.println("Verifying required: *");
+            $(requiredFieldInFillForm).shouldHave(text("*"));
+        }
+
+        //Allow multiple checkbox
+        if (StringUtils.isNotEmpty(checkbox_allow_multiple)) {
+            System.out.println("Verifying Allow multiple: " + checkbox_allow_multiple);
+
+            int k = (Arrays.asList(valuesInFillForm).indexOf(edit_values));
+            String inputField = blockStr + " input:nth-child("+(k+2)+")";
+            $(inputField).should(exist).click();
+
+            List<SelenideElement> valuesAvailableInInput = $$(blockStr + " .MuiAutocomplete-option"); //Fetch the options available
+             System.out.println(valuesAvailableInInput);
+            for (int i = 1; i <= valuesAvailableInInput.size(); i++) {
+
+                $(blockStr).find(" input:nth-child(" + i + ") .MuiAutocomplete-listbox .MuiAutocomplete-option").should(exist).click();
+            }
+
+            //Min count
+            if (StringUtils.isNotEmpty(text_numberField_minCount)) {
+                System.out.println("Verifying Minimum Count: " + text_numberField_minCount);
+                int x = (Arrays.asList(valuesInFillForm)).indexOf(edit_values);
+                String inputField2 = blockStr + " input:nth-child(" + (x + 2) + ")";
+                $(inputInFillForm).click();
+                Arrays.asList(inputField2).forEach(s -> {
+                    $$(" .MuiAutocomplete-listbox .MuiAutocomplete-option").findBy(text(s)).click();
+                });
+                String strErrorMessage1 = "The count is less than " + text_numberField_minCount ;
+                $("p.Mui-error").should(exist).shouldHave(text(strErrorMessage1));
+
+                $(inputInFillForm).should(exist).click();
+
+                List<SelenideElement> valuesAvailableInInput1 = $$(blockStr + ".MuiAutocomplete-listbox .MuiAutocomplete-option"); //Fetch the options available
+                for (int i = 1; i <= valuesAvailableInInput1.size(); i++) {
+
+                    $(blockStr).find(" input:nth-child(" + i + ") .MuiAutocomplete-listbox .MuiAutocomplete-option").should(exist).click();
+                }
+            }
+
+            //Max count
+            if (StringUtils.isNotEmpty(text_numberField_maxCount)) {
+                System.out.println("Verifying Maximum Count: " + text_numberField_maxCount);
+                int x = (Arrays.asList(valuesInFillForm)).indexOf(edit_values);
+                String inputField1 = blockStr + " input:nth-child(" + (x + 2) + ")";
+                $(inputInFillForm).click();
+                Arrays.asList(inputField1).forEach(s -> {
+                    $$(".MuiAutocomplete-popper li").findBy(cssClass("MuiAutocomplete-option")).click();
+                });
+                String strErrorMessage2 = "The count must be greater than " + text_numberField_maxCount ;
+                $("p.Mui-error").should(exist).shouldHave(text(strErrorMessage2));
+            }
+        }
     }
 }
