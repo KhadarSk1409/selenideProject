@@ -17,8 +17,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byClassName;
 import static com.codeborne.selenide.Selectors.byText;
@@ -286,7 +288,7 @@ public class SelectTest extends BaseTest {
         String helpInFillForm = blockStr + " .MuiFormHelperText-root";
         String valuesInFillForm = blockStr + " .MuiTextField-root input";
         String requiredFieldInFillForm = blockStr + " .MuiFormLabel-asterisk";
-        String ClickOnDropDownInFillForm = blockStr + " .MuiAutocomplete-endAdornment .MuiAutocomplete-popupIndicator";
+        String popupOpener = blockStr + " .MuiAutocomplete-endAdornment .MuiAutocomplete-popupIndicator";
         String inputInFillForm = blockStr + " input";
 
         //Label
@@ -309,18 +311,21 @@ public class SelectTest extends BaseTest {
         if (StringUtils.isNotEmpty(edit_values)) {
             System.out.println("Verifying edited values: " + edit_values);
             String[] strEditValues = edit_values.split(",");
-            Arrays.asList(strEditValues).forEach(s -> $(ClickOnDropDownInFillForm).should(exist).click());
+            //Open select popover,
+            $(popupOpener).should(exist).click();
+            //Popover dialog should appear
+            $(".MuiAutocomplete-popper").should(appear);
+            //verify all options are listend in dropdown
+            Arrays.asList(strEditValues).forEach(s -> {
+                $$(".MuiAutocomplete-popper li").shouldHave(itemWithText(s));
+            });
             $(valuesInFillForm).should(exist);
-
         }
 
         //Preselection values
-        if (StringUtils.isNotEmpty(preselection_value)) {
+        if (StringUtils.isNotEmpty(preselection_value) && StringUtils.isEmpty(checkbox_allow_multiple)) {
             System.out.println("Verifying Preselection value: " + preselection_value);
-            String[] preSelectedValues = edit_values.split(",");
-            int i = (Arrays.asList(preSelectedValues).indexOf(preselection_value));
-            String selectedValue = blockStr + " .MuiTextField-root input:nth-child(" + (i + 2) + ")";
-            Arrays.asList(preSelectedValues).forEach(s -> $(selectedValue).should(exist));
+            $(blockStr + " input").shouldHave(value(preselection_value));
         }
 
         //required
@@ -333,49 +338,32 @@ public class SelectTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_allow_multiple)) {
             System.out.println("Verifying Allow multiple: " + checkbox_allow_multiple);
 
-            int k = (Arrays.asList(valuesInFillForm).indexOf(edit_values));
-            String inputField = blockStr + " input:nth-child("+(k+2)+")";
-            $(inputField).should(exist).click();
+            //Open select popover,
+            $(popupOpener).should(exist).click();
+            //Popover dialog should appear
+            $(".MuiAutocomplete-popper").should(appear);
+            List<String> options = $$(".MuiAutocomplete-popper li").texts();
+            List<String> twoOptionsToSelect = options.stream().limit(2).collect(Collectors.toList());
+            //select two options
+            twoOptionsToSelect.forEach(s -> {
+                $$(".MuiAutocomplete-popper li").findBy(text(s)).click();
+            });
 
-            List<SelenideElement> valuesAvailableInInput = $$(blockStr + " .MuiAutocomplete-option"); //Fetch the options available
-             System.out.println(valuesAvailableInInput);
-            for (int i = 1; i <= valuesAvailableInInput.size(); i++) {
+            //verify two options are appearing as chips
+            twoOptionsToSelect.forEach(s -> {
+                $$(blockStr + " .MuiChip-root .MuiChip-label").findBy(text(s)).should(exist);
+            });
 
-                $(blockStr).find(" input:nth-child(" + i + ") .MuiAutocomplete-listbox .MuiAutocomplete-option").should(exist).click();
-            }
 
             //Min count
             if (StringUtils.isNotEmpty(text_numberField_minCount)) {
-                System.out.println("Verifying Minimum Count: " + text_numberField_minCount);
-                int x = (Arrays.asList(valuesInFillForm)).indexOf(edit_values);
-                String inputField2 = blockStr + " input:nth-child(" + (x + 2) + ")";
-                $(inputInFillForm).click();
-                Arrays.asList(inputField2).forEach(s -> {
-                    $$(" .MuiAutocomplete-listbox .MuiAutocomplete-option").findBy(text(s)).click();
-                });
-                String strErrorMessage1 = "The count is less than " + text_numberField_minCount ;
-                $("p.Mui-error").should(exist).shouldHave(text(strErrorMessage1));
-
-                $(inputInFillForm).should(exist).click();
-
-                List<SelenideElement> valuesAvailableInInput1 = $$(blockStr + ".MuiAutocomplete-listbox .MuiAutocomplete-option"); //Fetch the options available
-                for (int i = 1; i <= valuesAvailableInInput1.size(); i++) {
-
-                    $(blockStr).find(" input:nth-child(" + i + ") .MuiAutocomplete-listbox .MuiAutocomplete-option").should(exist).click();
-                }
+                //check scenarios: less than min -> error should appear
+                //more than or equal to min -> error should disappear
             }
 
             //Max count
             if (StringUtils.isNotEmpty(text_numberField_maxCount)) {
-                System.out.println("Verifying Maximum Count: " + text_numberField_maxCount);
-                int x = (Arrays.asList(valuesInFillForm)).indexOf(edit_values);
-                String inputField1 = blockStr + " input:nth-child(" + (x + 2) + ")";
-                $(inputInFillForm).click();
-                Arrays.asList(inputField1).forEach(s -> {
-                    $$(".MuiAutocomplete-popper li").findBy(cssClass("MuiAutocomplete-option")).click();
-                });
-                String strErrorMessage2 = "The count must be greater than " + text_numberField_maxCount ;
-                $("p.Mui-error").should(exist).shouldHave(text(strErrorMessage2));
+
             }
         }
     }
