@@ -8,7 +8,6 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
-import java.io.FileInputStream;
 import java.util.stream.IntStream;
 
 import static com.codeborne.selenide.Condition.*;
@@ -115,8 +114,6 @@ public class EmailFieldTest extends BaseTest {
                 String invalidEmail = "Invalid email address: " + textfield_defaultValue;
                 $("#textfield_defaultValueEmail-helper-text").shouldHave(text(invalidEmail)); //Verify the error
 
-                selectAndClear(By.id(EmailFieldTest.EmailFielsIds.textfield_defaultValueEmail.name()))
-                        .setValue("").sendKeys(TAB); //Error has to be fixed, so form can be published
             }
         }
 
