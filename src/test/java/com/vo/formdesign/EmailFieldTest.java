@@ -1,26 +1,18 @@
 package com.vo.formdesign;
 
-import com.codeborne.selenide.SelenideElement;
 import com.vo.BaseTest;
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.Connection;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.stream.IntStream;
 
 import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Condition.text;
-import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
-import static reusables.ReuseActions.createNewForm;
+import static org.openqa.selenium.Keys.TAB;
 import static reusables.ReuseActionsFormCreation.*;
 
 
@@ -134,9 +126,12 @@ public class EmailFieldTest extends BaseTest {
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
 
-            if (StringUtils.isEmpty(textfield_defaultValue)) {
+            if (StringUtils.isNotEmpty(textfield_defaultValue)) {
+                selectAndClear(By.id(EmailFieldTest.EmailFielsIds.textfield_defaultValueEmail.name())).sendKeys(Keys.TAB);
                 //When you don't have any value in Default value edit box and click on Read only checkbox it should show error (??)
-                $("#numberField_defaultValueNumber-helper-text").should(exist).shouldHave(text("Must be set, if read only")); //-> Defect raised for this part
+                $("#textfield_defaultValueEmail-helper-text").should(exist).shouldHave(text("Must be set, if read only")); //-> Defect raised for this part
+                selectAndClear(By.id(EmailFieldTest.EmailFielsIds.textfield_defaultValueEmail.name()))
+                        .setValue(textfield_defaultValue).sendKeys(Keys.TAB);
             }
         }
 
@@ -147,8 +142,101 @@ public class EmailFieldTest extends BaseTest {
             $(checkBoxId).shouldBe(visible).click();
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
+        }
+    }
 
+    @Test
+    @DisplayName("publish and open form page")
+    @Order(3)
+    public void publishAndOpenFormPage() {
+        $("#btnFormDesignPublish").should(exist).click();
+        $("#form-publish-dialog .MuiPaper-root").should(appear);
+        $("#form-publish-dialog #btnConfirm").should(exist).click();
+        $("#btnCreateNewData").waitUntil(exist, 50000).click(); // wait for form to publish
+        $("#dataContainer").should(appear);
+    }
+
+    @Order(4)
+    @DisplayName("verify fill form for emailfield")
+    @ParameterizedTest
+    @CsvFileSource(resources = "/email_field_test_data.csv", numLinesToSkip = 1)
+    public void emailFillFormField(Integer row, Integer col, Integer colSpan,
+                                   String labelText,
+                                   String checkbox_disableLabel,
+                                   String help_text,
+                                   String invalid_email,
+                                   String checkbox_required,
+                                   String textfield_defaultValue,
+                                   String checkbox_readonly,
+                                   String checkbox_allow_multiple) {
+        String blockId = "#data_block-loc_en-GB-r_" + row + "-c_" + col;
+        String labelInFillForm = blockId + " .MuiFormLabel-root";
+        String helpInFillForm = blockId + " .MuiFormHelperText-root";
+        String requiredFieldInFillForm = blockId + " .MuiFormLabel-asterisk";
+        String inputField = blockId + " input";
+
+        // Label
+        if (StringUtils.isNotEmpty(labelText)) {
+            System.out.printf("Verify label: %s%n", labelText);
+            if (StringUtils.isNotEmpty(checkbox_disableLabel)) {
+                $(labelInFillForm).should(exist).shouldNotHave(text(labelText));
+            } else {
+                $(labelInFillForm).should(exist).shouldHave(text(labelText));
+            }
         }
 
+        // Help Text
+        if (StringUtils.isNotEmpty(help_text)) {
+            System.out.printf("Verify help: %s%n", help_text);
+            $(helpInFillForm).shouldHave(text(help_text));
+        }
+
+        // Required
+        if (StringUtils.isNotEmpty(checkbox_required)) {
+            System.out.println("Verify required: *");
+            $(requiredFieldInFillForm).shouldHave(text("*"));
+        }
+
+        // Default
+        if (StringUtils.isNotEmpty(textfield_defaultValue)) {
+            $(inputField).shouldHave(value(textfield_defaultValue));
+        }
+
+        // Readonly
+        if (StringUtils.isNotEmpty(checkbox_readonly)) {
+            System.out.println("Verify readonly");
+            $(inputField).shouldBe(disabled);
+        } else {
+            System.out.println("Verify not readonly");
+            $(inputField).shouldBe(enabled);
+
+            // Allow Multiple only tested when readonly = False
+            if (StringUtils.isNotEmpty(checkbox_allow_multiple)) {
+
+                // Allow Multiple
+                System.out.println("Verify allow multiple");
+                $(inputField).setValue("e1@em.co, e2@em.co, e3@em.co").sendKeys(TAB);
+
+                // should not throw error, since allow multiple is enabled
+                $(helpInFillForm).shouldNotHave(text("Invalid email adress. Only single Email is allowed."));
+
+            } else {
+
+                // Don't allow multiple
+                System.out.println("Verify do not allow multiple");
+                $(inputField).setValue("e1@em.co, e2@em.co, e3@em.co").sendKeys(TAB);
+
+                // verify error, since allow multiple is disabled
+                $(helpInFillForm).shouldHave(text("Invalid email adress. Only single Email is allowed."));
+                selectAndClear(inputField);
+            }
+        }
+
+        if (StringUtils.isNotEmpty(invalid_email)) {
+            // invalid email
+            $(inputField).setValue(textfield_defaultValue).sendKeys(TAB);
+            // verify error
+            $(helpInFillForm).shouldHave(text("Invalid email adress: " + textfield_defaultValue));
+        }
     }
 }
