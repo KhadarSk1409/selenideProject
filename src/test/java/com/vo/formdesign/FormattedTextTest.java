@@ -1,29 +1,16 @@
 package com.vo.formdesign;
 
 import com.vo.BaseTest;
-
-import com.codeborne.selenide.CollectionCondition;
-import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.commands.PressEnter;
-import com.vo.BaseTest;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.stream.IntStream;
 
 import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Selectors.byText;
-import static com.codeborne.selenide.Selenide.*;
-import static java.lang.Integer.parseInt;
-import static reusables.ReuseActions.createNewForm;
+import static com.codeborne.selenide.Selenide.$;
 import static reusables.ReuseActionsFormCreation.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -47,7 +34,7 @@ public class FormattedTextTest extends BaseTest {
     }
 
     @Order(2)
-    @DisplayName("createNewFormulaDesignForCheckBoxGroupfields")
+    @DisplayName("createNewFormulaDesignForFormattedtextField")
     @ParameterizedTest
     @CsvFileSource(resources = "/formatted_field_test_data.csv", numLinesToSkip = 1)
     public void alltextfield(Integer row, Integer col, Integer colSpan,
@@ -135,7 +122,89 @@ public class FormattedTextTest extends BaseTest {
 
             }
 
+            $(blockId + " .fr-element").setValue(edit_values).pressTab();
         }
 
+    }
+
+    @Test
+    @DisplayName("publish and open form page")
+    @Order(3)
+    public void publishAndOpenFormPage() {
+        $("#btnFormDesignPublish").should(exist).click();
+        $("#form-publish-dialog .MuiPaper-root").should(appear);
+        $("#form-publish-dialog #btnConfirm").should(exist).click();
+        $("#btnCreateNewData").waitUntil(exist, 50000).click();
+        $("#dataContainer").should(appear);
+    }
+
+    @Order(4)
+    @DisplayName("verify fill form for formattedtext field")
+    @ParameterizedTest
+    @CsvFileSource(resources = "/formatted_field_test_data.csv", numLinesToSkip = 1)
+    public void formattedtextFillFormField(Integer row, Integer col, Integer colSpan,
+                                           String text_label,
+                                           String checkbox_disableLabel,
+                                           String text_help,
+                                           String checkbox_required,
+                                           String checkbox_readonly,
+                                           String edit_values,
+                                           String fraction_edit_value) {
+        String blockId = "#data_block-loc_en-GB-r_" + row + "-c_" + col;
+        String labelInFillForm = blockId + " .MuiFormLabel-root";
+        String helpInFillForm = blockId + " .MuiFormHelperText-root";
+        String requiredInFillForm = blockId + " .MuiFormLabel-asterisk";
+        String richtextInFillForm = blockId + " [data-custom-type=richtext-output]";
+        String inputField = blockId + " .fr-element";
+
+
+        // Default
+        if (StringUtils.isNotEmpty(edit_values)) {
+            System.out.printf("Require Default: %s%n", edit_values);
+            $(richtextInFillForm).shouldHave(text(edit_values));
+        }
+
+
+        // Label
+        if (StringUtils.isNotEmpty(text_label)) {
+
+            if (StringUtils.isNotEmpty(checkbox_disableLabel)) {
+                System.out.println("Verify label is hidden");
+                $(labelInFillForm).should(exist).shouldNotHave(text(text_label));
+
+            } else {
+
+                System.out.printf("Verify label: %s%n", text_label);
+                $(labelInFillForm).shouldHave(text(text_label));
+            }
+        }
+
+        // Help
+        if (StringUtils.isNotEmpty(text_help)) {
+            System.out.printf("Verify help: %s%n", text_help);
+            $(helpInFillForm).shouldHave(text(text_help));
+        }
+
+
+        // Required
+        if (StringUtils.isNotEmpty(checkbox_required)) {
+            System.out.println("Verify required: *");
+            $(requiredInFillForm).should(exist).shouldHave(text("*"));
+        }
+
+        $(richtextInFillForm).shouldBe(visible).click(); // Try open text editor
+
+        // Readonly
+        if (StringUtils.isNotEmpty(checkbox_readonly)) {
+            System.out.println("Verify readonly");
+
+            $(inputField).shouldNot(exist); // text editor does not appear
+
+        } else {
+
+            System.out.println("Verify not readonly");
+
+            $(inputField).should(exist); // text editor appears
+        }
     }
 }
