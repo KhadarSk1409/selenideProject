@@ -128,10 +128,12 @@ public class EmailFieldTest extends BaseTest {
             $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
 
-            if (StringUtils.isEmpty(textfield_defaultValue)) {
+            if (StringUtils.isNotEmpty(textfield_defaultValue)) {
+                selectAndClear(By.id(EmailFieldTest.EmailFielsIds.textfield_defaultValueEmail.name())).sendKeys(Keys.TAB);
                 //When you don't have any value in Default value edit box and click on Read only checkbox it should show error (??)
                 $("#textfield_defaultValueEmail-helper-text").should(exist).shouldHave(text("Must be set, if read only")); //-> Defect raised for this part
-                $(checkBoxId).shouldBe(visible).click(); // make not readonly because form cannot be published otherwise
+                selectAndClear(By.id(EmailFieldTest.EmailFielsIds.textfield_defaultValueEmail.name()))
+                        .setValue(textfield_defaultValue).sendKeys(Keys.TAB);
             }
         }
 
@@ -197,31 +199,26 @@ public class EmailFieldTest extends BaseTest {
             $(requiredFieldInFillForm).shouldHave(text("*"));
         }
 
+        // Default
         if (StringUtils.isNotEmpty(textfield_defaultValue)) {
-            if (StringUtils.isNotEmpty(invalid_email)) {
+            $(inputField).shouldHave(value(textfield_defaultValue));
+        }
 
-                // invalid email
-                $(inputField).setValue(textfield_defaultValue).sendKeys(TAB);
+        // Readonly
+        if (StringUtils.isNotEmpty(checkbox_readonly)) {
+            System.out.println("Verify readonly");
+            $(inputField).shouldBe(disabled);
+        } else {
+            // just to verify any valid user input
+            selectAndClear(inputField).setValue("test@example.com").pressTab();
+            $(inputField).shouldHave(value("test@example.com"));
+        }
 
-                // verify error
-                $(helpInFillForm).shouldHave(text("Invalid email adress: " + textfield_defaultValue));
-
-            } else {
-
-                // Default Value
-                System.out.printf("Verify email default value: %s%n", textfield_defaultValue);
-                $(inputField).shouldHave(value(textfield_defaultValue));
-
-                // Readonly
-                if (StringUtils.isNotEmpty(checkbox_readonly)) {
-                    System.out.println("Verify readonly");
-                    $(inputField).shouldBe(disabled);
-                } else {
-                    System.out.println("Verify not readonly");
-                    selectAndClear(inputField); // clear and default value should refill
-                    $(inputField).shouldHave(value(textfield_defaultValue));
-                }
-            }
+        if (StringUtils.isNotEmpty(invalid_email)) {
+            // invalid email
+            $(inputField).setValue(textfield_defaultValue).sendKeys(TAB);
+            // verify error
+            $(helpInFillForm).shouldHave(text("Invalid email adress: " + textfield_defaultValue));
         }
 
         if (StringUtils.isNotEmpty(checkbox_allow_multiple)) {
@@ -233,7 +230,7 @@ public class EmailFieldTest extends BaseTest {
             // should not throw error, since allow multiple is enabled
             $(helpInFillForm).shouldNotHave(text("Invalid email adress. Only single Email is allowed.")); // fix typo
 
-        } else if (StringUtils.isEmpty(checkbox_readonly)) { // if allow multiple is false and readonly verify error for putting in multiple values
+        } else { // if allow multiple is false and readonly verify error for putting in multiple values
 
             // Don't allow multiple
             System.out.println("Verify do not allow multiple");
