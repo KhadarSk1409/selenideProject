@@ -208,7 +208,7 @@ public class CheckboxgroupTest extends BaseTest {
             String errorMinCount1 = "The values count " + rowsCount + " is less than minimum count " + text_numberField_minCount;
 
 
-            //Verify that if the Min count is less than rowCount, then error should be shown
+            //Verify that if the Min count is more than rowCount, then error should be shown
             if (int_text_numberField_minCount > rowsCount) {
                 $("#panel1a-content div:nth-child(5) p.Mui-error").should(exist).shouldHave(text(errorMinCount1));
 
@@ -234,6 +234,7 @@ public class CheckboxgroupTest extends BaseTest {
             if (StringUtils.isNotEmpty(text_numberField_minCount)) {
                 int int_text_numberField_minCount = parseInt(text_numberField_minCount);
                 int int_text_numberField_maxCount = parseInt(text_numberField_maxCount);
+
                 if (int_text_numberField_minCount > int_text_numberField_maxCount) {
                     String errorMaxCount1 = "The maximum value " + text_numberField_maxCount + " is less than minimum value " + text_numberField_minCount;
                     $("#panel1a-content div:nth-child(5) p.Mui-error").should(exist).shouldHave(text(errorMaxCount1));
@@ -248,6 +249,29 @@ public class CheckboxgroupTest extends BaseTest {
                     selectAndClear(By.id(CheckboxgroupIds.numberField_maxCount.name()))
                             .setValue(strMaxValue1).sendKeys(Keys.TAB);
                     $("#numberField_maxCount").shouldHave(value(strMaxValue1));
+
+                } else {
+
+                    //Insert rows in options box to have maximum size
+                    $("#formelement_properties_card .editForm").should(exist).click(); //Click on edit value pen icon
+                    $("#form-value-list-card-dialog_content").should(exist); //Value List Editor window
+
+
+                    List<SelenideElement> rowsInListEditor = $$("#myGrid div.ag-center-cols-container div.ag-row"); //fetch number of rows in List editor
+                    int rowsCount = rowsInListEditor.size();
+
+                    int intRowDiff = int_text_numberField_maxCount - rowsCount;
+
+
+                    //Create rows more than max count
+                    for (int i = 0; i < intRowDiff + 1; i++) {
+                        $("#value_list_values button .fa-plus").should(exist).click(); //Create
+                    }
+
+
+                    //Click on close button
+                    $("#form-value-list-card-dialog_actions #btnClosePropertiesForm").should(exist).click();
+                    $(By.id(CheckboxgroupIds.numberField_maxCount.name())).should(exist); //Verify that Minimum count field exists
 
                 }
             }
@@ -364,7 +388,6 @@ public class CheckboxgroupTest extends BaseTest {
 
             List<SelenideElement> checkBoxes = $$(blockStr + " .MuiCheckbox-root"); //fetch number of checkboxes
 
-
             for (int k = 1; k <= checkBoxes.size(); k++) {
                 $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") .MuiCheckbox-root").shouldNotBe(checked);
             }
@@ -415,6 +438,47 @@ public class CheckboxgroupTest extends BaseTest {
 
         }
 
+        if (StringUtils.isNotEmpty(text_numberField_minCount)) {
+            System.out.println("Verifying direction: " + text_numberField_minCount);
+
+            List<SelenideElement> checkBoxes = $$(blockStr + " .MuiCheckbox-root"); //fetch number of checkboxes
+            int intMinCount = Integer.parseInt(text_numberField_minCount);
+
+
+            if (StringUtils.isNotEmpty(text_numberField_maxCount)) {
+                int intMaxCount = Integer.parseInt(text_numberField_maxCount);
+                if (intMinCount > intMaxCount) {
+                    for (int k = 1; k < checkBoxes.size(); k++) {
+                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") .MuiCheckbox-root").shouldNotBe(checked);
+                        $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") .MuiCheckbox-root").click();
+                        $(blockStr).find(" .MuiFormHelperText-marginDense").shouldHave(text("The count must be greater than " + checkBoxes.size()));
+                    }
+                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + checkBoxes.size() + ") .MuiCheckbox-root").shouldNotBe(checked);
+                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + checkBoxes.size() + ") .MuiCheckbox-root").click();
+                    $(blockStr).find(" .MuiFormHelperText-marginDense").shouldNotHave(text("The count must be greater than " + checkBoxes.size()));
+
+                }
+            }
+        }
+
+        if (StringUtils.isNotEmpty(text_numberField_maxCount)) {
+            System.out.println("Verifying direction: " + text_numberField_maxCount);
+
+            List<SelenideElement> checkBoxes = $$(blockStr + " .MuiCheckbox-root"); //fetch number of checkboxes
+            int intMaxCount = Integer.parseInt(text_numberField_maxCount);
+
+            int intMinCount = Integer.parseInt(text_numberField_minCount);
+
+            if (intMaxCount > intMinCount) {
+                for (int k = 1; k <= checkBoxes.size(); k++) {
+                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") .MuiCheckbox-root").shouldNotBe(checked);
+                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") .MuiCheckbox-root").click();
+
+                }
+                $(blockStr).find(" .MuiFormHelperText-marginDense").shouldHave(text("The count must be less than " + text_numberField_maxCount));
+
+            }
+        }
     }
 }
 

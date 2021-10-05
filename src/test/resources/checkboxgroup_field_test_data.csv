@@ -8,10 +8,8 @@ row,col,col+AF8-span,text_label,text_help,edit_values,preselection_value,disable
 2,3,,All select Deselect,,,,,,X,,,,
 2,4,,Allow select/Deselect all,,,,,,X,,,,
 3,1,,Min count_MoreThanAllowed,,,,,,,4,,,
-3,2,,Min count,,,,,,,3,,,
-3,3,,Min count_MoreThanMax,,,,,,,5,,,
-3,4,,Max count_LessThanMinCount,,,,,,,3,1,,
-4,1,,Max count,,,,,,,,5,,
+3,3,,Min count_MoreThanMax,,,,,,,3,2,,
+4,1,,Valid Min Max count,,,,,,,3,5,,
 4,2,,Other values,,,,,,,,,X,
 4,3,,Dropdown Vertical,,,,,,,,,,vertical
 4,4,3,Dropdown Horizontal,,,,,,,,,,horizontal
