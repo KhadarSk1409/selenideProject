@@ -6,8 +6,7 @@ row,col,col+AF8-span,text_label,text_help,disableLabel,edit_values,preselection_
 2,1,,Values edit 5,,,"One,two,three,four,five","two,four",,,,
 2,2,,Checkbox required,,,,,X,,,
 2,4,,Allow select/Deselect all,,,,,,X,,
-3,1,,Min count_MoreThanAllowed,,,"One,two,three,four",,,,4,
-3,2,,Min count,,,,,,,3,
-3,3,,Min count_MoreThanMax,,,"One,two,three,four,five",,,,5,
-3,4,,Max count_LessThanMinCount,,,"a,b,c",,,,3,1
-4,1,,Max count,,,"1,2,3,4,5",,,,,5
+3,1,,Min count_MoreThanAllowed,,,"One,two,three,four",,,X,4,
+3,2,,Min count,,,,,,X,3,
+3,3,,Min count_MoreThanMax,,,"One,two,three,four,five",,,X,5,
+3,4,,Max count,,,"1,2,3,4,5,6",,,X,,5

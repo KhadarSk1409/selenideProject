@@ -322,9 +322,9 @@ public abstract class BaseTest {
         }
 
         if (hasGuiTestLabel) {
-            $("#formListTable table").shouldBe(visible);
+            $("#formListTable .MuiDataGrid-row").shouldBe(visible);
             try {
-                $("#formListTable table tbody tr:first-of-type").waitUntil(not(text("No records to display")), 5000);
+                $("#formListTable .MuiDataGrid-row").waitUntil(not(text("No records to display")), 5000);
             } catch (Throwable t) {
                 hasGuiTestLabel = false;
             }
@@ -340,19 +340,19 @@ public abstract class BaseTest {
             System.out.println("applySearchForTestForms returned false, exiting deletion");
             return;
         }
-        int tableRows = $$("#formListTable table tbody tr").toArray().length;
+        int tableRows = $$("#formListTable .MuiDataGrid-row").size();
         System.out.println("found rows to delete: " + tableRows);
         for (int i = 0; i < tableRows; i++) {
-            $("#formListTable table tbody tr").shouldBe(visible);
-            if ($("#formListTable table tbody tr").has(text("No records to display"))) {
+            $("#formListTable .MuiDataGrid-row").shouldBe(visible);
+            if ($("#formListTable").has(text("No records to display"))) {
                 return;
             }
 
-            $("#formListTable table tbody tr td:first-of-type button").should(exist).click();
-            $("tr .fa-trash-alt").should(exist).click();
+            $("#formListTable .btnExpandRow").should(exist).click();
+            $("#formListTable .fa-trash-alt").should(exist).click();
             $("#confirm-deletion-dialog #confirmation-dialog-content").should(appear);
             $("#confirm-deletion-dialog #btnConfirm").should(exist).click();
-            $("tr .fa-trash-alt").should(disappear);
+            $(".fa-trash-alt").should(disappear);
             System.out.println("deleted row " + i);
             if (!applySearchForTestForms()) {
                 return;
@@ -370,6 +370,4 @@ public abstract class BaseTest {
         $(selector).sendKeys(Keys.chord(Keys.DELETE));
         return $(selector).shouldBe(empty);
     }
-
-
 }

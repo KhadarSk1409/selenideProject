@@ -1,9 +1,7 @@
 package com.vo.formdesign;
 
-import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.commands.PressEnter;
 import com.vo.BaseTest;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
@@ -12,22 +10,17 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Selectors.byClassName;
-import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static java.lang.Integer.parseInt;
 import static java.lang.Integer.valueOf;
-import static reusables.ReuseActions.createNewForm;
 import static reusables.ReuseActionsFormCreation.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -198,9 +191,7 @@ public class SelectTest extends BaseTest {
             //Click on close button
             $("#form-value-list-card-dialog_actions #btnClosePropertiesForm").should(exist).click();
 
-            //Click on Allow multiple checkbox:
-            String checkBoxId = "#" + SelectTest.SelectIds.checkbox_multiple.name();
-            $(checkBoxId).shouldBe(visible).click();
+
 
             $(By.id(SelectTest.SelectIds.numberField_minCount.name())).should(exist); //Verify that Minimum count field exists
 
@@ -265,7 +256,7 @@ public class SelectTest extends BaseTest {
         $("#form-publish-dialog .MuiPaper-root").should(appear); //Publish confirmation dialog appears
         $("#form-publish-dialog  #btnConfirm").should(exist).click(); //Click on Confirm button
         $("#btnCreateNewData").should(exist).click(); //Fill form button on Launch screen
-        $("#dataContainer").should(appear); //Verify that the form details screen appears
+        $("#dataContainer").waitUntil(appear, 5000); //Verify that the form details screen appears
     }
 
     @Order(4)
@@ -289,7 +280,7 @@ public class SelectTest extends BaseTest {
         String valuesInFillForm = blockStr + " .MuiTextField-root input";
         String requiredFieldInFillForm = blockStr + " .MuiFormLabel-asterisk";
         String popupOpener = blockStr + " .MuiAutocomplete-endAdornment .MuiAutocomplete-popupIndicator";
-        String inputInFillForm = blockStr + " input";
+        String cleanUpSelectedValuesInFillform = blockStr + " .MuiAutocomplete-clearIndicatorDirty";
 
         //Label
         if (StringUtils.isNotEmpty(text_label)) {
@@ -337,34 +328,106 @@ public class SelectTest extends BaseTest {
         //Allow multiple checkbox
         if (StringUtils.isNotEmpty(checkbox_allow_multiple)) {
             System.out.println("Verifying Allow multiple: " + checkbox_allow_multiple);
+            $("body").click();
+            $(labelInFillForm).should(exist).click();
 
-            //Open select popover,
+            //Open select popover
             $(popupOpener).should(exist).click();
             //Popover dialog should appear
             $(".MuiAutocomplete-popper").should(appear);
             List<String> options = $$(".MuiAutocomplete-popper li").texts();
             List<String> twoOptionsToSelect = options.stream().limit(2).collect(Collectors.toList());
+
             //select two options
             twoOptionsToSelect.forEach(s -> {
-                $$(".MuiAutocomplete-popper li").findBy(text(s)).click();
+                $$(".MuiAutocomplete-popper li").findBy(text(s)).should(exist).click();
+
+                //Click on input field inorder to select multiple options
+                $(popupOpener).should(exist).click();
             });
 
             //verify two options are appearing as chips
             twoOptionsToSelect.forEach(s -> {
                 $$(blockStr + " .MuiChip-root .MuiChip-label").findBy(text(s)).should(exist);
             });
+            //Should cleanup the selected values
+            $(cleanUpSelectedValuesInFillform).should(exist).click();
+        }
 
+        //Min count
+        if (StringUtils.isNotEmpty(text_numberField_minCount) && (StringUtils.isNotEmpty(checkbox_allow_multiple))) {
+            System.out.println("Verifying minimum count: " + text_numberField_minCount);
 
-            //Min count
-            if (StringUtils.isNotEmpty(text_numberField_minCount)) {
-                //check scenarios: less than min -> error should appear
-                //more than or equal to min -> error should disappear
-            }
+            //checking scenario: less than min -> error should appear
+            List<String> listOfOptions = $$(".MuiAutocomplete-popper li").texts();
+            $(popupOpener).should(exist).click(); //Open select popover
+            List<String> OptionsToSelect = listOfOptions.stream().limit(1).collect(Collectors.toList());
+
+            $(popupOpener).should(exist).click(); //Open select popover
+            //select options
+            OptionsToSelect.forEach(s -> {
+                $$(".MuiAutocomplete-popper li").findBy(text(s)).click();
+
+                //If count is less then error message should appear
+                String strErrorMessage1 = "The count must be greater than " + text_numberField_minCount;
+                $("p.Mui-error").should(exist).shouldHave(text(strErrorMessage1));
+
+            });
+
+            //Should cleanup the selected values
+            $(cleanUpSelectedValuesInFillform).should(exist).click();
+
+            //Select valid options so that error message will disappear
+            List<String> allOptionsToSelect = listOfOptions.stream().limit(listOfOptions.size()).collect(Collectors.toList());
+            $(popupOpener).should(exist).click(); //Open select popover
+            allOptionsToSelect.forEach(s -> {
+                $$(".MuiAutocomplete-popper li").findBy(text(s)).click();
+                $(popupOpener).should(exist).click(); //Open select popover
+            });
+
+            //verify all options are appearing as chips
+            allOptionsToSelect.forEach(s -> $$(blockStr + " .MuiChip-root .MuiChip-label").findBy(text(s)).should(exist));
+            $("p.Mui-error").shouldNot(exist); //Error message should not appear
+        }
 
             //Max count
-            if (StringUtils.isNotEmpty(text_numberField_maxCount)) {
+            if (StringUtils.isNotEmpty(text_numberField_maxCount)&& (StringUtils.isNotEmpty(checkbox_allow_multiple))) {
+                System.out.println("Verifying maximum count: " + text_numberField_maxCount);
 
-            }
+                List<String> listOfOptions = $$(".MuiAutocomplete-popper li").texts();
+
+                $(popupOpener).should(exist).click(); //Open select popover
+
+                List<String> OptionsToSelect = listOfOptions.stream().limit(listOfOptions.size()).collect(Collectors.toList());
+
+                $(popupOpener).should(exist).click(); //Open select popover
+                //select options
+                OptionsToSelect.forEach(s -> {
+                    $$(".MuiAutocomplete-popper li").findBy(text(s)).click();
+                    $(popupOpener).should(exist).click(); //Open select popover
+                });
+                //If count is more then error message should appear
+                String strErrorMessage1 = "The count must be less than " + text_numberField_maxCount;
+                $("p.Mui-error").should(exist).shouldHave(text(strErrorMessage1));
+
+                //Should cleanup the selected values
+                $(cleanUpSelectedValuesInFillform).should(exist).click();
+
+                //Select valid options so that error message will disappear
+                List<String> allOptionsToSelect = listOfOptions.stream().limit((listOfOptions.size())-1).collect(Collectors.toList());
+                $(popupOpener).should(exist).doubleClick(); //Open select popover
+                allOptionsToSelect.forEach(s -> {
+                    $$(".MuiAutocomplete-popper li").findBy(text(s)).click();
+                    $(popupOpener).should(exist).click(); //Open select popover
+                });
+
+                //verify all options are appearing as chips
+                allOptionsToSelect.forEach(s -> $$(blockStr + " .MuiChip-root .MuiChip-label").findBy(text(s)).should(exist));
+                $("p.Mui-error").shouldNot(exist); //Error message should not appear
+
         }
+            $("body").click();
+            $(".MuiAutocomplete-popper").shouldNot(appear);
+
     }
 }
