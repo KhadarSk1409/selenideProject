@@ -225,7 +225,6 @@ public class RadioGroupTest extends BaseTest {
             String otherValuesInFillForm = blockStr + " .MuiFormControlLabel-root:nth-of-type(4)";
             String otherOptionsInFillForm = blockStr + " .MuiFormControlLabel-root:nth-of-type(1)";
             String dropDownDirectionInFillForm = blockStr + " .MuiFormGroup-root";
-           // String expandedBlock = ".MuiFormGroup-row";
             String inputField = blockStr + " .MuiInputBase-input";
 
             //Label
