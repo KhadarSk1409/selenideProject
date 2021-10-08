@@ -218,7 +218,7 @@ public class EmailFieldTest extends BaseTest {
                 $(inputField).setValue("e1@em.co, e2@em.co, e3@em.co").sendKeys(TAB);
 
                 // should not throw error, since allow multiple is enabled
-                $(helpInFillForm).shouldNotHave(text("Invalid email adress. Only single Email is allowed."));
+                $(helpInFillForm).shouldNotHave(text("Invalid email address. Only single Email is allowed."));
 
             } else {
 
@@ -227,7 +227,7 @@ public class EmailFieldTest extends BaseTest {
                 $(inputField).setValue("e1@em.co, e2@em.co, e3@em.co").sendKeys(TAB);
 
                 // verify error, since allow multiple is disabled
-                $(helpInFillForm).shouldHave(text("Invalid email adress. Only single Email is allowed."));
+                $(helpInFillForm).shouldHave(text("Invalid email address. Only single Email is allowed."));
                 selectAndClear(inputField);
             }
         }
@@ -236,7 +236,7 @@ public class EmailFieldTest extends BaseTest {
             // invalid email
             $(inputField).setValue(textfield_defaultValue).sendKeys(TAB);
             // verify error
-            $(helpInFillForm).shouldHave(text("Invalid email adress: " + textfield_defaultValue));
+            $(helpInFillForm).shouldHave(text("Invalid email address: " + textfield_defaultValue));
         }
     }
 }
