@@ -56,14 +56,17 @@ public class FormComponentTreeTest extends BaseTest{
         $("#formelement_properties_card").should(exist);
         $(".MuiBottomNavigation-root .fa-dot-circle").should(exist).click(); //Click on Target in Form Component tree
         $("#formelement_properties_card ul li").should(exist);
-        $("#formelement_properties_card .MuiCardContent-root  ul li:nth-child(1)")
-                .$(byAttribute("aria-label","Moved")).should(exist);
-        $("#formelement_properties_card .MuiCardContent-root ul li ul li ul li:nth-child(1)").should(exist)
-                .$(byAttribute("aria-label","Edited")).should(exist);
-        $("#formelement_properties_card .MuiCardContent-root ul li:nth-child(2)").should(exist)
-                .$(byAttribute("aria-label","New")).should(exist);
-        $("#formelement_properties_card .MuiCardContent-root ul li:nth-child(3)").should(exist)
-                .$(byAttribute("aria-label","New")).should(exist);
+        $("#formelement_properties_card .MuiTreeItem-content span[title='Compare Test Forms'] ~ span").should(exist)
+                .shouldHave(attribute("title","Edited"));
+        $("#formelement_properties_card .MuiTreeItem-content span[title='Compare Test Forms'] ~ span ~ span").should(exist)
+                .shouldHave(attribute("title","Moved"));
+        $("#formelement_properties_card .MuiTreeItem-content span[title='First Text Field'] ~ span").should(exist)
+                .shouldHave(attribute("title","Edited"));
+        $("#formelement_properties_card .MuiTreeItem-content span[title='Second Text Field'] ~ span").should(exist)
+                .shouldHave(attribute("title","New"));
+        $("#formelement_properties_card .MuiTreeItem-content span[title='Select'] ~ span").should(exist)
+                .shouldHave(attribute("title","New"));
+
     }
 }
 
