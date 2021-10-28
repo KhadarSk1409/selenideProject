@@ -154,6 +154,6 @@ public class TextFieldBlockActionsTest extends BaseTest {
                 $("#block-loc_en-GB-r_2-c_3").click();
                 $(blockID).$(".fa-pen").closest("button").should(exist).click();
                 $("#blockButtonDownsize").shouldBe(visible).click();
-            }
+        }
     }
 }

@@ -38,8 +38,8 @@ public class DataCaptureWithTwoApprovalTest extends BaseTest {
                 .shouldHave(Condition.text("Started Data Capture process for the form: DATA-CAPTURE-WITH-TWO-PROCESS and version 1.0"));
         $("#gridItemUserDataList").should(exist);
         $("#tabDataCapture").should(exist).click(); //Click on Data Capture
-        $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Progress")); //Verify the Data Capture state
-        String formDataCaptureId= $("#tasksCard tbody tr:nth-of-type(2)").should(exist).getAttribute("id");
+        $("#tasksCard .MuiChip-label:nth-child(1)").shouldHave(Condition.text("In Progress")); //Verify the Data Capture state
+        String formDataCaptureId= $("#tasksCard .MuiCardContent-root .MuiDataGrid-main div:nth-child(2) div:nth-child(8) div").should(exist).getAttribute("id");
         $("#gridItemUserDataList").should(exist);
         $("#tabMyTasks").should(exist).click(); //Click on My Tasks
         $("#tasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId )).should(exist)
@@ -75,7 +75,7 @@ public class DataCaptureWithTwoApprovalTest extends BaseTest {
         //Verifying final state of the form
         $("#gridItemUserDataList").should(exist);
         $("#tabDataCapture").should(exist).click(); //Click on Data Capture
-        $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("Completed"));
+        $("#tasksCard .MuiChip-label:nth-child(1)").shouldHave(value("Completed"));
 
     }
 }

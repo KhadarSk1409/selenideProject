@@ -40,8 +40,8 @@ public class DataCaptureWithTwoApprovalAndDifferentUsersTest extends BaseTest {
                 .shouldHave(Condition.text("Started Data Capture process for the form: TA-TWO-APPROVAL-DIFF-USERS and version 2.0"));
         $("#gridItemUserDataList").should(exist);
         $("#tabDataCapture").should(exist).click(); //Click on Data Capture
-        $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("In Progress")); //Verify the Data Capture state
-        String formDataCaptureId= $("#tasksCard tbody tr:nth-of-type(2)").should(exist).getAttribute("id");
+        $("#tasksCard .MuiChip-label:nth-child(1)").shouldHave(Condition.text("In Progress")); //Verify the Data Capture state
+        String formDataCaptureId= $("#tasksCard .MuiCardContent-root .MuiDataGrid-main div:nth-child(2) div:nth-child(8) div").should(exist).getAttribute("id");
 
         //Should Login as GUI TESTER 01
         shouldLogin(BaseTest.UserType.USER_01);
@@ -84,7 +84,7 @@ public class DataCaptureWithTwoApprovalAndDifferentUsersTest extends BaseTest {
         $("#formDashboardHeaderLeft").should(appear);
         $("#gridItemUserDataList").should(exist);
         $("#tabDataCapture").should(exist).click(); //Click on Data Capture
-        $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("Completed")); //Verify the Final Data Capture State
+        $("#tasksCard .MuiChip-label:nth-child(1)").shouldHave(Condition.text("Completed")); //Verify the Final Data Capture State
 
     }
 }

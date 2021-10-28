@@ -10,23 +10,22 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.*;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.SessionId;
 import utils.SelenideLogReport;
 
 import java.net.URL;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.logging.Level;
 
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
@@ -103,9 +102,13 @@ public abstract class BaseTest {
 
 
                 DesiredCapabilities caps = new DesiredCapabilities();
+                LoggingPreferences logPrefs = new LoggingPreferences();
                 caps.setCapability("platformName", platform);
                 caps.setCapability("browserName", browser);
                 caps.setCapability("browserVersion", version);
+
+                logPrefs.enable(LogType.BROWSER, Level.ALL);
+                logPrefs.enable(LogType.PERFORMANCE, Level.ALL);
                 caps.setCapability("sauce:options", new LinkedHashMap() {{
                     put("username", SAUCE_USERNAME);
                     put("accessKey", SAUCE_ACCESS_KEY);
@@ -122,6 +125,8 @@ public abstract class BaseTest {
                     //0 is default , 1 is enable and 2 is disable
                     put("profile.content_settings.exceptions.clipboard", getClipBoardSettingsMap(1));
                 }});
+
+                caps.setCapability("goog:loggingPrefs", logPrefs);
                 caps.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
 
                 RemoteWebDriver driver = new RemoteWebDriver(new URL(SAUCE_URL), caps);
@@ -132,7 +137,7 @@ public abstract class BaseTest {
             shouldLogin(UserType.MAIN_TEST_USER);
 
 
-            setAppLanguageToEnglish(); //Newly added
+            //setAppLanguageToEnglish(); //Newly added
         } catch (Throwable t) {
             System.out.println("error on test setup: ");
             t.printStackTrace();
@@ -177,6 +182,10 @@ public abstract class BaseTest {
             deleteForm();
             System.out.println("tearing down test!!!, closing the webdriver");
             List<String> webDriverLogs = getWebDriverLogs(LogType.BROWSER);
+            LogEntries logEntries = getWebDriver().manage().logs().get(LogType.BROWSER);
+            for (LogEntry entry : logEntries) {
+                System.out.println(new Date(entry.getTimestamp()) + " " + entry.getLevel() + " " + entry.getMessage());
+            }
             System.out.println(StringUtils.join(webDriverLogs, "\n"));
         } catch (Throwable ignore) {
             System.out.println("unable to retrieve logs from web driver: " + ignore.getMessage());
@@ -249,16 +258,16 @@ public abstract class BaseTest {
     }
 
 
-    public static void setAppLanguageToEnglish() {
+   /* public static void setAppLanguageToEnglish() {
         $("#toDashboard").shouldBe(visible);
         //if already in english -> skip
         if ($("#toDashboard").has(text("Launchpad"))) {
             return;
         }
-
-        $("#user").should(exist).click(); //Wait until the 'User' element is visible on Dashboard and click on it
+        $("#btnUserSettingsPopover").should(exist).click(); //Wait until the element is visible on Dashboard and click on it
         $("#myPreferences").click(); //Click on preferences
-        $("#account_settings.MuiListItem-button").shouldBe(visible).click(); //Account Settings
+        $("#userSettingsView").should(appear);
+        $("#account_settings").shouldBe(visible).click(); //Account Settings
         String existingAppLanguage = $("#defaultLocale").should(exist).getText(); //Check the existing value of Language selected
         if (existingAppLanguage.contains("German")) {
             $("#defaultLocale").click();
@@ -270,12 +279,12 @@ public abstract class BaseTest {
             $("#toDashboard").click(); //Click on Home button
             $("#btnCreateForm").should(exist).click(); //Verify that user is on Dashboard page and click on Create form
         }
-        $("#user").should(exist).click(); //Click on Use icon and close the menu preferences
+        //$("#user").should(exist).click(); //Click on Use icon and close the menu preferences
         $("#toDashboard").should(exist).click(); //Click on Launchpad
-    }
+    }*/
 
     private static void setSauceJobId() {
-        WebDriver webDriver = WebDriverRunner.getWebDriver();
+        WebDriver webDriver = getWebDriver();
         if (webDriver instanceof RemoteWebDriver) {
             SessionId sessionId = ((RemoteWebDriver) webDriver).getSessionId();
             SAUCE_SESSION_ID.set(sessionId.toString());

@@ -39,8 +39,8 @@ import static com.codeborne.selenide.Selenide.$;
         $("#client-snackbar").should(appear)
                 .shouldHave(Condition.text("Started Data Capture process for the form: DATA-CAPTURE-WITH-ONE-PROCESS and version 1.0"));
         $("#tabDataCapture").should(exist).click(); //Click on Data Capture
-        $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("In Progress")); //Verify the Data Capture state
-        String formDataCaptureId= $("#tasksCard tbody tr:nth-of-type(2)").should(exist).getAttribute("id");
+        $("#tasksCard .MuiChip-label:nth-child(1)").shouldHave(Condition.text("In Progress")); //Verify the Data Capture state
+        String formDataCaptureId= $("#tasksCard .MuiCardContent-root .MuiDataGrid-main div:nth-child(2) div:nth-child(8) div").should(exist).getAttribute("id");
         $$("#gridItemUserDataList .MuiTab-root").findBy(text("My Tasks")).click();
         $("#gridItemUserDataList").should(exist);
         $("#tabMyTasks").should(exist).click(); //Click on My Tasks
@@ -53,7 +53,7 @@ import static com.codeborne.selenide.Selenide.$;
         $("#btnAcceptTask").click();
         $("#data-approve-reject-dialog").$("#btnConfirm").click();
         $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).click();
-        $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Approval")); //Verify the Data Capture state as In Approval
+        $("#tasksCard .MuiChip-label:nth-child(1)").shouldHave(Condition.text("In Approval")); //Verify the Data Capture state as In Approval
         $("#gridItemUserDataList").should(exist);
         $("#tabMyTasks").should(exist).click(); //Click on My Tasks
         $("#tasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId )).should(exist)
@@ -63,7 +63,7 @@ import static com.codeborne.selenide.Selenide.$;
         $("#data-approve-reject-dialog").$("#btnConfirm").should(exist).click();
         $("#gridItemUserDataList").should(exist);
         $("#tabDataCapture").should(exist).click(); //Click on Data Capture
-        $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("In Progress")); //Verify the Data Capture state
+        $("#tasksCard .MuiChip-label:nth-child(1)").shouldHave(Condition.text("In Progress")); //Verify the Data Capture state
         $("#tabMyTasks").should(exist).click(); //Click on My Tasks
         $("#tasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId )).should(exist)
                 .$(".buttonFillForm").should(exist).shouldBe(enabled).click(); //Click on Fill Form
@@ -73,7 +73,7 @@ import static com.codeborne.selenide.Selenide.$;
         $("#btnAcceptTask").should(exist).click();
         $("#data-approve-reject-dialog").$("#btnConfirm").should(exist).click();
         $("#tabDataCapture").should(exist).click(); //Click on Data Capture
-        $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Approval")); //Verify the Data Capture state as In Approval
+        $("#tasksCard .MuiChip-label:nth-child(1)").shouldHave(Condition.text("In Approval")); //Verify the Data Capture state as In Approval
         $("#gridItemUserDataList").should(exist);
         $("#tabMyTasks").should(exist).click(); //Click on My Tasks
         $("#tasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId )).should(exist)
@@ -83,7 +83,7 @@ import static com.codeborne.selenide.Selenide.$;
         $("#data-approve-reject-dialog").$("#btnConfirm").should(exist).click();
         $("#gridItemUserDataList").should(exist);
         $("#tabDataCapture").should(exist).click(); //Click on Data Capture
-        $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("Completed"));
+        $("#tasksCard .MuiChip-label:nth-child(1)").shouldHave(Condition.text("Completed"));
 
     }
 }

@@ -38,8 +38,8 @@ public class DataCaptureWithOneApprovalIncludingRejectAndDifferentUsersTest exte
                 .shouldHave(Condition.text("Started Data Capture process for the form: Data-Capture-One-Approval-Including-Reject-Different-Users and version 1.0"));
         $("#gridItemUserDataList").should(exist);
         $("#tabDataCapture").should(exist).click(); //Click on Data Capture
-        $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("In Progress")); //Verify the Data Capture state
-        String formDataCaptureId= $("#tasksCard tbody tr:nth-of-type(2)").should(exist).getAttribute("id");
+        $("#tasksCard .MuiChip-label:nth-child(1)").shouldHave(Condition.text("In Progress")); //Verify the Data Capture state
+        String formDataCaptureId= $("#tasksCard .MuiCardContent-root .MuiDataGrid-main div:nth-child(2) div:nth-child(8) div").should(exist).getAttribute("id");
 
         //Should Login as GUI TESTER 01
         shouldLogin(BaseTest.UserType.USER_01);
@@ -89,7 +89,7 @@ public class DataCaptureWithOneApprovalIncludingRejectAndDifferentUsersTest exte
         $("#gridItemUserDataList").should(exist);
         $("#tabMyTasks").should(exist).click(); //Click on My Tasks
         $("#tasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId )).should(exist)
-                .$(".buttonPreview").waitUntil(appears,10000).click(); //Click on Preview
+                .$(".buttonPreview").should(exist).click(); //Click on Preview
         $("#data-card-dialog_actions").should(appear).$("#btnAcceptTask").click(); //Click on Accept
         $("#data-approve-reject-dialog").$("#btnConfirm").shouldBe(enabled).click();
 
@@ -99,7 +99,7 @@ public class DataCaptureWithOneApprovalIncludingRejectAndDifferentUsersTest exte
         $("#formDashboardHeaderAppBar").should(exist);
         $("#gridItemUserDataList").should(exist);
         $("#tabDataCapture").should(exist).click(); //Click on Data Capture
-        $("#tasksCard tbody tr:nth-child(2) td:nth-child(5)").shouldHave(value("Completed")); //Verify the Final Data Capture State
+        $("#tasksCard .MuiChip-label:nth-child(1)").shouldHave(Condition.text("Completed")); //Verify the Final Data Capture State
 
     }
 }

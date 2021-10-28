@@ -39,7 +39,7 @@ public class DataCaptureWithTwoApproversIncludingRejectTest extends BaseTest {
                     .shouldHave(Condition.text("Started Data Capture process for the form: DATA-CAPTURE-WITH-TWO-PROCESS and version 1.0"));
             $("#gridItemUserDataList").should(exist);
             $("#tabDataCapture").should(exist).click(); //Click on Data Capture
-            $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Progress")); //Verify the Data Capture state
+            $("#tasksCard .MuiChip-label:nth-child(1)").shouldHave(Condition.text("In Progress")); //Verify the Data Capture state
             String formDataCaptureId= $("#tasksCard tbody tr:nth-of-type(2)").should(exist).getAttribute("id");
             $("#gridItemUserDataList").should(exist);
             $("#tabMyTasks").should(exist).click(); //Click on My Tasks
@@ -53,7 +53,7 @@ public class DataCaptureWithTwoApproversIncludingRejectTest extends BaseTest {
             $("#data-approve-reject-dialog").$("#btnConfirm").should(exist).click();
             $("#gridItemUserDataList").should(exist);
             $("#tabDataCapture").should(exist).click(); //Click on Data Capture
-            $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Approval")); //Verify the Data Capture state as In Approval
+            $("#tasksCard .MuiChip-label:nth-child(1)").shouldHave(Condition.text("In Approval")); //Verify the Data Capture state as In Approval
             $("#gridItemUserDataList").should(exist);
             $("#tabMyTasks").should(exist).click(); //Click on My Tasks
             $("#tasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
@@ -62,7 +62,7 @@ public class DataCaptureWithTwoApproversIncludingRejectTest extends BaseTest {
             $("#data-approve-reject-dialog").$("#btnConfirm").shouldBe(enabled).click();
             $("#gridItemUserDataList").should(exist);
             $("#tabDataCapture").should(exist).click(); //Click on Data Capture
-            $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Approval"));
+            $("#tasksCard .MuiChip-label:nth-child(1)").shouldHave(Condition.text("In Approval"));
             $("#gridItemUserDataList").should(exist);
             $("#tabMyTasks").should(exist).click(); //Click on My Tasks
             $("#tasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
@@ -76,11 +76,10 @@ public class DataCaptureWithTwoApproversIncludingRejectTest extends BaseTest {
                     .should(exist).$(".buttonPreview").waitUntil(appears,15000).click(); //Click on Preview
             $("#dataContainer").should(exist);
             $("#textField_form-user-343baf17-ff5e-42db-a382-77df0216a7f3").should(exist);
-            //$("#textField_form-user-343baf17-ff5e-42db-a382-77df0216a7f3").setValue(" Verified");
             $("#btnAcceptTask").should(exist).click(); //Click on Accept
             $("#data-approve-reject-dialog").$("#btnConfirm").click();
             $("#tabDataCapture").should(exist).click(); //Click on Data Capture
-            $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").shouldHave(value("In Approval"));
+            $("#tasksCard .MuiChip-label:nth-child(1)").shouldHave(Condition.text("In Approval"));
             $("#gridItemUserDataList").should(exist);
             $("#tabMyTasks").should(exist).click(); //Click on My Tasks
             $("#tasksCard").find(byAttribute("data-process-instance-id", formDataCaptureId ))
@@ -91,7 +90,7 @@ public class DataCaptureWithTwoApproversIncludingRejectTest extends BaseTest {
             $("#data-approve-reject-dialog").$("#btnConfirm").click();
             $("#gridItemUserDataList").should(exist);
             $("#tabDataCapture").should(exist).click(); //Click on Data Capture
-            $("#tasksCard tbody tr[index='0'] td:nth-of-type(5)").should(exist).shouldHave(value("Completed"));
+            $("#tasksCard .MuiChip-label:nth-child(1)").should(exist).shouldHave(Condition.text("Completed"));
 
     }
 }
