@@ -1,8 +1,12 @@
 package com.vo;
 
-import com.codeborne.selenide.*;
+import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
@@ -10,18 +14,24 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.logging.*;
+import org.openqa.selenium.logging.LogEntries;
+import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.SessionId;
 import utils.SelenideLogReport;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
-import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
@@ -89,6 +99,13 @@ public abstract class BaseTest {
             //Configuration.clickViaJs = true;
             //Configuration.headless = true;
 
+            if("local".equals(target)) {
+                LoggingPreferences logPrefs = new LoggingPreferences();
+                logPrefs.enable(LogType.BROWSER, Level.ALL);
+                logPrefs.enable(LogType.PERFORMANCE, Level.ALL);
+                Configuration.browserCapabilities.setCapability("goog:loggingPrefs", logPrefs);
+            }
+
             if ("sauce".equals(target) && WEB_DRIVER.get() == null) {
                 String platform = Optional.of(configOptions[1]).orElse("Windows 10");
                 String browser = Optional.of(configOptions[2]).orElse("chrome");
@@ -102,13 +119,10 @@ public abstract class BaseTest {
 
 
                 DesiredCapabilities caps = new DesiredCapabilities();
-                LoggingPreferences logPrefs = new LoggingPreferences();
                 caps.setCapability("platformName", platform);
                 caps.setCapability("browserName", browser);
                 caps.setCapability("browserVersion", version);
 
-                logPrefs.enable(LogType.BROWSER, Level.ALL);
-                logPrefs.enable(LogType.PERFORMANCE, Level.ALL);
                 caps.setCapability("sauce:options", new LinkedHashMap() {{
                     put("username", SAUCE_USERNAME);
                     put("accessKey", SAUCE_ACCESS_KEY);
@@ -126,7 +140,6 @@ public abstract class BaseTest {
                     put("profile.content_settings.exceptions.clipboard", getClipBoardSettingsMap(1));
                 }});
 
-                caps.setCapability("goog:loggingPrefs", logPrefs);
                 caps.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
 
                 RemoteWebDriver driver = new RemoteWebDriver(new URL(SAUCE_URL), caps);
@@ -173,7 +186,7 @@ public abstract class BaseTest {
 
     // we close browser manually
     @AfterAll
-    public static void tearDown() {
+    public static void tearDown() throws FileNotFoundException {
         if (IGNORE_BEFORE_AND_AFTER_LIFECYCLE.get()) {
             System.out.println(Thread.currentThread().getName() + " ignoring junit lifecycle tearDown");
             return;
@@ -181,15 +194,20 @@ public abstract class BaseTest {
         try {
             deleteForm();
             System.out.println("tearing down test!!!, closing the webdriver");
-            List<String> webDriverLogs = getWebDriverLogs(LogType.BROWSER);
-            LogEntries logEntries = getWebDriver().manage().logs().get(LogType.BROWSER);
-            for (LogEntry entry : logEntries) {
-                System.out.println(new Date(entry.getTimestamp()) + " " + entry.getLevel() + " " + entry.getMessage());
-            }
-            System.out.println(StringUtils.join(webDriverLogs, "\n"));
         } catch (Throwable ignore) {
-            System.out.println("unable to retrieve logs from web driver: " + ignore.getMessage());
+            System.out.println("unable to delete forms: " + ignore.getMessage());
         } finally {
+            try{
+                LogEntries logEntries = getWebDriver().manage().logs().get(LogType.BROWSER);
+
+                for (LogEntry entry : logEntries) {
+                    System.out.println(new Date(entry.getTimestamp()) + " " + entry.getLevel() + " " + entry.getMessage());
+
+                }
+            }
+            catch (Throwable ignore){
+                System.out.println("unable to retrieve logs from web driver: " + ignore.getMessage());
+            }
             close();
             ALREADY_LOGGED_IN.set(Boolean.FALSE);
         }
@@ -257,7 +275,8 @@ public abstract class BaseTest {
 
     }
 
-
+    // This method is commented as some of the ID's were changed
+    // And the App's default language is set to ENGLISH
    /* public static void setAppLanguageToEnglish() {
         $("#toDashboard").shouldBe(visible);
         //if already in english -> skip

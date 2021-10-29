@@ -17,6 +17,7 @@ import org.junit.platform.reporting.legacy.xml.LegacyXmlReportGeneratingListener
 import utils.VOTestEngine;
 import utils.xmlreport.XmlReportGeneratingListener;
 
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.nio.file.Path;
@@ -90,7 +91,11 @@ public class Main {
             launcher.execute(request);
 
             BaseTest.IGNORE_BEFORE_AND_AFTER_LIFECYCLE.set(Boolean.FALSE);
-            BaseTest.tearDown();
+            try {
+                BaseTest.tearDown();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
 
             TestExecutionSummary summary = summaryListener.getSummary();
             reportSauceJobStatus(summary);
