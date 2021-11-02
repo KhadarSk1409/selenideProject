@@ -35,7 +35,7 @@ public class UndoRedoTest extends BaseTest {
         $("#btnUndo").should(exist).click(); //Click on Undo button
         $("#block-loc_en-GB-r_1-c_1").should(exist).shouldNotHave(Condition.text("Text field 01")); //Text field should not exist
 
-        //Verifying both undo and redo functions
+        //Verifying both undo and redo functions once
         String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
         $("#block-loc_en-GB-r_1-c_3").should(exist).click();
         $("#template_card").should(appear).$("#li-template-TextareaField-06").click(); //Add 2nd field
@@ -47,13 +47,14 @@ public class UndoRedoTest extends BaseTest {
         $("#block-loc_en-GB-r_1-c_3").should(exist);
         $("#btnRedo").should(exist).click(); //Click on Undo button
         $("#block-loc_en-GB-r_1-c_3").should(exist).shouldHave(Condition.text("Textarea field 02")); //Textarea field should not exist
+
+        //Verifying both undo and redo functions twice
         String initialVerNumStr3 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
         $("#block-loc_en-GB-r_3-c_2").should(exist).click();
         $("#template_card").should(appear).$("#li-template-CheckboxGroupField-04").click(); //Add 3rd field
         $("#block-loc_en-GB-r_3-c_2 .fa-pen").should(exist).click();
         $("#formelement_properties_card .editForm").should(exist).click();
         $("#form-value-list-card-dialog_actions").should(appear);
-
         //Preselect a value
         String checkboxSelector = "div.ag-pinned-left-cols-container .ag-row:nth-child(2) input";
         $(checkboxSelector).should(exist).click();
