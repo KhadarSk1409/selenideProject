@@ -5,6 +5,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import reusables.ReuseActionsFormCreation;
 
+import java.io.IOException;
 import java.util.stream.IntStream;
 
 import static com.codeborne.selenide.Condition.*;
@@ -21,7 +22,7 @@ public class TextFieldBlockActionsTest extends BaseTest {
     @Test
     @DisplayName("Open Form Designer Block Actions form")
     @Order(1)
-    public void openFormDesigner() {
+    public void openFormDesigner() throws IOException {
         navigateToFormDesign(ReuseActionsFormCreation.FormField.TEXTFIELD_BLOCKACTIONS);
     }
 
@@ -154,6 +155,6 @@ public class TextFieldBlockActionsTest extends BaseTest {
                 $("#block-loc_en-GB-r_2-c_3").click();
                 $(blockID).$(".fa-pen").closest("button").should(exist).click();
                 $("#blockButtonDownsize").shouldBe(visible).click();
-            }
+        }
     }
 }

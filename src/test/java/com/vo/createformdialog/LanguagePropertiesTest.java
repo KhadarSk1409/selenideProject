@@ -28,16 +28,16 @@ public class LanguagePropertiesTest extends BaseTest {
         String formTitle = formTitleDesc.getLeft();
         String formDesc = formTitleDesc.getRight();
 
-        $("#wizard-addlOptionsButton").shouldBe(enabled).click(); //Click on Additional Options
+        $(elementLocators("AdditionalOptionsButton")).shouldBe(enabled).click(); //Click on Additional Options
 
-        SelenideElement lC = $("#language_properties_container").should(appear);
-        lC.$(".mtable_toolbar button:first-of-type").should(exist); //+ button in Add Language - confirmation that user has navigated
+        SelenideElement lC = $(elementLocators("LanguagePropertiesContainer")).should(appear);
+        lC.$(elementLocators("AddLanguageButton")).should(exist); //+ button in Add Language - confirmation that user has navigated
 
         //the buttons “BACK”, “CREATE FORM”, “NEXT” and “CANCEL” should all be enabled:
-        $("#wizard-backButton").shouldBe(enabled);
-        $("#wizard-createFormButton").shouldBe(enabled);
-        $("#wizard-cancelButton").shouldBe(enabled);
-        $("#wizard-addlOptionsButton").shouldBe(enabled); //Next button
+        $(elementLocators("BackButton")).shouldBe(enabled);
+        $(elementLocators("CreateFormButton")).shouldBe(enabled);
+        $(elementLocators("CancelButton")).shouldBe(enabled);
+        $(elementLocators("NextButton")).shouldBe(enabled); //Next button
 
         //Define the table rows
         SelenideElement firstRow = lC.$("tbody tr:nth-of-type(1)");
@@ -60,7 +60,7 @@ public class LanguagePropertiesTest extends BaseTest {
     @DisplayName("Verify Delete Language in Additional Language screen")
     @Order(2)
     public void verifyDeleteLanguage() {
-        SelenideElement lC = $("#language_properties_container").shouldBe(visible);
+        SelenideElement lC = $(elementLocators("LanguagePropertiesContainer")).shouldBe(visible);
         SelenideElement secondRow = lC.$("tbody tr:nth-of-type(2)"); //Row for German - German
 
         secondRow.$(byAttribute("title", "Edit")).should(exist).click(); //Click on edit button for German - German
@@ -91,8 +91,8 @@ public class LanguagePropertiesTest extends BaseTest {
     @DisplayName("Verify Add Language in Additional Language screen")
     @Order(3)
     public void verifyAddLanguage() {
-        SelenideElement lC = $("#language_properties_container").shouldBe(visible);
-        lC.$(".mtable_toolbar button[title=\"Add\"]").shouldBe(visible, enabled).click(); //Click on + button
+        SelenideElement lC = $(elementLocators("LanguagePropertiesContainer")).shouldBe(visible);
+        lC.$(elementLocators("AddLanguageButton")).shouldBe(visible, enabled).click(); //Click on + button
 
         //Define the table rows
         SelenideElement secondRow = lC.$("tbody tr:nth-of-type(2)[mode=\"add\"]").should(appear);
@@ -116,10 +116,9 @@ public class LanguagePropertiesTest extends BaseTest {
         cellsInFirstRow.get(4).$(byAttribute("title", "Edit")).click(); //Click on the Edit button
         cellsInFirstRow.get(1).shouldBe(enabled); //Form Title is now enabled
         cellsInFirstRow.get(1).shouldBe(enabled); //Form Description is now enabled
-        $("#wizard-cancelButton").click(); //Click on Cancel button
-        $("#confirmation-dialog-title").should(exist); //Confirmation for Cancellation is shown
-        $("#btnConfirm").should(exist).click();
-        $("#confirmation-dialog-content").shouldNot(appear); //Click on Confirm button
-    }
+        $(elementLocators("CancelButton")).click(); //Click on Cancel button
+        $(elementLocators("CancelConfirmationDialog")).should(exist); //Confirmation for Cancellation is shown
+        $(elementLocators("ConfirmCancel")).should(exist).click(); //Click on Confirm button
 
+    }
 }

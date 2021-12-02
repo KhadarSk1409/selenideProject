@@ -20,35 +20,35 @@ public class DataCapturePropertiesTest extends BaseTest {
     public void validateIntialSetup() {
         //Create Form:
         createNewForm();
-        $("#wizard-addlOptionsButton").shouldBe(enabled).click(); //Click on Additional Options
+        $(elementLocators("AdditionalOptionsButton")).shouldBe(enabled).click(); //Click on Additional Options
 
-        $("#dlgFormFormWizard .mtable_toolbar button:first-of-type").should(exist); //+ button in Add Language - confirmation that user has navigated
-        $("#wizard-addlOptionsButton").shouldBe(enabled).click(); //Next button
-        $("#wizard-addlOptionsButton").shouldBe(enabled).click(); //Next button
+        $(elementLocators("AddLanguageButton")).should(exist); //+ button in Add Language - confirmation that user has navigated
+        $(elementLocators("NextButton")).shouldBe(enabled).click(); //Next button
+        $(elementLocators("NextButton")).shouldBe(enabled).click(); //Next button
 
         //Verify that user is navigated to Datacapture screen
-        $("#lDataCapturreRequired").should(exist); //"Yes, Enable data capture flow for this form" - Ensures user has navigated to Data Capture page
-        $("#ckbDataCapturreRequired").shouldNotBe(checked); //"Yes, Enable data capture flow for this form" checkbox should be unchecked initially
-        $("#wizard-backButton").shouldBe(enabled); //Back button is enabled
-        $("#wizard-createFormButton").shouldBe(enabled); //Create Form button is enabled
-        $("#wizard-addlOptionsButton").shouldBe(enabled); //Next button is enabled
-        $("#wizard-cancelButton").shouldBe(enabled); //Cancel button is enabled
+        $(elementLocators("EnableDataCaptureDialog")).should(exist); //"Yes, Enable data capture flow for this form" - Ensures user has navigated to Data Capture page
+        $(elementLocators("EnableDataCaptureCheckBox")).shouldNotBe(checked); //"Yes, Enable data capture flow for this form" checkbox should be unchecked initially
+        $(elementLocators("BackButton")).shouldBe(enabled); //Back button is enabled
+        $(elementLocators("CreateFormButton")).shouldBe(enabled); //Create Form button is enabled
+        $(elementLocators("NextButton")).shouldBe(enabled); //Next button is enabled
+        $(elementLocators("CancelButton")).shouldBe(enabled); //Cancel button is enabled
     }
 
     @Test
     @DisplayName("Validations after checking Enable data capture checkbox")
     @Order(2)
     public void validationsAfterCheckingEnableDataCapture() {
-        $("#ckbDataCapturreRequired").should(exist).click(); //"Yes, Enable data capture flow for this form" Checkbox is checked
+        $(elementLocators("EnableDataCaptureCheckBox")).click(); //"Yes, Enable data capture flow for this form" Checkbox is checked
 
-        if (!($("#rb_Basic_Fill_Form_Process_WithApproval_OneStep").isSelected())) //If Data Capture with one approval is not checked
-            $("#rb_Basic_Fill_Form_Process_WithApproval_OneStep").click();
-        $("#ckbDataCapturreRequired").shouldBe(checked); //Direct manager of form publisher checkbox is checked
-        $("#ckb_first_ApproverGroupInMS").shouldNotBe(checked); //Members of MS Group checkbox
-        $("#ckb_first_ApproverGroupInVO").shouldNotBe(checked); //Members of VisualOrbit Group checkbox
-        $("#ckb_first_tApproverFreeUserSelection").shouldNotBe(checked); //Free User Selection checkbox
-        $("#sw_first_UserCanOverwrite").shouldNotBe(selected); //Toggle - “End-User can overwrite approver(s)“ - Switched Off
-        $("#rb_Basic_Fill_Form_Process_WithApproval_OneStep").shouldBe(selected); //Data Capture with one approval radio button is selected
+        if (!($(elementLocators("DatacaptureWithOneApproval")).isSelected())) //If Data Capture with one approval is not checked
+            $(elementLocators("DatacaptureWithOneApproval")).click();
+        $(elementLocators("DirectManagerOfDataFiller")).shouldBe(checked); //Direct manager of form publisher checkbox is checked
+        $(elementLocators("MembersOfMSGroup")).shouldNotBe(checked); //Members of MS Group checkbox
+        $(elementLocators("MembersOfVOGroup")).shouldNotBe(checked); //Members of VisualOrbit Group checkbox
+        $(elementLocators("FreeUserSelection")).shouldNotBe(checked); //Free User Selection checkbox
+        $(elementLocators("EndUserCanOverwrite")).shouldNotBe(selected); //Toggle - “End-User can overwrite approver(s)“ - Switched Off
+        $(elementLocators("DatacaptureWithOneApproval")).shouldBe(selected); //Data Capture with one approval radio button is selected
     }
 
     @Test
@@ -61,7 +61,7 @@ public class DataCapturePropertiesTest extends BaseTest {
     @Test
     @DisplayName("Validations after checking Members of MS Group checkbox")
     @Order(4)
-    public void validationsAfterCheckingMembersOfMsGroup() throws InterruptedException {
+    public void validationsAfterCheckingMembersOfMsGroup() {
         validationsAfterCheckingMembersOfMSgroup();
     }
 
@@ -83,24 +83,24 @@ public class DataCapturePropertiesTest extends BaseTest {
     @DisplayName("Data Capture with two approvals First approval")
     @Order(7)
     public void validateDataCaptureTwoApprovalsFirstApprovals() throws InterruptedException {
-        $("#rb_Basic_Fill_Form_Process_WithApproval_TwoStep").should(exist).click(); //with two approvals
+        $(elementLocators("DatacaptureWithTwoApprovals")).should(exist).click(); //with two approvals
 
         ReuseApproverSelection.ApproverOrder order = ReuseApproverSelection.ApproverOrder.FIRST;
 
-        $("#data_capture_process_container").$(byText(order.getLabelText())).should(exist).click(); //Click on First Approvals
-        selectApprovers("#data_capture_process_container", order);
+        $(elementLocators("DataCaptureProcessContainer")).$(byText(order.getLabelText())).should(exist).click(); //Click on First Approvals
+        selectApprovers(elementLocators("DataCaptureProcessContainer"), order);
     }
 
     @Test
     @DisplayName("Data capture with two approvals Second approval")
     @Order(8)
     public void validateDataCaptureTwoApprovalsSecondApprovals() throws InterruptedException {
-        if (!$("#rb_Basic_Fill_Form_Process_WithApproval_TwoStep").isSelected())
-            $("#rb_Basic_Fill_Form_Process_WithApproval_TwoStep").should(exist).click(); //Click on Data capture with two approvals
+        if (!$(elementLocators("DatacaptureWithTwoApprovals")).isSelected())
+            $(elementLocators("DatacaptureWithTwoApprovals")).should(exist).click(); //Click on Data capture with two approvals
 
         ReuseApproverSelection.ApproverOrder order = ReuseApproverSelection.ApproverOrder.SECOND;
-        $("#data_capture_process_container").$(byText(order.getLabelText())).should(exist).click(); //Click Second approval
-        selectApprovers("#data_capture_process_container", order);
+        $(elementLocators("DataCaptureProcessContainer")).$(byText(order.getLabelText())).should(exist).click(); //Click Second approval
+        selectApprovers(elementLocators("DataCaptureProcessContainer"), order);
     }
 
 }

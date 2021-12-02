@@ -3,10 +3,12 @@ package com.vo.mainDashboard;
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
 
+import java.time.Duration;
+
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.Selenide.$$;
+import static reusables.ReuseActions.elementLocators;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Verify the Form Designer Configure Permissions")
@@ -16,48 +18,48 @@ public class FormDesignerConfigurePermissionsTest extends BaseTest {
     @DisplayName("Open the Form Properties Test form")
     @Order(1)
     public void openFormDashboard(){
-        open("/dashboard/sqJiKRUdB");
+        open("/dashboard/Sample");
     }
 
     @Test
     @DisplayName("Verify the Configure Permissions in Form Properties Test form")
     @Order(2)
     public void configureFormPermissions() {
-        $("#formDashboardHeaderLeft").should(appear);
-        $("#formDashboardHeaderAppBar .btnMoreOptionsMenu").should(exist).click();
-        $("#optionsMenu ul li:nth-child(1) ").should(exist).click(); //Click on Edit Form Design
-        $("#formtree_card").should(exist);
-        $("#formelement_properties_card").should(exist);
-        $("#nav_button").should(exist).click();
-        $("#designer_panel_menu ul li:nth-child(5)").click(); //Should click on Configure permissions
-        $("#designer_tab_FormPermissions").should(exist);
-        $("#designer_tab_FormPermissions .fa-plus").should(exist).click(); //Click on "+"
-        $("#alert-dialog-title").should(exist);
-        $("#autocomplete_select_user").should(exist).click();
-        $(".MuiAutocomplete-popper").should(appear);
-        $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("GUI Tester 01"), 5000);
-        $$(".MuiAutocomplete-popper li").findBy(text("GUI Tester 01")).click(); //Click on the selected user
-        $("#btnOk").should(exist).click(); //Click on Confirm
-        $("#designer_tab_FormPermissions tbody tr:nth-child(2)").should(exist);
-        $("#designer_tab_FormPermissions tbody tr:nth-child(2) button:nth-child(1) .fa-pen").should(exist).shouldBe(enabled).click();
-        $("#permissions_edit_dialog").should(exist);
-        $("#transfer-list-all-item-EDIT_FORM-label").should(exist).click(); //Click on Edit Form
-        $("#btnMoveSelectedLeft").should(exist).click(); //Move selected element to the left
-        $("#btnOk").should(exist).shouldBe(enabled).click(); //Click on Confirm
-        $("#designer_panel_menu_container ~ button[text='Save']").should(exist).click(); //Click on Save
+        $(elementLocators("LeftFormDashboardHeader")).should(appear);
+        $(elementLocators("SubMenu")).should(appear, Duration.ofSeconds(30)).click();
+        $(elementLocators("EditFormDesignInSubMenu")).should(exist).click(); //Click on Edit Form Design
+        $(elementLocators("FormStructure")).should(exist);
+        $(elementLocators("ElementProperties")).should(exist);
+        $(elementLocators("DesignerMenuContainer")).should(exist).click();
+        $(elementLocators("ConfigPermissions")).click(); //Should click on Configure permissions
+        $(elementLocators("DesignerTab")).should(exist);
+        $(elementLocators("AddUser")).should(exist).click(); //Click on "+"
+        $(elementLocators("PermissionsWindow")).should(appear);
+        $(elementLocators("SelectUserInput")).should(exist).click();
+        $(elementLocators("Popover")).should(appear);
+        $$(elementLocators("ListOfOptions")).shouldHave(itemWithText("GUI Tester 01"), Duration.ofSeconds(8));
+        $$(elementLocators("ListOfOptions")).findBy(text("GUI Tester 01")).click(); //Click on the selected user
+        $(elementLocators("ButtonConfirm")).should(exist).click(); //Click on Confirm
+        $(elementLocators("AddedUser")).should(exist); //Newly added user should exists
+        $(elementLocators("EditAddedUserPermissions")).should(exist).shouldBe(enabled).click(); //Click on edit pen icon
+        $(elementLocators("PermissionsWindow")).should(exist);
+        $(elementLocators("EditFormLabel")).should(exist).click(); //Click on Edit Form
+        $(elementLocators("LeftArrow")).should(exist).click(); //Move selected element to the left
+        $(elementLocators("ButtonConfirm")).should(exist).shouldBe(enabled).click(); //Click on Confirm
+        $(elementLocators("SaveButton")).should(exist).click(); //Click on Save
 
         //Re-Opening the form in Designer mode
-        $("#toDashboard").click(); //Click on Launchpad
-        open("/dashboard/sqJiKRUdB");//Open the Form
-        $("#formDashboardHeaderLeft").should(exist);
-        $("#formDashboardHeaderAppBar .btnMoreOptionsMenu").should(exist).click();
-        $("#optionsMenu ul li:nth-child(1) ").should(exist).click(); //Click on Edit Form Design
-        $("#nav_button").should(exist).click();
-        $("#designer_panel_menu ul li:nth-child(5)").click(); //Should click on Configure permissions
-        $("#designer_tab_FormPermissions tbody tr:nth-child(2) td:nth-child(2)").shouldNotHave(value("EDIT_FORM"));
+        $(elementLocators("Launchpad")).click(); //Click on Launchpad
+        open("/designer/Sample");//Open the Form designer
+        $(elementLocators("LeftFormDashboardHeader")).should(exist);
+        /*$(elementLocators("SubMenu")).should(exist).click();
+        $(elementLocators("EditFormDesignInSubMenu")).should(exist).click(); //Click on Edit Form Design*/
+        $(elementLocators("DesignerMenuContainer")).should(exist).click(); //Click on Designer Menu container
+        $(elementLocators("ConfigPermissions")).click(); //Should click on Configure permissions
+        $(elementLocators("GrantedPermissions")).shouldNotHave(value("EDIT_FORM"));
         //Delete the selected User
-        $("#designer_tab_FormPermissions tbody tr:nth-child(2) button:nth-child(2) .fa-trash-alt").should(exist).click();
-        $("#designer_panel_menu_container ~ button[text='Save']").should(exist).click(); //Click on Save
+        $(elementLocators("DeleteSelectedUser")).should(exist).click();
+        $(elementLocators("SaveButton")).should(exist).click(); //Click on Save
 
     }
 }

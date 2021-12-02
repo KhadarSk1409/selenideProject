@@ -4,6 +4,7 @@ import com.vo.formdesign.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 import static com.codeborne.selenide.Condition.*;
@@ -42,7 +43,7 @@ public class ReuseActionsFormCreation {
 
     }
 
-    public static void navigateToFormDesign(FormField formField) {
+    public static void navigateToFormDesign(FormField formField) throws IOException {
         createNewForm();
         $("#wizard-createFormButton").should(exist).click();
         $("#btnFormDesignPublish").should(exist); //Verify that user has navigated to form design

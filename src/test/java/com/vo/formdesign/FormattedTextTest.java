@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.openqa.selenium.By;
 
+import java.io.IOException;
 import java.util.stream.IntStream;
 
 import static com.codeborne.selenide.Condition.*;
@@ -29,7 +30,7 @@ public class FormattedTextTest extends BaseTest {
     @Test
     @Order(1)
     @DisplayName("precondition")
-    public void precondition() {
+    public void precondition() throws IOException {
         navigateToFormDesign(FormField.FORMATTED_TEXT);
     }
 
@@ -74,7 +75,7 @@ public class FormattedTextTest extends BaseTest {
 
         //Label
         if (StringUtils.isNotEmpty(text_label)) {
-            labelVerificationOnFormDesign(blockId,text_label);
+            labelVerificationOnFormDesign(blockId, text_label);
         }
 
 

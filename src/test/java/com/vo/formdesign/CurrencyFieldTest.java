@@ -15,6 +15,7 @@ import static com.codeborne.selenide.Selenide.$$;
 import static java.lang.Double.parseDouble;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -53,7 +54,7 @@ public class CurrencyFieldTest extends BaseTest {
     @Test
     @Order(1)
     @DisplayName("precondition")
-    public void precondition() {
+    public void precondition() throws IOException {
         navigateToFormDesign(FormField.CURRENCY);
     }
 
