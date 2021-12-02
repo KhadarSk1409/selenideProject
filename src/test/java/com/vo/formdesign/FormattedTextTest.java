@@ -35,7 +35,7 @@ public class FormattedTextTest extends BaseTest {
     }
 
     @Order(2)
-    @DisplayName("createNewFormulaDesignForCheckBoxGroupfields")
+    @DisplayName("createNewFormulaDesignForFormattedtextField")
     @ParameterizedTest
     @CsvFileSource(resources = "/formatted_field_test_data.csv", numLinesToSkip = 1)
     public void alltextfield(Integer row, Integer col, Integer colSpan,
@@ -123,6 +123,7 @@ public class FormattedTextTest extends BaseTest {
 
             }
 
+            $(blockId + " .fr-element").setValue(edit_values).pressTab();
         }
 
     }
