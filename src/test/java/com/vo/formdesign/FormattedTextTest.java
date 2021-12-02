@@ -14,6 +14,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,7 +43,7 @@ public class FormattedTextTest extends BaseTest {
     @Test
     @Order(1)
     @DisplayName("precondition")
-    public void precondition() {
+    public void precondition() throws IOException {
         navigateToFormDesign(FormField.FORMATTED_TEXT);
     }
 

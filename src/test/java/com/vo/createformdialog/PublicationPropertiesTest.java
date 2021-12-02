@@ -3,6 +3,8 @@ package com.vo.createformdialog;
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
 
+import java.io.IOException;
+
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
@@ -19,31 +21,31 @@ public class PublicationPropertiesTest extends BaseTest {
     public void validateIntialSetup() {
         //Create Form:
         createNewForm();
-        $("#wizard-addlOptionsButton").shouldBe(enabled).click(); //Click on Additional Options
-        $("#dlgFormFormWizard .mtable_toolbar button:first-of-type").should(exist); //+ button in Add Language - confirmation that user has navigated
-        $("#wizard-addlOptionsButton").shouldBe(enabled).click(); //Next button
+        $(elementLocators("AdditionalOptionsButton")).shouldBe(enabled).click(); //Click on Additional Options
+        $(elementLocators("AddLanguageButton")).should(exist); //+ button in Add Language - confirmation that user has navigated
+        $(elementLocators("NextButton")).shouldBe(enabled).click(); //Next button
         //Verify that user is navigated to Publication Process
-        $("#ckbApprovalProcessRequired").should(exist).shouldNotBe(checked); //Checkbox - "Yes, Enable publication workflow for this form" is unchecked
-        $("#wizard-backButton").shouldBe(enabled); //Back button is disabled
-        $("#wizard-createFormButton").shouldBe(enabled); //Create Form button is enabled
-        $("#wizard-addlOptionsButton").shouldBe(enabled); //Next button is enabled
-        $("#wizard-cancelButton").shouldBe(enabled); //Cancel button is enabled
+        $(elementLocators("EnablePublicationProcessDialog")).should(exist).shouldNotBe(checked); //Checkbox - "Yes, Enable publication workflow for this form" is unchecked
+        $(elementLocators("BackButton")).shouldBe(enabled); //Back button is disabled
+        $(elementLocators("CreateFormButton")).shouldBe(enabled); //Create Form button is enabled
+        $(elementLocators("NextButton")).shouldBe(enabled); //Next button is enabled
+        $(elementLocators("CancelButton")).shouldBe(enabled); //Cancel button is enabled
     }
 
     @Test
     @DisplayName("Validations after checking Enable Publication checkbox")
     @Order(2)
     public void validationsAfterCheckingEnablePublication() {
-        $("#dlgFormFormWizard  input").should(exist).click(); //Checkbox is checked
+        $(elementLocators("EnablePublicationProcessCheckBox")).should(exist).click(); //Checkbox is checked
 
-        if (!($("#rb_Basic_Approve_Form_Process").isSelected())) //If Publication with one approval is not checked
-            $("#rb_Basic_Approve_Form_Process").click(); //Select Publication with one approval
-        $("#ckb_first_ApproverManager").shouldBe(checked); //Direct manager of form publisher checkbox is checked
-        $("#ckb_first_ApproverGroupInMS").shouldNotBe(checked); //Members of MS Group checkbox
-        $("#ckb_first_ApproverGroupInVO").shouldNotBe(checked); //Members of VisualOrbit Group checkbox
-        $("#ckb_first_tApproverFreeUserSelection").shouldNotBe(checked); //Free User Selection checkbox
-        $("#sw_first_UserCanOverwrite").shouldNotBe(selected); //Toggle - “End-User can overwrite approver(s)“ - Switched Off
-        $("#rb_Basic_Approve_Form_Process").shouldBe(selected); //Publication with one approval radio button is selected
+        if (!($(elementLocators("PublicationWithOneApproval")).isSelected())) //If Publication with one approval is not checked
+            $(elementLocators("PublicationWithOneApproval")).click(); //Select Publication with one approval
+        $(elementLocators("DirectManagerOfDataFiller")).shouldBe(checked); //Direct manager of form publisher checkbox is checked
+        $(elementLocators("MembersOfMSGroup")).shouldNotBe(checked); //Members of MS Group checkbox
+        $(elementLocators("MembersOfVOGroup")).shouldNotBe(checked); //Members of VisualOrbit Group checkbox
+        $(elementLocators("FreeUserSelection")).shouldNotBe(checked); //Free User Selection checkbox
+        $(elementLocators("EndUserCanOverwrite")).shouldNotBe(selected); //Toggle - “End-User can overwrite approver(s)“ - Switched Off
+        $(elementLocators("PublicationWithOneApproval")).shouldBe(selected); //Publication with one approval radio button is selected
 
     }
 
@@ -57,7 +59,7 @@ public class PublicationPropertiesTest extends BaseTest {
     @Test
     @DisplayName("Validations after checking Members of MS Group checkbox")
     @Order(4)
-    public void validationsAfterCheckingMembersOfMsGroup() throws InterruptedException {
+    public void validationsAfterCheckingMembersOfMsGroup() {
         validationsAfterCheckingMembersOfMSgroup();
     }
 
@@ -80,21 +82,21 @@ public class PublicationPropertiesTest extends BaseTest {
     @Order(7)
     public void validatePublicationTwoApprovalsFirstApprovals() throws InterruptedException {
 
-        $("#rb_Basic_Approve_Form_Process_TwoSteps").should(exist).click(); //Publication with two approvals
+        $(elementLocators("PublicationWithTwoApproval")).should(exist).click(); //Publication with two approvals
 
         ReuseApproverSelection.ApproverOrder order = ReuseApproverSelection.ApproverOrder.FIRST;
-        $("#publication_process_container").$(byText(order.getLabelText())).should(exist).click(); //Click on First Approvals
-        selectApprovers("#publication_process_container", order);
+        $(elementLocators("PublicationProcessContainer")).$(byText(order.getLabelText())).should(exist).click(); //Click on First Approvals
+        selectApprovers(elementLocators("PublicationProcessContainer"), order);
     }
 
     @Test
     @DisplayName("Publication with two approvals Second approval")
     @Order(8)
     public void validatePublicationTwoApprovalsSecondApprovals() throws InterruptedException {
-        $("#rb_Basic_Approve_Form_Process_TwoSteps").should(exist).click(); //Publication with two approvals
+        $(elementLocators("PublicationWithTwoApproval")).should(exist).click(); //Publication with two approvals
 
         ReuseApproverSelection.ApproverOrder order = ReuseApproverSelection.ApproverOrder.SECOND;
-        $("#publication_process_container").$(byText(order.getLabelText())).should(exist).click(); //Click on Second Approvals
+        $(elementLocators("PublicationProcessContainer")).$(byText(order.getLabelText())).should(exist).click(); //Click on Second Approvals
         selectApprovers("#publication_process_container", order);
     }
 }

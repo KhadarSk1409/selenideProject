@@ -3,10 +3,14 @@ package com.vo.formDashboard;
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
 
+import java.io.IOException;
+import java.time.Duration;
+
 import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byAttribute;
 import static com.codeborne.selenide.Selenide.*;
+import static reusables.ReuseActions.elementLocators;
 import static reusables.ReuseActions.navigateToFormDashBoardFromFavoriteForms;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -16,21 +20,22 @@ public class FormDashBoardComponentsTest extends BaseTest {
     @BeforeAll
     @DisplayName("Open Sample Form")
     public static void navigateFormDashboardFavoritesForms() {
-        open("/dashboard/sample-form");
+        open("/dashboard/Sample_Form");
     }
 
     @Test
     @DisplayName("Main components in Form Dashboard")
     @Order(1)
-    public void verifyMainComponentsInFormDashboard() {
-        $("#gridItemTasks").should(exist);  //My Tasks section should be avaialble
-        $("#gridItemTasks button").shouldHave(attribute("title", "Expand"));  //Verify that Expand button is present in My Tasks section
-        $("#gridItemUserDataList").should(exist);   //User Data Lists should be available
-        $("#gridItemUserDataList").find(byAttribute("title", "Expand")).should(exist);   //Verify that Expand button is present in User Data Lists section
-        $$("#full-width-tab-0").shouldHave(texts("MY SUBMISSIONS", "All Submissions", "Data Capture")); //User data lists contain these three tabs
+    public void verifyMainComponentsInFormDashboard() throws IOException {
+        $(elementLocators("UserDataList")).should(exist);   //User Data Lists should be available
+        $(elementLocators("MyTasks")).should(exist);  //My Tasks section should be avaialble
+        $(elementLocators("MySubmissions")).should(exist); //My Submissions section should be avaialble
+        $(elementLocators("AllSubmissions")).should(exist); //All Submissions section should be avaialble
+        $(elementLocators("DataCapture")).should(exist); //Data Capture section should be avaialble
     }
 
-    @Test
+    //Commented this method as Expand and Collapse functionality is taken off currently
+   /* @Test
     @DisplayName("Verify Expand/Collapse and layout of Dashboard")
     @Order(2)
     public void verifyExpandCollapseAndLayoutOfDashboard() {
@@ -43,23 +48,25 @@ public class FormDashBoardComponentsTest extends BaseTest {
         $("#full-width-tabpanel-MY_DATA .vo-expand-collapse").should(exist).click(); //Collapse button in User Data list section and click it
         $("#gridItemTasks").should(appear); //My tasks section appears again
 
-    }
+    }*/
 
     @Test
     @DisplayName("Verify Switching on User Data List Tabs should change visible tables")
     @Order(3)
-    public void verifySwitchingOnUserDataListTabs() {
-        $$("#gridItemUserDataList .MuiTab-root").shouldHave(texts("My Submissions", "All Submissions", "Data Capture"));
-        $$("#gridItemUserDataList .MuiTab-root").findBy(text("My Submissions")).shouldHave(cssClass("Mui-selected"));
-        $("#userDataListCardTable").shouldBe(visible); //Grid for My Submissions
+    public void verifySwitchingOnUserDataListTabs() throws IOException {
+        $(elementLocators("Body")).click();
+        $(elementLocators("UserDataList")).should(exist);   //User Data Lists should be available
+        $(elementLocators("MySubmissions")).click();
+        $(elementLocators("MySubmissions")).shouldHave(cssClass("Mui-selected"));
+        $(elementLocators("GridContainer")).shouldBe(visible); //Grid for My Submissions
 
-        $$("#gridItemUserDataList .MuiTab-root").findBy(text("All Submissions")).click();
-        $$("#gridItemUserDataList .MuiTab-root").findBy(text("All Submissions")).shouldHave(cssClass("Mui-selected"));
-        $("#dataListCardTable").should(appear); //Grid for My Submissions
+        $(elementLocators("AllSubmissions")).click();
+        $(elementLocators("AllSubmissions")).shouldHave(cssClass("Mui-selected"));
+        $(elementLocators("GridContainer")).should(appear, Duration.ofSeconds(10)); //Grid for My Submissions
 
-        $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).click();
-        $$("#gridItemUserDataList .MuiTab-root").findBy(text("Data Capture")).shouldHave(cssClass("Mui-selected"));
-        $("#full-width-tabpanel-DATA_CAPTURE").should(appear); //Grid for Data Capture
+        $(elementLocators("DataCapture")).click();
+        $(elementLocators("DataCapture")).shouldHave(cssClass("Mui-selected"));
+        $(elementLocators("GridContainer")).should(appear); //Grid for Data Capture
     }
 
 }

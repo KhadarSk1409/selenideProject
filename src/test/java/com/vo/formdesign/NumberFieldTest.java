@@ -46,7 +46,7 @@ public class NumberFieldTest extends BaseTest {
     @Test
     @Order(1)
     @DisplayName("precondition")
-    public void precondition() {
+    public void precondition() throws IOException {
         navigateToFormDesign(FormField.NUMBER);
     }
 

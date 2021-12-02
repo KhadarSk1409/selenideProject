@@ -1,6 +1,5 @@
 package com.vo.formdesign;
 
-import com.codeborne.selenide.Condition;
 import com.vo.BaseTest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
@@ -10,7 +9,6 @@ import org.junit.jupiter.api.TestMethodOrder;
 import static com.codeborne.selenide.Condition.appear;
 import static com.codeborne.selenide.Condition.exist;
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.title;
 import static reusables.ReuseActions.createNewForm;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

@@ -11,6 +11,7 @@ import reusables.ReuseActionsFormCreation;
 
 import static com.codeborne.selenide.Selenide.executeJavaScript;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
@@ -34,7 +35,7 @@ public class LabelFieldTest extends BaseTest {
     @Test
     @Order(1)
     @DisplayName("precondition")
-    public void precondition() {
+    public void precondition() throws IOException {
         navigateToFormDesign(ReuseActionsFormCreation.FormField.LABEL_FIELD);
 
     }

@@ -1,23 +1,16 @@
 package com.vo.mainDashboard;
 
-import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.conditions.Attribute;
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 
-import java.util.List;
-import java.util.function.IntFunction;
+import java.time.Duration;
 
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byAttribute;
 import static com.codeborne.selenide.Selenide.*;
+import static reusables.ReuseActions.elementLocators;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Data Capture without Approval")
@@ -35,34 +28,34 @@ public class DataCaptureWithoutApprovalTest extends BaseTest {
     @DisplayName("Data Capture without approval should create a Form Fill Task")
     @Order(2)
     public void dataCaptureWithoutApproval() {
-            $("#formDashboardHeaderAppBar .btnMoreOptionsMenu").should(exist).shouldBe(enabled).click();
-            $("#optionsMenu ul li:nth-child(4)").should(exist).shouldHave(Condition.text("Data Capture")).click();
-            $("#selUser").should(appear);
-            $("#selUser ~ .MuiAutocomplete-endAdornment .MuiAutocomplete-popupIndicator").should(exist).click();
-            $(".MuiAutocomplete-popper").should(appear);
-            $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("GUI Testerguitester@visualorbit.com"), 30000);
-            $$(".MuiAutocomplete-popper li").findBy(text("GUI Tester")).click();
-            $("#selUser").click();
-            $("#btnStartProcess").click(); //Start Data Capture Process
-            $("#client-snackbar").should(appear)
+            $(elementLocators("SubMenu")).should(exist).shouldBe(enabled).click();
+            $(elementLocators("DataCaptureInSubMenu")).should(exist).shouldHave(Condition.text("Data Capture")).click();
+            $(elementLocators("UserSelectionInput")).should(appear);
+            $(elementLocators("DropDownButton")).should(exist).click();
+            $(elementLocators("Popover")).should(appear);
+            $$(elementLocators("ListOfOptions")).shouldHave(itemWithText("GUI Testerguitester@visualorbit.com"), Duration.ofSeconds(30));
+            $$(elementLocators("ListOfOptions")).findBy(text("GUI Tester")).click();
+            $(elementLocators("UserSelectionInput")).click();
+            $(elementLocators("StartDataCaptureButton")).click(); //Start Data Capture Process
+            $(elementLocators("ConfirmationMessage")).should(appear)
                 .shouldHave(Condition.text("Started Data Capture process for the form: DATA-CAPTURE-WO-PROCESS and version 1.0"));
-            $("#gridItemUserDataList").should(exist);
-            $("#tabDataCapture").should(exist).click(); //Click on Data Capture
-            $("#tasksCard .MuiChip-label:nth-child(1)").shouldHave(Condition.text("In Progress"));//Verify the Data Capture state
-            String formDataCaptureId= $("#tasksCard .MuiCardContent-root .MuiDataGrid-main div:nth-child(2) div:nth-child(8) div").should(exist).getAttribute("id");
+            $(elementLocators("UserDataList")).should(exist);
+            $(elementLocators("DataCapture")).should(exist).click(); //Click on Data Capture
+            $(elementLocators("FormState")).shouldHave(Condition.text("In Progress"));//Verify the Data Capture state
+            String formDataCaptureId= $(elementLocators("NewFormID")).should(exist).getAttribute("id");
             System.out.println(formDataCaptureId);
-            $("#gridItemUserDataList").should(exist);
-            $("#tabMyTasks").should(exist).click(); //Click on My Tasks
-            $("#tasksCard .MuiDataGrid-row").find(byAttribute("data-process-instance-id", formDataCaptureId )).should(exist)
-              .$(".buttonFillForm").should(exist).shouldBe(enabled).click(); //Click on Fill Form
-            $("#data-card-dialog_actions").should(appear);
-            $("#dataContainer").should(exist);
+            $(elementLocators("UserDataList")).should(exist);
+            $(elementLocators("MyTasks")).should(exist).click(); //Click on My Tasks
+            $(elementLocators("FormsAvailable")).find(byAttribute("data-process-instance-id", formDataCaptureId )).should(exist)
+              .$(elementLocators("FillForm")).should(exist).shouldBe(enabled).click(); //Click on Fill Form with matching id's
+            $(elementLocators("DataCardActionsPage")).should(appear);
+            $(elementLocators("DataContainer")).should(exist);
             $("#textField_form-user-160cfec0-aef2-4927-a8a8-aff595813f53").should(exist);
             $("#textField_form-user-160cfec0-aef2-4927-a8a8-aff595813f53").setValue("TEST");
-            $("#btnAcceptTask").click();
-            $("#data-approve-reject-dialog #btnConfirm").should(exist).click();
-            $("#gridItemUserDataList").should(exist);
-            $("#tabDataCapture").should(exist).click(); //Click on Data Capture
-            $("#tasksCard .MuiChip-label:nth-child(1)").shouldHave(Condition.text("Completed"));//Verify the final Data Capture state
+            $(elementLocators("SubmitDataButton")).click();
+            $(elementLocators("ConfirmButton")).should(exist).click();
+            $(elementLocators("UserDataList")).should(exist);
+            $(elementLocators("DataCapture")).should(exist).click(); //Click on Data Capture
+            $(elementLocators("FormState")).shouldHave(Condition.text("Completed"));//Verify the final Data Capture state
     }
 }

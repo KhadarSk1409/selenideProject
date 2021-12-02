@@ -13,6 +13,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
 import javax.print.DocFlavor;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
@@ -49,7 +50,7 @@ public class TextFieldTest extends BaseTest {
     @Test
     @Order(1)
     @DisplayName("precondition")
-    public void precondition() {
+    public void precondition() throws IOException {
         navigateToFormDesign(FormField.TEXTFIELD);
 
     }

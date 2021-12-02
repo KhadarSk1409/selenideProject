@@ -4,9 +4,12 @@ import com.codeborne.selenide.Condition;
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
 
+import java.time.Duration;
+
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
+import static reusables.ReuseActions.elementLocators;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Verify the Form Properties")
@@ -16,56 +19,59 @@ public class EditFormPropertiesTest extends BaseTest {
     @DisplayName("Open the Form Properties Test form")
     @Order(1)
     public void openFormDashboard(){
-        open("/dashboard/sqJiKRUdB");
+        open("/dashboard/Sample");
     }
 
     @Test
     @DisplayName("Edit the Form Properties Test form")
     @Order(2)
-    public void editFormProperties(){
-        $("#formDashboardHeaderLeft").should(appear);
-        $("#formDashboardHeaderAppBar .btnMoreOptionsMenu").should(exist).click();
-        $("#optionsMenu ul li:nth-child(1)").should(exist).click(); //Click on Edit Form Design
-        $("#formtree_card").should(exist);
-        $("#formelement_properties_card").should(exist);
-        $("#nav_button").should(exist).click();
-        $("#designer_panel_menu ul li:nth-child(8)").click(); //Should click on Form Properties
-        $("#designer_tab_FormProperties").$("#selectFormIcon").click();
-        $("#selectFormIcon_dialog_content").should(appear);
+    public void editFormProperties() {
+        $(elementLocators("LeftFormDashboardHeader")).should(appear, Duration.ofSeconds(30));
+        $(elementLocators("SubMenu")).should(appear, Duration.ofSeconds(8)).click();
+        $(elementLocators("EditFormDesignInSubMenu")).should(exist).click(); //Click on Edit Form Design
+        $(elementLocators("FormStructure")).should(exist);
+        $(elementLocators("ElementProperties")).should(exist);
+        $(elementLocators("DesignerMenu")).should(exist).click();
+        $(elementLocators("FormProperties")).click(); //Should click on Form Properties
+        $(elementLocators("DesignerTab")).should(exist);
+        $(elementLocators("IconSelection")).click();
+        $(elementLocators("IconsWindow")).should(appear);
 
-        String iconName= $("#selectFormIcon_dialog_content span:nth-child(10)").getAttribute("title");
-        $("#selectFormIcon_dialog_content span:nth-child(10)").click(); //Should add selected Icon
-        $("#selFormLabelsControl").should(exist);
-        $("#designer_tab_FormProperties").$("#selLabel").click(); //Should click on Label
-        $(".MuiAutocomplete-popper").should(appear);
-        $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("SKB"), 5000);
-        $$(".MuiAutocomplete-popper li").findBy(text("SKB")).click(); //Click on the selected Label
-        $(".fa-plus").should(exist).click();
-        $("#designer_tab_FormProperties tbody tr:nth-child(2) td:nth-child(1)").should(exist);
-        String newLang=$("#designer_tab_FormProperties tbody tr:nth-child(2) td:nth-child(1)").getText();
+        String iconName= $(elementLocators("BusinessPersonIcon")).getAttribute("title");
+        $(elementLocators("BusinessPersonIcon")).click(); //Should add selected Icon
+        $(elementLocators("LabelsInput")).should(exist);
+        $(elementLocators("FormLabelSelection")).click(); //Should click on Label
+        $(elementLocators("Popover")).should(appear);
+        $$(elementLocators("ListOfOptions")).shouldHave(itemWithText("SKB"), Duration.ofSeconds(8));
+        $$(elementLocators("ListOfOptions")).findBy(text("SKB")).click(); //Click on the selected Label
+        $(elementLocators("AddFormLang")).should(exist).click();
+        $(elementLocators("GermanLang")).should(exist);
+        String newLang=$(elementLocators("GermanLang")).getText();
 
         //Should Add another language
-        $("#root div:nth-child(2) div:nth-child(2) tr:nth-child(2) button:nth-child(1)").should(exist).click();
-        $("#btnFormDesignPublish").click(); //Click on Publish
-        $("#form-publish-dialog").$("#btnConfirm").click();
-        $("#client-snackbar").should(appear).shouldHave(Condition.text("The form was published successfully"));
+        $(elementLocators("SelectLanguage")).should(exist).click();
+        $(elementLocators("PublishButton")).click(); //Click on Publish
+        $(elementLocators("ConfirmPublish")).click();
+        $(elementLocators("ConfirmationMessage")).should(appear).shouldHave(Condition.text("The form was published successfully"));
 
         //Verify the selected options
-        $("#toDashboard").click(); //Click on Launchpad
-        open("/dashboard/sqJiKRUdB"); //Open the Form
-        $("#formDashboardHeaderLeft").should(exist);
-        $("#formDashboardHeaderAppBar .btnMoreOptionsMenu").should(exist).click();
-        $("#optionsMenu ul li:nth-child(1) ").should(exist).click(); //Click on Edit Form Design
-        $("#formtree_card .MuiIcon-root svg").shouldHave(attributeMatching("data-src", ".*"+iconName+".*"));
-        $("#designer_formCardHeader button:nth-child(2)").shouldHave(text(newLang.toUpperCase()));
-        $("#nav_button").should(exist).click();
-        $("#designer_panel_menu ul li:nth-child(8)").shouldHave(Condition.text("Form Properties")).click();
-        $("#designer_tab_FormProperties tbody tr:nth-child(2)  button:nth-child(2)").click(); //Delete the selected language
-        $("#designer_tab_FormProperties tbody tr:nth-child(2) button:nth-child(1)").click();
-        $("#btnFormDesignPublish").click(); //Click on Publish
-        $("#form-publish-dialog").$("#btnConfirm").click();
-        $("#client-snackbar").should(appear).shouldHave(Condition.text("The form was published successfully"));
-        $("#formDashboardHeaderLeft").should(exist);
+        $(elementLocators("Launchpad")).click(); //Click on Launchpad
+        //open("/dashboard/Form_Properties_Sample"); //Open the Form
+        open("/dashboard/Sample");//Open the Form designer
+
+        $(elementLocators("LeftFormDashboardHeader")).should(exist);
+        $(elementLocators("SubMenu")).should(appear, Duration.ofSeconds(8)).click();
+        $(elementLocators("EditFormDesignInSubMenu")).should(exist).click(); //Click on Edit Form Design
+        $(elementLocators("FormTreeIcon")).shouldHave(attributeMatching("data-src", ".*"+iconName+".*"));
+        $(elementLocators("DesignerLanguage2")).shouldHave(text(newLang.toUpperCase())); //German language should exist
+        $(elementLocators("DesignerMenu")).should(exist).click();
+        $(elementLocators("FormProperties")).shouldHave(Condition.text("Form Properties")).click();
+        $(elementLocators("DeleteLang2")).click(); //Delete the selected language
+        $(elementLocators("ConfirmDelete")).click();
+        $(elementLocators("PublishButton")).click(); //Click on Publish
+        $(elementLocators("ConfirmPublish")).click();
+        $(elementLocators("ConfirmationMessage")).should(appear).shouldHave(Condition.text("The form was published successfully"));
+        $(elementLocators("LeftFormDashboardHeader")).should(exist);
 
     }
 }

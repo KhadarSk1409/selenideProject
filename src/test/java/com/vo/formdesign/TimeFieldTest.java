@@ -14,6 +14,7 @@ import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Selenide.$$;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.*;
 import java.util.stream.IntStream;
@@ -45,7 +46,7 @@ public class TimeFieldTest extends BaseTest {
     @Test
     @Order(1)
     @DisplayName("precondition")
-    public void precondition() {
+    public void precondition() throws IOException {
         navigateToFormDesign(FormField.TIME_FIELD);
     }
 

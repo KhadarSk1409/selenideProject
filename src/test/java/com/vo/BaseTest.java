@@ -1,10 +1,6 @@
 package com.vo;
 
-import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.Selenide;
-import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.WebDriverRunner;
-import org.apache.commons.lang3.StringUtils;
+import com.codeborne.selenide.*;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,9 +23,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.net.URL;
-import java.util.*;
+import java.time.Duration;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
@@ -37,6 +36,7 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static reusables.ReuseActions.elementLocators;
 
 
 @Execution(ExecutionMode.SAME_THREAD)
@@ -192,13 +192,21 @@ public abstract class BaseTest {
             return;
         }
         try {
-            deleteForm();
+            //deleteForm();
             System.out.println("tearing down test!!!, closing the webdriver");
         } catch (Throwable ignore) {
             System.out.println("unable to delete forms: " + ignore.getMessage());
         } finally {
             try{
                 LogEntries logEntries = getWebDriver().manage().logs().get(LogType.BROWSER);
+
+                //Routing the browser console logs to a file
+                //Instantiating the File class
+                File fileOut = new File("..\\testautomation\\build\\outputFile\\outputFile.txt");
+                //Instantiating the PrintStream class
+                PrintStream stream = new PrintStream(fileOut);
+                System.out.println("The browser logs will be saved in a file " +fileOut.getAbsolutePath());
+                System.setOut(stream);
 
                 for (LogEntry entry : logEntries) {
                     System.out.println(new Date(entry.getTimestamp()) + " " + entry.getLevel() + " " + entry.getMessage());
@@ -208,7 +216,7 @@ public abstract class BaseTest {
             catch (Throwable ignore){
                 System.out.println("unable to retrieve logs from web driver: " + ignore.getMessage());
             }
-            close();
+            closeWebDriver();
             ALREADY_LOGGED_IN.set(Boolean.FALSE);
         }
     }
@@ -216,7 +224,7 @@ public abstract class BaseTest {
     private static boolean appHeaderAppear() {
         boolean result = false;
         try {
-            $("header.MuiAppBar-root").waitUntil(appears, 15000);
+            $(elementLocators("AppHeader")).should(appear, Duration.ofSeconds(15));
             result = true;
         } catch (Throwable t) {
             System.out.println("App Header is not presented ");
@@ -228,10 +236,10 @@ public abstract class BaseTest {
     public static void shouldLogin(UserType targetUser) {
         if(Boolean.TRUE.equals(ALREADY_LOGGED_IN.get()) && targetUser != CURRENT_USER.get()) {
             //logging out Current User
-            $("#btnUserSettingsPopover").click(); //Click on User Settings Popover
-            $("#userLogout").should(exist).click(); //Click on Logout
-            $("#btnYesLogout").should(appear).click(); //Logout Confirmation
-            boolean presenceOfPickAnAccount = $("#loginHeader").is(exist);
+            $(elementLocators("UserSettingsPopover")).click(); //Click on User Settings Popover
+            $(elementLocators("LogoutButton")).should(exist).click(); //Click on Logout
+            $(elementLocators("ConfirmLogOutButton")).should(appear).click(); //Logout Confirmation
+            boolean presenceOfPickAnAccount = $(elementLocators("PickAnAccount")).is(exist);
             if (presenceOfPickAnAccount) {
                 $(byText(CURRENT_USER.get().userEmail())).shouldBe(visible).click();
                 Wait().until((input) -> WebDriverRunner.url().endsWith("logoutsession"));
@@ -243,25 +251,25 @@ public abstract class BaseTest {
             open("");
             setSauceJobId();
             Wait().until((input) -> WebDriverRunner.url().contains("oauth2/v2.0/authorize"));
-            boolean presenceUseOtherAccount = $("#otherTileText").is(exist);
+            boolean presenceUseOtherAccount = $(elementLocators("UseAnotherAccount")).is(exist);
             if(presenceUseOtherAccount) {
-                $("#otherTileText").shouldBe(visible).click();
+                $(elementLocators("UseAnotherAccount")).shouldBe(visible).click();
             }
-            $(By.name("loginfmt")).should(appear).setValue(targetUser.userEmail());
-            $(".button.primary").shouldBe(visible).click();
-            $("#displayName").shouldHave(text(targetUser.userEmail()));
+            $(By.name(elementLocators("EmailInputField"))).should(appear).setValue(targetUser.userEmail());
+            $(elementLocators("ButtonNext")).shouldBe(visible).click();
+            $(elementLocators("DisplayName")).shouldHave(text(targetUser.userEmail()));
 
-            $(By.name("passwd")).should(appear).setValue(targetUser.password());
-            $(".button.primary").shouldBe(visible).click();
+            $(By.name(elementLocators("PasswordInputField"))).should(appear).setValue(targetUser.password());
+            $(elementLocators("ButtonNext")).shouldBe(visible).click();
 
             //stay signed in?
-            boolean presenceOfStaySignedIn = $(".button.primary").is(exist);
+            boolean presenceOfStaySignedIn = $(elementLocators("ButtonNext")).is(exist);
             if(presenceOfStaySignedIn) {
-                $(".button.primary").shouldBe(visible).click();
+                $(elementLocators("ButtonNext")).shouldBe(visible).click();
             }
 
             appHeaderAppear();
-            boolean presenceOfPickAnAccount = $("#loginHeader").is(exist);
+            boolean presenceOfPickAnAccount = $(elementLocators("PickAnAccount")).is(exist);
             if (presenceOfPickAnAccount) {
                 // String valueToBeClicked = "//small[contains(text(),"+"'"+TEST_USER_EMAIL+"')]";
                 $(byText(targetUser.userEmail())).shouldBe(visible).click();
@@ -311,48 +319,47 @@ public abstract class BaseTest {
     }
 
     protected static void applyLabelForTestForms() {
-        $("#dlgFormFormWizard #selFormLabelsControl").shouldBe(visible);
-        if (!$("#dlgFormFormWizard #selFormLabelsControl .MuiChip-label").has(text("guitest"))) {
-            $("#dlgFormFormWizard #selLabel ~ .MuiAutocomplete-endAdornment .MuiAutocomplete-popupIndicator").should(exist).click();
-            $(".MuiAutocomplete-popper").should(appear);
+        $(elementLocators("LabelContainer")).shouldBe(visible);
+        if (!$(elementLocators("LabelInputField")).has(text("guitest"))) {
+            $(elementLocators("LabelsDropdownButton")).should(exist).click();
+            $(elementLocators("Popover")).should(appear);
             try {
-                $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("guitest"), 7000);
-                $$(".MuiAutocomplete-popper li").findBy(text("guitest")).click();
+                $$(elementLocators("ListOfOptions")).shouldHave(itemWithText("guitest"), Duration.ofSeconds(7));
+                $$(elementLocators("ListOfOptions")).findBy(text("guitest")).click();
             } catch (Throwable t) {
-                $("#dlgFormFormWizard #selLabel").setValue("guitest");
-                $(".MuiAutocomplete-popper").should(appear);
-                $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("Add \"guitest\""));
-                $$(".MuiAutocomplete-popper li").findBy(text("Add \"guitest\"")).click();
+                $(elementLocators("InputLabel")).setValue("guitest");
+                $(elementLocators("Popover")).should(appear);
+                $$(elementLocators("ListOfOptions")).shouldHave(itemWithText("Add \"guitest\""));
+                $$(elementLocators("ListOfOptions")).findBy(text("Add \"guitest\"")).click();
             }
 
-            $("#dlgFormFormWizard #selFormLabelsControl .MuiChip-label").shouldHave(text("guitest"));
+            $(elementLocators("LabelInputField")).shouldHave(text("guitest"));
         }
     }
 
     protected static boolean applySearchForTestForms() {
         boolean hasGuiTestLabel = true;
-        //selectAndClear("#formRelatedTabs .mtable_toolbar input.MuiInputBase-input").setValue("test-gu-");
-        $("#btnMoreFilter").should(exist).click(); //Click on filter icon
-        $("#pMoreFilterPopoverContent").should(appear);
-        $("#selFormLabelsControl").shouldBe(visible); //Label dropdown
-        if (!$("#selFormLabelsControl .MuiChip-label").has(text("guitest"))) {
-            $("#selLabel ~ .MuiAutocomplete-endAdornment .MuiAutocomplete-popupIndicator").should(exist).click();
-            $(".MuiAutocomplete-popper").should(appear);
+        $(elementLocators("MoreFilter")).should(exist).click(); //Click on filter icon
+        $(elementLocators("MoreFilterPopover")).should(appear);
+        $(elementLocators("LabelsInput")).shouldBe(visible); //Label dropdown
+        if (!$(elementLocators("FilterLabelInputField")).has(text("guitest"))) {
+            $(elementLocators("FilterLabelsDropdownButton")).should(exist).click();
+            $(elementLocators("Popover")).should(appear);
             try {
-                $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("guitest"), 5000);
-                $$(".MuiAutocomplete-popper li").findBy(text("guitest")).click();
+                $$(elementLocators("ListOfOptions")).shouldHave(itemWithText("guitest"), Duration.ofSeconds(5));
+                $$(elementLocators("ListOfOptions")).findBy(text("guitest")).click();
                 hasGuiTestLabel = true;
             } catch (Throwable t) {
                 hasGuiTestLabel = false;
             }
             $("body").click();
-            $("#pMoreFilterPopoverContent").should(disappear);
+            $(elementLocators("MoreFilterPopover")).should(disappear);
         }
 
         if (hasGuiTestLabel) {
-            $("#formListTable .MuiDataGrid-row").shouldBe(visible);
+            $(elementLocators("FormsGrid")).shouldBe(visible);
             try {
-                $("#formListTable .MuiDataGrid-row").waitUntil(not(text("No records to display")), 5000);
+                $(elementLocators("FormsGrid")).shouldNotHave(Condition.text("No forms available yet!"), Duration.ofSeconds(5));
             } catch (Throwable t) {
                 hasGuiTestLabel = false;
             }
@@ -361,18 +368,19 @@ public abstract class BaseTest {
         return hasGuiTestLabel;
     }
 
-    public static void deleteForm() {
+    //Commented deleteForm method because More Filter is not working properly and deleting all the forms
+    /*public static void deleteForm() {
         open("/dashboard");
         $("#navLibrary").should(exist).hover().click(); //Hover and click on Library to navigate to formlist table
         if (!applySearchForTestForms()) {
             System.out.println("applySearchForTestForms returned false, exiting deletion");
             return;
         }
-        int tableRows = $$("#formListTable .MuiDataGrid-row").size();
-        System.out.println("found rows to delete: " + tableRows);
-        for (int i = 0; i < tableRows; i++) {
+        int formsAvailable = $$("#formListTable .MuiDataGrid-row").size();
+        System.out.println("Found forms to delete: " + formsAvailable);
+        for (int i = 0; i < formsAvailable; i++) {
             $("#formListTable .MuiDataGrid-row").shouldBe(visible);
-            if ($("#formListTable").has(text("No records to display"))) {
+            if ($("#formListTable .MuiDataGrid-row").has(Condition.text("No forms available yet!"))) {
                 return;
             }
 
@@ -386,7 +394,7 @@ public abstract class BaseTest {
                 return;
             }
         }
-    }
+    }*/
 
 
     protected static SelenideElement selectAndClear(String cssSelector) {

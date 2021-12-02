@@ -10,11 +10,12 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import java.time.Duration;
+
 import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Condition.exist;
-import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static reusables.ReuseActions.createNewForm;
+import static reusables.ReuseActions.elementLocators;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Verify Form Publication Process Without Approver")
@@ -27,32 +28,30 @@ public class FormPublicationProcessWithoutApproverTest extends BaseTest {
         //Create a New Form
         Pair<String, String> formName=createNewForm();
         String actualFormName= formName.getKey();
-        $("#wizard-createFormButton").should(exist).shouldBe(enabled).click(); //Click on Create Form
-        $("#formDashboardHeaderLeft").should(appear);
-        $("#block-loc_en-GB-r_1-c_1").should(exist).click(); //Click on + to add a field
-        $("#template_card").should(appear).$("#li-template-Textfield-05").click(); //Add one field
-        $("#formtree_card").should(exist);
-        $("#formelement_properties_card").should(exist);
-        $("#nav_button").should(exist).click();
-        $("#designer_panel_menu ul").$(byText("Configure publication process"))
-                .should(exist).click(); //Should click on Configure publication process
-        $("#btnNext").should(exist).click(); //Click on Next
-        String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch version before publishing
-        $("#btnSave").should(exist).shouldBe(enabled).click(); //Click on Save
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version previous version is not present
-        $("#btnFormDesignPublish").should(exist).click();
-        $("#form-publish-dialog").$("#btnConfirm").should(exist).shouldBe(enabled).click();
-        $("#client-snackbar").should(appear)
-                .shouldHave(Condition.text("The form was published successfully"));
-        $("#formDashboardHeaderLeft").should(appear);
-        $("#btnCreateNewData").should(exist);
-        $("#navMainDashboard").should(exist).click();
-        $("#btnLibrary").should(exist).hover().click();
-        $("#tabDataCapture").should(exist).hover();
+        $(elementLocators("CreateFormButton")).should(exist).shouldBe(enabled).click(); //Click on Create Form
+        $(elementLocators("LeftFormDashboardHeader")).should(appear);
+        $(elementLocators("BlockR1C1")).should(exist).click(); //Click on + to add a field
+        $(elementLocators("TemplateCard")).should(appear).$(elementLocators("TextField")).click(); //Add one field
+        $(elementLocators("FormStructure")).should(exist);
+        $(elementLocators("ElementProperties")).should(exist);
+        $(elementLocators("DesignerMenu")).should(exist).click();
+        $(elementLocators("ConfigPublication")).should(exist).click(); //Should click on Configure publication process
+        $(elementLocators("nextButton")).should(exist).click(); //Click on Next
+        String initialVerNumStr = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch version before publishing
+        $(elementLocators("ButtonSave")).should(exist).shouldBe(enabled).click(); //Click on Save
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version previous version is not present
+        $(elementLocators("PublishButton")).should(exist).click();
+        $(elementLocators("ConfirmPublish")).should(exist).shouldBe(enabled).click();
+        $(elementLocators("ConfirmationMessage")).should(appear).shouldHave(Condition.text("The form was published successfully"), Duration.ofSeconds(5));
+        $(elementLocators("LeftFormDashboardHeader")).should(appear);
+        $(elementLocators("FillFormButton")).should(exist);
+        $(elementLocators("Launchpad")).should(exist).click();
+        $(elementLocators("ButtonLibrary")).should(exist).hover().click();
+        $(elementLocators("DataCapture")).should(exist).hover();
 
         //Verify the created form is published or not
-        SelenideElement formListTable = $("#formListTable .MuiTableBody-root").shouldBe(visible);
-        ElementsCollection formRows = formListTable.$$("tr");
+        SelenideElement formListTable = $(elementLocators("FormsList")).shouldBe(visible);
+        ElementsCollection formRows = formListTable.$$(elementLocators("FormsAvailableInTable"));
         System.out.println(" Form Count is " + formRows.size());
 
         if (formRows.size() == 0) {
@@ -60,9 +59,9 @@ public class FormPublicationProcessWithoutApproverTest extends BaseTest {
             return;
         }
         formRows.forEach(rowEl -> {
-            String finalFormName = rowEl.$("td:nth-child(2)").getText();
+            String finalFormName = rowEl.$(elementLocators("FinalFormName")).getText();
             if (finalFormName.equals(actualFormName)) {
-                rowEl.$("td:nth-child(3)").shouldHave(Condition.text("Published"));
+                rowEl.$(elementLocators("FormsStateInTable")).shouldHave(Condition.text("Published"));
             }
         });
     }
