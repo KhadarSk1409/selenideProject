@@ -5,12 +5,15 @@ import com.codeborne.selenide.SelenideElement;
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
 
+import java.time.Duration;
+
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byAttribute;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Selenide.$$;
+import static reusables.ReuseActions.elementLocators;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Verify the form versions")
@@ -21,7 +24,7 @@ public class FormComparisionExtensionTest extends BaseTest {
     @Order(1)
     public void openFromComparisionform(){
 
-        open("/compareForms/comparision-test/7/0");
+        open("/compareForms/comparision-test/9/0");
 
     }
 
@@ -30,25 +33,23 @@ public class FormComparisionExtensionTest extends BaseTest {
     @Order(2)
     public void verifyTheFormComparison() {
 
-        SelenideElement firstBlock = $("#gridCompareForms .MuiCardContent-root > div:nth-child(1) #block-loc_en-GB-r_1-c_2");
-        SelenideElement secondBlock = $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_3-c_2");
-        SelenideElement extendedSourceBlock = $("#gridCompareForms .MuiCardContent-root > div:nth-child(1) #block-loc_en-GB-r_1-c_2");
-        SelenideElement secondTargetBlock = $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_3-c_2");
+        SelenideElement firstBlock = $(elementLocators("SourceBlockR1C2"));
+        SelenideElement secondBlock = $(elementLocators("TargetBlockR3C2"));
+        SelenideElement extendedSourceBlock = $(elementLocators("SourceBlockR1C2"));
+        SelenideElement secondTargetBlock = $(elementLocators("TargetBlockR3C2"));
 
-        $("#formIcon").should(exist);
-        $("#gridItemFormProps").should(exist);
-        $("#gridCompareForms").should(exist);
-        $("#sourceFormSelect").shouldHave(value("Compare Test Forms 7.0"));
+        $(elementLocators("FormIcon")).should(exist);
+        $(elementLocators("FormComponents")).should(exist);
+        $(elementLocators("FormComparisonGrid")).should(exist);
+        $(elementLocators("SourceFormInputField")).shouldHave(value("Compare Test Forms 9.0"));
 
         //Verifying version 5.0
-        $("#sourceFormSelect ~ .MuiAutocomplete-endAdornment .MuiAutocomplete-popupIndicator")
-                .should(exist).click();
-        $(".MuiAutocomplete-popper").should(appear);
-        $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("Compare Test Forms 5.0"), 10000);
-        $$(".MuiAutocomplete-popper li").findBy(text("Compare Test Forms 5.0")).click();
-        $("#btnFormDesignSave").should(exist).click();
-        $("#gridCompareForms .MuiCardContent-root > div:nth-child(1) #block-loc_en-GB-r_1-c_1").should(exist)
-                .shouldHave(Condition.text("First Text Field")).should(exist);
+        $(elementLocators("SourceFormPopupOpener")).should(exist).click();
+        $(elementLocators("Popover")).should(appear);
+        $$(elementLocators("ListOfOptions")).shouldHave(itemWithText("Compare Test Forms 5.0"), Duration.ofSeconds(10));
+        $$(elementLocators("ListOfOptions")).findBy(text("Compare Test Forms 5.0")).click();
+        $(elementLocators("CompareButton")).should(exist).click();
+        $(elementLocators("SourceBlockR1C1")).should(exist).shouldHave(Condition.text("First Text Field")).should(exist);
         $(firstBlock).should(exist)
                 .$(byAttribute("aria-label", "Moved")).should(appear); //Verify the text field is marked as Moved
         int oneWidhtBlock = $(firstBlock).getRect().getWidth();
@@ -57,25 +58,23 @@ public class FormComparisionExtensionTest extends BaseTest {
                 .$(byAttribute("aria-label", "Moved")).should(appear); //Verify the text field is marked as Moved
         int extendedBlockWidth = $(secondBlock).getRect().getWidth();
 
-        Assertions.assertEquals(extendedBlockWidth/oneWidhtBlock, 2, "second block should have span of 2");
+        Assertions.assertEquals(extendedBlockWidth/oneWidhtBlock, 3, "second block should have span of 2");
 
-        $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_3-c_2 #movedBtn_form-user-d2a0678d-bb8c-4e28-a6a5-39bae183b9fc")
-                .should(exist).click();
-        $("#simple-popover").should(appear).shouldHave(Condition.text("MOVED"));
-        $("#simple-popover").should(exist).click();
-        $("#gridCompareForms input[value='checkedMoved']").should(exist).click(); //Click on Moved
-        $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_3-c_2").should(exist)
+        $(elementLocators("TargetBlockR3C2MovedButton")).should(exist).click();
+        $(elementLocators("PopoverWindow")).should(appear).shouldHave(Condition.text("MOVED"));
+        $(elementLocators("PopoverWindow")).should(exist).click();
+        $(elementLocators("MovedCheckBox")).should(exist).click(); //Click on Moved
+        $(elementLocators("TargetBlockR3C2")).should(exist)
                 .$(byAttribute("aria-label", "Moved")).shouldNot(appear); //Verify the text field is marked Moved is visible or not
-        $("#gridCompareForms input[value='checkedMoved']").should(exist).click(); //Click on Moved
+        $(elementLocators("MovedCheckBox")).should(exist).click(); //Click on Moved
 
         //Verifying Version 6.0
-        $("#sourceFormSelect").shouldHave(value("Compare Test Forms 5.0"));
-        $("#sourceFormSelect ~ .MuiAutocomplete-endAdornment .MuiAutocomplete-popupIndicator")
-                .should(exist).click();
-        $(".MuiAutocomplete-popper").should(appear);
-        $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("Compare Test Forms 6.0"), 10000);
-        $$(".MuiAutocomplete-popper li").findBy(text("Compare Test Forms 6.0")).click();
-        $("#btnFormDesignSave").should(exist).click();
+        $(elementLocators("SourceFormInputField")).shouldHave(value("Compare Test Forms 5.0"));
+        $(elementLocators("SourceFormPopupOpener")).should(exist).click();
+        $(elementLocators("Popover")).should(appear);
+        $$(elementLocators("ListOfOptions")).shouldHave(itemWithText("Compare Test Forms 6.0"), Duration.ofSeconds(10));
+        $$(elementLocators("ListOfOptions")).findBy(text("Compare Test Forms 6.0")).click();
+        $(elementLocators("CompareButton")).should(exist).click();
         $(extendedSourceBlock).should(exist)
                 .$(byAttribute("aria-label", "Moved")).should(appear); //Verify the text field is marked Moved is visible or not
         int extendedSourceBlockWidth = $(extendedSourceBlock).getRect().getWidth();
@@ -87,38 +86,37 @@ public class FormComparisionExtensionTest extends BaseTest {
         Assertions.assertEquals(extendedTargetBlockWidth/extendedSourceBlockWidth, 1, "Both the blocks should have same span");
 
         //Verifying Version 7.0
-        $("#sourceFormSelect").shouldHave(value("Compare Test Forms 6.0"));
-        $("#sourceFormSelect ~ .MuiAutocomplete-endAdornment .MuiAutocomplete-popupIndicator")
-                .should(exist).click();
-        $(".MuiAutocomplete-popper").should(appear);
-        $$(".MuiAutocomplete-popper li").shouldHave(itemWithText("Compare Test Forms 7.0"), 10000);
-        $$(".MuiAutocomplete-popper li").findBy(text("Compare Test Forms 7.0")).click();
-        $("#btnFormDesignSave").should(exist).click();
+        $(elementLocators("SourceFormInputField")).shouldHave(value("Compare Test Forms 6.0"));
+        $(elementLocators("SourceFormPopupOpener")).should(exist).click();
+        $(elementLocators("Popover")).should(appear);
+        $$(elementLocators("ListOfOptions")).shouldHave(itemWithText("Compare Test Forms 7.0"), Duration.ofSeconds(10));
+        $$(elementLocators("ListOfOptions")).findBy(text("Compare Test Forms 7.0")).click();
+        $(elementLocators("CompareButton")).should(exist).click();
 
-        //Verifying all the labels are visible or not
+        //Verifying all the labels are visible or not in source and target Second Text Field Block
         // In Source Form Section
-        $("#gridCompareForms .MuiCardContent-root > div:nth-child(1) #block-loc_en-GB-r_3-c_2").should(exist)
-                .shouldHave(Condition.text("Second Text Field")).should(exist).$(byAttribute("aria-label", "Moved")).shouldNot(appear);
-        $("#gridCompareForms .MuiCardContent-root > div:nth-child(1) #block-loc_en-GB-r_3-c_2").should(exist)
-                .shouldHave(Condition.text("Second Text Field")).should(exist).$(byAttribute("aria-label", "Edited")).shouldNot(appear);
-        $("#gridCompareForms .MuiCardContent-root > div:nth-child(1) #block-loc_en-GB-r_3-c_2").should(exist)
-                .shouldHave(Condition.text("Second Text Field")).should(exist).$(byAttribute("aria-label", "Removed")).shouldNot(appear);
-        $("#gridCompareForms .MuiCardContent-root > div:nth-child(1) #block-loc_en-GB-r_3-c_2").should(exist)
-                .shouldHave(Condition.text("Second Text Field")).should(exist).$(byAttribute("aria-label", "New")).shouldNot(appear);
-        $("#gridCompareForms .MuiCardContent-root > div:nth-child(1) #block-loc_en-GB-r_3-c_2").should(exist)
-                .shouldHave(Condition.text("Second Text Field")).should(exist).$(byAttribute("aria-label", "Values")).shouldNot(appear);
+        $(elementLocators("SourceBlockR3C2")).should(exist).shouldHave(Condition.text("Second Text Field")).should(exist)
+                .$(byAttribute("aria-label", "Moved")).shouldNot(appear);
+        $(elementLocators("SourceBlockR3C2")).should(exist).shouldHave(Condition.text("Second Text Field")).should(exist)
+                .$(byAttribute("aria-label", "Edited")).shouldNot(appear);
+        $(elementLocators("SourceBlockR3C2")).should(exist).shouldHave(Condition.text("Second Text Field")).should(exist)
+                .$(byAttribute("aria-label", "Removed")).shouldNot(appear);
+        $(elementLocators("SourceBlockR3C2")).should(exist).shouldHave(Condition.text("Second Text Field")).should(exist)
+                .$(byAttribute("aria-label", "New")).shouldNot(appear);
+        $(elementLocators("SourceBlockR3C2")).should(exist).shouldHave(Condition.text("Second Text Field")).should(exist)
+                .$(byAttribute("aria-label", "Values")).shouldNot(appear);
 
         // In Target Form Section
-        $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_3-c_2").should(exist)
-                .shouldHave(Condition.text("Second Text Field")).should(exist).$(byAttribute("aria-label", "Moved")).shouldNot(appear);;
-        $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_3-c_2").should(exist)
-                .shouldHave(Condition.text("Second Text Field")).should(exist).$(byAttribute("aria-label", "Edited")).shouldNot(appear);;
-        $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_3-c_2").should(exist)
-                .shouldHave(Condition.text("Second Text Field")).should(exist).$(byAttribute("aria-label", "Removed")).shouldNot(appear);;
-        $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_3-c_2").should(exist)
-                .shouldHave(Condition.text("Second Text Field")).should(exist).$(byAttribute("aria-label", "New")).shouldNot(appear);
-        $("#gridCompareForms .MuiCardContent-root > div:nth-child(2) #block-loc_en-GB-r_3-c_2").should(exist)
-                .shouldHave(Condition.text("Second Text Field")).should(exist).$(byAttribute("aria-label", "Values")).shouldNot(appear);
+        $(elementLocators("TargetBlockR3C2")).should(exist).shouldHave(Condition.text("Second Text Field")).should(exist)
+                .$(byAttribute("aria-label", "Moved")).shouldNot(appear);;
+        $(elementLocators("TargetBlockR3C2")).should(exist).shouldHave(Condition.text("Second Text Field")).should(exist)
+                .$(byAttribute("aria-label", "Edited")).shouldNot(appear);;
+        $(elementLocators("TargetBlockR3C2")).should(exist).shouldHave(Condition.text("Second Text Field")).should(exist)
+                .$(byAttribute("aria-label", "Removed")).shouldNot(appear);;
+        $(elementLocators("TargetBlockR3C2")).should(exist).shouldHave(Condition.text("Second Text Field")).should(exist)
+                .$(byAttribute("aria-label", "New")).shouldNot(appear);
+        $(elementLocators("TargetBlockR3C2")).should(exist).shouldHave(Condition.text("Second Text Field")).should(exist)
+                .$(byAttribute("aria-label", "Values")).shouldNot(appear);
 
     }
 }
