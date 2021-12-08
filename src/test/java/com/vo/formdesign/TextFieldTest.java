@@ -23,6 +23,7 @@ import static com.codeborne.selenide.Selenide.*;
 import static java.lang.Integer.parseInt;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static reusables.ReuseActions.createNewForm;
+import static reusables.ReuseActions.elementLocators;
 import static reusables.ReuseActionsFormCreation.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -80,20 +81,20 @@ public class TextFieldTest extends BaseTest {
         //create new block, if not exist
         if (!$(blockId).exists()) {
             String prevBlockId = "#block-loc_en-GB-r_" + (row - 1) + "-c_" + col;
-            $(prevBlockId + " .add-row").shouldBe(visible).click();
+            $(prevBlockId + elementLocators("AddRowBtn")).shouldBe(visible).click();
         }
-        String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+        String initialVerNumStr = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $("#li-template-Textfield-05").should(appear).click();
-        $("#formelement_properties_card").should(appear);
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
+        $(elementLocators("TextField")).should(appear).click();
+        $(elementLocators("FormPropertiesCard")).should(appear);
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
         if (colSpan != null && colSpan > 1) {
             int prevWidth = $(blockId).getRect().getWidth();
             IntStream.range(1, colSpan).forEach(c -> {
-                String initialVerNumStr1 = $("#formMinorversion").should(exist).getText();
-                $("#blockButtonExpand").shouldBe(visible).click();
-                $("#formMinorversion").shouldNotHave(text(initialVerNumStr1));
+                String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText();
+                $(elementLocators("ExpandBlockBtn")).shouldBe(visible).click();
+                $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1));
             });
             int currWidth = $(blockId).getRect().getWidth();
             Assertions.assertEquals(colSpan, currWidth / prevWidth, "block column span should be " + colSpan);
@@ -122,102 +123,102 @@ public class TextFieldTest extends BaseTest {
         //Prefix
         if (StringUtils.isNotEmpty(textfield_prefix)) {
             //   $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(TextFieldOptionsIds.textfield_prefix.name()))
                     .setValue(textfield_prefix).sendKeys(Keys.TAB);
             //TODO check appearance on designer
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(By.id(TextFieldOptionsIds.textfield_prefix.name())).shouldHave(value(textfield_prefix));
         }
 
         //Suffix
         if (StringUtils.isNotEmpty(textfield_suffix)) {
             //     $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(TextFieldOptionsIds.textfield_suffix.name()))
                     .setValue(textfield_suffix).sendKeys(Keys.TAB);
             //TODO check appearance on designer
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(By.id(TextFieldOptionsIds.textfield_suffix.name())).shouldHave(value(textfield_suffix));
         }
 
         //Default Value
         if (StringUtils.isNotEmpty(textfield_defaultValue)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(TextFieldOptionsIds.textfield_defaultValue.name()))
                     .setValue(textfield_defaultValue).sendKeys(Keys.TAB);
             //TODO check appearance on designer
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(By.id(TextFieldOptionsIds.textfield_defaultValue.name())).shouldHave(value(textfield_defaultValue));
         }
 
         //chars normal
         if (StringUtils.isNotEmpty(property_toggle_button_normal)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             $(By.id(TextFieldOptionsIds.prop_toggle_button_normal.name())).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(By.id(TextFieldOptionsIds.prop_toggle_button_normal.name())).shouldHave(attribute("aria-pressed", "true"));
         }
 
         //chars caps/uppercase
         if (StringUtils.isNotEmpty(property_toggle_button_uppercase)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             $(By.id(TextFieldOptionsIds.prop_toggle_button_uppercase.name())).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(By.id(TextFieldOptionsIds.prop_toggle_button_uppercase.name())).shouldHave(attribute("aria-pressed", "true"));
         }
 
         //chars small/lowercase
         if (StringUtils.isNotEmpty(property_toggle_button_lowercase)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             $(By.id(TextFieldOptionsIds.prop_toggle_button_lowercase.name())).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(By.id(TextFieldOptionsIds.prop_toggle_button_lowercase.name())).shouldHave(attribute("aria-pressed", "true"));
         }
 
         //only Alphabets
         if (StringUtils.isNotEmpty(property_onlyAlphabets)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
             String radioBtnId = "#" + TextFieldOptionsIds.prop_onlyAlphabets_onlyAlphabets.name();
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             $(radioBtnId).shouldBe(visible).click();
             //$(checkBoxId + " input").shouldHave(value("true"));
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(radioBtnId + " input").shouldBe(selected);
         }
 
         //Alphabets and numerics
         if (StringUtils.isNotEmpty(property_alphabetsAndNumerics)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
             String radioBtnId = "#" + TextFieldOptionsIds.prop_alphabetsAndNumerics_alphabetsAndNumerics.name();
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             $(radioBtnId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(radioBtnId + " input").shouldBe(selected);
         }
 
         //All chars
         if (StringUtils.isNotEmpty(property_allCharacters)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
             String radioBtnId = "#" + TextFieldOptionsIds.prop_allCharacters_allCharacters.name();
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             $(radioBtnId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             //$(checkBoxId + " input").shouldHave(value("true"));
             $(radioBtnId + " input").shouldBe(selected);
         }
 
         if (minLength != null && minLength > 0) {
-            String sliderId = "#prop_minMaxLength_formcontrol";
-            String minInputSel = sliderId + " .hidden_slider_inputs .minValue input";
+            String sliderId = elementLocators("MinMaxSlider");
+            String minInputSel = sliderId + elementLocators("HiddenSliderInputMinValue");
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
             executeJavaScript("document.querySelector('#prop_minMaxLength_formcontrol .hidden_slider_inputs').hidden = false;");
             selectAndClear(By.cssSelector(minInputSel)).setValue(minLength.toString()).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
 
             executeJavaScript("document.querySelector('#prop_minMaxLength_formcontrol .hidden_slider_inputs').hidden = true;");
 
@@ -226,13 +227,13 @@ public class TextFieldTest extends BaseTest {
         }
 
         if (maxLength != null && maxLength > 0) {
-            String sliderId = "#prop_minMaxLength_formcontrol";
-            String minInputSel = sliderId + " .hidden_slider_inputs .maxValue input";
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String sliderId = elementLocators("MinMaxSlider");
+            String minInputSel = sliderId + elementLocators("HiddenSliderInputMaxValue");
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             executeJavaScript("document.querySelector('#prop_minMaxLength_formcontrol .hidden_slider_inputs').hidden = false;");
 
             selectAndClear(By.cssSelector(minInputSel)).setValue(maxLength.toString()).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
 
             executeJavaScript("document.querySelector('#prop_minMaxLength_formcontrol .hidden_slider_inputs').hidden = true;");
 
@@ -247,12 +248,12 @@ public class TextFieldTest extends BaseTest {
     @DisplayName("publish and open FormPage")
     public void publishAndOpenFormPage() {
         //Click on publish button, wait until form dashboard opens and click on fill form
-        $("#btnFormDesignPublish").should(exist).click();
+        $(elementLocators("PublishButton")).should(exist).click();
 
-        $("#form-publish-dialog .MuiPaper-root").should(appear); //Publish confirmation dialog appears
-        $("#form-publish-dialog  #btnConfirm").should(exist).click(); //Click on Confirm button
-        $("#btnCreateNewData").should(exist).click(); //Fill form button on Launch screen
-        $("#dataContainer").should(appear); //Verify that the form details screen appears
+        $(elementLocators("PublishConfirmationDialog")).should(appear); //Publish confirmation dialog appears
+        $(elementLocators("ConfirmPublish")).should(exist).click(); //Click on Confirm button
+        $(elementLocators("FillFormButton")).should(exist).click(); //Fill form button on Launch screen
+        $(elementLocators("DataContainer")).should(appear); //Verify that the form details screen appears
 
     }
 
