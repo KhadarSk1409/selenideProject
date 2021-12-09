@@ -21,6 +21,7 @@ import java.util.stream.IntStream;
 
 import static com.codeborne.selenide.Condition.*;
 import static reusables.ReuseActions.createNewForm;
+import static reusables.ReuseActions.elementLocators;
 import static reusables.ReuseActionsFormCreation.*;
 
 public class TimeFieldTest extends BaseTest {
@@ -78,18 +79,18 @@ public class TimeFieldTest extends BaseTest {
             String prevBlockId = "#block-loc_en-GB-r_" + (row - 1) + "-c_" + col;
             $(prevBlockId + " .add-row").shouldBe(visible).click();
         }
-        String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+        String initialVerNumStr = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $("#li-template-TimeField-04").should(appear).click();
-        $("#formelement_properties_card").should(appear);
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
+        $(elementLocators("TimeField")).should(appear).click();
+        $(elementLocators("FormPropertiesCard")).should(appear);
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
         if (colSpan != null && colSpan > 1) {
             int prevWidth = $(blockId).getRect().getWidth();
             IntStream.range(1, colSpan).forEach(c -> {
-                String initialVerNumStr1 = $("#formMinorversion").should(exist).getText();
-                $("#blockButtonExpand").shouldBe(visible).click();
-                $("#formMinorversion").shouldNotHave(text(initialVerNumStr1));
+                String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText();
+                $(elementLocators("ExpandBlockBtn")).shouldBe(visible).click();
+                $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1));
             });
             int currWidth = $(blockId).getRect().getWidth();
             Assertions.assertEquals(colSpan, currWidth / prevWidth, "block column span should be " + colSpan);
@@ -118,17 +119,17 @@ public class TimeFieldTest extends BaseTest {
 
         //Hour Minute Second radioBtn
         if (StringUtils.isNotEmpty(radioBtn_hrMinSec)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String radioBtnId = "#" + TimeFieldTest.TimeFieldOptionsIds.prop_hourMinuteSecond_hourMinuteSecond.name();
             $(radioBtnId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(radioBtnId + " input").shouldBe(selected);
         }
 
         //Hour Minute radioBtn
         if (StringUtils.isNotEmpty(radio_hrMin)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
             String radioBtnId = "#" + TimeFieldTest.TimeFieldOptionsIds.prop_hourMinute_hourMinute.name();
             $(radioBtnId).shouldBe(visible).click();
             $(radioBtnId + " input").shouldBe(selected);
@@ -136,58 +137,58 @@ public class TimeFieldTest extends BaseTest {
 
         //Minute Second radioBtn
         if (StringUtils.isNotEmpty(radio_minSec)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String radioBtnId = "#" + TimeFieldTest.TimeFieldOptionsIds.prop_minuteSecond_minuteSecond.name();
             $(radioBtnId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(radioBtnId + " input").shouldBe(selected);
         }
 
 
         //Hour radioBtn
         if (StringUtils.isNotEmpty(radio_hour)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String radioBtnId = "#" + TimeFieldTest.TimeFieldOptionsIds.prop_hour_hour.name();
             $(radioBtnId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(radioBtnId + " input").shouldBe(selected);
         }
 
         //Enter Default value
         if (StringUtils.isNotEmpty(time_defaultValueTime)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(TimeFieldTest.TimeFieldOptionsIds.time_defaultValueTime.name()))
                     .setValue(time_defaultValueTime).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $("#time_defaultValueTime").shouldHave(value(time_defaultValueTime));
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("DefaultTime")).shouldHave(value(time_defaultValueTime));
 
 
         }
 
         //Read only checkbox check
         if (StringUtils.isNotEmpty(checkbox_readOnly)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + TimeFieldTest.TimeFieldOptionsIds.checkbox_readOnly.name();
             $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
 
             //Verify Read Only with Default:
             if (StringUtils.isNotEmpty(time_defaultValueTime)) {
                 selectAndClear(By.id(TimeFieldTest.TimeFieldOptionsIds.time_defaultValueTime.name()))
                         .setValue(time_defaultValueTime).sendKeys(Keys.TAB);
-                $("#time_defaultValueTime").shouldHave(value(time_defaultValueTime));
+                $(elementLocators("DefaultTime")).shouldHave(value(time_defaultValueTime));
             } else {
-                $("#time_defaultValueTime-helper-text").should(exist).shouldHave(text("Must be set, if read only")); //Verify the error shown when read only checkbox is checked wihtout any value in default value field
+                $(elementLocators("DefaultTimeHelperText")).should(exist).shouldHave(text("Must be set, if read only")); //Verify the error shown when read only checkbox is checked wihtout any value in default value field
 
                 //Set some value in Default value
                 selectAndClear(By.id(TimeFieldTest.TimeFieldOptionsIds.time_defaultValueTime.name()))
                         .setValue("01:00").sendKeys(Keys.TAB);
-                $("#time_defaultValueTime").shouldHave(value("01:00"));
+                $(elementLocators("DefaultTime")).shouldHave(value("01:00"));
             }
             $(checkBoxId).shouldBe(visible).click();
             $(checkBoxId + " input").shouldNotBe(selected);
@@ -195,11 +196,11 @@ public class TimeFieldTest extends BaseTest {
 
         //Verify 12h/24h checkbox for hour selection
         if (StringUtils.isNotEmpty(checkbox_24hr)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 =$(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + TimeFieldTest.TimeFieldOptionsIds.checkbox_ampm.name();
             $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
         }
     }
@@ -209,12 +210,11 @@ public class TimeFieldTest extends BaseTest {
     @DisplayName("publish and open FormPage")
     public void publishAndOpenFormPage() {
         //Click on publish button, wait until form dashboard opens and click on fill form
-        $("#btnFormDesignPublish").should(exist).click();
-
-        $("#form-publish-dialog .MuiPaper-root").should(appear); //Publish confirmation dialog appears
-        $("#form-publish-dialog  #btnConfirm").should(exist).click(); //Fill form button on Launch screen
-        $("#btnCreateNewData").should(exist).click();
-        $("#dataContainer").should(appear); //Verify that the form details screen appears
+        $(elementLocators("PublishButton")).should(exist).click();
+        $(elementLocators("PublishConfirmationDialog")).should(appear); //Publish confirmation dialog appears
+        $(elementLocators("ConfirmPublish")).should(exist).click(); //Click on Confirm button
+        $(elementLocators("FillFormButton")).should(exist).click(); //Fill form button on Launch screen
+        $(elementLocators("DataContainer")).should(appear); //Verify that the form details screen appears
 
     }
 

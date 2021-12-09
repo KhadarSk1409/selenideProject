@@ -81,7 +81,7 @@ public class TextFieldTest extends BaseTest {
         //create new block, if not exist
         if (!$(blockId).exists()) {
             String prevBlockId = "#block-loc_en-GB-r_" + (row - 1) + "-c_" + col;
-            $(prevBlockId + elementLocators("AddRowBtn")).shouldBe(visible).click();
+            $(prevBlockId + " .add-row").shouldBe(visible).click();
         }
         String initialVerNumStr = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
@@ -213,9 +213,9 @@ public class TextFieldTest extends BaseTest {
         }
 
         if (minLength != null && minLength > 0) {
-            String sliderId = elementLocators("MinMaxSlider");
-            String minInputSel = sliderId + elementLocators("HiddenSliderInputMinValue");
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String sliderId = "#prop_minMaxLength_formcontrol";
+            String minInputSel = sliderId + " .hidden_slider_inputs .minValue input";
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             executeJavaScript("document.querySelector('#prop_minMaxLength_formcontrol .hidden_slider_inputs').hidden = false;");
             selectAndClear(By.cssSelector(minInputSel)).setValue(minLength.toString()).sendKeys(Keys.TAB);
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
@@ -227,8 +227,8 @@ public class TextFieldTest extends BaseTest {
         }
 
         if (maxLength != null && maxLength > 0) {
-            String sliderId = elementLocators("MinMaxSlider");
-            String minInputSel = sliderId + elementLocators("HiddenSliderInputMaxValue");
+            String sliderId = "#prop_minMaxLength_formcontrol";
+            String minInputSel = sliderId + " .hidden_slider_inputs .maxValue input";
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             executeJavaScript("document.querySelector('#prop_minMaxLength_formcontrol .hidden_slider_inputs').hidden = false;");
 
@@ -249,7 +249,6 @@ public class TextFieldTest extends BaseTest {
     public void publishAndOpenFormPage() {
         //Click on publish button, wait until form dashboard opens and click on fill form
         $(elementLocators("PublishButton")).should(exist).click();
-
         $(elementLocators("PublishConfirmationDialog")).should(appear); //Publish confirmation dialog appears
         $(elementLocators("ConfirmPublish")).should(exist).click(); //Click on Confirm button
         $(elementLocators("FillFormButton")).should(exist).click(); //Fill form button on Launch screen
