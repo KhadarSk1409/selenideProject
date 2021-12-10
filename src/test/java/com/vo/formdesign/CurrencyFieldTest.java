@@ -26,6 +26,7 @@ import java.util.stream.IntStream;
 
 import static com.codeborne.selenide.Condition.*;
 import static reusables.ReuseActions.createNewForm;
+import static reusables.ReuseActions.elementLocators;
 import static reusables.ReuseActionsFormCreation.*;
 import static reusables.ReuseActionsFormCreation.readOnlyCheckboxOnFormDesign;
 
@@ -89,20 +90,20 @@ public class CurrencyFieldTest extends BaseTest {
             String prevBlockId = "#block-loc_en-GB-r_" + (row - 1) + "-c_" + col;
             $(prevBlockId + " .add-row").shouldBe(visible).click();
         }
-        String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+        String initialVerNumStr = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $("#li-template-CurrencyField-06").should(appear).click();
-        $("#formelement_properties_card").should(appear);
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
+        $(elementLocators("CurrencyField")).should(appear).click();
+        $(elementLocators("FormPropertiesCard")).should(appear);
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
         DecimalFormat df = getDecimalFormat(textfield_decimalScale, checkbox_thousandSeparator);
 
         if (colSpan != null && colSpan > 1) {
             int prevWidth = $(blockId).getRect().getWidth();
             IntStream.range(1, colSpan).forEach(c -> {
-                String initialVerNumStr1 = $("#formMinorversion").should(exist).getText();
-                $("#blockButtonExpand").shouldBe(visible).click();
-                $("#formMinorversion").shouldNotHave(text(initialVerNumStr1));
+                String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText();
+                $(elementLocators("ExpandBlockBtn")).shouldBe(visible).click();
+                $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1));
             });
             int currWidth = $(blockId).getRect().getWidth();
             Assertions.assertEquals(colSpan, currWidth / prevWidth, "block column span should be " + colSpan);
@@ -131,15 +132,15 @@ public class CurrencyFieldTest extends BaseTest {
         //Currencies field
         if (StringUtils.isNotEmpty(currency_field)) {
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
-            $("#sel_input_currencies").shouldBe(visible);
-            $("#sel_control_currencies .selLabelChip").shouldHave(text("EUR"));
-            $("#sel_control_currencies .selLabelChip").sendKeys(Keys.BACK_SPACE); //Clear the default value in Currencies field
+            $(elementLocators("CurrencyInput")).shouldBe(visible);
+            $(elementLocators("CurrencyInputField")).shouldHave(text("EUR"));
+            $(elementLocators("CurrencyInputField")).sendKeys(Keys.BACK_SPACE); //Clear the default value in Currencies field
 
             Arrays.asList(currency_field.split(",")).forEach(currency -> {
-                $("#sel_input_currencies").should(exist).click();
-                $(".MuiAutocomplete-popper").should(appear);
-                $$(".MuiAutocomplete-popper li").findBy(text(currency)).should(exist).click();
-                $("#sel_control_currencies").shouldHave(text(currency));
+                $(elementLocators("CurrencyInput")).should(exist).click();
+                $(elementLocators("Popover")).should(appear);
+                $$(elementLocators("ListOfOptions")).findBy(text(currency)).should(exist).click();
+                $(elementLocators("Currencies")).shouldHave(text(currency));
             });
         }
 
@@ -150,13 +151,13 @@ public class CurrencyFieldTest extends BaseTest {
 
             //  if (StringUtils.isEmpty(text_currencyField_defaultValueCurrency)) {
             //When you don't have any value in Default value edit box and click on Read only checkbox it should show error
-            $("#numberField_defaultValueNumber-helper-text").should(exist).shouldHave(text("Must be set, if read only"));
+            $(elementLocators("DefaultNumberHelperText")).should(exist).shouldHave(text("Must be set, if read only"));
 
             //Uncheck the readonly checkbox
             String checkBoxId = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_readOnly.name();
-            String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String initialVerNumStr2 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
             $(checkBoxId + " input").shouldNotBe(selected); //Uncheck the Read only checkbox
 
             //Set the value in the Default value:
@@ -172,15 +173,15 @@ public class CurrencyFieldTest extends BaseTest {
 
         //Apply user format checkbox check
         if (StringUtils.isNotEmpty(checkbox_applyFormatter)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + CurrencyFieldTest.CurrencyFieldOptionsIds.checkbox_applyFormatter.name();
             $(checkBoxId).shouldBe(visible).click();
 
             //Set the number in Default value:
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name()))
                     .setValue(text_currencyField_defaultValueCurrency).sendKeys(Keys.TAB); //Enter value
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
 
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name())).shouldHave(value(text_currencyField_defaultValueCurrency));
@@ -198,14 +199,14 @@ public class CurrencyFieldTest extends BaseTest {
         //  Thousand Separator checkbox check
         if (StringUtils.isNotEmpty(checkbox_thousandSeparator)) {
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name()))
                     .setValue(text_currencyField_defaultValueCurrency).sendKeys(Keys.TAB); //Enter value in Default chekbox
 
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + CurrencyFieldTest.CurrencyFieldOptionsIds.checkbox_thousandSeparator.name();
             $(checkBoxId).shouldBe(visible).click(); //TBD - Thousand separator logic
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
 
             //Verify the changed format:
@@ -218,11 +219,11 @@ public class CurrencyFieldTest extends BaseTest {
         //Allow Negative checkbox
         if (StringUtils.isNotEmpty(checkbox_allowNegative)) {
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + CurrencyFieldTest.CurrencyFieldOptionsIds.checkbox_allowNegative.name();
             $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
         }
 
@@ -230,26 +231,26 @@ public class CurrencyFieldTest extends BaseTest {
         // Allow leading zeros
         if (StringUtils.isNotEmpty(checkbox_allowLeadingZeros)) {
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + CurrencyFieldTest.CurrencyFieldOptionsIds.checkbox_allowLeadingZeros.name();
             $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
         }
 
         //Only integer
         if (StringUtils.isNotEmpty(checkbox_onlyInteger)) {
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + CurrencyFieldTest.CurrencyFieldOptionsIds.checkbox_onlyInteger.name();
             $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
 
             //here also check that after this is checked the Decimal places textfield should be disabled
-            $("#numberField_decimalScale").shouldBe(disabled); //Decimal places
+            $(elementLocators("DecimalPlaceInputField")).shouldBe(disabled); //Decimal places
             $(checkBoxId).shouldBe(visible).click(); //Click Only integer checkbox again
             $(checkBoxId).shouldNotBe(checked);
             $(blockId).shouldHave(text(label_text));
@@ -259,11 +260,11 @@ public class CurrencyFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(textfield_decimalScale)) {
             // $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
-            String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String initialVerNumStr2 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_decimalScale.name()))
                     .setValue(textfield_decimalScale).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
-            $("#numberField_decimalScale").shouldHave(value(textfield_decimalScale));
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
+            $(elementLocators("DecimalPlaceInputField")).shouldHave(value(textfield_decimalScale));
         }
 
         //Enter Default value
@@ -273,12 +274,12 @@ public class CurrencyFieldTest extends BaseTest {
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name()))
                     .setValue(text_currencyField_defaultValueCurrency).sendKeys(Keys.TAB);
             if (StringUtils.isNotEmpty(textfield_decimalScale)) {
-                $("#numberField_defaultValueNumber").shouldHave(value("1234.56"));
+                $(elementLocators("DefaultNumberInputField")).shouldHave(value("1234.56"));
                 selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_decimalScale.name())).sendKeys(Keys.TAB); //Clear the decimal scale field
                 selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name()))
                         .setValue(text_currencyField_defaultValueCurrency).sendKeys(Keys.TAB); //Again set text_currencyField_defaultValueCurrency
             } else {
-                $("#numberField_defaultValueNumber")
+                $(elementLocators("DefaultNumberInputField"))
                         .shouldHave(value(df.format(new BigDecimal(text_currencyField_defaultValueCurrency))));
             }
         }
@@ -301,14 +302,14 @@ public class CurrencyFieldTest extends BaseTest {
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name())).shouldHave(value(str_numberfield_lessThanMinValue));
 
             String errorStr = "The value " + str_numberfield_lessThanMinValue + " is smaller than minimum value " + int_numberfield_minValue;
-            $("#numberField_defaultValueNumber-helper-text").should(exist).shouldHave(text(errorStr)); //Verify error shown
+            $(elementLocators("DefaultNumberHelperText")).should(exist).shouldHave(text(errorStr)); //Verify error shown
 
             //Set the allowable value again:
-            String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String initialVerNumStr2 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name()))
                     .setValue(text_currencyField_defaultValueCurrency).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
-            $("#numberField_minValue").shouldHave(value(text_currencyField_defaultValueCurrency));
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
+            $(elementLocators("MinValueInputField")).shouldHave(value(text_currencyField_defaultValueCurrency));
         }
 
         //Enter Maximum Value
@@ -327,14 +328,14 @@ public class CurrencyFieldTest extends BaseTest {
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name())).setValue(str_numberfield_maxValue).sendKeys(Keys.TAB);
             String errorStr = "The value " + str_numberfield_maxValue + " is greater than maximum value " + int_numberfield_maxValue;
 
-            $("#numberField_defaultValueNumber-helper-text").should(exist).shouldHave(text(errorStr)); //Verify error shown
+            $(elementLocators("DefaultNumberHelperText")).should(exist).shouldHave(text(errorStr)); //Verify error shown
 
             //Set back the allowable value again:
-            String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String initialVerNumStr2 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name()))
                     .setValue(text_currencyField_defaultValueCurrency).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
-            $("#numberField_maxValue").shouldHave(value(text_currencyField_defaultValueCurrency));
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
+            $(elementLocators("MaxValueInputField")).shouldHave(value(text_currencyField_defaultValueCurrency));
         }
 
     }
@@ -344,12 +345,11 @@ public class CurrencyFieldTest extends BaseTest {
     @DisplayName("publish and open FormPage")
     public void publishAndOpenFormPage() {
         //Click on publish button, wait until form dashboard opens and click on fill form
-        $("#btnFormDesignPublish").should(exist).click();
-
-        $("#form-publish-dialog .MuiPaper-root").should(appear); //Publish confirmation dialog appears
-        $("#form-publish-dialog #btnConfirm").should(exist).click(); //Click on Confirm button
-        $("#btnCreateNewData").waitUntil(exist, 50000).click(); //Fill form button on Launch screen
-        $("#dataContainer").should(appear); //Verify that the form details screen appears
+        $(elementLocators("PublishButton")).should(exist).click();
+        $(elementLocators("PublishConfirmationDialog")).should(appear); //Publish confirmation dialog appears
+        $(elementLocators("ConfirmPublish")).should(exist).click(); //Click on Confirm button
+        $(elementLocators("FillFormButton")).should(exist).click(); //Fill form button on Launch screen
+        $(elementLocators("DataContainer")).should(appear); //Verify that the form details screen appears
 
     }
 
