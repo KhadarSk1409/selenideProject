@@ -238,7 +238,7 @@ public class NumberFieldTest extends BaseTest {
             selectAndClear(By.id(NumberFieldOptionsIds.numberField_decimalScale.name()))
                     .setValue(numberfield_decimalScale).sendKeys(Keys.TAB);
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
-            $("#numberField_decimalScale").shouldHave(value(numberfield_decimalScale));
+            $(elementLocators("DecimalPlaceInputField")).shouldHave(value(numberfield_decimalScale));
         }
 
 
