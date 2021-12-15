@@ -14,6 +14,7 @@ import org.openqa.selenium.Keys;
 
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,8 +23,7 @@ import java.util.stream.IntStream;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 import static java.lang.Integer.parseInt;
-import static reusables.ReuseActions.createNewForm;
-import static reusables.ReuseActions.navigateToFormDashBoardFromFavoriteForms;
+import static reusables.ReuseActions.*;
 import static reusables.ReuseActionsFormCreation.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -63,18 +63,18 @@ public class CheckboxgroupTest extends BaseTest {
             String prevBlockId = "#block-loc_en-GB-r_" + (row - 1) + "-c_" + col;
             $(prevBlockId + " .add-row").shouldBe(visible).click();
         }
-        String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+        String initialVerNumStr = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $("#li-template-CheckboxGroupField-04").should(appear).click();
-        $("#formelement_properties_card").should(appear);
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
+        $(elementLocators("CheckboxGroupField")).should(appear).click();
+        $(elementLocators("FormPropertiesCard")).should(appear);
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
         if (colSpan != null && colSpan > 1) {
             int prevWidth = $(blockId).getRect().getWidth();
             IntStream.range(1, colSpan).forEach(c -> {
-                String initialVerNumStr1 = $("#formMinorversion").should(exist).getText();
-                $("#blockButtonExpand").shouldBe(visible).click();
-                $("#formMinorversion").shouldNotHave(text(initialVerNumStr1));
+                String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText();
+                $(elementLocators("ExpandBlockBtn")).shouldBe(visible).click();
+                $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1));
             });
             int currWidth = $(blockId).getRect().getWidth();
             Assertions.assertEquals(colSpan, currWidth / prevWidth, "block column span should be " + colSpan);
@@ -106,22 +106,22 @@ public class CheckboxgroupTest extends BaseTest {
 
             String[] values = edit_values.split(",");
 
-            $("#formelement_properties_card .editForm").should(exist).click(); //Click on edit value pen icon
-            $("#form-value-list-card-dialog_content").should(exist); //Value List Editor window
+            $(elementLocators("EditValuesPenIcon")).should(exist).click(); //Click on edit value pen icon
+            $(elementLocators("ValuesEditor")).should(exist); //Value List Editor window
 
             //Deleting the existing rows:
-            List<SelenideElement> delBtn = $$("div.ag-pinned-right-cols-container .ag-row .fa-trash-alt");
-            int countDelBtn = $$("div.ag-pinned-right-cols-container .ag-row .fa-trash-alt").size();
+            List<SelenideElement> delBtn = $$(elementLocators("DeleteButtonsAvailable"));
+            int countDelBtn = $$(elementLocators("DeleteButtonsAvailable")).size();
             for (int n = countDelBtn; n >= 1; n--) {
-                String strDeleteBtn = ".ag-row:nth-child(" + n + ") .fa-trash-alt"; //Delete the n th row
+                String strDeleteBtn = "#myGrid .MuiDataGrid-row:nth-child(" + n + ") .fa-trash"; //Delete the n th row
                 $(strDeleteBtn).click();
-                $(strDeleteBtn).waitUntil(disappear, 10000);
+                $(strDeleteBtn).should(disappear, Duration.ofSeconds(10));
             }
 
             //Add rows in value list editor for the number of labels
-            if (!$("div.ag-pinned-right-cols-container .ag-row").exists()) {
+            if (!$(elementLocators("RowsInValuesEditor")).exists()) {
                 for (int x = 0; x < values.length; x++) {
-                    $("#value_list_values button .fa-plus").should(exist).click();
+                    $(elementLocators("PlusIconToAddRows")).should(exist).click();
                 }
             }
 
@@ -132,22 +132,22 @@ public class CheckboxgroupTest extends BaseTest {
 
             for (int i = 1; i <= values.length; i++) {
                 //Click on label option
-                String labelSelector = "div.ag-body-viewport .ag-center-cols-viewport .ag-row:nth-child(" + i + ") .ag-cell:nth-child(2)";
+                String labelSelector = "#myGrid .MuiDataGrid-row:nth-child("+i+") div:nth-child(3)";
                 $(labelSelector).should(exist).doubleClick();
                 String labelValue = values[i - 1];
-                $("div.ag-popup input.ag-input-field-input").sendKeys(Keys.BACK_SPACE); //Clear the default value in label field
-                $("div.ag-popup input.ag-input-field-input").setValue(labelValue).sendKeys(Keys.ENTER);
+                $(elementLocators("LabelInputInEditor")).sendKeys(Keys.BACK_SPACE); //Clear the default value in label field
+                $(elementLocators("LabelInputInEditor")).setValue(labelValue).sendKeys(Keys.ENTER);
                 $(labelSelector).shouldHave(text(labelValue));
 
                 if (preselected.contains(labelValue)) {
-                    String checkboxSelector = "div.ag-pinned-left-cols-container .ag-row:nth-child(" + i + ") input";
+                    String checkboxSelector = "#myGrid .MuiDataGrid-row:nth-child("+i+") div:nth-child(1) span input";
                     $(checkboxSelector).should(exist).click();
                     $(checkboxSelector).shouldBe(checked);
                 }
             }
 
             //Click on close button
-            $("#form-value-list-card-dialog_actions #btnClosePropertiesForm").should(exist).click();
+            $(elementLocators("CloseValuesEditorBtn")).should(exist).click();
 
             //verify preselection on designer surface
             $(blockId).should(exist);
@@ -165,44 +165,44 @@ public class CheckboxgroupTest extends BaseTest {
 
         //Allow select:
         if (StringUtils.isNotEmpty(checkbox_globalSelection)) {
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + CheckboxgroupTest.CheckboxgroupIds.checkbox_globalSelection.name();
             $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
         }
 
 
         //Enter Minimum Value
         if (StringUtils.isNotEmpty(text_numberField_minCount)) {
-            $("#formelement_properties_card .editForm").should(exist).click(); //Click on edit value pen icon
-            $("#form-value-list-card-dialog_content").should(exist); //Value List Editor window
+            $(elementLocators("EditValuesPenIcon")).should(exist).click(); //Click on edit value pen icon
+            $(elementLocators("ValuesEditor")).should(exist); //Value List Editor window
 
-            List<SelenideElement> rowsInListEditor = $$("#myGrid div.ag-center-cols-container div.ag-row"); //fetch number of rows in List editor
+            List<SelenideElement> rowsInListEditor = $$(elementLocators("RowsInValuesEditor")); //fetch number of rows in List editor
             int rowsCount = rowsInListEditor.size();
 
             //Click on close button
-            $("#form-value-list-card-dialog_actions #btnClosePropertiesForm").should(exist).click();
+            $(elementLocators("CloseValuesEditorBtn")).should(exist).click();
             $(By.id(CheckboxgroupTest.CheckboxgroupIds.numberField_minCount.name())).should(exist); //Verify that Minimum count field exists
 
             //Error verification if the Min count is more than rowCount, then error should be shown
             int minCountMoreThanRowCount = rowsCount +1;
             String strMinCountMoreThanRowCount = Integer.toString(minCountMoreThanRowCount);
-            String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String initialVerNumStr2 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(CheckboxgroupTest.CheckboxgroupIds.numberField_minCount.name()))
                     .setValue(strMinCountMoreThanRowCount).sendKeys(Keys.TAB);
 
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
 
-            $("#numberField_minCount").shouldHave(value(strMinCountMoreThanRowCount)).waitUntil(appears, 4000);
+            $(elementLocators("MinCountInputField")).shouldHave(value(strMinCountMoreThanRowCount)).should(appear, Duration.ofSeconds(5));
 
             String errorMinCount1 = "The values count " + rowsCount + " is less than minimum count " + strMinCountMoreThanRowCount;
-                $("#panel1a-content div:nth-child(5) p.Mui-error").should(exist).shouldHave(text(errorMinCount1));
+                $(elementLocators("MinCountErrorHelperText")).should(exist).shouldHave(text(errorMinCount1));
 
                 //Reset the minCount to valid value
                 selectAndClear(By.id(CheckboxgroupTest.CheckboxgroupIds.numberField_minCount.name()))
                         .setValue(text_numberField_minCount).sendKeys(Keys.TAB);
-                $("#numberField_minCount").shouldHave(value(text_numberField_minCount));
+            $(elementLocators("MinCountInputField")).shouldHave(value(text_numberField_minCount));
 
             int int_text_numberField_minCount = Integer.parseInt(text_numberField_minCount); //Valid min value
 
@@ -211,18 +211,18 @@ public class CheckboxgroupTest extends BaseTest {
                 String strMaxValue = Integer.toString(validMaxValue);
                 selectAndClear(By.id(CheckboxgroupIds.numberField_maxCount.name()))
                         .setValue(strMaxValue).sendKeys(Keys.TAB);
-                $("#numberField_maxCount").shouldHave(value(strMaxValue));
+                $(elementLocators("MaxCountInputField")).shouldHave(value(strMaxValue));
 
         }
 
         //Enter Maximum Value
         if (StringUtils.isNotEmpty(text_numberField_maxCount)) {
-            String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String initialVerNumStr2 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(CheckboxgroupIds.numberField_maxCount.name()))
                     .setValue(text_numberField_maxCount).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
 
-            $("#numberField_maxCount").shouldHave(value(text_numberField_maxCount)).waitUntil(appears, 4000);
+            $(elementLocators("MaxCountInputField")).shouldHave(value(text_numberField_maxCount)).should(appear, Duration.ofSeconds(5));
 
             //Verify that if Max count is less than Min count, relevant errors should be shown:
             if (StringUtils.isNotEmpty(text_numberField_minCount)) {
@@ -231,11 +231,11 @@ public class CheckboxgroupTest extends BaseTest {
                 String strInvalidMinCount = Integer.toString(invalidMinCount);
 
                 //Insert rows in options box to have maximum size
-                $("#formelement_properties_card .editForm").should(exist).click(); //Click on edit value pen icon
-                $("#form-value-list-card-dialog_content").should(exist); //Value List Editor window
+                $(elementLocators("EditValuesPenIcon")).should(exist).click(); //Click on edit value pen icon
+                $(elementLocators("ValuesEditor")).should(exist); //Value List Editor window
 
 
-                List<SelenideElement> rowsInListEditor = $$("#myGrid div.ag-center-cols-container div.ag-row"); //fetch number of rows in List editor
+                List<SelenideElement> rowsInListEditor = $$(elementLocators("RowsInValuesEditor")); //fetch number of rows in List editor
                 int rowsCount = rowsInListEditor.size();
 
                 int intRowDiff = int_text_numberField_maxCount - rowsCount;
@@ -243,12 +243,12 @@ public class CheckboxgroupTest extends BaseTest {
 
                 //Create rows more than max count
                 for (int i = 0; i < intRowDiff + 1; i++) {
-                    $("#value_list_values button .fa-plus").should(exist).click(); //Create
+                    $(elementLocators("PlusIconToAddRows")).should(exist).click(); //Create
                 }
 
 
                 //Click on close button
-                $("#form-value-list-card-dialog_actions #btnClosePropertiesForm").should(exist).click();
+                $(elementLocators("CloseValuesEditorBtn")).should(exist).click();
                 $(By.id(CheckboxgroupIds.numberField_maxCount.name())).should(exist); //Verify that Minimum count field exists
 
 
@@ -256,27 +256,23 @@ public class CheckboxgroupTest extends BaseTest {
                 selectAndClear(By.id(CheckboxgroupIds.numberField_minCount.name()))
                         .setValue(strInvalidMinCount).sendKeys(Keys.TAB);
                 String errorMaxCount1 = "The maximum value " + text_numberField_maxCount + " is less than minimum value " + strInvalidMinCount;
-                $("#panel1a-content div:nth-child(5) p.Mui-error").should(exist).shouldHave(text(errorMaxCount1));
-                $("#panel2a-content p.Mui-error").should(exist).shouldHave(text(errorMaxCount1));
-
-
+                $(elementLocators("MinCountErrorHelperText")).should(exist).shouldHave(text(errorMaxCount1));
+                $(elementLocators("MaxCountErrorHelperText")).should(exist).shouldHave(text(errorMaxCount1));
 
                 //Reset min value to valid value
                 selectAndClear(By.id(CheckboxgroupIds.numberField_minCount.name()))
                         .setValue(text_numberField_minCount).sendKeys(Keys.TAB);
-                $("#numberField_minCount").shouldHave(value(text_numberField_minCount));
+                $(elementLocators("MinCountInputField")).shouldHave(value(text_numberField_minCount));
 
             }
         }
 
-
-
         //Other values:
         if (StringUtils.isNotEmpty(checkbox_other_values)) {
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + CheckboxgroupTest.CheckboxgroupIds.checkbox_other.name();
             $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
         }
 
@@ -295,12 +291,11 @@ public class CheckboxgroupTest extends BaseTest {
     @DisplayName("publish and open FormPage")
     public void publishAndOpenFormPage() {
         //Click on publish button, wait until form dashboard opens and click on fill form
-        $("#btnFormDesignPublish").should(exist).click();
-
-        $("#form-publish-dialog .MuiPaper-root").should(appear); //Publish confirmation dialog appears
-        $("#form-publish-dialog #btnConfirm").should(exist).click(); //Click on Confirm button
-        $("#btnCreateNewData").waitUntil(exist, 50000).click(); //Fill form button on Launch screen
-        $("#dataContainer").should(appear); //Verify that the form details screen appears
+        $(elementLocators("PublishButton")).should(exist).click();
+        $(elementLocators("PublishConfirmationDialog")).should(appear); //Publish confirmation dialog appears
+        $(elementLocators("ConfirmPublish")).should(exist).click(); //Click on Confirm button
+        $(elementLocators("FillFormButton")).should(exist).click(); //Fill form button on Launch screen
+        $(elementLocators("DataContainer")).should(appear); //Verify that the form details screen appears
 
     }
 
@@ -359,7 +354,7 @@ public class CheckboxgroupTest extends BaseTest {
 
                     $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").shouldNotBe(checked);
 
-                    //Check the chekbox
+                    //Check the checkbox
                     $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").click();
                     $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").shouldBe(checked);
                 } else {
@@ -408,14 +403,13 @@ public class CheckboxgroupTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_other_values)) {
 
             //Verify that Other values checkbox is not checked:
-            $("#chwckboxgroup_other").shouldNotBe(checked);
+            $(elementLocators("OtherValues")).shouldNotBe(checked);
 
             //Now click the checkbox and enable the edit box
-            $("#chwckboxgroup_other").click();
+            $(elementLocators("OtherValues")).click();
 
-            $(blockStr).find(" .MuiInputBase-root").setValue(RandomStringUtils.randomAlphanumeric(6)).sendKeys(Keys.TAB);
+            $(blockStr).find(" .MuiInputBase-root input").setValue(RandomStringUtils.randomAlphanumeric(6)).sendKeys(Keys.TAB);
         }
-
 
         //Dropdown direction
         if (StringUtils.isNotEmpty(dropdown_direction)) {
@@ -424,12 +418,8 @@ public class CheckboxgroupTest extends BaseTest {
                 $(dropDownDirectionInFillForm).shouldHave(cssClass("MuiFormGroup-row"));
             } else {
                 $(dropDownDirectionInFillForm).shouldNotHave(cssClass("MuiFormGroup-row"));
-
             }
-
-
         }
-
 
         //Min Count validations
         if (StringUtils.isNotEmpty(text_numberField_minCount)) {
@@ -442,19 +432,17 @@ public class CheckboxgroupTest extends BaseTest {
             for (int k = 1; k < intMinCount; k++) {
                 $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") .MuiCheckbox-root").shouldNotBe(checked);
                 $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") .MuiCheckbox-root").click();
-                $(blockStr).find(" .MuiFormHelperText-marginDense").shouldHave(text("The count must be greater than " + intMinCount));
+                $(blockStr).find("fieldset p span").shouldHave(text("The count must be greater than " + intMinCount));
             }
             $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + intMinCount + ") .MuiCheckbox-root").shouldNotBe(checked);
             $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + intMinCount + ") .MuiCheckbox-root").click();
-            $(blockStr).find(" .MuiFormHelperText-marginDense").shouldNotHave(text("The count must be greater than " + intMinCount));
+            $(blockStr).find("fieldset p span").shouldNotHave(text("The count must be greater than " + intMinCount));
 
 
             for (int k = 1; k <= intMinCount; k++) {
                 $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") .MuiCheckbox-root").click();
             }
         }
-
-
 
         //Max count validations
         if (StringUtils.isNotEmpty(text_numberField_maxCount)) {
@@ -468,9 +456,7 @@ public class CheckboxgroupTest extends BaseTest {
                     $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") .MuiCheckbox-root").click();
 
                 }
-                $(blockStr).find(" .MuiFormHelperText-marginDense").shouldHave(text("The count must be less than " + text_numberField_maxCount));
-
-
+            $(blockStr).find("fieldset p span").shouldHave(text("The count must be less than " + text_numberField_maxCount));
         }
     }
 
