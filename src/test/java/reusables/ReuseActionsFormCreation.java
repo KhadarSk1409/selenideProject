@@ -159,7 +159,7 @@ public class ReuseActionsFormCreation {
 
             case LABEL_FIELD:
                 $("#" + formField.fieldId).should(appear);
-                $(elementLocators("ElementProperties")).should(appear);
+                $(elementLocators("TemplateList")).should(appear);
                 $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
                 $(blockId1).shouldBe(visible).click();
                 $("#" + formField.fieldId).should(appear).click();
