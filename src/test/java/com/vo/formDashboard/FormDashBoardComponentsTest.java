@@ -26,7 +26,8 @@ public class FormDashBoardComponentsTest extends BaseTest {
     @Test
     @DisplayName("Main components in Form Dashboard")
     @Order(1)
-    public void verifyMainComponentsInFormDashboard() throws IOException {
+    public void verifyMainComponentsInFormDashboard() {
+        $(elementLocators("FormDashboardHeader")).should(appear);
         $(elementLocators("UserDataList")).should(exist);   //User Data Lists should be available
         $(elementLocators("MyTasks")).should(exist);  //My Tasks section should be avaialble
         $(elementLocators("MySubmissions")).should(exist); //My Submissions section should be avaialble
@@ -53,7 +54,7 @@ public class FormDashBoardComponentsTest extends BaseTest {
     @Test
     @DisplayName("Verify Switching on User Data List Tabs should change visible tables")
     @Order(3)
-    public void verifySwitchingOnUserDataListTabs() throws IOException {
+    public void verifySwitchingOnUserDataListTabs() {
         $(elementLocators("Body")).click();
         $(elementLocators("UserDataList")).should(exist);   //User Data Lists should be available
         $(elementLocators("MySubmissions")).click();

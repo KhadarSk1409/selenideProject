@@ -22,8 +22,8 @@ public class ConfigurePermissionsWithMultipleUsersTest extends BaseTest {
         shouldLogin(UserType.USER_01); //Should Login as GUI Tester 01
         open("/dashboard/PERMISSIONS_TEST");
         $(elementLocators("SubMenu")).should(exist).click(); //Click on SubMenu button on Form Dashboard
-        $(elementLocators("EditFormPermissionsInSubMenu")).should(exist).shouldHave(Condition.text("Edit Form Permissions")).click(); //Edit permissions submenu
-        $(elementLocators("FormAuthorizationTitle")).should(appear);
+        $(elementLocators("EditFormPermissionsInSubMenu")).should(exist).shouldHave(text("Edit Form Permissions")).click(); //Edit permissions submenu
+        $(elementLocators("FormAuthorizationTitle")).should(exist);
         $(elementLocators("PlusIconToAddUser")).should(exist).click();
         $(elementLocators("AddCreateUserTitle")).should(appear);
         $(elementLocators("SelectUserInput")).should(exist).click();
@@ -32,7 +32,7 @@ public class ConfigurePermissionsWithMultipleUsersTest extends BaseTest {
         $$(elementLocators("ListOfOptions")).findBy(text("GUI Tester 02")).click(); //Click on the selected user
         $(elementLocators("ButtonConfirm")).should(exist).click(); //Click on Confirm
         $(elementLocators("UsersContainer")).should(appear);
-        $(elementLocators("SecondUserNameInContainer")).shouldHave(value("GUI Tester 02")).shouldBe(visible);
+        $(elementLocators("SecondUserNameInContainer")).shouldHave(text("GUI Tester 02")).shouldBe(visible);
         $(elementLocators("ApplyAndCloseButton")).should(exist).click(); //Click on Apply and close
         $(elementLocators("LeftFormDashboardHeader")).should(exist);
 
@@ -43,14 +43,14 @@ public class ConfigurePermissionsWithMultipleUsersTest extends BaseTest {
         $(elementLocators("NavigateToLibrary")).should(exist).hover().click(); //Hover and click on Library
         $(elementLocators("Body")).click();
         $(elementLocators("FormsRelatedTab")).should(exist);
-        $(elementLocators("NewlyCreatedForm")).should(exist); //Form with name Permissions_Test should exist in the list
+        $(elementLocators("NewlyCreatedForm")).should(exist).shouldHave(text("PERMISSIONS_TEST")); //Form with name Permissions_Test should exist in the list
 
         //Verify the deletion of previously given Permissions
         shouldLogin(UserType.USER_01); // Should login as  GUI Tester 01
         open("/dashboard/PERMISSIONS_TEST");
         $(elementLocators("SubMenu")).should(exist).click(); //Click on SubMenu button on Form Dashboard
-        $(elementLocators("EditFormPermissionsInSubMenu")).should(exist).shouldHave(Condition.text("Edit Form Permissions")).click(); //Edit permissions submenu
-        $(elementLocators("FormAuthorizationTitle")).should(appear);
+        $(elementLocators("EditFormPermissionsInSubMenu")).should(exist).shouldHave(text("Edit Form Permissions")).click(); //Edit permissions submenu
+        $(elementLocators("FormAuthorizationTitle")).should(exist);
         $(elementLocators("UserDeleteButton")).should(exist).click(); //Delete GUI Tester 02
         $(elementLocators("ApplyAndCloseButton")).should(exist).click();
         $(elementLocators("FormDashboardHeader")).should(exist);
