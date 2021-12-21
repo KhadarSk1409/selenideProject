@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
 import java.text.*;
+import java.time.Duration;
 import java.util.Scanner;
 
 import java.math.BigDecimal;
@@ -26,6 +27,7 @@ import java.util.stream.IntStream;
 
 import static com.codeborne.selenide.Condition.*;
 import static reusables.ReuseActions.createNewForm;
+import static reusables.ReuseActions.elementLocators;
 import static reusables.ReuseActionsFormCreation.*;
 
 import java.util.Date;
@@ -83,7 +85,7 @@ public class DateFieldTest extends BaseTest {
                              String checkbox_disableFuture,
                              String checkbox_disablePast
 
-    ) throws InterruptedException, ParseException {
+    ) throws ParseException {
 
         String blockId = "#block-loc_en-GB-r_" + row + "-c_" + col;
 
@@ -97,18 +99,18 @@ public class DateFieldTest extends BaseTest {
             String prevBlockId = "#block-loc_en-GB-r_" + (row - 1) + "-c_" + col;
             $(prevBlockId + " .add-row").shouldBe(visible).click();
         }
-        String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+        String initialVerNumStr = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $("#li-template-DateField-04").should(appear).click();
-        $("#formelement_properties_card").should(appear);
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
+        $(elementLocators("DateField")).should(appear).click();
+        $(elementLocators("FormPropertiesCard")).should(appear);
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
         if (colSpan != null && colSpan > 1) {
             int prevWidth = $(blockId).getRect().getWidth();
             IntStream.range(1, colSpan).forEach(c -> {
-                String initialVerNumStr1 = $("#formMinorversion").should(exist).getText();
-                $("#blockButtonExpand").shouldBe(visible).click();
-                $("#formMinorversion").shouldNotHave(text(initialVerNumStr1));
+                String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText();
+                $(elementLocators("ExpandBlockBtn")).shouldBe(visible).click();
+                $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1));
             });
             int currWidth = $(blockId).getRect().getWidth();
             Assertions.assertEquals(colSpan, currWidth / prevWidth, "block column span should be " + colSpan);
@@ -137,61 +139,61 @@ public class DateFieldTest extends BaseTest {
 
         //Select Date radioBtn
         if (StringUtils.isNotEmpty(radioBtn_Date)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String radioBtnId = "#" + DateFieldTest.DateFieldOptionsIds.prop_yearMonthDay_yearMonthDay.name();
             $(radioBtnId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(radioBtnId + " input").shouldBe(selected);
         }
 
         //Select Year and Month radioBtn
         if (StringUtils.isNotEmpty(radio_yearMonth)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String radioBtnId = "#" + DateFieldTest.DateFieldOptionsIds.prop_yearMonthDay_yearMonthDay.name();
             $(radioBtnId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(radioBtnId + " input").shouldBe(selected);
         }
 
         //Select Year radioBtn
         if (StringUtils.isNotEmpty(radio_year)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String radioBtnId = "#" + DateFieldTest.DateFieldOptionsIds.prop_yearMonthDay_yearMonthDay.name();
             $(radioBtnId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(radioBtnId + " input").shouldBe(selected);
         }
 
         //Select Default
         if (StringUtils.isNotEmpty(text_timeField_defaultValueTime)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(DateFieldTest.DateFieldOptionsIds.date_defaultValueDate.name()))
                     .setValue(text_timeField_defaultValueTime).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $("#date_defaultValueDate").shouldHave(value(text_timeField_defaultValueTime));
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("DefaultDate")).shouldHave(value(text_timeField_defaultValueTime));
         }
 
 
         //Read only checkbox check
         if (StringUtils.isNotEmpty(checkbox_readOnly)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + DateFieldTest.DateFieldOptionsIds.checkbox_readOnly.name();
             $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
 
             if (StringUtils.isEmpty(text_timeField_defaultValueTime)) {
-                $("#date_defaultValueDate-helper-text").should(exist).shouldHave(text("Must be set, if read only")); //Verify the error shown when read only checkbox is checked wihtout any value in default value field
+                $(elementLocators("DefaultDateHelperText")).should(exist).shouldHave(text("Must be set, if read only")); //Verify the error shown when read only checkbox is checked wihtout any value in default value field
 
                 //Uncheck the readonly checkbox
-                String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+                String initialVerNumStr2 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
                 $(checkBoxId).shouldBe(visible).click();
-                $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
+                $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
                 $(checkBoxId + " input").shouldNotBe(selected); //Uncheck the Read only checkbox
 
                 //Set the value in the Default value:
@@ -206,31 +208,32 @@ public class DateFieldTest extends BaseTest {
 
         //Disable future checkbox check
         if (StringUtils.isNotEmpty(checkbox_disableFuture)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + DateFieldTest.DateFieldOptionsIds.checkbox_disableFuture.name();
             $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
         }
 
         //Disable past checkbox check
         if (StringUtils.isNotEmpty(checkbox_disablePast)) {
-            $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + DateFieldTest.DateFieldOptionsIds.checkbox_disablePast.name();
             $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
         }
 
         //Enter Minimum Value
         if (StringUtils.isNotEmpty(date_minValue)) {
-            String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String initialVerNumStr2 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(DateFieldTest.DateFieldOptionsIds.date_minDate.name()))
                     .setValue(date_minValue).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
-            $("#date_minDate").shouldHave(value(date_minValue)).waitUntil(appears, 4000);
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
+            $(elementLocators("MinDate")).shouldHave(value(date_minValue)).should(appear, Duration.ofSeconds(5));
+            //#panel2a-content div:nth-child(7) input
 
             //Verification of error
             //Convert min value string to date
@@ -244,17 +247,17 @@ public class DateFieldTest extends BaseTest {
             //Date after adding the days to the current date
             String previousDate = sdf.format(cal.getTime());
 
-            String initialVerNumStr3 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String initialVerNumStr3 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(DateFieldOptionsIds.date_defaultValueDate.name()))
                     .setValue(previousDate).sendKeys(Keys.TAB); //Enter one day ahead date value
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr3)); //Verify that version has increased
-            $("#date_defaultValueDate-helper-text").shouldHave(text("is before than minimum date"));
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr3)); //Verify that version has increased
+            $(elementLocators("DefaultDateHelperText")).shouldHave(text("is before than minimum date"));
 
             //Correcting the default value
-            String initialVerNumStr4 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String initialVerNumStr4 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(DateFieldTest.DateFieldOptionsIds.date_defaultValueDate.name()))
                     .setValue("").sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr4)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr4)); //Verify that version has increased
             $(blockId + " .MuiFormHelperText-root").shouldNotHave(text("is before than minimum date"));
 
 
@@ -262,11 +265,12 @@ public class DateFieldTest extends BaseTest {
 
         //Enter Maximum Value
         if (StringUtils.isNotEmpty(date_maxValue)) {
-            String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String initialVerNumStr2 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(DateFieldTest.DateFieldOptionsIds.date_maxDate.name()))
                     .setValue(date_maxValue).sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
-            $("#date_maxDate").shouldHave(value(date_maxValue)).waitUntil(appears, 4000);
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
+            $(elementLocators("MaxDate")).shouldHave(value(date_maxValue)).should(appear, Duration.ofSeconds(5));
+            //#panel2a-content div:nth-child(8) input
 
             //Verification of error
             //Convert min value string to date
@@ -281,17 +285,17 @@ public class DateFieldTest extends BaseTest {
             //Date after adding the days to the current date
             String futureDate = sdf.format(cal.getTime());
 
-            String initialVerNumStr3 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String initialVerNumStr3 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(DateFieldOptionsIds.date_defaultValueDate.name()))
                     .setValue(futureDate).sendKeys(Keys.TAB); //Enter default value
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr3)); //Verify that version has increased
-            $("#date_defaultValueDate-helper-text").shouldHave(text("is after than maximum date"));
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr3)); //Verify that version has increased
+            $(elementLocators("DefaultDateHelperText")).shouldHave(text("is after than maximum date"));
 
             //Correcting the default value
-            String initialVerNumStr4 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String initialVerNumStr4 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(DateFieldTest.DateFieldOptionsIds.date_defaultValueDate.name()))
                     .setValue("").sendKeys(Keys.TAB);
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr4)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr4)); //Verify that version has increased
             $(blockId + " .MuiFormHelperText-root").shouldNotHave(text("is before than maximum date"));
 
         }
@@ -304,12 +308,11 @@ public class DateFieldTest extends BaseTest {
     @DisplayName("publish and open FormPage")
     public void publishAndOpenFormPage() {
         //Click on publish button, wait until form dashboard opens and click on fill form
-        $("#btnFormDesignPublish").should(exist).click();
-
-        $("#form-publish-dialog .MuiPaper-root").should(appear); //Publish confirmation dialog appears
-        $("#form-publish-dialog  #btnConfirm").should(exist).click(); //Click on Confirm button
-        $("#btnCreateNewData").should(exist).click(); //Fill form button on Launch screen
-        $("#dataContainer").should(appear); //Verify that the form details screen appears
+        $(elementLocators("PublishButton")).should(exist).click();
+        $(elementLocators("PublishConfirmationDialog")).should(appear); //Publish confirmation dialog appears
+        $(elementLocators("ConfirmPublish")).should(exist).click(); //Click on Confirm button
+        $(elementLocators("FillFormButton")).should(exist).click(); //Fill form button on Launch screen
+        $(elementLocators("DataContainer")).should(appear); //Verify that the form details screen appears
 
     }
 
