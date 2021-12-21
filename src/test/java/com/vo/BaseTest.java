@@ -192,7 +192,7 @@ public abstract class BaseTest {
             return;
         }
         try {
-            //deleteForm();
+            deleteForm();
             System.out.println("tearing down test!!!, closing the webdriver");
         } catch (Throwable ignore) {
             System.out.println("unable to delete forms: " + ignore.getMessage());
@@ -352,7 +352,7 @@ public abstract class BaseTest {
             } catch (Throwable t) {
                 hasGuiTestLabel = false;
             }
-            $("body").click();
+            $(elementLocators("Body")).click();
             $(elementLocators("MoreFilterPopover")).should(disappear);
         }
 
@@ -368,33 +368,33 @@ public abstract class BaseTest {
         return hasGuiTestLabel;
     }
 
-    //Commented deleteForm method because More Filter is not working properly and deleting all the forms
-    /*public static void deleteForm() {
+    //Form Deletion with label: guitest
+    public static void deleteForm() {
         open("/dashboard");
-        $("#navLibrary").should(exist).hover().click(); //Hover and click on Library to navigate to formlist table
+        $(elementLocators("NavigateToLibrary")).should(exist).hover().click(); //Hover and click on Library to navigate to formlist table
         if (!applySearchForTestForms()) {
             System.out.println("applySearchForTestForms returned false, exiting deletion");
             return;
         }
-        int formsAvailable = $$("#formListTable .MuiDataGrid-row").size();
+        int formsAvailable = $$(elementLocators("FormsGrid")).size();
         System.out.println("Found forms to delete: " + formsAvailable);
         for (int i = 0; i < formsAvailable; i++) {
-            $("#formListTable .MuiDataGrid-row").shouldBe(visible);
-            if ($("#formListTable .MuiDataGrid-row").has(Condition.text("No forms available yet!"))) {
+            $(elementLocators("FormsGrid")).shouldBe(visible);
+            if ($(elementLocators("FormsGrid")).has(Condition.text("No forms available yet!"))) {
                 return;
             }
 
-            $("#formListTable .btnExpandRow").should(exist).click();
-            $("#formListTable .fa-trash-alt").should(exist).click();
-            $("#confirm-deletion-dialog #confirmation-dialog-content").should(appear);
-            $("#confirm-deletion-dialog #btnConfirm").should(exist).click();
-            $(".fa-trash-alt").should(disappear);
-            System.out.println("deleted row " + i);
+            $(elementLocators("ExpandRowButton")).should(exist).click();
+            $(elementLocators("DeleteFormBtn")).should(exist).click();
+            $(elementLocators("ConfirmationDialog")).should(appear);
+            $(elementLocators("ConfirmDeleteBtn")).should(exist).click();
+            $(elementLocators("DeleteFormBtn")).should(disappear);
+            System.out.println("Deleted Form " + i);
             if (!applySearchForTestForms()) {
                 return;
             }
         }
-    }*/
+    }
 
 
     protected static SelenideElement selectAndClear(String cssSelector) {
