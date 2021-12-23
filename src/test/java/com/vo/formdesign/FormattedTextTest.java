@@ -12,6 +12,7 @@ import java.util.stream.IntStream;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
+import static reusables.ReuseActions.elementLocators;
 import static reusables.ReuseActionsFormCreation.*;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -56,18 +57,18 @@ public class FormattedTextTest extends BaseTest {
             String prevBlockId = "#block-loc_en-GB-r_" + (row - 1) + "-c_" + col;
             $(prevBlockId + " .add-row").shouldBe(visible).click();
         }
-        String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+        String initialVerNumStr = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $("#li-template-RichTextEditor-06").should(exist).click();
-        $("#formelement_properties_card").should(appear);
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
+        $(elementLocators("FormattedTextField")).should(exist).click();
+        $(elementLocators("FormPropertiesCard")).should(appear);
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
         if (colSpan != null && colSpan > 1) {
             int prevWidth = $(blockId).getRect().getWidth();
             IntStream.range(1, colSpan).forEach(c -> {
-                String initialVerNumStr1 = $("#formMinorversion").should(exist).getText();
-                $("#blockButtonExpand").shouldBe(visible).click();
-                $("#formMinorversion").shouldNotHave(text(initialVerNumStr1));
+                String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText();
+                $(elementLocators("ExpandBlockBtn")).shouldBe(visible).click();
+                $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1));
             });
             int currWidth = $(blockId).getRect().getWidth();
             Assertions.assertEquals(colSpan, currWidth / prevWidth, "block column span should be " + colSpan);
@@ -96,15 +97,15 @@ public class FormattedTextTest extends BaseTest {
 
         //Read only checkbox
         if (StringUtils.isNotEmpty(checkbox_readonly)) {
-            String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + FormattedTextTest.FormattedTextIds.checkbox_readOnly.name();
             $(checkBoxId).shouldBe(visible).click();
-            $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
 
             if (StringUtils.isEmpty(edit_values)) {
                 //When you don't have any value in Default value edit box and click on Read only checkbox it should show error
-                $("#richTextField_areaValueHtml .Mui-error").should(exist).shouldHave(text("Must be set, if read only"));
+                $(elementLocators("FormattedTextErrorHelperText")).should(exist).shouldHave(text("Must be set, if read only"));
             }
         }
 
@@ -112,10 +113,10 @@ public class FormattedTextTest extends BaseTest {
         if (StringUtils.isNotEmpty(edit_values)) {
             String checkBoxId = "#richTextField_areaValueHtml .fa-pen";
             $(checkBoxId).shouldBe(visible).click();
-            $("#rich_text_editor_wrapper").should(appear); //Text Editor should appear
+            $(elementLocators("TextEditor")).should(appear); //Text Editor should appear
 
-            $("#rich_text_editor_wrapper .fr-element").should(exist).setValue(edit_values); //Set the value
-            $("#appBar #btnClosePropertiesForm").should(exist).click(); //Close button
+            $(elementLocators("TextInputField")).should(exist).setValue(edit_values); //Set the value
+            $(elementLocators("CloseTextEditorBtn")).should(exist).click(); //Close button
 
             //Verify that Text Area Value has text fraction
             if (StringUtils.isNotEmpty(fraction_edit_value)) {
@@ -132,11 +133,13 @@ public class FormattedTextTest extends BaseTest {
     @DisplayName("publish and open form page")
     @Order(3)
     public void publishAndOpenFormPage() {
-        $("#btnFormDesignPublish").should(exist).click();
-        $("#form-publish-dialog .MuiPaper-root").should(appear);
-        $("#form-publish-dialog #btnConfirm").should(exist).click();
-        $("#btnCreateNewData").waitUntil(exist, 50000).click();
-        $("#dataContainer").should(appear);
+        //Click on publish button, wait until form dashboard opens and click on fill form
+        $(elementLocators("PublishButton")).should(exist).click();
+        $(elementLocators("PublishConfirmationDialog")).should(appear); //Publish confirmation dialog appears
+        $(elementLocators("ConfirmPublish")).should(exist).click(); //Click on Confirm button
+        $(elementLocators("FillFormButton")).should(exist).click(); //Fill form button on Launch screen
+        $(elementLocators("DataContainer")).should(appear); //Verify that the form details screen appears
+
     }
 
     @Order(4)

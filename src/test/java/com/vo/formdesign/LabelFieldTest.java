@@ -61,7 +61,7 @@ public class LabelFieldTest extends BaseTest {
 
         $(elementLocators("TemplateList")).should(exist);
         $(elementLocators("LabelField")).should(exist).click();
-        $(blockId).shouldBe(visible).click(); //? actually this should not be needed again
+        //$(blockId).shouldBe(visible).click(); //? actually this should not be needed again
 
         if (colSpan != null && colSpan > 1) {
             int prevWidth = $(blockId).getRect().getWidth();
