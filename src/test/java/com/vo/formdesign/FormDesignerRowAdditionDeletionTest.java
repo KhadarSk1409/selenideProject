@@ -10,6 +10,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static reusables.ReuseActions.createNewForm;
+import static reusables.ReuseActions.elementLocators;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Verify the row addition and deletion in form designer")
@@ -20,84 +21,84 @@ public class FormDesignerRowAdditionDeletionTest extends BaseTest {
     public void addAndDeleteRows() {
 
         createNewForm();
-        $("#wizard-createFormButton").should(exist).click();
-        $("#btnFormDesignPublish").should(exist);
-        String initialVerNumStr = $("#formMinorversion").should(exist).getText(); //Initial version
-        $("#block-loc_en-GB-r_1-c_1").should(exist).click();
-        $("#template_card").should(appear);
-        $("#li-template-Textfield-04").should(appear).click();
-        $("#block-loc_en-GB-r_1-c_1 div:nth-child(1) .fa-pen").should(exist).click();
-        $("#textfield_label").should(exist).setValue(" 01 ");
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
-        $("#block-loc_en-GB-r_1-c_2").should(exist).click();
+        $(elementLocators("CreateFormButton")).should(exist).click();
+        $(elementLocators("PublishButton")).should(exist);
+        String initialVerNumStr = $(elementLocators("InitialVersion")).should(exist).getText(); //Initial version
+        $(elementLocators("BlockR1C1")).should(exist).click();
+        $(elementLocators("TemplateCard")).should(appear);
+        $(elementLocators("TextField")).should(appear).click();
+        $(elementLocators("BlockR1C1PenIcon")).should(exist).click();
+        $(elementLocators("TextFieldLabel")).should(exist).setValue(" 01 ");
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
+        $(elementLocators("BlockR1C2")).should(exist).click();
 
-        $("#block-loc_en-GB-r_2-c_1").should(exist).click();
-        $("#template_card").should(appear);
-        $("#li-template-Textfield-04").should(appear).click();
-        $("#block-loc_en-GB-r_2-c_1 div:nth-child(1) .fa-pen").should(exist).click();
-        $("#textfield_label").should(exist).setValue(" 02 ");
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
+        $(elementLocators("BlockR2C1")).should(exist).click();
+        $(elementLocators("TemplateCard")).should(appear);
+        $(elementLocators("TextField")).should(appear).click();
+        $(elementLocators("BlockR2C1PenIcon")).should(exist).click();
+        $(elementLocators("TextFieldLabel")).should(exist).setValue(" 02 ");
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
-        $("#block-loc_en-GB-r_4-c_1").should(exist).click();
-        $("#li-template-Textfield-04").should(appear).click();
-        $("#block-loc_en-GB-r_4-c_1 div:nth-child(1) .fa-pen").should(exist).click();
-        $("#textfield_label").should(exist).setValue(" 03 ");
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
-        $("#block-loc_en-GB-r_4-c_2").should(exist).click();
+        $(elementLocators("BlockR4C1")).should(exist).click();
+        $(elementLocators("TextField")).should(appear).click();
+        $(elementLocators("BlockR4C1PenIcon")).should(exist).click();
+        $(elementLocators("TextFieldLabel")).should(exist).setValue(" 03 ");
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
+        $(elementLocators("BlockR4C2")).should(exist).click();
 
         //Adding rows
         //Adding a new row before existing first row
-        $("#section_1-loc_en-GB-r_1-c_1").should(exist);
-        $("#section_1-loc_en-GB-r_1-c_1 div:nth-child(1) .fa-plus").should(exist).click();
-        $("#block-loc_en-GB-r_1-c_2").should(exist).click();
-        $("#block-loc_en-GB-r_1-c_3").should(exist).click();
-        $("#block-loc_en-GB-r_1-c_1").should(exist).click();
-        $("#template_card").should(appear);
-        $("#li-template-Textfield-04").should(appear).click();
-        $("#block-loc_en-GB-r_1-c_1 div:nth-child(1) .fa-pen").should(exist).click();
-        $("#textfield_label").should(exist).setValue(" 000 ");
-        $("#block-loc_en-GB-r_1-c_2").should(exist).click();
-        $("#block-loc_en-GB-r_1-c_3").should(exist).click();
-        $("#block-loc_en-GB-r_1-c_1").should(exist).shouldHave(Condition.text("Text field 000"));
+        $(elementLocators("Section1")).should(exist);
+        $(elementLocators("Row1FirstPlusIconToAddRow")).should(exist).click();
+        $(elementLocators("BlockR1C2")).should(exist).click();
+        $(elementLocators("BlockR1C3")).should(exist).click();
+        $(elementLocators("BlockR1C1")).should(exist).click();
+        $(elementLocators("TemplateCard")).should(appear);
+        $(elementLocators("TextField")).should(appear).click();
+        $(elementLocators("BlockR1C1PenIcon")).should(exist).click();
+        $(elementLocators("TextFieldLabel")).should(exist).setValue(" 000 ");
+        $(elementLocators("BlockR1C2")).should(exist).click();
+        $(elementLocators("BlockR1C3")).should(exist).click();
+        $(elementLocators("BlockR1C1")).should(exist).shouldHave(Condition.text("Text field 000"));
 
         //Adding a new row in between existing rows
-        $("#block-loc_en-GB-r_2-c_1 div:nth-child(2) .fa-plus").should(exist).click(); //Click on + icon to add new row
-        $("#block-loc_en-GB-r_3-c_2").should(exist).click();
-        $("#block-loc_en-GB-r_3-c_3").should(exist).click();
-        $("#block-loc_en-GB-r_3-c_1").should(appear).click();
-        $("#template_card").should(appear);
-        $("#li-template-Textfield-04").should(appear).click();
-        $("#block-loc_en-GB-r_3-c_1 span[iconname='fas fa-pen']").should(exist).click();
-        $("#textfield_label").should(exist).setValue(" 001 ");
-        $("#block-loc_en-GB-r_3-c_2").should(exist).click();
-        $("#block-loc_en-GB-r_3-c_3").should(exist).click();
-        $("#block-loc_en-GB-r_3-c_1").should(exist).shouldHave(Condition.text("Text field 001"));
+        $(elementLocators("BlockR2C1PlusIconToAddRow")).should(exist).click(); //Click on + icon to add new row
+        $(elementLocators("BlockR3C2")).should(exist).click();
+        $(elementLocators("BlockR3C3")).should(exist).click();
+        $(elementLocators("BlockR3C1")).should(appear).click();
+        $(elementLocators("TemplateCard")).should(appear);
+        $(elementLocators("TextField")).should(appear).click();
+        $(elementLocators("BlockR3C1PenIcon")).should(exist).click();
+        $(elementLocators("TextFieldLabel")).should(exist).setValue(" 001 ");
+        $(elementLocators("BlockR3C2")).should(exist).click();
+        $(elementLocators("BlockR3C3")).should(exist).click();
+        $(elementLocators("BlockR3C1")).should(exist).shouldHave(Condition.text("Text field 001"));
 
         //Adding a new row after the existing row
-        $("#block-loc_en-GB-r_6-c_1 div:nth-child(2) .fa-plus").should(exist).click(); //Click on + icon to add new row
-        $("#block-loc_en-GB-r_7-c_2").should(exist).click();
-        $("#block-loc_en-GB-r_7-c_3").should(exist).click();
-        $("#block-loc_en-GB-r_7-c_1").should(exist).click();
-        $("#template_card").should(appear);
-        $("#li-template-Textfield-04").should(appear).click();
-        $("#block-loc_en-GB-r_7-c_1 div:nth-child(1) .fa-pen").should(exist).click();
-        $("#textfield_label").should(exist).setValue(" 002 ");
-        $("#block-loc_en-GB-r_7-c_2").should(exist).click();
-        $("#block-loc_en-GB-r_7-c_3").should(exist).click();
-        $("#block-loc_en-GB-r_7-c_1").should(exist).shouldHave(Condition.text("Text field 002"));
+        $(elementLocators("BlockR6C1PlusIconToAddRow")).should(exist).click(); //Click on + icon to add new row
+        $(elementLocators("BlockR7C2")).should(exist).click();
+        $(elementLocators("BlockR7C3")).should(exist).click();
+        $(elementLocators("BlockR7C1")).should(exist).click();
+        $(elementLocators("TemplateCard")).should(appear);
+        $(elementLocators("TextField")).should(appear).click();
+        $(elementLocators("BlockR7C1PenIcon")).should(exist).click();
+        $(elementLocators("TextFieldLabel")).should(exist).setValue(" 002 ");
+        $(elementLocators("BlockR7C2")).should(exist).click();
+        $(elementLocators("BlockR7C3")).should(exist).click();
+        $(elementLocators("BlockR7C1")).should(exist).shouldHave(Condition.text("Text field 002"));
 
         //Deletions of added rows
-        $("#block-loc_en-GB-r_1-c_1 div:nth-child(3) .fa-trash-alt").should(exist).click(); //Click on Delete 1st row
-        $("#block-loc_en-GB-r_1-c_2").should(exist).click();
-        $("#block-loc_en-GB-r_1-c_1").should(exist).shouldNotHave(Condition.text("Text field 000")); //Verify the added row is deleted
+        $(elementLocators("1stRowDeleteBtn")).should(exist).click(); //Click on Delete 1st row
+        $(elementLocators("BlockR1C2")).should(exist).click();
+        $(elementLocators("BlockR1C1")).should(exist).shouldNotHave(Condition.text("Text field 000")); //Verify the added row is deleted
 
-        $("#block-loc_en-GB-r_2-c_1 div:nth-child(3) .fa-trash-alt").should(exist).click(); //Click on Delete 2nd row
-        $("#block-loc_en-GB-r_2-c_2").should(exist).click();
-        $("#block-loc_en-GB-r_2-c_1").should(exist).shouldNotHave(Condition.text("Text field 001")); //Verify the added row is deleted
+        $(elementLocators("2ndRowDeleteBtn")).should(exist).click(); //Click on Delete 2nd row
+        $(elementLocators("BlockR2C2")).should(exist).click();
+        $(elementLocators("BlockR2C1")).should(exist).shouldNotHave(Condition.text("Text field 001")); //Verify the added row is deleted
 
-        $("#block-loc_en-GB-r_5-c_1 div:nth-child(3) .fa-trash-alt").should(exist).click(); //Click on Delete 5th row
-        $("#block-loc_en-GB-r_4-c_2").should(exist).click();
-        $("#block-loc_en-GB-r_4-c_1").should(exist).shouldNotHave(Condition.text("Text field 002")); //Verify the added row is deleted
+        $(elementLocators("5thRowDeleteBtn")).should(exist).click(); //Click on Delete 5th row
+        $(elementLocators("BlockR4C2")).should(exist).click();
+        $(elementLocators("BlockR4C1")).should(exist).shouldNotHave(Condition.text("Text field 002")); //Verify the added row is deleted
 
     }
 }
