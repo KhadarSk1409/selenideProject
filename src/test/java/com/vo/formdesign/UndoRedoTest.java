@@ -12,6 +12,7 @@ import org.openqa.selenium.By;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
 import static reusables.ReuseActions.createNewForm;
+import static reusables.ReuseActions.elementLocators;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Verify Unod and Redo")
@@ -22,54 +23,54 @@ public class UndoRedoTest extends BaseTest {
     public void verifyUndoRedo(){
 
         createNewForm(); //Create new form
-        $("#wizard-createFormButton").should(exist).shouldBe(enabled).click(); //Click on Create Form
-        $("#formDashboardHeaderLeft").should(appear);
+        $(elementLocators("CreateFormButton")).should(exist).shouldBe(enabled).click(); //Click on Create Form
+        $(elementLocators("LeftFormDashboardHeader")).should(appear);
 
         //Verifying undo function
-        String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-        $("#block-loc_en-GB-r_1-c_1").should(exist).click();
-        $("#template_card").should(appear).$("#li-template-Textfield-05").click(); //Add one field
-        $("#block-loc_en-GB-r_1-c_1 .fa-pen").should(exist).click();
-        $("#textfield_label").sendKeys(" 01 ");
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr1)); //Verify that previous version should increase
-        $("#btnUndo").should(exist).click(); //Click on Undo button
-        $("#block-loc_en-GB-r_1-c_1").should(exist).shouldNotHave(Condition.text("Text field 01")); //Text field should not exist
+        String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
+        $(elementLocators("BlockR1C1")).should(exist).click();
+        $(elementLocators("TemplateCard")).should(appear).$(elementLocators("TextField")).click(); //Add one field
+        $(elementLocators("BlockR1C1PenIcon")).should(exist).click();
+        $(elementLocators("TextFieldLabel")).sendKeys(" 01 ");
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that previous version should increase
+        $(elementLocators("UndoButton")).should(exist).click(); //Click on Undo button
+        $(elementLocators("BlockR1C1")).should(exist).shouldNotHave(Condition.text("Text field 01")); //Text field should not exist
 
         //Verifying both undo and redo functions once
-        String initialVerNumStr2 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-        $("#block-loc_en-GB-r_1-c_3").should(exist).click();
-        $("#template_card").should(appear).$("#li-template-TextareaField-06").click(); //Add 2nd field
-        $("#block-loc_en-GB-r_1-c_3 .fa-pen").should(exist).click();
-        $("#textfield_label").sendKeys(" 02 ");
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr2)); //Verify that previous version should increase
-        $("#btnUndo").should(exist).click(); //Click on Undo button
-        $("#block-loc_en-GB-r_1-c_3").should(exist).shouldNotHave(Condition.text("Textarea field 02")); //Textarea field should not exist
-        $("#block-loc_en-GB-r_1-c_3").should(exist);
-        $("#btnRedo").should(exist).click(); //Click on Undo button
-        $("#block-loc_en-GB-r_1-c_3").should(exist).shouldHave(Condition.text("Textarea field 02")); //Textarea field should not exist
+        String initialVerNumStr2 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
+        $(elementLocators("BlockR1C3")).should(exist).click();
+        $(elementLocators("TemplateCard")).should(appear).$(elementLocators("TextAreaField")).click(); //Add 2nd field
+        $(elementLocators("BlockR1C3PenIcon")).should(exist).click();
+        $(elementLocators("TextFieldLabel")).sendKeys(" 02 ");
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr2)); //Verify that previous version should increase
+        $(elementLocators("UndoButton")).should(exist).click(); //Click on Undo button
+        $(elementLocators("BlockR1C3")).should(exist).shouldNotHave(Condition.text("Textarea field 02")); //Textarea field should not exist
+        $(elementLocators("BlockR1C3")).should(exist);
+        $(elementLocators("RedoButton")).should(exist).click(); //Click on Undo button
+        $(elementLocators("BlockR1C3")).should(exist).shouldHave(Condition.text("Textarea field 02")); //Textarea field should not exist
 
         //Verifying both undo and redo functions twice
-        String initialVerNumStr3 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-        $("#block-loc_en-GB-r_3-c_2").should(exist).click();
-        $("#template_card").should(appear).$("#li-template-CheckboxGroupField-04").click(); //Add 3rd field
-        $("#block-loc_en-GB-r_3-c_2 .fa-pen").should(exist).click();
-        $("#formelement_properties_card .editForm").should(exist).click();
-        $("#form-value-list-card-dialog_actions").should(appear);
+        String initialVerNumStr3 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
+        $(elementLocators("BlockR3C2")).should(exist).click();
+        $(elementLocators("TemplateCard")).should(appear).$("#li-template-CheckboxGroupField-04").click(); //Add 3rd field
+        $(elementLocators("BlockR3C2PenIcon")).should(exist).click();
+        $(elementLocators("EditValuesPenIcon")).should(exist).click();
+        $(elementLocators("ValuesListEditor")).should(appear);
         //Preselect a value
-        String checkboxSelector = "div.ag-pinned-left-cols-container .ag-row:nth-child(2) input";
+        String checkboxSelector = "#myGrid .MuiDataGrid-row:nth-child(2) div:nth-child(1) span input";
         $(checkboxSelector).should(exist).click();
         $(checkboxSelector).shouldBe(checked);
-        $("#form-value-list-card-dialog_actions .fa-times").should(exist).click();
-        $("#btnUndo").should(exist).click(); //Click on Undo button
-        $("#block-loc_en-GB-r_3-c_2 .Mui-disabled:nth-child(2)").should(not(checked)); //Preselected value should be unchecked
-        $(".fa-undo").should(exist).click(); //Click on Undo button
-        $("#formMinorversion").shouldHave(text(initialVerNumStr3)); //Verify that previous version should increase
-        $("#block-loc_en-GB-r_3-c_2").should(exist).shouldNotHave(Condition.text("Checkbox group")); //Checkboxgroup field should not exist
-        $("#btnRedo").should(exist).click(); //Click on Redo button
-        $("#formMinorversion").shouldNotHave(text(initialVerNumStr3)); //Verify that previous version should increase
-        $("#block-loc_en-GB-r_3-c_2").should(exist).shouldHave(Condition.text("Checkbox group")); //Checkboxgroup field  field should not exist
-        $(".fa-redo").should(exist).click(); //Click on Redo button
-        $("#block-loc_en-GB-r_3-c_2 .MuiFormControlLabel-root:nth-child(2) input").shouldBe(checked); //Preselected value should be checked
+        $(elementLocators("CloseValuesEditorBtn")).should(exist).click();
+        $(elementLocators("UndoButton")).should(exist).click(); //Click on Undo button
+        $(elementLocators("SecondCheckBox")).should(not(checked)); //Preselected value should be unchecked
+        $(elementLocators("UndoButton")).should(exist).click(); //Click on Undo button
+        $(elementLocators("InitialVersion")).shouldHave(text(initialVerNumStr3)); //Verify that previous version should increase
+        $(elementLocators("BlockR3C2")).should(exist).shouldNotHave(Condition.text("Checkbox group")); //Checkboxgroup field should not exist
+        $(elementLocators("RedoButton")).should(exist).click(); //Click on Redo button
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr3)); //Verify that previous version should increase
+        $(elementLocators("BlockR3C2")).should(exist).shouldHave(Condition.text("Checkbox group")); //Checkboxgroup field  field should not exist
+        $(elementLocators("RedoButton")).should(exist).click(); //Click on Redo button
+        $(elementLocators("SecondCheckBox")).shouldBe(checked); //Preselected value should be checked
 
     }
 }
