@@ -33,13 +33,12 @@ public class DataCaptureWithoutApprovalByTwoUsersTest extends BaseTest {
         $(elementLocators("DataCaptureInSubMenu")).should(exist).shouldHave(Condition.text("Data Capture")).click();
         $(elementLocators("UserSelectionInput")).should(appear);
         $(elementLocators("DropDownButton")).should(exist).click();
-        $(elementLocators("Popover")).should(appear);
-        $$(elementLocators("ListOfOptions")).shouldHave(itemWithText("GUI Tester 01guitester01@visualorbit.com"), 5000);
-        $$(elementLocators("ListOfOptions")).findBy(text("GUI Tester 01")).click(); //Click on GUI Tester 01
+        $(elementLocators("Popover")).should(appear, Duration.ofSeconds(30));
+        $$(elementLocators("ListOfOptions")).findBy(text("GUI Tester 01")).should(appear, Duration.ofSeconds(30)).click(); //Click on GUI Tester 01
         $(elementLocators("UserSelectionInput")).click();
         $(elementLocators("StartDataCaptureButton")).click(); //Start Data Capture Process
         $(elementLocators("ConfirmationMessage"))
-                .shouldHave(Condition.text("Started Data Capture process for the form: DATA-CAPTURE-WO-PROCESS and version 1.0"));
+                .shouldHave(Condition.text("Started Data Capture process for the form: DATA-CAPTURE-WO-PROCESS and version 2.0"));
         $(elementLocators("UserDataList")).should(exist);
         $(elementLocators("DataCapture")).should(exist).click(); //Click on Data Capture
         $(elementLocators("FormState")).shouldHave(Condition.text("In Progress")); //Verify the Data Capture state

@@ -33,9 +33,8 @@ public class DataCaptureWithTwoApprovalAndDifferentUsersTest extends BaseTest {
         $(elementLocators("DataCaptureInSubMenu")).should(exist).shouldHave(Condition.text("Data Capture")).click();
         $(elementLocators("UserSelectionInput")).should(appear);
         $(elementLocators("DropDownButton")).should(exist).click();
-        $(elementLocators("Popover")).should(appear);
-        $$(elementLocators("ListOfOptions")).shouldHave(itemWithText("GUI Tester 01guitester01@visualorbit.com"), Duration.ofSeconds(30));
-        $$(elementLocators("ListOfOptions")).findBy(text("GUI Tester 01")).click(); //Click on GUI Tester 01
+        $(elementLocators("Popover")).should(appear, Duration.ofSeconds(30));
+        $$(elementLocators("ListOfOptions")).findBy(text("GUI Tester 01")).should(appear, Duration.ofSeconds(30)).click(); //Click on GUI Tester 01
         $(elementLocators("UserSelectionInput")).click();
         $(elementLocators("StartDataCaptureButton")).click(); //Start Data Capture Process
         $(elementLocators("ConfirmationMessage")).should(appear)
