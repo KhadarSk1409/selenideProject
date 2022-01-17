@@ -15,6 +15,7 @@ import org.openqa.selenium.Keys;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Properties;
@@ -104,16 +105,23 @@ public class ReuseActions extends BaseTest {
     }
 
     public static String elementLocators(String elementProperty) {
-        //Instantiating the properties file
-        Properties props = new Properties();
-        try {
-            FileReader reader = new FileReader("..\\testautomation\\src\\test\\java\\reusables\\TestLibrary.properties");
-            props.load(reader);
-            return props.getProperty(elementProperty);
-        } catch (IOException e) {
-            return e.toString();
-        }
+
+            try {
+                //Instantiating the properties file
+                props = new Properties();
+                String PropFileName = "TestLibrary.properties";
+                InputStream inputStream = ReuseActions.class.getClassLoader().getResourceAsStream(PropFileName);
+                 if (inputStream != null) {
+                    props.load(inputStream);
+                } else {
+                    throw new FileNotFoundException("Property file '" +PropFileName + "' not found in the classpath");
+                }
+            } catch (IOException e) {
+                return e.toString();
+            }
+        return props.getProperty(elementProperty);
     }
+    private static Properties props = null;
 }
 
 
