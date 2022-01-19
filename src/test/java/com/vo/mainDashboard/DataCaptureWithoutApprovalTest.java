@@ -2,6 +2,7 @@ package com.vo.mainDashboard;
 
 import com.codeborne.selenide.Condition;
 import com.vo.BaseTest;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.*;
 
 import java.time.Duration;
@@ -37,10 +38,10 @@ public class DataCaptureWithoutApprovalTest extends BaseTest {
             $(elementLocators("UserSelectionInput")).click();
             $(elementLocators("StartDataCaptureButton")).click(); //Start Data Capture Process
             $(elementLocators("ConfirmationMessage")).should(appear)
-                .shouldHave(Condition.text("Started Data Capture process for the form: DATA-CAPTURE-WO-PROCESS and version 2.0"));
+                .shouldHave(Condition.text("Started Data Capture process for the form: DATA-CAPTURE-WO-PROCESS and version 3.0"));
             $(elementLocators("UserDataList")).should(exist);
             $(elementLocators("DataCapture")).should(exist).click(); //Click on Data Capture
-            $(elementLocators("FormState")).shouldHave(Condition.text("In Progress"));//Verify the Data Capture state
+            $(elementLocators("FormState")).shouldHave(Condition.text("In Progress"), Duration.ofSeconds(30));//DataCapture State
             String formDataCaptureId= $(elementLocators("NewFormID")).should(exist).getAttribute("id");
             System.out.println(formDataCaptureId);
             $(elementLocators("UserDataList")).should(exist);
@@ -51,6 +52,9 @@ public class DataCaptureWithoutApprovalTest extends BaseTest {
             $(elementLocators("DataContainer")).should(exist);
             $("#textField_form-user-160cfec0-aef2-4927-a8a8-aff595813f53").should(exist);
             $("#textField_form-user-160cfec0-aef2-4927-a8a8-aff595813f53").setValue("TEST");
+            //LEI Number: Required field to be filled
+            String LEIData = RandomStringUtils.randomAlphanumeric(20);
+            $("#textField_form-user-24f25d7e-c4b4-437d-8e6b-1fe0e2c943ec").setValue(LEIData);//Set LEI value
             $(elementLocators("SubmitDataButton")).click();
             $(elementLocators("ConfirmButton")).should(exist).click();
             $(elementLocators("UserDataList")).should(exist);
