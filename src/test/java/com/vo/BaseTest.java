@@ -35,6 +35,7 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
+import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static reusables.ReuseActions.elementLocators;
 
@@ -337,63 +338,14 @@ public abstract class BaseTest {
         }
     }
 
-    protected static boolean applySearchForTestForms() {
-        boolean hasGuiTestLabel = true;
-        $(elementLocators("MoreFilter")).should(exist).click(); //Click on filter icon
-        $(elementLocators("MoreFilterPopover")).should(appear);
-        $(elementLocators("LabelsInput")).shouldBe(visible); //Label dropdown
-        if (!$(elementLocators("FilterLabelInputField")).has(text("guitest"))) {
-            $(elementLocators("FilterLabelsDropdownButton")).should(exist).click();
-            $(elementLocators("Popover")).should(appear);
-            try {
-                $$(elementLocators("ListOfOptions")).shouldHave(itemWithText("guitest"), Duration.ofSeconds(5));
-                $$(elementLocators("ListOfOptions")).findBy(text("guitest")).click();
-                hasGuiTestLabel = true;
-            } catch (Throwable t) {
-                hasGuiTestLabel = false;
-            }
-            $(elementLocators("Body")).click();
-            $(elementLocators("MoreFilterPopover")).should(disappear);
-        }
-
-        if (hasGuiTestLabel) {
-            $(elementLocators("FormsGrid")).shouldBe(visible);
-            try {
-                $(elementLocators("FormsGrid")).shouldNotHave(Condition.text("No forms available yet!"), Duration.ofSeconds(5));
-            } catch (Throwable t) {
-                hasGuiTestLabel = false;
-            }
-        }
-        System.out.println("applySearchForTestForms " + hasGuiTestLabel);
-        return hasGuiTestLabel;
-    }
 
     //Form Deletion with label: guitest
     public static void deleteForm() {
-        open("/dashboard");
-        $(elementLocators("NavigateToLibrary")).should(exist).hover().click(); //Hover and click on Library to navigate to formlist table
-        if (!applySearchForTestForms()) {
-            System.out.println("applySearchForTestForms returned false, exiting deletion");
-            return;
-        }
-        int formsAvailable = $$(elementLocators("FormsGrid")).size();
-        System.out.println("Found forms to delete: " + formsAvailable);
-        for (int i = 0; i < formsAvailable; i++) {
-            $(elementLocators("FormsGrid")).shouldBe(visible);
-            if ($(elementLocators("FormsGrid")).has(Condition.text("No forms available yet!"))) {
-                return;
-            }
-
-            $(elementLocators("ExpandRowButton")).should(exist).click();
-            $(elementLocators("DeleteFormBtn")).should(exist).click();
-            $(elementLocators("ConfirmationDialog")).should(appear);
-            $(elementLocators("ConfirmDeleteBtn")).should(exist).click();
-            $(elementLocators("DeleteFormBtn")).should(disappear);
-            System.out.println("Deleted Form " + i);
-            if (!applySearchForTestForms()) {
-                return;
-            }
-        }
+        open("/library/forms");
+        $("#btnCreateForm").should(appear); //ensure library is loadaed and create new form button is visible
+        executeJavaScript("document.querySelector('#btnCleanupTestForms').style.visibility = 'inherit'"); //make hidden cleanup button visible for the test user
+        $("#btnCleanupTestForms").should(appear).click();
+        $("#btnCleanupTestForms").should(disappear, Duration.of(10, MINUTES));
     }
 
 
