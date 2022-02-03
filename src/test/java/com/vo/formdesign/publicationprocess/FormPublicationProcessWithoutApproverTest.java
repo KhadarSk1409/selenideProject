@@ -32,7 +32,6 @@ public class FormPublicationProcessWithoutApproverTest extends BaseTest {
         $(elementLocators("LeftFormDashboardHeader")).should(appear);
         $(elementLocators("BlockR1C1")).should(exist).click(); //Click on + to add a field
         $(elementLocators("TemplateCard")).should(appear).$(elementLocators("TextField")).click(); //Add one field
-        $(elementLocators("FormStructure")).should(exist);
         $(elementLocators("ElementProperties")).should(exist);
         $(elementLocators("DesignerMenu")).should(exist).click();
         $(elementLocators("ConfigPublication")).should(exist).click(); //Should click on Configure publication process

@@ -31,32 +31,30 @@ public class FormPublicationProcessWithTwoApprovalAndDifferentUsersIncludingReje
 
         Pair<String, String> formName = createNewForm();
         String actualFormName = formName.getKey();
-        System.out.println(actualFormName);
+        System.out.println("Created form name is: " +actualFormName);
         $(elementLocators("CreateFormButton")).should(exist).shouldBe(enabled).click(); //Click on Create Form
         $(elementLocators("LeftFormDashboardHeader")).should(appear);
         $(elementLocators("BlockR1C1")).should(exist).click(); //Click on + to add a field
         $(elementLocators("TemplateCard")).should(appear).$(elementLocators("TextField")).click(); //Add one field
-        $(elementLocators("FormStructure")).should(exist);
         $(elementLocators("ElementProperties")).should(exist);
         $(elementLocators("DesignerMenu")).should(exist).click();
         $(elementLocators("ConfigPublication")).should(exist).click(); //Should click on Configure publication process
         $(elementLocators("EnablePublicationProcessCheckBox")).should(exist).click();
         $(elementLocators("nextButton")).should(exist).click();
-        $(elementLocators("PublicationWithTwoApproval")).shouldBe(visible).click(); //Publication with two approval should be checked
+        $(elementLocators("PublicationWithTwoApproval")).should(exist).click(); //Publication with two approval should be checked
         $(elementLocators("nextButton")).should(exist).click(); //Click on Next
         $(elementLocators("FreeUserSelection")).should(exist).click(); //Click on Free User Selection
         $(elementLocators("UserSelectionInput")).should(exist).click(); //Click on SelUser to select the user
         $(elementLocators("Popover")).should(appear);
-        $$(elementLocators("ListOfOptions")).shouldHave(itemWithText("GUI Tester 01guitester01@visualorbit.com"), Duration.ofSeconds(10));
-        $$(elementLocators("ListOfOptions")).findBy(text("GUI Tester 01guitester01@visualorbit.com")).click(); //Click on the selected user
+        $$(elementLocators("ListOfOptions")).findBy(text("GUI Tester 01")).click(); //Click on the selected user
         $(elementLocators("EndUserCanOverwrite")).should(exist).shouldBe(enabled).click();
         $(elementLocators("EndUserCanOverwrite")).shouldHave(Condition.value("false"));
         $(elementLocators("nextButton")).should(exist).click(); //Click on Next
         $(elementLocators("UserSelectionInput")).should(exist).click(); //Click on SelUser to select the user
         $(elementLocators("Popover")).should(appear);
-        $$(elementLocators("ListOfOptions")).shouldHave(itemWithText("GUI Tester 02guitester02@visualorbit.com"), Duration.ofSeconds(10));
-        $$(elementLocators("ListOfOptions")).findBy(text("GUI Tester 02guitester02@visualorbit.com")).click(); //Click on the selected user
+        $$(elementLocators("ListOfOptions")).findBy(text("GUI Tester 02")).click(); //Click on the selected user
         $(elementLocators("SecondEndUserCanOverwrite")).should(exist).shouldBe(enabled).click();
+        $(elementLocators("SecondEndUserCanOverwrite")).shouldHave(Condition.value("false"));
         $(elementLocators("nextButton")).should(exist).click(); //Click on Next
         String initialVerNumStr = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch version before publishing
         $(elementLocators("ButtonSave")).should(exist).shouldBe(enabled).click(); //Click on Save

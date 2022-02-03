@@ -45,7 +45,6 @@ public class MenuActionsTest extends BaseTest {
     public void verifyClickOnEditFormPermOpensDialog() {
         $(elementLocators("SubMenu")).should(exist).click(); //SubMenu button on Form Dashboard
         $(elementLocators("EditFormPermissionsInSubMenu")).should(exist).shouldHave(Condition.text("Edit Form Permissions")).click(); //Edit permissions in submenu
-        $(elementLocators("FormAuthorizationTitle")).should(appear); //Form Authorization dialog should appear
         $(elementLocators("UsersContainer")).should(exist); //Form Authorization dialog container
         $(elementLocators("CancelButton")).should(exist).click(); //
     }
