@@ -30,12 +30,11 @@ public class FromPublicationProcessWithOneApprovalIncludingRejectTest extends Ba
 
         Pair<String, String> formName=createNewForm();
         String actualFormName= formName.getKey();
-        System.out.println(actualFormName);
+        System.out.println("Created Form name is:" +actualFormName);
         $(elementLocators("CreateFormButton")).should(exist).shouldBe(enabled).click(); //Click on Create Form
         $(elementLocators("LeftFormDashboardHeader")).should(appear);
         $(elementLocators("BlockR1C1")).should(exist).click(); //Click on + to add a field
         $(elementLocators("TemplateCard")).should(appear).$(elementLocators("TextField")).click(); //Add one field
-        $(elementLocators("FormStructure")).should(exist);
         $(elementLocators("ElementProperties")).should(exist);
         $(elementLocators("DesignerMenu")).should(exist).click();
         $(elementLocators("ConfigPublication")).should(exist).click(); //Should click on Configure publication process
@@ -47,8 +46,7 @@ public class FromPublicationProcessWithOneApprovalIncludingRejectTest extends Ba
         $(elementLocators("UserSelectionInput")).should(exist).click(); //Click on SelUser to select the user
         //Select GUI Tester to Approve and Publish
         $(elementLocators("Popover")).should(appear);
-        $$(elementLocators("ListOfOptions")).shouldHave(itemWithText("GUI Testerguitester@visualorbit.com"), Duration.ofSeconds(10));
-        $$(elementLocators("ListOfOptions")).findBy(text("GUI Testerguitester@visualorbit.com")).click(); //Click on the selected user
+        $$(elementLocators("ListOfOptions")).findBy(text("GUI Tester")).click(); //Click on the selected user
         $(elementLocators("EndUserCanOverwrite")).should(exist).shouldBe(enabled).click();
         $(elementLocators("nextButton")).should(exist).shouldBe(enabled).click(); //Click on Next
         String initialVerNumStr = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch version before publishing
@@ -61,7 +59,7 @@ public class FromPublicationProcessWithOneApprovalIncludingRejectTest extends Ba
         $(elementLocators("DataCapture")).should(exist).hover();
 
         //Verify the initial state of created form should be in draft
-        SelenideElement formListTable = $(elementLocators("FormsGrid")).shouldBe(visible);
+        SelenideElement formListTable = $(elementLocators("FormsGrid")).should(appear);
 
         ElementsCollection formRows = formListTable.$$(elementLocators("FormsAvailableInTable"));
         System.out.println(" Form Count is " + formRows.size());

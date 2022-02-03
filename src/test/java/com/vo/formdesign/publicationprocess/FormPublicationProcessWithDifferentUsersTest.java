@@ -35,7 +35,6 @@ public class FormPublicationProcessWithDifferentUsersTest extends BaseTest {
         $(elementLocators("LeftFormDashboardHeader")).should(appear);
         $(elementLocators("BlockR1C1")).should(exist).click(); //Click on + to add a field
         $(elementLocators("TemplateCard")).should(appear).$(elementLocators("TextField")).click(); //Add one field
-        $(elementLocators("FormStructure")).should(exist);
         $(elementLocators("ElementProperties")).should(exist);
         $(elementLocators("DesignerMenu")).should(exist).click();
         $(elementLocators("ConfigPublication")).should(exist).click(); //Should click on Configure publication process
@@ -48,8 +47,7 @@ public class FormPublicationProcessWithDifferentUsersTest extends BaseTest {
 
         //Select GUI Tester 02 to Approve and Publish
         $(elementLocators("Popover")).should(appear);
-        $$(elementLocators("ListOfOptions")).shouldHave(itemWithText("GUI Tester 02guitester02@visualorbit.com"), Duration.ofSeconds(10));
-        $$(elementLocators("ListOfOptions")).findBy(text("GUI Tester 02guitester02@visualorbit.com")).click(); //Click on the selected user
+        $$(elementLocators("ListOfOptions")).findBy(text("GUI Tester 02")).click(); //Click on the selected user
         $(elementLocators("EndUserCanOverwrite")).should(exist).shouldBe(enabled).click();
         $(elementLocators("nextButton")).should(exist).shouldBe(enabled).click(); //Click on Next
         String initialVerNumStr = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch version before publishing

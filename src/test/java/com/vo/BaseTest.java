@@ -203,7 +203,7 @@ public abstract class BaseTest {
 
                 //Routing the browser console logs to a file
                 //Instantiating the File class
-                File fileOut = new File("..\\testautomation\\build\\outputFile\\outputFile.txt");
+                File fileOut = new File("./outputFile.text");
                 //Instantiating the PrintStream class
                 PrintStream stream = new PrintStream(fileOut);
                 System.out.println("The browser logs will be saved in a file " +fileOut.getAbsolutePath());
