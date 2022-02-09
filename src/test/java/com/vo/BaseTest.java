@@ -202,8 +202,9 @@ public abstract class BaseTest {
                 LogEntries logEntries = getWebDriver().manage().logs().get(LogType.BROWSER);
 
                 //Routing the browser console logs to a file
+                String logFilePath = "build/reports/outputFile";
                 //Instantiating the File class
-                File fileOut = new File("./outputFile.text");
+                File fileOut = new File(logFilePath);
                 //Instantiating the PrintStream class
                 PrintStream stream = new PrintStream(fileOut);
                 System.out.println("The browser logs will be saved in a file " +fileOut.getAbsolutePath());
@@ -342,7 +343,7 @@ public abstract class BaseTest {
     //Form Deletion with label: guitest
     public static void deleteForm() {
         open("/library/forms");
-        $("#btnCreateForm").should(appear); //ensure library is loadaed and create new form button is visible
+        $("#btnCreateForm").should(appear); //ensure library is loaded and create new form button is visible
         executeJavaScript("document.querySelector('#btnCleanupTestForms').style.visibility = 'inherit'"); //make hidden cleanup button visible for the test user
         $("#btnCleanupTestForms").should(appear).click();
         $("#btnCleanupTestForms").should(disappear, Duration.of(10, MINUTES));
@@ -354,8 +355,9 @@ public abstract class BaseTest {
     }
 
     public static SelenideElement selectAndClear(By selector) {
-        $(selector).sendKeys(Keys.chord(Keys.CONTROL, Keys.COMMAND, "a"));
-        $(selector).sendKeys(Keys.chord(Keys.DELETE));
+
+        $(selector).sendKeys(Keys.CONTROL, Keys.COMMAND, "a"); //Select the text (Ctrl + a)
+        $(selector).sendKeys(Keys.DELETE); //Delete the selected text
         return $(selector).shouldBe(empty);
     }
 }
