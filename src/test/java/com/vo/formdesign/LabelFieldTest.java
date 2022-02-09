@@ -46,7 +46,7 @@ public class LabelFieldTest extends BaseTest {
     @DisplayName("createNewFormulaDesignForLabelfields")
     @ParameterizedTest
     @CsvFileSource(resources = "/label_field_test_data.csv", numLinesToSkip = 1)
-    public void allLabelField(Integer row, Integer col, Integer colSpan, String textfield_value) throws InterruptedException {
+    public void allLabelField(Integer row, Integer col, Integer colSpan, String textfield_value) {
 
         String blockId = "#block-loc_en-GB-r_" + row + "-c_" + col;
 
@@ -57,10 +57,10 @@ public class LabelFieldTest extends BaseTest {
         }
         String initialVerNumStr = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
         $(elementLocators("TemplateList")).should(exist);
         $(elementLocators("LabelField")).should(exist).click();
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
         //$(blockId).shouldBe(visible).click(); //? actually this should not be needed again
 
         if (colSpan != null && colSpan > 1) {
@@ -82,7 +82,6 @@ public class LabelFieldTest extends BaseTest {
                     .setValue(textfield_value).sendKeys(Keys.TAB);
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(blockId + " input").shouldHave(value(textfield_value));
-            //  labelVerificationOnFormDesign(blockId,textfield_value);
         }
     }
 

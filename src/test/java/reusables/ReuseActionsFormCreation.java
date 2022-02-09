@@ -52,7 +52,6 @@ public class ReuseActionsFormCreation {
         String blockId1 = elementLocators("BlockR1C1"); //Need to change later as of now _1 is returning two results
         String initialVerNumStr = $(elementLocators("InitialVersion")).should(exist).getText(); //Initial version
         $(blockId1).shouldBe(visible).click();
-        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
         //Click on Show More
         $(elementLocators("TemplateList")).find(byText("Show More")).should(exist).click();
 
@@ -160,10 +159,10 @@ public class ReuseActionsFormCreation {
             case LABEL_FIELD:
                 $("#" + formField.fieldId).should(appear);
                 $(elementLocators("TemplateList")).should(appear);
-                $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
                 $(blockId1).shouldBe(visible).click();
                 $("#" + formField.fieldId).should(appear).click();
                 $(elementLocators("InputTextField")).should(appear);
+                $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
 
                 //options for Label field should exist:
                 Arrays.asList(LabelFieldTest.LabelFieldOptionsIds.values()).forEach(valueId -> $(By.id(valueId.name())).shouldBe(visible));
@@ -269,8 +268,8 @@ public class ReuseActionsFormCreation {
         String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
         String checkBoxId = "#" + DesignFormFieldIds.checkbox_disableLabel.name();
         $(checkBoxId).shouldBe(visible).click();
-        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
         $(checkBoxId + " input").shouldBe(selected);
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
         $(StrBlockId).shouldNotHave(value(str_value));
     }
 
