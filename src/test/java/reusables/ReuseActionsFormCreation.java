@@ -289,19 +289,19 @@ public class ReuseActionsFormCreation {
         String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
         $(checkBoxId).shouldBe(visible).click();
         //$(checkBoxId + " input").shouldHave(value("true"));
-        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
         $(checkBoxId + " input").shouldBe(selected);
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
     }
 
     //Read only
     public static void readOnlyCheckboxOnFormDesign(String StrBlockId) {
         $(StrBlockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+        $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
         String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
         String checkBoxId = "#" + DesignFormFieldIds.checkbox_readOnly.name();
         $(checkBoxId).shouldBe(visible).click();
-        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
         $(checkBoxId + " input").shouldBe(selected);
-
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
     }
 
     public enum DesignFormFieldIds {

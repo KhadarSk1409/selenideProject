@@ -356,7 +356,7 @@ public abstract class BaseTest {
 
     public static SelenideElement selectAndClear(By selector) {
 
-        $(selector).sendKeys(Keys.CONTROL, Keys.COMMAND, "a"); //Select the text (Ctrl + a)
+        $(selector).should(exist).sendKeys(Keys.CONTROL, Keys.COMMAND, "a"); //Select the text (Ctrl + a)
         $(selector).sendKeys(Keys.DELETE); //Delete the selected text
         return $(selector).shouldBe(empty);
     }

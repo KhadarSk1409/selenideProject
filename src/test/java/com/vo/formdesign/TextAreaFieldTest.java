@@ -1,5 +1,6 @@
 package com.vo.formdesign;
 
+import com.codeborne.selenide.Condition;
 import com.vo.BaseTest;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -10,6 +11,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
@@ -73,8 +75,8 @@ public class TextAreaFieldTest extends BaseTest {
         }
         String initialVerNumStr = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
         $(elementLocators("TextAreaField")).should(appear).click();
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
         $(elementLocators("FormPropertiesCard")).should(appear);
 
         if (colSpan != null && colSpan > 1) {
@@ -116,24 +118,26 @@ public class TextAreaFieldTest extends BaseTest {
             selectAndClear(By.id(TextAreaFieldOptionsIds.textfield_defaultValue.name()))
                     .setValue(textfield_defaultValue).sendKeys(Keys.TAB);
             //TODO check appearance on designer
-            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(By.id(TextAreaFieldOptionsIds.textfield_defaultValue.name())).shouldHave(value(textfield_defaultValue));
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
         }
 
 
         //only Alphabets
         if (StringUtils.isNotEmpty(property_onlyAlphabets)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String radioBtnId = "#" + TextAreaFieldTest.TextAreaFieldOptionsIds.prop_onlyAlphabets_onlyAlphabets.name();
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             $(radioBtnId).shouldBe(visible).click();
-            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(radioBtnId + " input").shouldBe(selected);
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
         }
 
         //Alphabets and numerics
         if (StringUtils.isNotEmpty(property_alphabetsAndNumerics)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String radioBtnId = "#" + TextAreaFieldTest.TextAreaFieldOptionsIds.prop_alphabetsAndNumerics_alphabetsAndNumerics.name();
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             $(radioBtnId).shouldBe(visible).click();
@@ -158,6 +162,7 @@ public class TextAreaFieldTest extends BaseTest {
             String sliderId = "#prop_minMaxLength_formcontrol";
             String minInputSel = sliderId + " .hidden_slider_inputs .minValue input";
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             executeJavaScript("document.querySelector('#prop_minMaxLength_formcontrol .hidden_slider_inputs').hidden = false;");
             selectAndClear(By.cssSelector(minInputSel)).setValue(minLength.toString()).sendKeys(Keys.TAB);
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
@@ -175,11 +180,11 @@ public class TextAreaFieldTest extends BaseTest {
             executeJavaScript("document.querySelector('#prop_minMaxLength_formcontrol .hidden_slider_inputs').hidden = false;");
 
             selectAndClear(By.cssSelector(minInputSel)).setValue(maxLength.toString()).sendKeys(Keys.TAB);
-            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
 
             executeJavaScript("document.querySelector('#prop_minMaxLength_formcontrol .hidden_slider_inputs').hidden = true;");
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
 
-            String maxValue = $(sliderId + " input").getValue().split(",")[1];
+            String maxValue = $(sliderId + " input").getValue().split(",")[0];
             Assertions.assertEquals(maxLength.toString(), maxValue, "max value should be " + maxLength);
         }
 
@@ -193,6 +198,7 @@ public class TextAreaFieldTest extends BaseTest {
         $(elementLocators("PublishButton")).should(exist).click();
         $(elementLocators("PublishConfirmationDialog")).should(appear); //Publish confirmation dialog appears
         $(elementLocators("ConfirmPublish")).should(exist).click(); //Click on Confirm button
+        $(elementLocators("ConfirmationMessage")).should(appear).shouldHave(Condition.text("The form was published successfully"), Duration.ofSeconds(5));
         $(elementLocators("FillFormButton")).should(exist).click(); //Fill form button on Launch screen
         $(elementLocators("DataContainer")).should(appear); //Verify that the form details screen appears
 
