@@ -1,5 +1,6 @@
 package com.vo.formdesign;
 
+import com.codeborne.selenide.Condition;
 import com.vo.BaseTest;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
@@ -9,12 +10,14 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
 import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static org.openqa.selenium.Keys.TAB;
 import static reusables.ReuseActions.elementLocators;
@@ -68,7 +71,9 @@ public class EmailFieldTest extends BaseTest {
         }
         String initialVerNumStr = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
-        $(elementLocators("EmailField")).should(appear).click();
+        //Click on Show More
+        $(elementLocators("TemplateList")).find(byText("Show More")).should(exist).click();
+        $(elementLocators("EmailField")).should(exist).click();
         $(elementLocators("FormPropertiesCard")).should(appear);
         $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
@@ -107,6 +112,7 @@ public class EmailFieldTest extends BaseTest {
         //Default Value
         if (StringUtils.isNotEmpty(textfield_defaultValue)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(EmailFieldTest.EmailFielsIds.textfield_defaultValueEmail.name()))
                     .setValue(textfield_defaultValue).sendKeys(Keys.TAB);
@@ -128,8 +134,8 @@ public class EmailFieldTest extends BaseTest {
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + EmailFieldTest.EmailFielsIds.checkbox_readOnly.name();
             $(checkBoxId).shouldBe(visible).click();
-            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
 
             if (StringUtils.isNotEmpty(textfield_defaultValue)) {
                 selectAndClear(By.id(EmailFieldTest.EmailFielsIds.textfield_defaultValueEmail.name())).sendKeys(Keys.TAB);
@@ -143,6 +149,7 @@ public class EmailFieldTest extends BaseTest {
         //Allow Multiple:
         if (StringUtils.isNotEmpty(checkbox_allow_multiple)) {
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String checkBoxId = "#" + EmailFieldTest.EmailFielsIds.checkbox_multiple.name();
             $(checkBoxId).shouldBe(visible).click();
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
@@ -158,6 +165,7 @@ public class EmailFieldTest extends BaseTest {
         $(elementLocators("PublishButton")).should(exist).click();
         $(elementLocators("PublishConfirmationDialog")).should(appear); //Publish confirmation dialog appears
         $(elementLocators("ConfirmPublish")).should(exist).click(); //Click on Confirm button
+        $(elementLocators("ConfirmationMessage")).should(appear).shouldHave(Condition.text("The form was published successfully"), Duration.ofSeconds(5));
         $(elementLocators("FillFormButton")).should(exist).click(); //Fill form button on Launch screen
         $(elementLocators("DataContainer")).should(appear); //Verify that the form details screen appears
 
@@ -235,7 +243,7 @@ public class EmailFieldTest extends BaseTest {
 
                 // verify error, since allow multiple is disabled
                 $(helpInFillForm).shouldHave(text("Invalid email address. Only single Email is allowed."));
-                selectAndClear(inputField);
+                $(inputField).sendKeys(Keys.CONTROL, Keys.COMMAND, "a", Keys.DELETE); //selectAndClear method is not working fine here so performed KeyBoard Actions
             }
         }
 

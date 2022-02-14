@@ -1,5 +1,6 @@
 package com.vo.formdesign;
 
+import com.codeborne.selenide.Condition;
 import com.vo.BaseTest;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -14,6 +15,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.time.Duration;
 import java.util.Locale;
 import java.util.Random;
 import java.util.stream.IntStream;
@@ -72,7 +74,7 @@ public class NumberFieldTest extends BaseTest {
                                String checkbox_allowLeadingZeros,
                                String checkbox_onlyInteger,
                                String numberField_defaultValueNumber
-    ) throws IOException {
+    ) {
 
          String blockId = "#block-loc_en-GB-r_" + row + "-c_" + col;
 
@@ -133,14 +135,18 @@ public class NumberFieldTest extends BaseTest {
                 //When you don't have any value in Default value edit box and click on Read only checkbox it should show error
                 $(elementLocators("DefaultNumberHelperText")).should(exist).shouldHave(text("Must be set, if read only"));
 
+            $(elementLocators("DesignerMenu")).should(exist);
+
                 //Uncheck the readonly checkbox
                 String checkBoxId = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_readOnly.name();
                 String initialVerNumStr2 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
                 $(checkBoxId).shouldBe(visible).click();
-                $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
                 $(checkBoxId + " input").shouldNotBe(selected); //Uncheck the Read only checkbox
+                $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
 
-                //Set the value in the Default value:
+            $(elementLocators("DesignerMenu")).should(exist);
+
+            //Set the value in the Default value:
                 selectAndClear(By.id(NumberFieldTest.NumberFieldOptionsIds.numberField_defaultValueNumber.name()))
                         .setValue("1").sendKeys(Keys.TAB);
                 $(By.id(NumberFieldTest.NumberFieldOptionsIds.numberField_defaultValueNumber.name())).shouldHave(value("1"));
@@ -153,6 +159,7 @@ public class NumberFieldTest extends BaseTest {
         //Apply user format checkbox check
         if (StringUtils.isNotEmpty(checkbox_applyFormatter)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_applyFormatter.name();
             $(checkBoxId).shouldBe(visible).click();
@@ -179,14 +186,15 @@ public class NumberFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_thousandSeparator)) {
             $(By.id(NumberFieldTest.NumberFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             selectAndClear(By.id(NumberFieldTest.NumberFieldOptionsIds.numberField_defaultValueNumber.name()))
                     .setValue(numberField_defaultValueNumber).sendKeys(Keys.TAB); //Enter value in Default chekbox
 
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_thousandSeparator.name();
             $(checkBoxId).shouldBe(visible).click();
-            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
 
             //Verify the changed format:
             if (StringUtils.isNotEmpty(numberField_defaultValueNumber)) {
@@ -199,32 +207,35 @@ public class NumberFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_allowNegative)) {
             $(By.id(NumberFieldTest.NumberFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_allowNegative.name();
             $(checkBoxId).shouldBe(visible).click();
-            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
         }
 
         //Allow leading zeros
         if (StringUtils.isNotEmpty(checkbox_allowLeadingZeros)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_allowLeadingZeros.name();
             $(checkBoxId).shouldBe(visible).click();
-            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
         }
 
         //Only integer
         if (StringUtils.isNotEmpty(checkbox_onlyInteger)) {
             if (StringUtils.isNotEmpty(checkbox_onlyInteger)) {
                 $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+                $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
                 String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
                 String checkBoxId = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_onlyInteger.name();
                 $(checkBoxId).shouldBe(visible).click();
-                $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
                 $(checkBoxId + " input").shouldBe(selected);
+                $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
 
                 //here also check that after this is checked the Decimal places textfield should be disabled
                 $(elementLocators("DecimalPlaceInputField")).shouldBe(disabled); //Decimal places
@@ -233,7 +244,8 @@ public class NumberFieldTest extends BaseTest {
 
         //Enter Decimal Places
         if (StringUtils.isNotEmpty(numberfield_decimalScale)) {
-            //    $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String initialVerNumStr2 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(NumberFieldOptionsIds.numberField_decimalScale.name()))
                     .setValue(numberfield_decimalScale).sendKeys(Keys.TAB);
@@ -246,6 +258,7 @@ public class NumberFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(numberField_defaultValueNumber)) {
             $(By.id(NumberFieldTest.NumberFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
             $(By.id(NumberFieldTest.NumberFieldOptionsIds.numberField_defaultValueNumber.name())).should(exist);
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             selectAndClear(By.id(NumberFieldTest.NumberFieldOptionsIds.numberField_defaultValueNumber.name()))
                     .setValue(numberField_defaultValueNumber).sendKeys(Keys.TAB);
             if (StringUtils.isNotEmpty(numberfield_decimalScale)) {
@@ -284,8 +297,9 @@ public class NumberFieldTest extends BaseTest {
             String initialVerNumStr2 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(NumberFieldTest.NumberFieldOptionsIds.numberField_defaultValueNumber.name()))
                     .setValue(numberField_defaultValueNumber).sendKeys(Keys.TAB);
-            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
             $(elementLocators("MinValueInputField")).shouldHave(value(numberField_defaultValueNumber));
+            $(elementLocators("ReadOnlyCheckBox")).should(exist);
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
 
         }
 
@@ -326,6 +340,7 @@ public class NumberFieldTest extends BaseTest {
         $(elementLocators("PublishButton")).should(exist).click();
         $(elementLocators("PublishConfirmationDialog")).should(appear); //Publish confirmation dialog appears
         $(elementLocators("ConfirmPublish")).should(exist).click(); //Click on Confirm button
+        $(elementLocators("ConfirmationMessage")).should(appear).shouldHave(Condition.text("The form was published successfully"), Duration.ofSeconds(5));
         $(elementLocators("FillFormButton")).should(exist).click(); //Fill form button on Launch screen
         $(elementLocators("DataContainer")).should(appear); //Verify that the form details screen appears
 
@@ -353,7 +368,7 @@ public class NumberFieldTest extends BaseTest {
                                      String checkbox_allowLeadingZeros,
                                      String checkbox_onlyInteger,
                                      String numberField_defaultValueNumber
-    ) throws ParseException {
+    ) {
 
         String blockStr = "#data_block-loc_en-GB-r_" + row + "-c_" + col;
         String labelInFillForm = blockStr + " .MuiFormLabel-root";
