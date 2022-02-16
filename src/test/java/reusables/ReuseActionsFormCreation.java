@@ -258,8 +258,8 @@ public class ReuseActionsFormCreation {
         String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
         selectAndClear(By.id(DesignFormFieldIds.textfield_label.name()))
                 .setValue(str_value).sendKeys(Keys.TAB);
-        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
         $(StrBlockId).shouldHave(text(str_value));
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
     }
 
     //Hide label
@@ -278,8 +278,8 @@ public class ReuseActionsFormCreation {
         String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
         selectAndClear(By.id(DesignFormFieldIds.textfield_help.name()))
                 .setValue(str_value).sendKeys(Keys.TAB);
-        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
         $(StrBlockId).shouldHave(text(str_value));
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
     }
 
     //Required

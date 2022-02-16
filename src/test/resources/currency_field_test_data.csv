@@ -3,7 +3,6 @@ row,col,col+AF8-span,currency_label,currency_help,currency_field,disableLabel,re
 1,2,,Help Text,This is Help Text,,X,,,,,,,,,,,
 1,3,,Required,,,,X,,,,,,,,,,
 1,4,,Default Value,This is Help Text,,,,,,,,,,,,,1234567
-2,1,,Currencies,This is Help Text,"USD,CAD",,,,,,,,,,,,
 2,2,,Read Only,This is Help Text,,,,,,,X,,,,,,
 2,4,,Text Currency,This is Help Text,,,,,,,,,,,,,1234567
 3,1,,Apply Format,This is Help Text,,,,,,,,X,,,,,1234567
@@ -14,3 +13,4 @@ row,col,col+AF8-span,currency_label,currency_help,currency_field,disableLabel,re
 4,2,,Decimal Scale,Help Text,,,,2,,,,,,,,,1234.567
 4,3,,Textfield minValue,Help Text,,,,,5,,,,,,,,5
 4,4,,Textfield maxValue,Help Text,,,,,,123,,,,,,,123
+2,1,,Currencies,This is Help Text,"USD,CAD",,,,,,,,,,,,
