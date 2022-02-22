@@ -20,6 +20,7 @@ import java.util.stream.IntStream;
 
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static java.lang.Integer.parseInt;
 import static java.lang.Integer.valueOf;
@@ -74,6 +75,7 @@ public class SelectTest extends BaseTest {
         }
         String initialVerNumStr = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
+        $(elementLocators("TemplateList")).find(byText("Show More")).should(exist).click(); //Click on Show More
         $(elementLocators("SelectField")).should(appear).click();
         $(elementLocators("FormPropertiesCard")).should(appear);
         $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
@@ -173,6 +175,7 @@ public class SelectTest extends BaseTest {
         //Allow Multiple:
         if (StringUtils.isNotEmpty(checkbox_allow_multiple)) {
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String checkBoxId = "#" + SelectTest.SelectIds.checkbox_multiple.name();
             $(checkBoxId).shouldBe(visible).click();
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased

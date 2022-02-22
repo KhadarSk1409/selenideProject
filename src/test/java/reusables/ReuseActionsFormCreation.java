@@ -285,8 +285,8 @@ public class ReuseActionsFormCreation {
     //Required
     public static void requiredCheckboxVerificationOnFormDesign(String StrBlockId) {
         $(StrBlockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
-        String checkBoxId = "#" + DesignFormFieldIds.checkbox_required.name();
         String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
+        String checkBoxId = "#" + DesignFormFieldIds.checkbox_required.name();
         $(checkBoxId).shouldBe(visible).click();
         //$(checkBoxId + " input").shouldHave(value("true"));
         $(checkBoxId + " input").shouldBe(selected);
