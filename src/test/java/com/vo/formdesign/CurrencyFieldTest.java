@@ -1,5 +1,6 @@
 package com.vo.formdesign;
 
+import com.codeborne.selenide.Condition;
 import com.vo.BaseTest;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -21,6 +22,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.time.Duration;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -111,7 +113,7 @@ public class CurrencyFieldTest extends BaseTest {
 
         //Label
         if (StringUtils.isNotEmpty(label_text)) {
-            labelVerificationOnFormDesign(blockId,label_text);
+            labelVerificationOnFormDesign(blockId, label_text);
         }
 //
         //Hide(disable) Label
@@ -134,12 +136,14 @@ public class CurrencyFieldTest extends BaseTest {
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
             $(elementLocators("CurrencyInput")).shouldBe(visible);
             $(elementLocators("CurrencyInputField")).shouldHave(text("EUR"));
+            String initialVersion = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             $(elementLocators("CurrencyInputField")).sendKeys(Keys.BACK_SPACE); //Clear the default value in Currencies field
 
             Arrays.asList(currency_field.split(",")).forEach(currency -> {
                 $(elementLocators("CurrencyInput")).should(exist).click();
                 $(elementLocators("Popover")).should(appear);
                 $$(elementLocators("ListOfOptions")).findBy(text(currency)).should(exist).click();
+                $(elementLocators("InitialVersion")).shouldNotHave(text(initialVersion)); //Verify that version has increased
                 $(elementLocators("Currencies")).shouldHave(text(currency));
             });
         }
@@ -153,12 +157,16 @@ public class CurrencyFieldTest extends BaseTest {
             //When you don't have any value in Default value edit box and click on Read only checkbox it should show error
             $(elementLocators("DefaultNumberHelperText")).should(exist).shouldHave(text("Must be set, if read only"));
 
+            $(elementLocators("DesignerMenu")).should(exist);
+
             //Uncheck the readonly checkbox
             String checkBoxId = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_readOnly.name();
             String initialVerNumStr2 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             $(checkBoxId).shouldBe(visible).click();
-            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
             $(checkBoxId + " input").shouldNotBe(selected); //Uncheck the Read only checkbox
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
+
+            $(elementLocators("DesignerMenu")).should(exist);
 
             //Set the value in the Default value:
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name()))
@@ -200,14 +208,15 @@ public class CurrencyFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_thousandSeparator)) {
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name()))
                     .setValue(text_currencyField_defaultValueCurrency).sendKeys(Keys.TAB); //Enter value in Default chekbox
 
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + CurrencyFieldTest.CurrencyFieldOptionsIds.checkbox_thousandSeparator.name();
             $(checkBoxId).shouldBe(visible).click(); //TBD - Thousand separator logic
-            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
 
             //Verify the changed format:
             if (StringUtils.isNotEmpty(text_currencyField_defaultValueCurrency)) {
@@ -220,11 +229,12 @@ public class CurrencyFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_allowNegative)) {
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + CurrencyFieldTest.CurrencyFieldOptionsIds.checkbox_allowNegative.name();
             $(checkBoxId).shouldBe(visible).click();
-            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(checkBoxId + " input").shouldBe(selected);
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
         }
 
 
@@ -232,6 +242,7 @@ public class CurrencyFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_allowLeadingZeros)) {
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + CurrencyFieldTest.CurrencyFieldOptionsIds.checkbox_allowLeadingZeros.name();
             $(checkBoxId).shouldBe(visible).click();
@@ -243,6 +254,7 @@ public class CurrencyFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_onlyInteger)) {
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + CurrencyFieldTest.CurrencyFieldOptionsIds.checkbox_onlyInteger.name();
             $(checkBoxId).shouldBe(visible).click();
@@ -258,8 +270,9 @@ public class CurrencyFieldTest extends BaseTest {
 
         //Enter Decimal Places
         if (StringUtils.isNotEmpty(textfield_decimalScale)) {
-            // $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
+            $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String initialVerNumStr2 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_decimalScale.name()))
                     .setValue(textfield_decimalScale).sendKeys(Keys.TAB);
@@ -271,6 +284,7 @@ public class CurrencyFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(text_currencyField_defaultValueCurrency)) {
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name())).should(exist);
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name()))
                     .setValue(text_currencyField_defaultValueCurrency).sendKeys(Keys.TAB);
             if (StringUtils.isNotEmpty(textfield_decimalScale)) {
@@ -348,6 +362,7 @@ public class CurrencyFieldTest extends BaseTest {
         $(elementLocators("PublishButton")).should(exist).click();
         $(elementLocators("PublishConfirmationDialog")).should(appear); //Publish confirmation dialog appears
         $(elementLocators("ConfirmPublish")).should(exist).click(); //Click on Confirm button
+        $(elementLocators("ConfirmationMessage")).should(appear).shouldHave(Condition.text("The form was published successfully"), Duration.ofSeconds(5));
         $(elementLocators("FillFormButton")).should(exist).click(); //Fill form button on Launch screen
         $(elementLocators("DataContainer")).should(appear); //Verify that the form details screen appears
 
@@ -476,7 +491,7 @@ public class CurrencyFieldTest extends BaseTest {
         //Allow leading zeroes:
         if (StringUtils.isNotEmpty(checkbox_allowLeadingZeros)) {
             System.out.println("Verifying allow leading zeros");
-            String randomStr = "000"+RandomStringUtils.randomNumeric(4);
+            String randomStr = "000" + RandomStringUtils.randomNumeric(4);
             selectAndClear(inputField).setValue(randomStr).sendKeys(Keys.TAB);
             $(inputField).shouldHave(value(randomStr));
         }
@@ -580,7 +595,7 @@ public class CurrencyFieldTest extends BaseTest {
         df.setMaximumFractionDigits(2);
         df.setRoundingMode(RoundingMode.DOWN);
         df.setParseBigDecimal(true);
-        System.out.println("random bigdecmial: " + " .... " + bd.toString() + " .... " + df.format(bd));
+        System.out.println("random bigdecimal: " + " .... " + bd.toString() + " .... " + df.format(bd));
 
     }
 

@@ -1,6 +1,7 @@
 package com.vo.formdesign;
 
 import com.codeborne.selenide.CollectionCondition;
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.commands.PressEnter;
 import com.vo.BaseTest;
@@ -166,6 +167,7 @@ public class CheckboxgroupTest extends BaseTest {
         //Allow select:
         if (StringUtils.isNotEmpty(checkbox_globalSelection)) {
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String checkBoxId = "#" + CheckboxgroupTest.CheckboxgroupIds.checkbox_globalSelection.name();
             $(checkBoxId).shouldBe(visible).click();
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
@@ -183,6 +185,7 @@ public class CheckboxgroupTest extends BaseTest {
 
             //Click on close button
             $(elementLocators("CloseValuesEditorBtn")).should(exist).click();
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             $(By.id(CheckboxgroupTest.CheckboxgroupIds.numberField_minCount.name())).should(exist); //Verify that Minimum count field exists
 
             //Error verification if the Min count is more than rowCount, then error should be shown
@@ -269,6 +272,7 @@ public class CheckboxgroupTest extends BaseTest {
 
         //Other values:
         if (StringUtils.isNotEmpty(checkbox_other_values)) {
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + CheckboxgroupTest.CheckboxgroupIds.checkbox_other.name();
             $(checkBoxId).shouldBe(visible).click();
@@ -279,6 +283,7 @@ public class CheckboxgroupTest extends BaseTest {
         //Direction
         //Click on Direction. Select Vertical
         if (StringUtils.isNotEmpty(dropdown_direction)) {
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             $(By.id(CheckboxgroupTest.CheckboxgroupIds.property_select_direction.name())).should(exist).click();
             $(By.id(CheckboxgroupTest.CheckboxgroupIds.property_select_direction.name())).selectOptionByValue(dropdown_direction);
             $(By.id(CheckboxgroupTest.CheckboxgroupIds.property_select_direction.name())).shouldHave(value(dropdown_direction));
@@ -294,6 +299,7 @@ public class CheckboxgroupTest extends BaseTest {
         $(elementLocators("PublishButton")).should(exist).click();
         $(elementLocators("PublishConfirmationDialog")).should(appear); //Publish confirmation dialog appears
         $(elementLocators("ConfirmPublish")).should(exist).click(); //Click on Confirm button
+        $(elementLocators("ConfirmationMessage")).should(appear).shouldHave(Condition.text("The form was published successfully"), Duration.ofSeconds(5));
         $(elementLocators("FillFormButton")).should(exist).click(); //Fill form button on Launch screen
         $(elementLocators("DataContainer")).should(appear); //Verify that the form details screen appears
 
