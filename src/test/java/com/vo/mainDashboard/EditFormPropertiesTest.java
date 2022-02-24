@@ -30,26 +30,24 @@ public class EditFormPropertiesTest extends BaseTest {
         $(elementLocators("SubMenu")).should(appear, Duration.ofSeconds(8)).click();
         $(elementLocators("EditFormDesignInSubMenu")).should(exist).click(); //Click on Edit Form Design
         $(elementLocators("FormStructure")).should(exist);
-        $(elementLocators("ElementProperties")).should(exist);
         $(elementLocators("DesignerMenu")).should(exist).click();
         $(elementLocators("FormProperties")).click(); //Should click on Form Properties
         $(elementLocators("DesignerTab")).should(exist);
         $(elementLocators("IconSelection")).click();
         $(elementLocators("IconsWindow")).should(appear);
 
-        String iconName= $(elementLocators("BusinessPersonIcon")).getAttribute("title");
         $(elementLocators("BusinessPersonIcon")).click(); //Should add selected Icon
+        $(elementLocators("CloseIconPackButton")).should(exist).click();
         $(elementLocators("LabelsInput")).should(exist);
         $(elementLocators("FormLabelSelection")).click(); //Should click on Label
         $(elementLocators("Popover")).should(appear);
         $$(elementLocators("ListOfOptions")).shouldHave(itemWithText("SKB"), Duration.ofSeconds(8));
         $$(elementLocators("ListOfOptions")).findBy(text("SKB")).click(); //Click on the selected Label
-        $(elementLocators("AddFormLang")).should(exist).click();
-        $(elementLocators("GermanLang")).should(exist);
+        $(elementLocators("FormLabelsField")).shouldHave(text("SKB"));
+        $(elementLocators("AddLanguagePlusIcon")).should(exist).shouldBe(enabled).click();
+        $(elementLocators("GermanLang")).should(appear);
         String newLang=$(elementLocators("GermanLang")).getText();
-
-        //Should Add another language
-        $(elementLocators("SelectLanguage")).should(exist).click();
+        System.out.println("Added Language is " +newLang);
         $(elementLocators("PublishButton")).click(); //Click on Publish
         $(elementLocators("ConfirmPublish")).click();
         $(elementLocators("ConfirmationMessage")).should(appear).shouldHave(Condition.text("The form was published successfully"));
@@ -62,12 +60,13 @@ public class EditFormPropertiesTest extends BaseTest {
         $(elementLocators("LeftFormDashboardHeader")).should(exist);
         $(elementLocators("SubMenu")).should(appear, Duration.ofSeconds(8)).click();
         $(elementLocators("EditFormDesignInSubMenu")).should(exist).click(); //Click on Edit Form Design
-        $(elementLocators("FormTreeIcon")).shouldHave(attributeMatching("data-src", ".*"+iconName+".*"));
-        $(elementLocators("DesignerLanguage2")).shouldHave(text(newLang.toUpperCase())); //German language should exist
         $(elementLocators("DesignerMenu")).should(exist).click();
         $(elementLocators("FormProperties")).shouldHave(Condition.text("Form Properties")).click();
+
+        $(elementLocators("FormLabelsField")).shouldHave(text("SKB"));
+        $(elementLocators("DesignerLanguage2")).shouldHave(text("German - Germany")); //German language should exist
         $(elementLocators("DeleteLang2")).click(); //Delete the selected language
-        $(elementLocators("ConfirmDelete")).click();
+        $(elementLocators("DesignerLanguage2")).shouldNot(exist, Duration.ofSeconds(2));
         $(elementLocators("PublishButton")).click(); //Click on Publish
         $(elementLocators("ConfirmPublish")).click();
         $(elementLocators("ConfirmationMessage")).should(appear).shouldHave(Condition.text("The form was published successfully"));
