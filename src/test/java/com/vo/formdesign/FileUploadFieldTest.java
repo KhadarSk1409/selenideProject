@@ -74,6 +74,7 @@ public class FileUploadFieldTest extends BaseTest {
         }
         String initialVerNumStr = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
+        $(elementLocators("TemplateList")).find(byText("Show More")).should(exist).click(); //Click on Show More
         $(elementLocators("FileUploadField")).should(exist).click();
         $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
         $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
@@ -101,6 +102,7 @@ public class FileUploadFieldTest extends BaseTest {
 
         //Maximum file size
         if(StringUtils.isNotEmpty(text_max_file_size)){
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             $(By.id(FileUploadFieldTest.FileUploadFieldIds.numberField_maxFileSize.name())).should(exist);
             selectAndClear(By.id(FileUploadFieldTest.FileUploadFieldIds.numberField_maxFileSize.name()))
                     .setValue(text_max_file_size).sendKeys(Keys.TAB);
@@ -110,6 +112,7 @@ public class FileUploadFieldTest extends BaseTest {
 
         //Enter Minimum Value
         if (StringUtils.isNotEmpty(text_numberField_minCount)) {
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
 
             $(By.id(FileUploadFieldTest.FileUploadFieldIds.numberField_minCount.name())).should(exist); //Verify that Minimum count field exists
 
@@ -124,6 +127,7 @@ public class FileUploadFieldTest extends BaseTest {
 
         //Enter Maximum Value
         if (StringUtils.isNotEmpty(text_numberField_maxCount)) {
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String initialVerNumStr2 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(FileUploadFieldIds.numberField_maxCount.name()))
                     .setValue(text_numberField_maxCount).sendKeys(Keys.TAB);
@@ -153,6 +157,8 @@ public class FileUploadFieldTest extends BaseTest {
 
         //Values
         if (StringUtils.isNotEmpty(edit_values)) {
+
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
 
             String[] values = edit_values.split(",");
 

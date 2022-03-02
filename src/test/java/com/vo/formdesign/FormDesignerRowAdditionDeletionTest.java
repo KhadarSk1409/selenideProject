@@ -39,6 +39,7 @@ public class FormDesignerRowAdditionDeletionTest extends BaseTest {
         $(elementLocators("TextFieldLabel")).should(exist).setValue(" 02 ");
         $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
 
+        $(elementLocators("BlockR4C2")).click();
         $(elementLocators("BlockR4C1")).should(exist).click();
         $(elementLocators("TextField")).should(appear).click();
         $(elementLocators("BlockR4C1PenIcon")).should(exist).click();
@@ -48,43 +49,41 @@ public class FormDesignerRowAdditionDeletionTest extends BaseTest {
 
         //Adding rows
         //Adding a new row before existing first row
+        String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Initial version
         $(elementLocators("Section1")).should(exist);
         $(elementLocators("Row1FirstPlusIconToAddRow")).should(exist).click();
-        $(elementLocators("BlockR1C2")).should(exist).click();
-        $(elementLocators("BlockR1C3")).should(exist).click();
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
         $(elementLocators("BlockR1C1")).should(exist).click();
         $(elementLocators("TemplateCard")).should(appear);
         $(elementLocators("TextField")).should(appear).click();
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
         $(elementLocators("BlockR1C1PenIcon")).should(exist).click();
         $(elementLocators("TextFieldLabel")).should(exist).setValue(" 000 ");
-        $(elementLocators("BlockR1C2")).should(exist).click();
-        $(elementLocators("BlockR1C3")).should(exist).click();
+        $(elementLocators("BlockR1C2")).click();
         $(elementLocators("BlockR1C1")).should(exist).shouldHave(Condition.text("Text field 000"));
 
         //Adding a new row in between existing rows
         $(elementLocators("BlockR2C1PlusIconToAddRow")).should(exist).click(); //Click on + icon to add new row
-        $(elementLocators("BlockR3C2")).should(exist).click();
-        $(elementLocators("BlockR3C3")).should(exist).click();
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
         $(elementLocators("BlockR3C1")).should(appear).click();
         $(elementLocators("TemplateCard")).should(appear);
         $(elementLocators("TextField")).should(appear).click();
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
         $(elementLocators("BlockR3C1PenIcon")).should(exist).click();
         $(elementLocators("TextFieldLabel")).should(exist).setValue(" 001 ");
-        $(elementLocators("BlockR3C2")).should(exist).click();
-        $(elementLocators("BlockR3C3")).should(exist).click();
+        $(elementLocators("BlockR3C2")).click();
         $(elementLocators("BlockR3C1")).should(exist).shouldHave(Condition.text("Text field 001"));
 
         //Adding a new row after the existing row
         $(elementLocators("BlockR6C1PlusIconToAddRow")).should(exist).click(); //Click on + icon to add new row
-        $(elementLocators("BlockR7C2")).should(exist).click();
-        $(elementLocators("BlockR7C3")).should(exist).click();
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
         $(elementLocators("BlockR7C1")).should(exist).click();
         $(elementLocators("TemplateCard")).should(appear);
         $(elementLocators("TextField")).should(appear).click();
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
         $(elementLocators("BlockR7C1PenIcon")).should(exist).click();
         $(elementLocators("TextFieldLabel")).should(exist).setValue(" 002 ");
-        $(elementLocators("BlockR7C2")).should(exist).click();
-        $(elementLocators("BlockR7C3")).should(exist).click();
+        $(elementLocators("BlockR7C2")).click();
         $(elementLocators("BlockR7C1")).should(exist).shouldHave(Condition.text("Text field 002"));
 
         //Deletions of added rows
