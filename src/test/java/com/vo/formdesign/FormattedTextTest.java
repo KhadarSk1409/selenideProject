@@ -1,16 +1,20 @@
 package com.vo.formdesign;
 
+import com.codeborne.selenide.Condition;
 import com.vo.BaseTest;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.stream.IntStream;
 
 import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static reusables.ReuseActions.elementLocators;
 import static reusables.ReuseActionsFormCreation.*;
@@ -59,6 +63,7 @@ public class FormattedTextTest extends BaseTest {
         }
         String initialVerNumStr = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
+        $(elementLocators("TemplateList")).find(byText("Show More")).should(exist).click(); //Click on Show More
         $(elementLocators("FormattedTextField")).should(exist).click();
         $(elementLocators("FormPropertiesCard")).should(appear);
         $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
@@ -98,6 +103,7 @@ public class FormattedTextTest extends BaseTest {
         //Read only checkbox
         if (StringUtils.isNotEmpty(checkbox_readonly)) {
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String checkBoxId = "#" + FormattedTextTest.FormattedTextIds.checkbox_readOnly.name();
             $(checkBoxId).shouldBe(visible).click();
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
@@ -112,6 +118,7 @@ public class FormattedTextTest extends BaseTest {
         //Value edit
         if (StringUtils.isNotEmpty(edit_values)) {
             String checkBoxId = "#richTextField_areaValueHtml .fa-pen";
+          // $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             $(checkBoxId).shouldBe(visible).click();
             $(elementLocators("TextEditor")).should(appear); //Text Editor should appear
 
@@ -137,6 +144,7 @@ public class FormattedTextTest extends BaseTest {
         $(elementLocators("PublishButton")).should(exist).click();
         $(elementLocators("PublishConfirmationDialog")).should(appear); //Publish confirmation dialog appears
         $(elementLocators("ConfirmPublish")).should(exist).click(); //Click on Confirm button
+        $(elementLocators("ConfirmationMessage")).should(appear).shouldHave(Condition.text("The form was published successfully"), Duration.ofSeconds(5));
         $(elementLocators("FillFormButton")).should(exist).click(); //Fill form button on Launch screen
         $(elementLocators("DataContainer")).should(appear); //Verify that the form details screen appears
 

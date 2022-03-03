@@ -147,7 +147,7 @@ public class TextFieldBlockActionsTest extends BaseTest {
                 IntStream.range(1, columnSpan).forEach(c -> {
                     String initialVerNumStr = $(elementLocators("InitialVersion")).should(exist).getText();
                     $(blockID).$(elementLocators("PenIcon")).closest("button").should(exist).click();
-                    $(elementLocators("CompressBlockBtn")).shouldBe(visible).click();
+                    $(elementLocators("CompressBlockBtn")).shouldBe(visible).shouldBe(enabled).click();
                     $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr));
                 });
                 int prevWidth = $(blockID).getRect().getWidth();

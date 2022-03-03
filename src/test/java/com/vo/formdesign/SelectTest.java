@@ -228,7 +228,7 @@ public class SelectTest extends BaseTest {
                     .setValue(text_numberField_maxCount).sendKeys(Keys.TAB);
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
 
-            $(elementLocators("MaxCountInputField")).shouldHave(value(text_numberField_maxCount)).waitUntil(appears, 4000);
+            $(elementLocators("MaxCountInputField")).shouldHave(value(text_numberField_maxCount)).should(appear, Duration.ofSeconds(4));
 
             //Verify that if Max count is less than Min count, relevant errors should be shown:
             if (StringUtils.isNotEmpty(text_numberField_minCount)) {
@@ -261,6 +261,7 @@ public class SelectTest extends BaseTest {
         $(elementLocators("PublishButton")).should(exist).click();
         $(elementLocators("PublishConfirmationDialog")).should(appear); //Publish confirmation dialog appears
         $(elementLocators("ConfirmPublish")).should(exist).click(); //Click on Confirm button
+        $(elementLocators("ConfirmationMessage")).should(appear).shouldHave(Condition.text("The form was published successfully"), Duration.ofSeconds(5));
         $(elementLocators("FillFormButton")).should(exist).click(); //Fill form button on Launch screen
         $(elementLocators("DataContainer")).should(appear); //Verify that the form details screen appears
     }
