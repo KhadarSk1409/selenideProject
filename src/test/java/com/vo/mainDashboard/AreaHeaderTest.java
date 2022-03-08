@@ -104,7 +104,7 @@ public class AreaHeaderTest extends BaseTest {
         $(elementLocators("CloseEditFormButton")).shouldBe(enabled).click(); //Click on x on Edit Form design
         $(elementLocators("SubMenu")).should(exist, Duration.ofSeconds(10)).click();
         $(elementLocators("EditFormDesignInSubMenu")).should(exist).click(); //Edit Form Design
-        $(elementLocators("InitialVersion")).shouldHave(text(initialVerNumStr)); //Verify that version has increased
+        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
         $(elementLocators("CloseEditFormButton")).shouldBe(enabled).click(); //Click on x on Edit Form design
         $(elementLocators("InitialVersion")).shouldNot(exist);
         $(elementLocators("CloseEditFormButton")).shouldNot(exist);

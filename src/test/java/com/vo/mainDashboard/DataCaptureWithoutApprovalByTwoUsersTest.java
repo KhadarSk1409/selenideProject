@@ -3,6 +3,7 @@ package com.vo.mainDashboard;
 import com.codeborne.selenide.Condition;
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
+import org.openqa.selenium.Keys;
 
 import java.time.Duration;
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
@@ -38,7 +39,7 @@ public class DataCaptureWithoutApprovalByTwoUsersTest extends BaseTest {
         $(elementLocators("UserSelectionInput")).click();
         $(elementLocators("StartDataCaptureButton")).click(); //Start Data Capture Process
         $(elementLocators("ConfirmationMessage"))
-                .shouldHave(Condition.text("Started Data Capture process for the form: DATA-CAPTURE-WO-PROCESS and version 2.0"));
+                .shouldHave(Condition.text("Started Data Capture process for the form: DATA-CAPTURE-WO-PROCESS and version 3.0"));
         $(elementLocators("UserDataList")).should(exist);
         $(elementLocators("DataCapture")).should(exist).click(); //Click on Data Capture
         $(elementLocators("FormState")).shouldHave(Condition.text("In Progress")); //Verify the Data Capture state
@@ -56,6 +57,8 @@ public class DataCaptureWithoutApprovalByTwoUsersTest extends BaseTest {
         $(elementLocators("DataContainer")).should(exist);
         $("#textField_form-user-160cfec0-aef2-4927-a8a8-aff595813f53").should(exist);
         $("#textField_form-user-160cfec0-aef2-4927-a8a8-aff595813f53").setValue("TEST");
+        //LEI Number: Required field to be filled
+        $(elementLocators("LeiInputField")).setValue("5299001Q62EEBWDKOO80").sendKeys(Keys.TAB);//Set LEI value
         $(elementLocators("SubmitDataButton")).click();
         $(elementLocators("ConfirmButton")).should(exist).click();
 

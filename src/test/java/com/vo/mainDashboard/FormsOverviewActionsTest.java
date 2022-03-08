@@ -37,7 +37,7 @@ public class FormsOverviewActionsTest extends BaseTest {
             String createdBy = rowEl.$(elementLocators("FormCreatedBy")).getText();
 
             if (formState.equals("Published") && createdBy.equals("GUI Tester")) {
-                rowEl.$(elementLocators("FillForm")).closest("button").shouldBe(enabled);
+                rowEl.$(elementLocators("FillForm")).shouldBe(enabled);
                 //Fill Form should be enabled
                 rowEl.$(elementLocators("OpenFormInFormDesignerButton")).shouldBe(enabled);
                 //Open form in form designer should be enabled
