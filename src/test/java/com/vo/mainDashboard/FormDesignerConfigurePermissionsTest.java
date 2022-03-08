@@ -29,11 +29,10 @@ public class FormDesignerConfigurePermissionsTest extends BaseTest {
         $(elementLocators("SubMenu")).should(appear, Duration.ofSeconds(30)).click();
         $(elementLocators("EditFormDesignInSubMenu")).should(exist).click(); //Click on Edit Form Design
         $(elementLocators("FormStructure")).should(exist);
-        $(elementLocators("ElementProperties")).should(exist);
         $(elementLocators("DesignerMenuContainer")).should(exist).click();
         $(elementLocators("ConfigPermissions")).click(); //Should click on Configure permissions
-        $(elementLocators("DesignerTab")).should(exist);
-        $(elementLocators("AddUser")).should(exist).click(); //Click on "+"
+        $(elementLocators("FormPermissionsTab")).should(appear);
+        $(elementLocators("AddUser")).should(exist).click(); //Click on "+" icon
         $(elementLocators("PermissionsWindow")).should(appear);
         $(elementLocators("SelectUserInput")).should(exist).click();
         $(elementLocators("Popover")).should(appear);
@@ -48,12 +47,12 @@ public class FormDesignerConfigurePermissionsTest extends BaseTest {
         $(elementLocators("ButtonConfirm")).should(exist).shouldBe(enabled).click(); //Click on Confirm
         $(elementLocators("SaveButton")).should(exist).click(); //Click on Save
 
-        //Re-Opening the form in Designer mode
+        //Re-Opening the form to delete the added user
         $(elementLocators("Launchpad")).click(); //Click on Launchpad
-        open("/designer/Sample");//Open the Form designer
+        open("/dashboard/Sample");//Open the Form dashboard
         $(elementLocators("LeftFormDashboardHeader")).should(exist);
-        /*$(elementLocators("SubMenu")).should(exist).click();
-        $(elementLocators("EditFormDesignInSubMenu")).should(exist).click(); //Click on Edit Form Design*/
+        $(elementLocators("SubMenu")).should(exist).click();
+        $(elementLocators("EditFormDesignInSubMenu")).should(exist).click(); //Click on Edit Form Design
         $(elementLocators("DesignerMenuContainer")).should(exist).click(); //Click on Designer Menu container
         $(elementLocators("ConfigPermissions")).click(); //Should click on Configure permissions
         $(elementLocators("GrantedPermissions")).shouldNotHave(value("EDIT_FORM"));

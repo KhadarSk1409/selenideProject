@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.vo.BaseTest;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.*;
+import org.openqa.selenium.Keys;
 
 import java.time.Duration;
 
@@ -53,8 +54,7 @@ public class DataCaptureWithoutApprovalTest extends BaseTest {
             $("#textField_form-user-160cfec0-aef2-4927-a8a8-aff595813f53").should(exist);
             $("#textField_form-user-160cfec0-aef2-4927-a8a8-aff595813f53").setValue("TEST");
             //LEI Number: Required field to be filled
-            String LEIData = RandomStringUtils.randomAlphanumeric(20);
-            $("#textField_form-user-24f25d7e-c4b4-437d-8e6b-1fe0e2c943ec").setValue(LEIData);//Set LEI value
+            $(elementLocators("LeiInputField")).setValue("5299001Q62EEBWDKOO80").sendKeys(Keys.TAB);//Set LEI value
             $(elementLocators("SubmitDataButton")).click();
             $(elementLocators("ConfirmButton")).should(exist).click();
             $(elementLocators("UserDataList")).should(exist);

@@ -38,7 +38,7 @@ public class DataCaptureWithTwoApproversIncludingRejectTest extends BaseTest {
             $(elementLocators("UserSelectionInput")).click();
             $(elementLocators("StartDataCaptureButton")).click(); //Start Data Capture Process
             $(elementLocators("ConfirmationMessage")).should(appear)
-                    .shouldHave(Condition.text("Started Data Capture process for the form: DATA-CAPTURE-WITH-TWO-PROCESS and version 1.0"));
+                    .shouldHave(Condition.text("Started Data Capture process for the form: DATA-CAPTURE-WITH-TWO-PROCESS and version 3.0"));
             $(elementLocators("UserDataList")).should(exist);
             $(elementLocators("DataCapture")).should(exist).click(); //Click on Data Capture
             $(elementLocators("FormState")).shouldHave(Condition.text("In Progress")); //Verify the Data Capture state

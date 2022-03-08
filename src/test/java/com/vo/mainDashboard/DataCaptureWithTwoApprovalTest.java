@@ -39,7 +39,7 @@ public class DataCaptureWithTwoApprovalTest extends BaseTest {
         $(elementLocators("UserSelectionInput")).click();
         $(elementLocators("StartDataCaptureButton")).click(); //Start Data Capture Process
         $(elementLocators("ConfirmationMessage")).should(appear)
-                .shouldHave(Condition.text("Started Data Capture process for the form: DATA-CAPTURE-WITH-TWO-PROCESS and version 1.0"));
+                .shouldHave(Condition.text("Started Data Capture process for the form: DATA-CAPTURE-WITH-TWO-PROCESS and version 3.0"));
         $(elementLocators("UserDataList")).should(exist);
         $(elementLocators("DataCapture")).should(exist).click(); //Click on Data Capture
         $(elementLocators("FormState")).shouldHave(Condition.text("In Progress")); //Verify the Data Capture state
@@ -56,7 +56,7 @@ public class DataCaptureWithTwoApprovalTest extends BaseTest {
         $(elementLocators("ConfirmButton")).should(exist).click();
         $(elementLocators("UserDataList")).should(exist);
         $(elementLocators("DataCapture")).should(exist).click(); //Click on Data Capture
-        $(elementLocators("FormState")).shouldHave(value("In Approval")); //Verify the Data Capture state as In Approval
+        $(elementLocators("FormState")).shouldHave(Condition.text("In Approval")); //Verify the Data Capture state as In Approval
 
         //First Approval
         $(elementLocators("UserDataList")).should(exist);
@@ -67,7 +67,7 @@ public class DataCaptureWithTwoApprovalTest extends BaseTest {
         $(elementLocators("FormsAvailable")).find(byAttribute("data-process-instance-id", formDataCaptureId )).should(disappear);
         $(elementLocators("UserDataList")).should(exist);
         $(elementLocators("DataCapture")).should(exist).click(); //Click on Data Capture
-        $(elementLocators("FormState")).shouldHave(value("In Approval"));
+        $(elementLocators("FormState")).shouldHave(Condition.text("In Approval"));
 
         //Second Approval
         $(elementLocators("UserDataList")).should(exist);
@@ -79,7 +79,7 @@ public class DataCaptureWithTwoApprovalTest extends BaseTest {
         //Verifying final state of the form
         $(elementLocators("UserDataList")).should(exist);
         $(elementLocators("DataCapture")).should(exist).click(); //Click on Data Capture
-        $(elementLocators("FormState")).shouldHave(value("Completed"));
+        $(elementLocators("FormState")).shouldHave(text("Completed"));
 
     }
 }
