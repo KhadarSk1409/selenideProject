@@ -106,6 +106,7 @@ public class CheckboxgroupTest extends BaseTest {
         if (StringUtils.isNotEmpty(edit_values)) {
 
             String[] values = edit_values.split(",");
+            String currentVersion = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch current version
 
             $(elementLocators("EditValuesPenIcon")).should(exist).click(); //Click on edit value pen icon
             $(elementLocators("ValuesEditor")).should(exist); //Value List Editor window
@@ -134,10 +135,12 @@ public class CheckboxgroupTest extends BaseTest {
             for (int i = 1; i <= values.length; i++) {
                 //Click on label option
                 String labelSelector = "#myGrid .MuiDataGrid-row:nth-child("+i+") div:nth-child(3)";
+                currentVersion = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
                 $(labelSelector).should(exist).doubleClick();
                 String labelValue = values[i - 1];
-                $(elementLocators("LabelInputInEditor")).sendKeys(Keys.BACK_SPACE); //Clear the default value in label field
+                $(elementLocators("LabelInputInEditor")).sendKeys(Keys.CONTROL, Keys.COMMAND, "a", Keys.CLEAR); //Clear the default value in label field
                 $(elementLocators("LabelInputInEditor")).setValue(labelValue).sendKeys(Keys.ENTER);
+                $(elementLocators("InitialVersion")).shouldNotHave(text(currentVersion));
                 $(labelSelector).shouldHave(text(labelValue));
 
                 if (preselected.contains(labelValue)) {
@@ -149,6 +152,7 @@ public class CheckboxgroupTest extends BaseTest {
 
             //Click on close button
             $(elementLocators("CloseValuesEditorBtn")).should(exist).click();
+            $(elementLocators("InitialVersion")).shouldNotHave(text(currentVersion));
 
             //verify preselection on designer surface
             $(blockId).should(exist);
@@ -223,9 +227,9 @@ public class CheckboxgroupTest extends BaseTest {
             String initialVerNumStr2 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(CheckboxgroupIds.numberField_maxCount.name()))
                     .setValue(text_numberField_maxCount).sendKeys(Keys.TAB);
-            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
 
             $(elementLocators("MaxCountInputField")).shouldHave(value(text_numberField_maxCount)).should(appear, Duration.ofSeconds(5));
+            $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
 
             //Verify that if Max count is less than Min count, relevant errors should be shown:
             if (StringUtils.isNotEmpty(text_numberField_minCount)) {
@@ -327,7 +331,7 @@ public class CheckboxgroupTest extends BaseTest {
         String helpInFillForm = blockStr + " .MuiFormHelperText-root";
         String requiredFieldInFillForm = blockStr + " .MuiFormLabel-asterisk";
         String inputField = blockStr + " input";
-        String dropDownDirectionInFillForm = blockStr + " .MuiFormGroup-root";
+        String dropDownDirectionInFillForm = blockStr + " fieldset";
 
         //  Label
         if (StringUtils.isNotEmpty(text_label)) {
@@ -358,19 +362,19 @@ public class CheckboxgroupTest extends BaseTest {
 
                 if (!(StringUtils.isNotEmpty(preselection_value))) {
 
-                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").shouldNotBe(checked);
+                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") .PrivateSwitchBase-input").shouldNotBe(checked);
 
                     //Check the checkbox
-                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").click();
-                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").shouldBe(checked);
+                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") .PrivateSwitchBase-input").click();
+                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") .PrivateSwitchBase-input").shouldBe(checked);
                 } else {
 
                     //preselection_value
-                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").shouldBe(checked);
+                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") .PrivateSwitchBase-input").shouldBe(checked);
 
                     //Uncheck the checkbox:
-                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").click();
-                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") input").shouldNotBe(checked);
+                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") .PrivateSwitchBase-input").click();
+                    $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + i + ") .PrivateSwitchBase-input").shouldNotBe(checked);
                 }
             }
         }
@@ -382,26 +386,26 @@ public class CheckboxgroupTest extends BaseTest {
             List<SelenideElement> checkBoxes = $$(blockStr + " .MuiCheckbox-root"); //fetch number of checkboxes
 
             for (int k = 1; k <= checkBoxes.size(); k++) {
-                $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") .MuiCheckbox-root").shouldNotBe(checked);
+                $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") .PrivateSwitchBase-input").shouldNotBe(checked);
             }
 
             //Verify switch for All select Deselect and Allow select/Deselect all
-            $(blockStr).find(" .MuiSwitch-input").shouldNotBe(checked);
+            $(blockStr).find(" .PrivateSwitchBase-input").shouldNotBe(checked);
 
-            $(blockStr).find(" .MuiSwitch-input").click();
-            $(blockStr).find(" .MuiSwitch-input").shouldBe(checked);
+            $(blockStr).find(" .PrivateSwitchBase-input").click();
+            $(blockStr).find(" .PrivateSwitchBase-input").shouldBe(checked);
 
             //Verify that all check boxes get checked
             for (int k = 1; k <= checkBoxes.size(); k++) {
-                $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") .MuiCheckbox-root").shouldBe(checked);
+                $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") .PrivateSwitchBase-input").shouldBe(checked);
             }
 
-            $(blockStr).find(" .MuiSwitch-input").click();
-            $(blockStr).find(" .MuiSwitch-input").shouldBe(checked);
+            $(blockStr).find(" .PrivateSwitchBase-input").click();
+            $(blockStr).find(" input[type='checkbox']").shouldNotBe(checked);
 
             //Verify that all check boxes get unchecked
             for (int k = 1; k <= checkBoxes.size(); k++) {
-                $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") .MuiCheckbox-root").shouldNotBe(checked);
+                $(blockStr).find(" .MuiFormControlLabel-root:nth-child(" + k + ") .PrivateSwitchBase-input").shouldNotBe(checked);
             }
 
         }
@@ -421,9 +425,9 @@ public class CheckboxgroupTest extends BaseTest {
         if (StringUtils.isNotEmpty(dropdown_direction)) {
             System.out.println("Verifying direction: " + dropdown_direction);
             if (dropdown_direction.equals("horizontal")) {
-                $(dropDownDirectionInFillForm).shouldHave(cssClass("MuiFormGroup-row"));
+                $(dropDownDirectionInFillForm).shouldHave(cssClass("vo-direction-horizontal"));
             } else {
-                $(dropDownDirectionInFillForm).shouldNotHave(cssClass("MuiFormGroup-row"));
+                $(dropDownDirectionInFillForm).shouldNotHave(cssClass("vo-direction-vertical"));
             }
         }
 
