@@ -1,5 +1,6 @@
 package reusables;
 
+import com.codeborne.selenide.conditions.ExactText;
 import com.vo.formdesign.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -259,7 +260,7 @@ public class ReuseActionsFormCreation {
         selectAndClear(By.id(DesignFormFieldIds.textfield_label.name()))
                 .setValue(str_value).sendKeys(Keys.TAB);
         $(StrBlockId).shouldHave(text(str_value));
-        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+        $(elementLocators("InitialVersion")).shouldNotHave(value(initialVerNumStr1)); //Verify that version has increased
     }
 
     //Hide label

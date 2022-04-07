@@ -116,6 +116,7 @@ public class SelectTest extends BaseTest {
         if (StringUtils.isNotEmpty(edit_values)) {
 
             String[] values = edit_values.split(",");
+            String currentVersion = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch current version
 
             $(elementLocators("EditValuesPenIcon")).should(exist).click(); //Click on edit value pen icon
             $(elementLocators("ValuesEditor")).should(exist); //Value List Editor window
@@ -143,11 +144,13 @@ public class SelectTest extends BaseTest {
 
             for (int i = 1; i <= values.length; i++) {
                 //Click on label option
+                currentVersion = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
                 String labelSelector = "#myGrid .MuiDataGrid-row:nth-child("+i+") div:nth-child(3)";
                 $(labelSelector).should(exist).doubleClick();
                 String labelValue = values[i - 1];
-                $(elementLocators("LabelInputInEditor")).sendKeys(Keys.BACK_SPACE); //Clear the default value in label field
+                $(elementLocators("LabelInputInEditor")).doubleClick().sendKeys(Keys.DELETE); //Clear the default value in label field
                 $(elementLocators("LabelInputInEditor")).setValue(labelValue).sendKeys(Keys.ENTER);
+                $(elementLocators("InitialVersion")).shouldNotHave(text(currentVersion));
                 $(labelSelector).shouldHave(text(labelValue));
 
                 if (preselected.contains(labelValue)) {
@@ -156,14 +159,16 @@ public class SelectTest extends BaseTest {
                     $(checkboxSelector).shouldBe(checked);
                 }
             }
+            currentVersion = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch the current version
 
             //Click on close button
             $(elementLocators("CloseValuesEditorBtn")).should(exist).click();
+            $(elementLocators("InitialVersion")).shouldNotHave(text(currentVersion));
 
             //verify preselection on designer surface
             $(blockId).should(exist);
             for (int i = 1; i <= values.length; i++) {
-                String labelValue = values[i - 1];
+                String labelValue = values[i-1];
                 if (preselected.contains(labelValue)) {
                     $(blockId).find(".MuiInputBase-root").shouldHave(text(labelValue));
                 } else {
