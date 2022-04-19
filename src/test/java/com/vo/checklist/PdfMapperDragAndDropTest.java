@@ -64,7 +64,7 @@ public class PdfMapperDragAndDropTest extends BaseTest {
         String selectedForm1 = $(".MuiDataGrid-row:nth-of-type(1) [data-field='formName'] h6").getText();
         System.out.println(selectedForm1);
         String form1DataID = $(".MuiDataGrid-row:nth-of-type(1)").should(exist).getAttribute("data-id");
-        $(".MuiDataGrid-row:nth-of-type(1)").click(); //Select the first form available in the list
+        $(".MuiDataGrid-row [data-field='formName']").$(byText(selectedForm1)).click(); //Select the first form available in the list
         $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID'] .MuiList-root").shouldHave(text(selectedForm1)); //Verify whether the selected form is available in the Checklist flow or not
         assert form1DataID != null;
         SelenideElement form1 = $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID'] .MuiList-root").find(byAttribute("id",form1DataID)).should(exist);
@@ -99,9 +99,9 @@ public class PdfMapperDragAndDropTest extends BaseTest {
         $("[data-testid='AttachFileIcon']").should(appear);
         $("#client-snackbar").should(appear);
         $("#dlg_PDFFileUpload button:nth-child(1)").click(); //Click on Submit Button
-//#dlg_PDFEditor
+        //#dlg_PDFEditor
         $("#dlg_PDFFileUpload button:nth-child(2)").should(exist).click(); //Click on Cancel Button
-//        $("[data-rbd-draggable-id='samplePDF.pdf'] [title='Edit PDF Mapping']").should(exist).click();
+        //$("[data-rbd-draggable-id='samplePDF.pdf'] [title='Edit PDF Mapping']").should(exist).click();
 
         SelenideElement Iban = $("ul li li li li [aria-label='Iban ELEMENT TextField']");
         SelenideElement Bic = $("ul li li li li [aria-label='Bic ELEMENT TextField']");
@@ -116,7 +116,6 @@ public class PdfMapperDragAndDropTest extends BaseTest {
         int BankSourceY = Bank.getLocation().getY();
         int targetLocX = targetLocation.getLocation().getX();
         int targetLocY = targetLocation.getLocation().getY();
-
 
         int targetIbanX = (targetLocX-IbanSourceX)+20;
         int targetIbanY = (IbanSourceY+targetLocY);
