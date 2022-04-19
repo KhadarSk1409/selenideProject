@@ -36,12 +36,12 @@ public class PdfMapperDragAndDropTest extends BaseTest {
     @DisplayName("Verify PDF Mapper Drag and Drop")
     @Order(2)
     public void verifyPdfMapperDragNDrop(){
-        $("button[title='Preview Checklist']").should(appear); //Preview button should exist
-        $("#btnCheckListTemplatePublish").should(exist);
+        $(elementLocators("PreviewChecklistButton")).should(appear);
+        $(elementLocators("PublishChecklistTemplateButton")).should(exist);
 
-        SelenideElement sourceFormEle = $("[data-rbd-draggable-id='FORM']");
-        SelenideElement sourceLabel = $("[data-rbd-draggable-id='LABEL']");
-        SelenideElement targetChecklistFlow = $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID']");
+        SelenideElement sourceFormEle = $(elementLocators("SourceFormElement"));
+        SelenideElement sourceLabel = $(elementLocators("SourceLabelElement"));
+        SelenideElement targetChecklistFlow = $(elementLocators("TargetChecklistFlow"));
 
         //Get the initial locations of Source and Target elements
         int sourceFormXOffset = sourceFormEle.getLocation().getX();
@@ -57,17 +57,17 @@ public class PdfMapperDragAndDropTest extends BaseTest {
         actions().clickAndHold(sourceFormEle).moveToElement(targetChecklistFlow).build().perform();
         actions().moveByOffset(Xoffset,Yoffset).release().build().perform();
         //Select a form available in the list
-        $(byText("Select a Form")).should(appear);
-        $(byText("Choose from Library")).click();
-        $(".MuiDataGrid-main").should(appear); //Forms available in Library will appear
-        $(".MuiDataGrid-row").should(exist).getSize();
-        String selectedForm1 = $(".MuiDataGrid-row:nth-of-type(1) [data-field='formName'] h6").getText();
+        $(byText(elementLocators("SelectAForm"))).should(appear);
+        $(byText(elementLocators("ChooseFromLibrary"))).click();
+        $(elementLocators("FormsGridContainer")).should(appear); //Forms available in Library will appear
+        $(elementLocators("FormsAvailableInTable")).should(exist).getSize();
+        String selectedForm1 = $(elementLocators("FirstFormNameInTheTable")).getText();
         System.out.println(selectedForm1);
-        String form1DataID = $(".MuiDataGrid-row:nth-of-type(1)").should(exist).getAttribute("data-id");
-        $(".MuiDataGrid-row [data-field='formName']").$(byText(selectedForm1)).click(); //Select the first form available in the list
-        $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID'] .MuiList-root").shouldHave(text(selectedForm1)); //Verify whether the selected form is available in the Checklist flow or not
+        String form1DataID = $(elementLocators("FirstFormAvailableInTable")).should(exist).getAttribute("data-id");
+        $(elementLocators("FormsAvailableInTable")).$(byText(selectedForm1)).click(); //Select the first form available in the list
+        $(elementLocators("TargetListInChecklistFlow")).shouldHave(text(selectedForm1)); //Verify whether the selected form is available in the Checklist flow or not
         assert form1DataID != null;
-        SelenideElement form1 = $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID'] .MuiList-root").find(byAttribute("id",form1DataID)).should(exist);
+        SelenideElement form1 = $(elementLocators("TargetListInChecklistFlow")).find(byAttribute("id",form1DataID)).should(exist);
 
 
         //Drag and Drop LABEL field to Checklist flow
@@ -79,8 +79,8 @@ public class PdfMapperDragAndDropTest extends BaseTest {
         //POST PROCESSING FLOW
         //Drag n Drop PDF Generator to Post Processing flow and verify cancel
         //Get the Source and Target offset's from changed positions
-        SelenideElement sourcePDF = $("#PDF_GENERATOR_undefined");
-        SelenideElement targetPDF = $(".MuiCardContent-root [data-rbd-droppable-id='TARGET_POST_PROCESSING_LIST_ID']");
+        SelenideElement sourcePDF = $(elementLocators("PDFGenerator"));
+        SelenideElement targetPDF = $(elementLocators("TargetPostProcessing"));
         int sourcePDFXOffset = sourcePDF.getLocation().getX();
         int sourcePDFYOffset = sourcePDF.getLocation().getY();
         int targetPDFXOffset = targetPDF.getLocation().getX();
@@ -92,21 +92,18 @@ public class PdfMapperDragAndDropTest extends BaseTest {
         actions().clickAndHold(sourcePDF).moveToElement(targetPDF).build().perform();
         actions().moveByOffset(PDFXOffset,PDFYOffset).release().build().perform();
 
-        $(byText("Upload PDF Template in US Letter or A4 Page Format")).should(appear);
-        SelenideElement UploadPDFDialogue = $("#dlg_PDFFileUpload [data-testid='CloudUploadIcon']");
+        $(byText(elementLocators("UploadPDFTemplateInUSLetterOrA4PageFormat"))).should(appear);
 
-        $("#dlg_PDFFileUpload input").uploadFromClasspath("samplePDF.pdf");
-        $("[data-testid='AttachFileIcon']").should(appear);
-        $("#client-snackbar").should(appear);
-        $("#dlg_PDFFileUpload button:nth-child(1)").click(); //Click on Submit Button
-        //#dlg_PDFEditor
-        $("#dlg_PDFFileUpload button:nth-child(2)").should(exist).click(); //Click on Cancel Button
-        //$("[data-rbd-draggable-id='samplePDF.pdf'] [title='Edit PDF Mapping']").should(exist).click();
+        $(elementLocators("UploadPdfInput")).uploadFromClasspath("samplePDF.pdf");
+        $(elementLocators("AttachFileIcon")).should(appear);
+        $(elementLocators("FileUploadedMessage")).should(appear);
+        $(elementLocators("SubmitButton")).click(); //Click on Submit Button
+        $(elementLocators("CancelBtn")).should(exist).click(); //Click on Cancel Button
 
-        SelenideElement Iban = $("ul li li li li [aria-label='Iban ELEMENT TextField']");
-        SelenideElement Bic = $("ul li li li li [aria-label='Bic ELEMENT TextField']");
-        SelenideElement Bank = $("ul li li li li [aria-label='Bank ELEMENT TextField']");
-        SelenideElement targetLocation = $("#vo_pdf_template_designer_surface");
+        SelenideElement Iban = $(elementLocators("Iban"));
+        SelenideElement Bic = $(elementLocators("Bic"));
+        SelenideElement Bank = $(elementLocators("Bank"));
+        SelenideElement targetLocation = $(elementLocators("targetPDFTemplateSurface"));
         Iban.should(exist);
         int IbanSourceX = Iban.getLocation().getX();
         int IbanSourceY = Iban.getLocation().getY();

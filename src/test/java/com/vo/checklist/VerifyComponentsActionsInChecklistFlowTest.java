@@ -13,6 +13,7 @@ import static com.codeborne.selenide.Selectors.byAttribute;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Selenide.$;
+import static reusables.ReuseActions.elementLocators;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Verify the components actions in checklist flow")
@@ -28,12 +29,12 @@ public class VerifyComponentsActionsInChecklistFlowTest extends BaseTest {
     @Test
     @DisplayName("Verify Edit actions in Checklist components")
     public void verifyComponentsActions(){
-        $("button[title='Preview Checklist']").should(appear); //Preview button should exist
-        $("#btnCheckListTemplatePublish").should(exist);
+        $(elementLocators("PreviewChecklistButton")).should(appear);
+        $(elementLocators("PublishChecklistTemplateButton")).should(exist);
 
-        SelenideElement sourceFormEle = $("[data-rbd-draggable-id='FORM']"); //Form field
-        SelenideElement targetChecklistFlow = $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID']");
-        SelenideElement sourceLabel = $("[data-rbd-draggable-id='LABEL']"); //Label field
+        SelenideElement sourceFormEle = $(elementLocators("SourceFormElement"));
+        SelenideElement sourceLabel = $(elementLocators("SourceLabelElement"));
+        SelenideElement targetChecklistFlow = $(elementLocators("TargetChecklistFlow"));
 
         //Get the initial locations of Source and Target elements
         int sourceFormXOffset = sourceFormEle.getLocation().getX();
@@ -49,36 +50,35 @@ public class VerifyComponentsActionsInChecklistFlowTest extends BaseTest {
         int Yoffset = (targetYOffset-sourceFormYOffset);
         actions().moveByOffset(Xoffset,Yoffset).release().build().perform();
 
-        $(byText("Select a Form")).should(appear);
-        $(byText("Choose from Library")).click();
-        $(".MuiDataGrid-main").should(appear); //Forms available in Library will appear
-        $(".MuiDataGrid-row").should(exist).getSize();
-        String selectedFormName = $(".MuiDataGrid-row:nth-of-type(1) [data-field='formName'] h6").getText();
+        $(byText(elementLocators("SelectAForm"))).should(appear);
+        $(byText(elementLocators("ChooseFromLibrary"))).click();
+        $(elementLocators("FormsGridContainer")).should(appear); //Forms available in Library will appear
+        $(elementLocators("FormsAvailableInTable")).should(exist).getSize();
+        String selectedFormName = $(elementLocators("FirstFormNameInTheTable")).getText();
         System.out.println(selectedFormName);
-        String formDataID = $(".MuiDataGrid-row:nth-of-type(1)").should(exist).getAttribute("data-id");
-        $(".MuiDataGrid-row:nth-of-type(1)").click(); //Select the first form available in the list
-        $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID'] .MuiList-root").shouldHave(text(selectedFormName)); //Verify whether the selected form is available in the Checklist flow or not
+        String formDataID = $(elementLocators("FirstFormAvailableInTable")).should(exist).getAttribute("data-id");
+        $(elementLocators("FirstFormAvailableInTable")).click(); //Select the first form available in the list
+        $(elementLocators("TargetListInChecklistFlow")).shouldHave(text(selectedFormName)); //Verify whether the selected form is available in the Checklist flow or not
         assert formDataID != null;
-        $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID'] .MuiList-root").find(byAttribute("id",formDataID)).$(".MuiListItemText-root").hover();
+        $(elementLocators("TargetListInChecklistFlow")).find(byAttribute("id",formDataID)).$(".MuiListItemText-root").hover();
 
-        $(".editSecondaryText").shouldBe(visible).click();
-        $("#textField_secondaryTxt").should(appear).setValue("Actions Test").pressEnter();
-        $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID'] .MuiList-root").find(byAttribute("id",formDataID))
-                .$(".MuiListItemText-root p").shouldHave(text("Actions Test"));
+        $(elementLocators("PenIconToEditSecondaryText")).shouldBe(visible).click();
+        $(elementLocators("SecondaryTextInputField")).should(appear).setValue("Actions Test").pressEnter();
+        $(elementLocators("TargetListInChecklistFlow")).find(byAttribute("id",formDataID))
+                .$(elementLocators("SecondaryTextField")).shouldHave(text("Actions Test"));
 
         //Drag and Drop LABEL field to Checklist flow
         actions().clickAndHold(sourceLabel).moveToElement(targetChecklistFlow).build().perform();
         int labelXOffset = (targetXOffset-sourceLabelXOffset)+50;
         int labelYOffset= (sourceLabelYOffset-targetYOffset)+40;
         actions().moveByOffset(labelXOffset,labelYOffset).release().build().perform();
-        $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID'] div[draggable='false']:nth-of-type(2) .MuiListItemText-root").should(appear, Duration.ofSeconds(2))
-                .shouldHave(text("LABEL")).hover();
-        $(".editPrimaryText").shouldBe(visible).click();
-        $("#textField_primaryTxt").should(appear).setValue(" 01").pressEnter();
-        $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID'] div[draggable='false']:nth-of-type(2) .MuiListItemText-root").shouldHave(text("LABEL 01"));
-        $(".editSecondaryText").shouldBe(visible).click();
-        $("#textField_secondaryTxt").shouldBe(visible).setValue("Sample Test Description").pressEnter();
-        $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID'] div[draggable='false']:nth-of-type(2) .MuiListItemText-root p span").shouldHave(text("Sample Test Description"));
+        $(elementLocators("SecondComponentInChecklistFlow")).should(appear, Duration.ofSeconds(2)).shouldHave(text("LABEL")).hover();
+        $(elementLocators("PenIconToEditPrimaryText")).shouldBe(visible).click();
+        $(elementLocators("PrimaryTextInputField")).should(appear).setValue(" 01").pressEnter();
+        $(elementLocators("SecondComponentInChecklistFlow")).shouldHave(text("LABEL 01"));
+        $(elementLocators("PenIconToEditSecondaryText")).shouldBe(visible).click();
+        $(elementLocators("SecondaryTextInputField")).shouldBe(visible).setValue("Sample Test Description").pressEnter();
+        $(elementLocators("SecondComponentSecondaryTextField")).shouldHave(text("Sample Test Description"));
 
     }
 }
