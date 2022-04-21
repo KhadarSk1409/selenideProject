@@ -11,6 +11,7 @@ import static com.codeborne.selenide.Selectors.byAttribute;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Selenide.actions;
+import static reusables.ReuseActions.elementLocators;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Checklists Form Actions Verification Tests")
@@ -28,12 +29,12 @@ public class ChecklistFormActionsTest extends BaseTest {
     @DisplayName("Verify checklist form actions")
     @Order(2)
     public void verifyChecklistFormActions() {
-        $("button[title='Preview Checklist']").should(appear); //Preview button should exist
-        $("#btnCheckListTemplatePublish").should(exist);
+        $(elementLocators("PreviewChecklistButton")).should(appear);
+        $(elementLocators("PublishChecklistTemplateButton")).should(exist);
 
-        SelenideElement sourceFormEle = $("[data-rbd-draggable-id='FORM']");
-        SelenideElement targetChecklistFlow = $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID']");
-        SelenideElement sourceLabel = $("[data-rbd-draggable-id='LABEL']"); //Label field
+        SelenideElement sourceFormEle = $(elementLocators("SourceFormElement"));
+        SelenideElement sourceLabel = $(elementLocators("SourceLabelElement"));
+        SelenideElement targetChecklistFlow = $(elementLocators("TargetChecklistFlow"));
 
         //Get the initial locations of Source and Target elements
         int sourceFormXOffset = sourceFormEle.getLocation().getX();
@@ -49,22 +50,22 @@ public class ChecklistFormActionsTest extends BaseTest {
         int Yoffset = (targetYOffset-sourceFormYOffset);
         actions().moveByOffset(Xoffset,Yoffset).release().build().perform();
 
-        $(byText("Select a Form")).should(appear);
-        $(byText("Choose from Library")).click();
-        $(".MuiDataGrid-main").should(appear); //Forms available in Library will appear
-        $(".MuiDataGrid-row").should(exist).getSize();
-        String selectedFormName = $(".MuiDataGrid-row:nth-of-type(1) [data-field='formName'] h6").getText();
+        $(byText(elementLocators("SelectAForm"))).should(appear);
+        $(byText(elementLocators("ChooseFromLibrary"))).click();
+        $(elementLocators("FormsGridContainer")).should(appear); //Forms available in Library will appear
+        $(elementLocators("FormsAvailableInTable")).should(exist).getSize();
+        String selectedFormName = $(elementLocators("FirstFormNameInTheTable")).getText();
         System.out.println(selectedFormName);
-        String formDataID = $(".MuiDataGrid-row:nth-of-type(1)").should(exist).getAttribute("data-id");
-        $(".MuiDataGrid-row:nth-of-type(1)").click(); //Select the first form available in the list
-        $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID'] .MuiList-root").shouldHave(text(selectedFormName)); //Verify whether the selected form is available in the Checklist flow or not
+        String formDataID = $(elementLocators("FirstFormAvailableInTable")).should(exist).getAttribute("data-id");
+        $(elementLocators("FirstFormAvailableInTable")).click(); //Select the first form available in the list
+        $(elementLocators("TargetListInChecklistFlow")).shouldHave(text(selectedFormName)); //Verify whether the selected form is available in the Checklist flow or not
         assert formDataID != null;
-        $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID'] .MuiList-root").find(byAttribute("id",formDataID))
-                .should(exist).$(".previewItem").should(exist).click(); //Find the form with same ID and click on Preview Button
-        $("#btnCloseDataFillForm").should(exist).click();
-        $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID'] .MuiList-root").find(byAttribute("id",formDataID))
-                .should(exist).$(".deleteItem").should(exist).click();
-        $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID'] .MuiList-root").find(byAttribute("id",formDataID)).shouldNot(exist, Duration.ofSeconds(3));
+        $(elementLocators("TargetListInChecklistFlow")).find(byAttribute("id",formDataID))
+                .should(exist).$(elementLocators("PreviewItemButton")).should(exist).click(); //Find the form with same ID and click on Preview Button
+        $(elementLocators("CloseFillFOrmButton")).should(exist).click();
+        $(elementLocators("TargetListInChecklistFlow")).find(byAttribute("id",formDataID))
+                .should(exist).$(elementLocators("DeleteItemButton")).should(exist).click(); //Find the form with same ID and click on Delete Button
+        $(elementLocators("TargetListInChecklistFlow")).find(byAttribute("id",formDataID)).shouldNot(exist, Duration.ofSeconds(3));
 
         //Drag and Drop LABEL field to Checklist flow
         actions().clickAndHold(sourceLabel).moveToElement(targetChecklistFlow).build().perform();

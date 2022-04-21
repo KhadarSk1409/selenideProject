@@ -9,6 +9,7 @@ import static com.codeborne.selenide.Selectors.byAttribute;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Selenide.actions;
+import static reusables.ReuseActions.elementLocators;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Verify the re-arranging of multiple forms in the checklist flow")
@@ -22,18 +23,17 @@ public class ReArrangingTheFormsTest extends BaseTest {
     }
 
     @Test
-    @DisplayName("Verify the forms re-arrangement of forms")
+    @DisplayName("Verify the re-arrangement of forms in checklist flow")
     @Order(2)
     public void verifyReArrangingTheFormsInChecklist(){
+        $(elementLocators("PreviewChecklistButton")).should(appear);
+        $(elementLocators("PublishChecklistTemplateButton")).should(exist);
 
-        $("button[title='Preview Checklist']").should(appear); //Preview button should exist
-        $("#btnCheckListTemplatePublish").should(exist);
-
-        SelenideElement sourceFormEle = $("[data-rbd-draggable-id='FORM']");
-        SelenideElement sourceLabel = $("[data-rbd-draggable-id='LABEL']");
-        SelenideElement sourceCondition = $("[data-rbd-draggable-id='CONDITION']");
-        SelenideElement sourceEventTrigger = $("[data-rbd-droppable-id='EVENT_TRIGGER']");
-        SelenideElement targetChecklistFlow = $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID']");
+        SelenideElement sourceFormEle = $(elementLocators("SourceFormElement"));
+        SelenideElement sourceLabel = $(elementLocators("SourceLabelElement"));
+        SelenideElement sourceCondition = $(elementLocators("SourceConditionElement"));
+        SelenideElement sourceEventTrigger = $(elementLocators("SourceEventTrigger"));
+        SelenideElement targetChecklistFlow = $(elementLocators("TargetChecklistFlow"));
 
         //Get the initial locations of Source and Target elements
         int sourceFormXOffset = sourceFormEle.getLocation().getX();
@@ -53,17 +53,17 @@ public class ReArrangingTheFormsTest extends BaseTest {
         actions().clickAndHold(sourceFormEle).moveToElement(targetChecklistFlow).build().perform();
         actions().moveByOffset(Xoffset,Yoffset).release().build().perform();
         //Select a form available in the list
-        $(byText("Select a Form")).should(appear);
-        $(byText("Choose from Library")).click();
-        $(".MuiDataGrid-main").should(appear); //Forms available in Library will appear
-        $(".MuiDataGrid-row").should(exist).getSize();
-        String selectedForm1 = $(".MuiDataGrid-row:nth-of-type(1) [data-field='formName'] h6").getText();
+        $(byText(elementLocators("SelectAForm"))).should(appear);
+        $(byText(elementLocators("ChooseFromLibrary"))).click();
+        $(elementLocators("FormsGridContainer")).should(appear); //Forms available in Library will appear
+        $(elementLocators("FormsAvailableInTable")).should(exist).getSize();
+        String selectedForm1 = $(elementLocators("FirstFormNameInTheTable")).getText();
         System.out.println(selectedForm1);
-        String form1DataID = $(".MuiDataGrid-row:nth-of-type(1)").should(exist).getAttribute("data-id");
-        $(".MuiDataGrid-row:nth-of-type(1)").click(); //Select the first form available in the list
-        $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID'] .MuiList-root").shouldHave(text(selectedForm1)); //Verify whether the selected form is available in the Checklist flow or not
+        String form1DataID = $(elementLocators("FirstFormAvailableInTable")).should(exist).getAttribute("data-id");
+        $(elementLocators("FirstFormAvailableInTable")).click(); //Select the first form available in the list
+        $(elementLocators("TargetListInChecklistFlow")).shouldHave(text(selectedForm1)); //Verify whether the selected form is available in the Checklist flow or not
         assert form1DataID != null;
-        SelenideElement form1 = $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID'] .MuiList-root").find(byAttribute("id",form1DataID)).should(exist);
+        SelenideElement form1 = $(elementLocators("TargetListInChecklistFlow")).find(byAttribute("id",form1DataID)).should(exist);
 
         //Drag and Drop LABEL field to Checklist flow
         int labelXOffset = (targetXOffset-sourceLabelXOffset)+50;
@@ -75,17 +75,17 @@ public class ReArrangingTheFormsTest extends BaseTest {
         actions().clickAndHold(sourceFormEle).moveToElement(targetChecklistFlow).build().perform();
         actions().moveByOffset(Xoffset,Yoffset).release().build().perform();
         //Select a form available in the list
-        $(byText("Select a Form")).should(appear);
-        $(byText("Choose from Library")).click();
-        $(".MuiDataGrid-main").should(appear); //Forms available in Library will appear
-        $(".MuiDataGrid-row").should(exist).getSize();
-        String selectedForm2 = $(".MuiDataGrid-row:nth-of-type(2) [data-field='formName'] h6").getText();
+        $(byText(elementLocators("SelectAForm"))).should(appear);
+        $(byText(elementLocators("ChooseFromLibrary"))).click();
+        $(elementLocators("FormsGridContainer")).should(appear); //Forms available in Library will appear
+        $(elementLocators("FormsAvailableInTable")).should(exist).getSize();
+        String selectedForm2 = $(elementLocators("SecondFormNameInTheTable")).getText();
         System.out.println(selectedForm2);
-        String form2DataID = $(".MuiDataGrid-row:nth-of-type(2)").should(exist).getAttribute("data-id");
-        $(".MuiDataGrid-row:nth-of-type(2)").click(); //Select the Second form available in the list
-        $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID'] .MuiList-root").shouldHave(text(selectedForm2)); //Verify whether the selected form is available in the Checklist flow or not
+        String form2DataID =  $(elementLocators("SecondFormAvailableInTable")).should(exist).getAttribute("data-id");
+        $(elementLocators("SecondFormAvailableInTable")).click(); //Select the Second form available in the list
+        $(elementLocators("TargetListInChecklistFlow")).shouldHave(text(selectedForm2)); //Verify whether the selected form is available in the Checklist flow or not
         assert form2DataID != null;
-        SelenideElement form2 = $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID'] .MuiList-root").find(byAttribute("id",form2DataID)).should(exist);
+        SelenideElement form2 = $(elementLocators("TargetListInChecklistFlow")).find(byAttribute("id",form2DataID)).should(exist);
 
         //RE-ARRANGE FORM-1
         int form1Xoffset = form1.getLocation().getX();
