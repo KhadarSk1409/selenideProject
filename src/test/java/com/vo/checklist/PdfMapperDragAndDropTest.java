@@ -8,8 +8,11 @@ import com.vo.BaseTest;
 import com.vo.formdesign.FileUploadFieldTest;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.interactions.Interaction;
+import org.openqa.selenium.interactions.PointerInput;
 
 import java.io.File;
+import java.time.Duration;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Condition.exist;
@@ -61,13 +64,17 @@ public class PdfMapperDragAndDropTest extends BaseTest {
         $(byText(elementLocators("ChooseFromLibrary"))).click();
         $(elementLocators("FormsGridContainer")).should(appear); //Forms available in Library will appear
         $(elementLocators("FormsAvailableInTable")).should(exist).getSize();
-        String selectedForm1 = $(elementLocators("FirstFormNameInTheTable")).getText();
+        String ibanTestFormName = "IbanTestForm";
+        SelenideElement ibanFormRow = $$(".MuiDataGrid-row [data-field='formName']").findBy( text(ibanTestFormName));
+        String selectedForm1 = ibanFormRow.getText();
         System.out.println(selectedForm1);
-        String form1DataID = $(elementLocators("FirstFormAvailableInTable")).should(exist).getAttribute("data-id");
-        $(elementLocators("FormsAvailableInTable")).$(byText(selectedForm1)).click(); //Select the first form available in the list
-        $(elementLocators("TargetListInChecklistFlow")).shouldHave(text(selectedForm1)); //Verify whether the selected form is available in the Checklist flow or not
+
+
+        String form1DataID = ibanFormRow.parent().should(exist).getAttribute("data-id");
+        ibanFormRow.parent().click(); //Select the first form available in the list
+        $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID'] .MuiList-root").shouldHave(text(ibanTestFormName)); //Verify whether the selected form is available in the Checklist flow or not
         assert form1DataID != null;
-        SelenideElement form1 = $(elementLocators("TargetListInChecklistFlow")).find(byAttribute("id",form1DataID)).should(exist);
+        SelenideElement form1 = $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID'] .MuiList-root").find(byAttribute("id",form1DataID)).should(exist);
 
 
         //Drag and Drop LABEL field to Checklist flow
@@ -117,13 +124,37 @@ public class PdfMapperDragAndDropTest extends BaseTest {
         int targetIbanX = (targetLocX-IbanSourceX)+20;
         int targetIbanY = (IbanSourceY+targetLocY);
 
-        actions().clickAndHold(Iban).moveToElement(targetLocation).build().perform();
-        actions().moveByOffset(targetIbanX, targetIbanY).release().build().perform();
+        /*
+        all of following variants do not work, so we decided to workaround drag and drop issues with explicit gui actions like click on button and fill positions into text fields
+        PointerInput p = new PointerInput(PointerInput.Kind.MOUSE, "MouseOnPDFMapper");
+        Interaction i = p.createPointerMove(Duration.ofSeconds(1), PointerInput.Origin.fromElement(Iban), 2, 2);
+
+        //actions().tick(i).clickAndHold().moveToElement(targetLocation).build().perform();
+        //actions().moveByOffset(targetIbanX, targetIbanY).release().build().perform();
+
+        actions().tick(p.createPointerMove(Duration.ofSeconds(1), PointerInput.Origin.fromElement(Iban), 2, 2))
+                .tick(p.createPointerDown(PointerInput.MouseButton.LEFT.ordinal()))
+                .tick(p.createPointerMove(Duration.ofSeconds(5),
+                        PointerInput.Origin.fromElement(Iban), 300, 50))
+                .release()
+                .build().perform();
 
         int targetBicX = (targetLocX-BicSourceX)+50;
         int targetBicY = (BicSourceY-targetLocY)+20;
         actions().clickAndHold(Bic).moveToElement(targetLocation).build().perform();
         actions().moveByOffset(targetBicX, targetBicY).release().build().perform();
+
+        */
+
+        //make hidden add buttons visible for the test user
+        String js = "var els = document.querySelectorAll('.btn_AddSrc')\n" +
+                "for(var idx = 0; idx < els.length; idx ++) {els[idx].style.visibility = 'inherit' }";
+        executeJavaScript(js);
+        $("#Iban .btn_AddSrc").shouldBe(visible).click();
+        SelenideElement pageBox = $(".vo-page-container").shouldBe(visible).find(byText("Iban")).should(appear);
+        actions().moveToElement(pageBox).click().build().perform();
+        $("#txt_PosLeft").should(appear).setValue("30").pressTab();
+        $("#txt_PosTop").should(appear).setValue("100").pressTab();
 
     }
 }
