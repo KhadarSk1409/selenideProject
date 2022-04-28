@@ -1,25 +1,14 @@
 package com.vo.checklist;
 
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.commands.UploadFile;
-import com.codeborne.selenide.commands.UploadFileFromClasspath;
 import com.vo.BaseTest;
-import com.vo.formdesign.FileUploadFieldTest;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.interactions.Interaction;
-import org.openqa.selenium.interactions.PointerInput;
-
-import java.io.File;
-import java.time.Duration;
+import org.openqa.selenium.Dimension;
 
 import static com.codeborne.selenide.Condition.*;
-import static com.codeborne.selenide.Condition.exist;
 import static com.codeborne.selenide.Selectors.byAttribute;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.Selenide.$;
 import static reusables.ReuseActions.elementLocators;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -65,16 +54,15 @@ public class PdfMapperDragAndDropTest extends BaseTest {
         $(elementLocators("FormsGridContainer")).should(appear); //Forms available in Library will appear
         $(elementLocators("FormsAvailableInTable")).should(exist).getSize();
         String ibanTestFormName = "IbanTestForm";
-        SelenideElement ibanFormRow = $$(".MuiDataGrid-row [data-field='formName']").findBy( text(ibanTestFormName));
+        SelenideElement ibanFormRow = $$(elementLocators("FormRows")).findBy( text(ibanTestFormName));
         String selectedForm1 = ibanFormRow.getText();
-        System.out.println(selectedForm1);
-
+        System.out.println("Selected Form is: " +selectedForm1);
 
         String form1DataID = ibanFormRow.parent().should(exist).getAttribute("data-id");
         ibanFormRow.parent().click(); //Select the first form available in the list
-        $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID'] .MuiList-root").shouldHave(text(ibanTestFormName)); //Verify whether the selected form is available in the Checklist flow or not
+        $(elementLocators("TargetListInChecklistFlow")).shouldHave(text(ibanTestFormName)); //Verify whether the selected form is available in the Checklist flow or not
         assert form1DataID != null;
-        SelenideElement form1 = $("[data-rbd-droppable-id='TARGET_FORM_LIST_ID'] .MuiList-root").find(byAttribute("id",form1DataID)).should(exist);
+        SelenideElement form1 = $(elementLocators("TargetListInChecklistFlow")).find(byAttribute("id",form1DataID)).should(exist);
 
 
         //Drag and Drop LABEL field to Checklist flow
@@ -111,50 +99,68 @@ public class PdfMapperDragAndDropTest extends BaseTest {
         SelenideElement Bic = $(elementLocators("Bic"));
         SelenideElement Bank = $(elementLocators("Bank"));
         SelenideElement targetLocation = $(elementLocators("targetPDFTemplateSurface"));
-        Iban.should(exist);
-        int IbanSourceX = Iban.getLocation().getX();
-        int IbanSourceY = Iban.getLocation().getY();
-        int BicSourceX = Bic.getLocation().getX();
-        int BicSourceY = Bic.getLocation().getY();
-        int BankSourceX = Bank.getLocation().getX();
-        int BankSourceY = Bank.getLocation().getY();
-        int targetLocX = targetLocation.getLocation().getX();
-        int targetLocY = targetLocation.getLocation().getY();
+        $(Iban).should(exist);
+        $(Bic).should(exist);
+        $(Bank).should(exist);
 
-        int targetIbanX = (targetLocX-IbanSourceX)+20;
-        int targetIbanY = (IbanSourceY+targetLocY);
-
-        /*
-        all of following variants do not work, so we decided to workaround drag and drop issues with explicit gui actions like click on button and fill positions into text fields
-        PointerInput p = new PointerInput(PointerInput.Kind.MOUSE, "MouseOnPDFMapper");
-        Interaction i = p.createPointerMove(Duration.ofSeconds(1), PointerInput.Origin.fromElement(Iban), 2, 2);
-
-        //actions().tick(i).clickAndHold().moveToElement(targetLocation).build().perform();
-        //actions().moveByOffset(targetIbanX, targetIbanY).release().build().perform();
-
-        actions().tick(p.createPointerMove(Duration.ofSeconds(1), PointerInput.Origin.fromElement(Iban), 2, 2))
-                .tick(p.createPointerDown(PointerInput.MouseButton.LEFT.ordinal()))
-                .tick(p.createPointerMove(Duration.ofSeconds(5),
-                        PointerInput.Origin.fromElement(Iban), 300, 50))
-                .release()
-                .build().perform();
-
-        int targetBicX = (targetLocX-BicSourceX)+50;
-        int targetBicY = (BicSourceY-targetLocY)+20;
-        actions().clickAndHold(Bic).moveToElement(targetLocation).build().perform();
-        actions().moveByOffset(targetBicX, targetBicY).release().build().perform();
-
-        */
-
-        //make hidden add buttons visible for the test user
+        //Make hidden add buttons visible for the test user to add multiple components into the pdf
         String js = "var els = document.querySelectorAll('.btn_AddSrc')\n" +
                 "for(var idx = 0; idx < els.length; idx ++) {els[idx].style.visibility = 'inherit' }";
         executeJavaScript(js);
-        $("#Iban .btn_AddSrc").shouldBe(visible).click();
-        SelenideElement pageBox = $(".vo-page-container").shouldBe(visible).find(byText("Iban")).should(appear);
-        actions().moveToElement(pageBox).click().build().perform();
-        $("#txt_PosLeft").should(appear).setValue("30").pressTab();
-        $("#txt_PosTop").should(appear).setValue("100").pressTab();
+        //Add Component: 1
+        $(elementLocators("AddIbanButton")).shouldBe(visible).click();
+        SelenideElement IbanBox = $(elementLocators("PDFContainer")).shouldBe(visible).find(byText("Iban")).should(appear);
+        $(elementLocators("LeftPosition")).should(appear).setValue("75").pressTab();
+        $(elementLocators("TopPosition")).should(appear).setValue("100").pressTab();
+
+        //Component: 2
+        String js1 = "var els = document.querySelectorAll('.btn_AddSrc')\n" +
+                "for(var idx = 0; idx < els.length; idx ++) {els[idx].style.visibility = 'inherit' }";
+        executeJavaScript(js1);
+        $(elementLocators("AddBankButton")).shouldBe(visible).click();
+        SelenideElement BankBox = $(elementLocators("PDFContainer")).shouldBe(visible).find(byText("Bank")).should(appear);
+        actions().moveToElement(BankBox).click().build().perform();
+        $(elementLocators("LeftPosition")).should(appear).setValue("75").pressTab();
+        $(elementLocators("TopPosition")).should(appear).setValue("150").pressTab();
+
+        //Component: 3
+        String js2 = "var els = document.querySelectorAll('.btn_AddSrc')\n" +
+                "for(var idx = 0; idx < els.length; idx ++) {els[idx].style.visibility = 'inherit' }";
+        executeJavaScript(js2);
+        $(elementLocators("AddBicButton")).shouldBe(visible).click();
+        SelenideElement BicBox = $(elementLocators("PDFContainer")).shouldBe(visible).find(byText("Bic")).should(appear);
+        actions().moveToElement(BicBox).click().build().perform();
+        $(elementLocators("LeftPosition")).should(appear).setValue("75").pressTab();
+        $(elementLocators("TopPosition")).should(appear).setValue("200").pressTab();
+
+        //Verify deletion of added components in the pdf
+        //Delete IbanBox from PDF
+        $(IbanBox).should(exist).click();
+        $(elementLocators("DeleteButton")).should(appear).click();
+        $(IbanBox).shouldNot(exist);
+        $(BicBox).should(exist);
+        $(BankBox).should(exist);
+        $(elementLocators("OkButton")).should(exist).click();
+
+        //Re-Open the checklist form designer to verify whether Iban disappears or not
+        $(elementLocators("ListOfPDFsAvailable")).shouldHave(text("samplePDF.pdf")).$(elementLocators("PenIconToEditPDF")).click();
+        $(IbanBox).shouldNot(exist);
+        Dimension BicBoxSize= $(BicBox).getRect().getDimension(); //Get the dimensions of Bic Box
+        System.out.println("Initial Width and Height of BicBox is " +BicBoxSize);
+
+        //Clear the existing values of BicBox and Re-Size by giving some random values
+        $(BicBox).should(exist).click();
+        selectAndClear(elementLocators("WidthField")).should(appear).setValue("400").pressTab();
+        selectAndClear(elementLocators("HeightField")).setValue("60").pressTab();
+        $(elementLocators("OkButton")).should(exist).click();
+
+        //Re-Open the designer to verify re-sized block have same width and height
+        $(elementLocators("ListOfPDFsAvailable")).shouldHave(text("samplePDF.pdf")).$(elementLocators("PenIconToEditPDF")).click();
+        $(BicBox).should(exist);
+        $(BankBox).should(exist);
+        int width = BicBox.getRect().getWidth();
+        int height = BicBox.getRect().getHeight();
+        System.out.println("Changed Width is "+ width+" Changed Height is "+height );
 
     }
 }
