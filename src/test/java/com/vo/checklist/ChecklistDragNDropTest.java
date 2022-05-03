@@ -98,28 +98,7 @@ public class ChecklistDragNDropTest extends BaseTest {
         //POST PROCESSING FLOW
         //Drag n Drop PDF Generator to Post Processing flow and verify cancel
         //Get the Source and Target offset's from changed positions
-        SelenideElement sourcePDF = $(elementLocators("PDFGenerator"));
-        SelenideElement targetPDF = $(elementLocators("TargetPostProcessing"));
-        int sourcePDFXOffset = sourcePDF.getLocation().getX();
-        int sourcePDFYOffset = sourcePDF.getLocation().getY();
-        int targetPDFXOffset = targetPDF.getLocation().getX();
-        int targetPDFYOffset = targetPDF.getLocation().getY();
-
-        int PDFXOffset = (targetPDFXOffset-sourcePDFXOffset)+50;
-        int PDFYOffset=  (targetPDFYOffset-sourcePDFYOffset)+20;
-
-        System.out.println("sourcePDF xoffset is " +sourcePDFXOffset);
-        System.out.println("sourcePDF yoffset is " +sourcePDFYOffset);
-        System.out.println("targetPostProcessingFlow xoffset is " +targetPDFXOffset);
-        System.out.println("targetPostProcessingFlow yoffset is " +targetPDFYOffset);
-        System.out.println("PDF xoffset is " +PDFXOffset);
-        System.out.println("PDF yoffset is " +PDFYOffset);
-
-        actions().clickAndHold(sourcePDF).moveToElement(targetPDF).build().perform();
-
-        actions().moveByOffset(PDFXOffset,PDFYOffset).release().build().perform();
-
-      //Element is getting closer to the target @359, 215 but not able to drop at correct region
+        $(elementLocators("PDFGenerator")).doubleClick();
         $(byText(elementLocators("UploadPDFTemplateInUSLetterOrA4PageFormat"))).should(appear);
         $(elementLocators("CancelBtn")).should(exist).click(); //Click on Cancel Button
 
