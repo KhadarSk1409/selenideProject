@@ -113,12 +113,14 @@ public class FormattedTextTest extends BaseTest {
                 //When you don't have any value in Default value edit box and click on Read only checkbox it should show error
                 $(elementLocators("FormattedTextErrorHelperText")).should(exist).shouldHave(text("Must be set, if read only"));
             }
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
+
         }
 
         //Value edit
         if (StringUtils.isNotEmpty(edit_values)) {
             String checkBoxId = "#richTextField_areaValueHtml .fa-pen";
-          // $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
+            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             $(checkBoxId).shouldBe(visible).click();
             $(elementLocators("TextEditor")).should(appear); //Text Editor should appear
 

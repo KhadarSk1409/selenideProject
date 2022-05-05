@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
+import org.openqa.selenium.Keys;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
@@ -23,9 +24,11 @@ public class FormDesignerSectionsAdditionAndDeletionTest extends BaseTest {
         $(elementLocators("CreateFormButton")).should(exist).click();
         $(elementLocators("PublishButton")).should(exist);
         $(elementLocators("DesignerContent")).should(exist);
+        String currentVersion = $(elementLocators("InitialVersion")).should(exist).getText();
         $(elementLocators("Section1")).should(exist);
         $(elementLocators("Section1PenIcon")).click();
-        $(elementLocators("TextFieldLabel")).should(exist).setValue(" 01 ");//Add name to the section
+        $(elementLocators("TextFieldLabel")).should(exist).setValue(" 01 ").sendKeys(Keys.TAB);//Add name to the section
+        $(elementLocators("InitialVersion")).shouldNotHave(text(currentVersion));
         $(elementLocators("Section1")).should(exist).shouldHave(text("Section 01 "));
         $(elementLocators("BlockR1C1")).should(exist).click();
         $(elementLocators("TemplateCard")).should(appear);
@@ -36,26 +39,32 @@ public class FormDesignerSectionsAdditionAndDeletionTest extends BaseTest {
         $(elementLocators("SectionR5C1")).should(exist); //New section should be visible
         $(elementLocators("SectionR5C1PlusIcon")).should(exist).click(); //Click on + to add another section
         $(elementLocators("SectionR9C1")).should(exist); //New Section added
+        $(elementLocators("InitialVersion")).shouldNotHave(text(currentVersion));
         $(elementLocators("SectionR9C1PenIcon")).should(exist).click();
         $(elementLocators("TextFieldLabel")).should(exist).setValue(" 02 ");//Add name to the section
+        $(elementLocators("InitialVersion")).shouldNotHave(text(currentVersion));
         $(elementLocators("Section9BlockR1C1")).should(exist).click(); //Click on 1st block of added section
         $(elementLocators("TemplateCard")).should(appear);
         $(elementLocators("TextField")).should(appear).click();
 
         //Deletion of added sections
         $(elementLocators("Section1")).should(exist);
+        $(elementLocators("InitialVersion")).shouldNotHave(text(currentVersion));
         $(elementLocators("Section1PenIcon")).should(exist).click(); //Click on edit
         $(elementLocators("DeleteBlockBtn")).should(exist).click(); //Click on Delete button
 
         $(elementLocators("SectionR5C1")).should(exist);
+        $(elementLocators("InitialVersion")).shouldNotHave(text(currentVersion));
+        $(elementLocators("Section5BlockR1C1")).should(exist);
         $(elementLocators("SectionR5C1PenIcon")).should(exist).click(); //Click on edit
         $(elementLocators("DeleteBlockBtn")).should(exist).click(); //Click on Delete button
+
+        //Verifying whether deleted sections are still appearing or not
+        $(elementLocators("SectionR9C1")).shouldNot(exist);
+        $(elementLocators("SectionR5C1")).shouldNot(exist);
 
         $(elementLocators("Section1")).should(exist); //Section 1 should exist
         $(elementLocators("BlockR1C1")).should(exist).click();
 
-        //Verifying whether deleted sections are still appearing or not
-        $(elementLocators("SectionR5C1")).shouldNot(exist);
-        $(elementLocators("SectionR9C1")).shouldNot(exist);
     }
 }
