@@ -41,7 +41,6 @@ public class VerifyChecklistCreationWithNewFormTest extends BaseTest {
         int sourceLabelXOffset = sourceLabel.getLocation().getX();
         int sourceLabelYOffset = sourceLabel.getLocation().getY();
 
-
         actions().clickAndHold(sourceFormEle).moveToElement(targetChecklistFlow).build().perform(); //Click n hold the source element and move to target element
 
         //Find the xOffset and yOffset difference to find x and y offset needed in which from object required to dragged and dropped
@@ -63,7 +62,6 @@ public class VerifyChecklistCreationWithNewFormTest extends BaseTest {
         int labelXOffset = (targetXOffset-sourceLabelXOffset)+50;
         int labelYOffset= (sourceLabelYOffset-targetYOffset)+40;
         actions().moveByOffset(labelXOffset,labelYOffset).release().build().perform();
-
 
     }
 }

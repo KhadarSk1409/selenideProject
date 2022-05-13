@@ -97,7 +97,6 @@ public class ChecklistDragNDropTest extends BaseTest {
 
         //POST PROCESSING FLOW
         //Drag n Drop PDF Generator to Post Processing flow and verify cancel
-        //Get the Source and Target offset's from changed positions
         $(elementLocators("PDFGenerator")).doubleClick();
         $(byText(elementLocators("UploadPDFTemplateInUSLetterOrA4PageFormat"))).should(appear);
         $(elementLocators("CancelBtn")).should(exist).click(); //Click on Cancel Button
