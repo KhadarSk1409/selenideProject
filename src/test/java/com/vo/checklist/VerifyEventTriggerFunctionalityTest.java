@@ -1,6 +1,5 @@
 package com.vo.checklist;
 
-import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.SelenideElement;
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
@@ -12,12 +11,12 @@ import static reusables.ReuseActions.elementLocators;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Verify Even Trigger Functionality")
-public class verifyEventTriggerFunctionalityTest extends BaseTest {
+public class VerifyEventTriggerFunctionalityTest extends BaseTest {
 
     @Test
     @DisplayName("Open the existing form in Checklist")
     @Order(1)
-    public void openExistingChecklistform(){
+    public void openExistingChecklistForm(){
         open("/checklistdesigner2/demo");
 
     }
