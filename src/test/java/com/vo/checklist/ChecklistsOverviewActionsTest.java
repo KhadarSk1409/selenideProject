@@ -39,6 +39,14 @@ public class ChecklistsOverviewActionsTest extends BaseTest {
                 rowEl.$(elementLocators("EditChecklistButton")).shouldBe(enabled);
                 rowEl.$(elementLocators("openChecklistDashboardButton")).shouldBe(enabled);
             }
+            else if (checklistState.equals("Published/in draft")) {
+                rowEl.$(elementLocators("EditChecklistButton")).shouldBe(enabled);
+                rowEl.$(elementLocators("openChecklistDashboardButton")).shouldBe(enabled);
+            }
+            else {
+                rowEl.$(elementLocators("EditChecklistButton")).shouldBe(enabled);
+                rowEl.$(elementLocators("openChecklistDashboardButton")).shouldBe(disabled);
+            }
         });
     }
 
@@ -71,7 +79,7 @@ public class ChecklistsOverviewActionsTest extends BaseTest {
             if (formState.equals("Published")) {
                 rowEl.$(elementLocators("EditChecklistButton")).shouldBe(enabled).click(); //Click on pen icon to open checklist designer
                 $(elementLocators("CloseChecklistDesignerButton")).closest("button").should(exist).click();
-                $(elementLocators("ChecklistTemplateOverview")).should(appear);
+                $(elementLocators("ChecklistTable")).should(appear);
                 rowEl = getRow.apply(i);
                 rowEl.$(elementLocators("openChecklistDashboardButton")).shouldBe(enabled).click();
                 $(elementLocators("UsageOverview")).should(appear);

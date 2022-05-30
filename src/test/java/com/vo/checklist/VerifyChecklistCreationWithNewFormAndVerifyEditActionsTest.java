@@ -6,6 +6,7 @@ import org.junit.jupiter.api.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.Locale;
 import java.util.Set;
 
 import static com.codeborne.selenide.Condition.*;
@@ -72,7 +73,10 @@ public class VerifyChecklistCreationWithNewFormAndVerifyEditActionsTest extends 
         //Switch back to Checklist window to verify whether the form state is changed to published or not
         switchTo().window(0);
         refresh();
-        $(elementLocators("TargetListInChecklistFlow")).shouldHave(text("DemoForm"));
+        $(elementLocators("TargetListInChecklistFlow")).shouldHave(text("DemoForm")).$(elementLocators("PreviewItemButton")).should(exist).click();
+        $(elementLocators("DataContainer")).should(appear);
+        $(elementLocators("AddedBlock")).should(exist);
+        $(elementLocators("CloseFillFormButton")).should(exist).click();
 
     }
 }

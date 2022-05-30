@@ -62,7 +62,7 @@ public class ChecklistFormActionsTest extends BaseTest {
         assert formDataID != null;
         $(elementLocators("TargetListInChecklistFlow")).find(byAttribute("id",formDataID))
                 .should(exist).$(elementLocators("PreviewItemButton")).should(exist).click(); //Find the form with same ID and click on Preview Button
-        $(elementLocators("CloseFillFOrmButton")).should(exist).click();
+        $(elementLocators("CloseFillFormButton")).should(exist).click();
         $(elementLocators("TargetListInChecklistFlow")).find(byAttribute("id",formDataID))
                 .should(exist).$(elementLocators("DeleteItemButton")).should(exist).click(); //Find the form with same ID and click on Delete Button
         $(elementLocators("TargetListInChecklistFlow")).find(byAttribute("id",formDataID)).shouldNot(exist, Duration.ofSeconds(3));

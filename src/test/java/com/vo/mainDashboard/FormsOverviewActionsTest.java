@@ -41,19 +41,19 @@ public class FormsOverviewActionsTest extends BaseTest {
                 //Fill Form should be enabled
                 rowEl.$(elementLocators("OpenFormInFormDesignerButton")).shouldBe(enabled);
                 //Open form in form designer should be enabled
-                rowEl.$(elementLocators("OpenFormInFormDashboard")).closest("button").shouldBe(enabled);
+                rowEl.$(elementLocators("OpenFormInFormDashboard")).shouldBe(enabled);
                 //Open form Dashboard should be enabled
                 rowEl.$(elementLocators("AddFormToFavoritesButton")).shouldBe(enabled);
                 //Add favorite should be enabled
             } else if (formState.equals("Published/in draft") && createdBy.equals("GUI Tester")) {
                 rowEl.$(elementLocators("FillForm")).shouldBe(enabled);
                 rowEl.$(elementLocators("OpenFormInFormDesignerButton")).shouldBe(enabled);
-                rowEl.$(elementLocators("OpenFormInFormDashboard")).closest("button").shouldBe(enabled);
+                rowEl.$(elementLocators("OpenFormInFormDashboard")).shouldBe(enabled);
                 rowEl.$(elementLocators("AddFormToFavoritesButton")).shouldBe(enabled);
             } else {
                 rowEl.$(elementLocators("FillForm")).shouldBe(disabled);
                 rowEl.$(elementLocators("OpenFormInFormDesignerButton")).shouldBe(enabled);
-                rowEl.$(elementLocators("OpenFormInFormDashboard")).closest("button").shouldBe(disabled);
+                rowEl.$(elementLocators("OpenFormInFormDashboard")).shouldBe(disabled);
                 rowEl.$(elementLocators("AddFormToFavoritesButton")).shouldNotBe(visible);
             }
         });
@@ -94,7 +94,7 @@ public class FormsOverviewActionsTest extends BaseTest {
                 $(elementLocators("NavigateToLibrary")).should(exist).hover().click(); //Hover and click on Library
                 $(elementLocators("FormsList")).should(appear);
                 rowEl = getRow.apply(i);
-                rowEl.$(elementLocators("OpenFormInFormDashboard")).closest("button").shouldBe(enabled).click();//Click on Open form dashboard
+                rowEl.$(elementLocators("OpenFormInFormDashboard")).shouldBe(enabled).click();//Click on Open form dashboard
                 $(elementLocators("NavigateToLibrary")).should(exist).hover().click(); //Hover and click on Library
 
             } else if (formState.equals("Published/in draft") && createdBy.equals("GUI Tester")) {
@@ -107,7 +107,7 @@ public class FormsOverviewActionsTest extends BaseTest {
                 $(elementLocators("NavigateToLibrary")).should(exist).hover().click(); //Hover and click on Library
                 $(elementLocators("FormsList")).should(appear);
                 rowEl = getRow.apply(i);
-                rowEl.$(elementLocators("OpenFormInFormDashboard")).closest("button").shouldBe(enabled).click();//Click on Open form dashboard
+                rowEl.$(elementLocators("OpenFormInFormDashboard")).shouldBe(enabled).click();//Click on Open form dashboard
                 $(elementLocators("NavigateToLibrary")).should(exist).hover().click(); //Hover and click on Library
 
             } else {
