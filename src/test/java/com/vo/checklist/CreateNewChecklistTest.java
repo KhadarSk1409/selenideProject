@@ -11,6 +11,7 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.open;
 import static reusables.ReuseActions.elementLocators;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -20,7 +21,7 @@ public class CreateNewChecklistTest extends BaseTest {
     @Test
     @DisplayName("Create checklist from library")
     public void NewChecklistCreation(){
-        $(elementLocators("NavigateToLibrary")).should(exist).hover().click(); //Hover and click on Library
+        open("/library/checklists");
         $(elementLocators("CreateNewChecklistButton")).should(exist).click();
         String ChecklistTitle = RandomStringUtils.randomAlphanumeric(5);
         $(elementLocators("FormTitleInputField")).setValue(ChecklistTitle); //Set Title

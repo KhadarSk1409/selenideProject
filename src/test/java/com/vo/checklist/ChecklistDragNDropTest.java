@@ -14,7 +14,7 @@ import static reusables.ReuseActions.elementLocators;
 public class ChecklistDragNDropTest extends BaseTest {
 
     @Test
-    @DisplayName("Open the form in CheckLists")
+    @DisplayName("Open the form in Checklists")
     @Order(1)
     public void openExistingForm(){
 
