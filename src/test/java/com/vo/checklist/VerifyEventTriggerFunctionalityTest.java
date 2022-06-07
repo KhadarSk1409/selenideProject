@@ -65,7 +65,7 @@ public class VerifyEventTriggerFunctionalityTest extends BaseTest {
         //Drag and Drop another Event Trigger to checklist flow
         actions().clickAndHold(sourceEventTrigger).moveToElement(targetChecklistFlow).build().perform();
         int ETXOffset2 = (targetXOffset-sourceETXOffset);
-        int ETYOffset2=  (sourceETYOffset-targetYOffset);
+        int ETYOffset2=  (sourceETYOffset-targetYOffset)-50;
         actions().moveByOffset(ETXOffset2,ETYOffset2).release().build().perform();
         $(elementLocators("EventTriggerEditor")).should(appear);
         $(elementLocators("IntegrationInputField")).should(exist).click();
