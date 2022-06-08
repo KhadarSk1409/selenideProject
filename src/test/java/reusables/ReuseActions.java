@@ -101,7 +101,7 @@ public class ReuseActions extends BaseTest {
         ElementsCollection listFavForms = $$(elementLocators("FormsInFavorites"));
         listFavForms.shouldHave(CollectionCondition.sizeGreaterThanOrEqual(1)); //Verify that Favorite form is available
         listFavForms.get(0).click(); //Click on the Favorite form
-        $(elementLocators("FormDashboardData")).should(exist); //Navigated to Form Dashboard
+        $(elementLocators("FormDashboardHeader")).should(exist); //Navigated to Form Dashboard
     }
 
     public static String elementLocators(String elementProperty) {

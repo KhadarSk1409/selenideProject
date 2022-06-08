@@ -343,10 +343,10 @@ public abstract class BaseTest {
     //Form Deletion with label: guitest
     public static void deleteForm() {
         open("/library/forms");
-        $("#btnCreateForm").should(appear); //ensure library is loaded and create new form button is visible
+        $(elementLocators("CreateNewFormButton")).should(appear); //ensure library is loaded and create new form button is visible
         executeJavaScript("document.querySelector('#btnCleanupTestForms').style.visibility = 'inherit'"); //make hidden cleanup button visible for the test user
-        $("#btnCleanupTestForms").should(appear).click();
-        $("#btnCleanupTestForms").should(disappear, Duration.of(10, MINUTES));
+        $(elementLocators("CleanUpButton")).should(appear).click();
+        $(elementLocators("CleanUpButton")).should(disappear, Duration.of(10, MINUTES));
     }
 
 
