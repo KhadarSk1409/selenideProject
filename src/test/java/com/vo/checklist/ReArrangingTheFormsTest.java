@@ -10,22 +10,17 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Selenide.actions;
 import static reusables.ReuseActions.elementLocators;
+import static reusables.ReuseActionsChecklistCreation.createNewChecklist;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Verify the re-arranging of multiple forms in the checklist flow")
 public class ReArrangingTheFormsTest extends BaseTest {
 
     @Test
-    @DisplayName("Open the existing form in checklists")
-    @Order(1)
-    public void openExistingChecklist(){
-        open("/checklistdesigner2/demo");
-    }
-
-    @Test
     @DisplayName("Verify the re-arrangement of forms in checklist flow")
-    @Order(2)
+    @Order(1)
     public void verifyReArrangingTheFormsInChecklist(){
+        createNewChecklist();
         $(elementLocators("PreviewChecklistButton")).should(appear);
         $(elementLocators("PublishChecklistTemplateButton")).should(exist);
 
@@ -114,6 +109,7 @@ public class ReArrangingTheFormsTest extends BaseTest {
         int ETYOffset=  (sourceETYOffset-targetYOffset)-100;
         actions().clickAndHold(sourceEventTrigger).moveToElement(targetChecklistFlow).build().perform();
         actions().moveByOffset(ETXOffset,ETYOffset).release().build().perform();
+        $(elementLocators("OkButton")).should(appear).click();
 
         //RE-ARRANGE FORM-1
         actions().clickAndHold(form1).moveToElement(targetChecklistFlow).build().perform();

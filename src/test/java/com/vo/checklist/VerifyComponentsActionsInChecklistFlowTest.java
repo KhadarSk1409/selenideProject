@@ -14,21 +14,16 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Selenide.$;
 import static reusables.ReuseActions.elementLocators;
+import static reusables.ReuseActionsChecklistCreation.createNewChecklist;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Verify the components actions in checklist flow")
 public class VerifyComponentsActionsInChecklistFlowTest extends BaseTest {
 
     @Test
-    @DisplayName("Open the exisitng form in checklist flow")
-    @Order(1)
-    public void openExistingForm(){
-        open("/checklistdesigner2/demo");
-    }
-
-    @Test
     @DisplayName("Verify Edit actions in Checklist components")
     public void verifyComponentsActions(){
+        createNewChecklist();
         $(elementLocators("PreviewChecklistButton")).should(appear);
         $(elementLocators("PublishChecklistTemplateButton")).should(exist);
 

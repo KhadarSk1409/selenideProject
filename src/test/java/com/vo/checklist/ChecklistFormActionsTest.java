@@ -12,23 +12,17 @@ import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Selenide.actions;
 import static reusables.ReuseActions.elementLocators;
+import static reusables.ReuseActionsChecklistCreation.createNewChecklist;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Checklists Form Actions Verification Tests")
 public class ChecklistFormActionsTest extends BaseTest {
 
     @Test
-    @DisplayName("Open the form in Checklists")
-    @Order(1)
-    public void openExistingForm(){
-
-        open("/checklistdesigner2/demo");
-    }
-
-    @Test
     @DisplayName("Verify checklist form actions")
-    @Order(2)
+    @Order(1)
     public void verifyChecklistFormActions() {
+        createNewChecklist();
         $(elementLocators("PreviewChecklistButton")).should(appear);
         $(elementLocators("PublishChecklistTemplateButton")).should(exist);
 

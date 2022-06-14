@@ -10,24 +10,17 @@ import static com.codeborne.selenide.Selectors.byAttribute;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static reusables.ReuseActions.elementLocators;
+import static reusables.ReuseActionsChecklistCreation.createNewChecklist;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Verify drag and drop functionality in PDF Mapper")
 public class PdfMapperDragAndDropTest extends BaseTest {
 
     @Test
-    @DisplayName("Open the existing form in Checklist")
-    @Order(1)
-    public void openExistingChecklistForm(){
-
-        open("/checklistdesigner2/demo");
-
-    }
-
-    @Test
     @DisplayName("Verify PDF Mapper Drag and Drop")
-    @Order(2)
+    @Order(1)
     public void verifyPdfMapperDragNDrop(){
+        createNewChecklist(); //Creates new checklist and Checklist designer will open
         $(elementLocators("PreviewChecklistButton")).should(appear);
         $(elementLocators("PublishChecklistTemplateButton")).should(exist);
 
