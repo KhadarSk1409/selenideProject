@@ -15,23 +15,18 @@ import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static reusables.ReuseActions.elementLocators;
+import static reusables.ReuseActionsChecklistCreation.createNewChecklist;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Verify new form creation and edit actions in checklist")
 public class VerifyChecklistCreationWithNewFormAndVerifyEditActionsTest extends BaseTest {
 
     @Test
-    @DisplayName("Open the existing form in Checklists")
-    @Order(1)
-    public void openChecklistDesigner(){
-        open("/checklistdesigner2/demo");
-    }
-
-    @Test
     @DisplayName("Verify Create checklist with new form and verify edit actions")
-    @Order(2)
+    @Order(1)
     public void createAndVerifyChecklistWithNewForm() {
 
+        createNewChecklist();
         $(elementLocators("PreviewChecklistButton")).should(appear);
         $(elementLocators("PublishChecklistTemplateButton")).should(exist);
 

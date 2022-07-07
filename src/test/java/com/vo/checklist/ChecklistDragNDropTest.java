@@ -7,24 +7,20 @@ import org.junit.jupiter.api.*;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
+
 import static reusables.ReuseActions.elementLocators;
+import static reusables.ReuseActionsChecklistCreation.createChecklistWithNewForm;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Checklists Drag and Drop functionality Demo Tests")
 public class ChecklistDragNDropTest extends BaseTest {
 
     @Test
-    @DisplayName("Open the form in Checklists")
-    @Order(1)
-    public void openExistingForm(){
-
-        open("/checklistdesigner2/demo");
-    }
-
-    @Test
     @DisplayName("Verify Drag and Drop Functionality")
-    @Order(2)
+    @Order(1)
     public void verifyDragNDrop() {
+
+        createChecklistWithNewForm(); //A new form will be created during new checklist creation
 
         $(elementLocators("PreviewChecklistButton")).should(appear);
         $(elementLocators("PublishChecklistTemplateButton")).should(exist);
@@ -94,6 +90,7 @@ public class ChecklistDragNDropTest extends BaseTest {
         int ETXOffset = (targetXOffset-sourceETXOffset)+50;
         int ETYOffset=  (sourceETYOffset-targetYOffset)-100;
         actions().moveByOffset(ETXOffset,ETYOffset).release().build().perform();
+        $(elementLocators("OkButton")).should(appear).click();
 
         //POST PROCESSING FLOW
         //Drag n Drop PDF Generator to Post Processing flow and verify cancel

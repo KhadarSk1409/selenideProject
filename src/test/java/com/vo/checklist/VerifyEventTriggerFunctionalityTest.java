@@ -8,23 +8,17 @@ import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.*;
 import static reusables.ReuseActions.elementLocators;
+import static reusables.ReuseActionsChecklistCreation.createNewChecklist;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Verify Even Trigger Functionality")
 public class VerifyEventTriggerFunctionalityTest extends BaseTest {
 
     @Test
-    @DisplayName("Open the existing form in Checklist")
-    @Order(1)
-    public void openExistingChecklistForm(){
-        open("/checklistdesigner2/demo");
-
-    }
-
-    @Test
     @DisplayName("Verify Drag and Drop Event Trigger and selected Integrations are appearing or not ")
-    @Order(2)
+    @Order(1)
     public void verfiyEventTriggerAndIntegrationSelection(){
+        createNewChecklist(); //Creates new checklist and Checklist designer will open
         $(elementLocators("PreviewChecklistButton")).should(appear);
         $(elementLocators("PublishChecklistTemplateButton")).should(exist);
 
@@ -54,7 +48,7 @@ public class VerifyEventTriggerFunctionalityTest extends BaseTest {
         //Drag n Drop Event Trigger to checklist flow
         actions().clickAndHold(sourceEventTrigger).moveToElement(targetChecklistFlow).build().perform();
         int ETXOffset = (targetXOffset-sourceETXOffset)+50;
-        int ETYOffset=  (sourceETYOffset-targetYOffset)-100;
+        int ETYOffset=  (sourceETYOffset-targetYOffset)-150;
         actions().moveByOffset(ETXOffset,ETYOffset).release().build().perform();
         $(elementLocators("EventTriggerEditor")).should(appear);
         SelenideElement Integration1 = $(elementLocators("IntegrationInputField")).should(exist).shouldHave(text("VAT Number Verification"));
@@ -64,8 +58,8 @@ public class VerifyEventTriggerFunctionalityTest extends BaseTest {
 
         //Drag and Drop another Event Trigger to checklist flow
         actions().clickAndHold(sourceEventTrigger).moveToElement(targetChecklistFlow).build().perform();
-        int ETXOffset2 = (targetXOffset-sourceETXOffset);
-        int ETYOffset2=  (sourceETYOffset-targetYOffset)-50;
+        int ETXOffset2 = (targetXOffset-sourceETXOffset)+60;
+        int ETYOffset2=  (sourceETYOffset-targetYOffset)-135;
         actions().moveByOffset(ETXOffset2,ETYOffset2).release().build().perform();
         $(elementLocators("EventTriggerEditor")).should(appear);
         $(elementLocators("IntegrationInputField")).should(exist).click();
@@ -97,6 +91,5 @@ public class VerifyEventTriggerFunctionalityTest extends BaseTest {
         $(elementLocators("TargetPostProcessing")).shouldHave(text("samplePDF.pdf")).$(elementLocators("PenIconToEditPDF")).click();
         $(elementLocators("ItemContainer")).shouldHave(text("EVENT DATA"));
         $(elementLocators("SecondListItem")).should(exist).click();
-        //$("ul.MuiList-root:nth-child(2)").shouldHave(CollectionCondition.texts("VAT Number Verification","IBAN Number Verification","SAP Purchase Order Lookup Example"));
     }
 }
