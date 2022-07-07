@@ -9,6 +9,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.logging.LogEntry;
@@ -23,11 +24,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
 import java.net.URL;
+import java.rmi.Remote;
 import java.time.Duration;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
@@ -50,8 +49,8 @@ public abstract class BaseTest {
     public static ThreadLocal<String> BROWSER_CONFIG = ThreadLocal.withInitial(() -> "local");
     public static ThreadLocal<String> SAUCE_SESSION_ID = new ThreadLocal<>();
     public static ThreadLocal<RemoteWebDriver> WEB_DRIVER = new ThreadLocal<>();
-    public static ThreadLocal<Boolean> ALREADY_LOGGED_IN = ThreadLocal.withInitial(() -> Boolean.FALSE);
-    public static ThreadLocal<UserType> CURRENT_USER = ThreadLocal.withInitial(() -> UserType.MAIN_TEST_USER);
+    public static ThreadLocal<Map<String, Boolean>> ALREADY_LOGGED_IN = ThreadLocal.withInitial(() -> new HashMap<>());
+    public static ThreadLocal<Map<String, UserType>> CURRENT_USER = ThreadLocal.withInitial(() -> new HashMap<>());
     public static ThreadLocal<Boolean> IGNORE_BEFORE_AND_AFTER_LIFECYCLE = ThreadLocal.withInitial(() -> Boolean.FALSE);
 
     public enum UserType {
@@ -158,10 +157,10 @@ public abstract class BaseTest {
         }
     }
 
-    private static Map<String,Object> getClipBoardSettingsMap(int settingValue) {
+    private static Map<String, Object> getClipBoardSettingsMap(int settingValue) {
         Map cbPreference = new LinkedHashMap() {{
             put("[*.],*", new LinkedHashMap() {{
-                put("last_modified",String.valueOf(System.currentTimeMillis()));
+                put("last_modified", String.valueOf(System.currentTimeMillis()));
                 put("setting", settingValue);
             }});
         }};
@@ -188,6 +187,7 @@ public abstract class BaseTest {
     // we close browser manually
     @AfterAll
     public static void tearDown() throws FileNotFoundException {
+        Optional<String> currentSessionId = getCurrentSessionId();
         if (IGNORE_BEFORE_AND_AFTER_LIFECYCLE.get()) {
             System.out.println(Thread.currentThread().getName() + " ignoring junit lifecycle tearDown");
             return;
@@ -207,19 +207,18 @@ public abstract class BaseTest {
                 File fileOut = new File(logFilePath);
                 //Instantiating the PrintStream class
                 PrintStream stream = new PrintStream(fileOut);
-                System.out.println("The browser logs will be saved in a file " +fileOut.getAbsolutePath());
+                System.out.println("The browser logs will be saved in a file " + fileOut.getAbsolutePath());
                 System.setOut(stream);
 
                 for (LogEntry entry : logEntries) {
                     System.out.println(new Date(entry.getTimestamp()) + " " + entry.getLevel() + " " + entry.getMessage());
 
                 }
-            }
-            catch (Throwable ignore){
+            } catch (Throwable ignore) {
                 System.out.println("unable to retrieve logs from web driver: " + ignore.getMessage());
             }
             closeWebDriver();
-            ALREADY_LOGGED_IN.set(Boolean.FALSE);
+            ALREADY_LOGGED_IN.get().put(currentSessionId.orElse(""), Boolean.FALSE);
         }
     }
 
@@ -236,25 +235,28 @@ public abstract class BaseTest {
     }
 
     public static void shouldLogin(UserType targetUser) {
-        if(Boolean.TRUE.equals(ALREADY_LOGGED_IN.get()) && targetUser != CURRENT_USER.get()) {
+        Optional<String> currentSessionId = getCurrentSessionId();
+        if (currentSessionId.isPresent() &&
+                (Boolean.TRUE.equals(ALREADY_LOGGED_IN.get().get(currentSessionId.get())) &&
+                targetUser != CURRENT_USER.get().get(currentSessionId.get()))) {
             //logging out Current User
             $(elementLocators("UserSettingsPopover")).click(); //Click on User Settings Popover
             $(elementLocators("LogoutButton")).should(exist).click(); //Click on Logout
             $(elementLocators("ConfirmLogOutButton")).should(appear).click(); //Logout Confirmation
             boolean presenceOfPickAnAccount = $(elementLocators("PickAnAccount")).is(exist);
             if (presenceOfPickAnAccount) {
-                $(byText(CURRENT_USER.get().userEmail())).shouldBe(visible).click();
+                $(byText(CURRENT_USER.get().get(currentSessionId.get()).userEmail())).shouldBe(visible).click();
                 Wait().until((input) -> WebDriverRunner.url().endsWith("logoutsession"));
             }
-            ALREADY_LOGGED_IN.set(Boolean.FALSE);
+            ALREADY_LOGGED_IN.get().put(currentSessionId.get(), Boolean.FALSE);
         }
-
-        if (Boolean.FALSE.equals(ALREADY_LOGGED_IN.get())) {
+        if (currentSessionId.isEmpty() ||
+                Boolean.FALSE.equals(ALREADY_LOGGED_IN.get().getOrDefault(currentSessionId.orElse(""), Boolean.FALSE))) {
             open("");
             setSauceJobId();
             Wait().until((input) -> WebDriverRunner.url().contains("oauth2/v2.0/authorize"));
             boolean presenceUseOtherAccount = $(elementLocators("UseAnotherAccount")).is(exist);
-            if(presenceUseOtherAccount) {
+            if (presenceUseOtherAccount) {
                 $(elementLocators("UseAnotherAccount")).shouldBe(visible).click();
             }
             $(By.name(elementLocators("EmailInputField"))).should(appear).setValue(targetUser.userEmail());
@@ -266,7 +268,7 @@ public abstract class BaseTest {
 
             //stay signed in?
             boolean presenceOfStaySignedIn = $(elementLocators("ButtonNext")).is(exist);
-            if(presenceOfStaySignedIn) {
+            if (presenceOfStaySignedIn) {
                 $(elementLocators("ButtonNext")).shouldBe(visible).click();
             }
 
@@ -279,10 +281,22 @@ public abstract class BaseTest {
 
             //  assertEquals(title(), "VisualOrbit App");
             assertTrue(title().contains("VisualOrbit"));
-            ALREADY_LOGGED_IN.set(Boolean.TRUE);
-            CURRENT_USER.set(targetUser);
+            currentSessionId = getCurrentSessionId();
+            if ( currentSessionId.isEmpty()) {
+                throw new RuntimeException("Session ID not present after opening browser and completed login process");
+            }
+            ALREADY_LOGGED_IN.get().put(currentSessionId.get(), Boolean.TRUE);
+            CURRENT_USER.get().put(currentSessionId.get(), targetUser);
         }
+    }
 
+    private static Optional<String> getCurrentSessionId() {
+        try {
+            String sessionID = ((RemoteWebDriver) getWebDriver()).getSessionId().toString();
+            return Optional.ofNullable(sessionID);
+        } catch (Throwable t) {
+            return Optional.empty();
+        }
     }
 
     // This method is commented as some of the ID's were changed
@@ -334,11 +348,9 @@ public abstract class BaseTest {
                 $$(elementLocators("ListOfOptions")).shouldHave(itemWithText("Add \"guitest\""));
                 $$(elementLocators("ListOfOptions")).findBy(text("Add \"guitest\"")).click();
             }
-
             $(elementLocators("LabelInputField")).shouldHave(text("guitest"));
         }
     }
-
 
     //Form Deletion with label: guitest
     public static void deleteForm() {
@@ -349,13 +361,11 @@ public abstract class BaseTest {
         $(elementLocators("CleanUpButton")).should(disappear, Duration.of(10, MINUTES));
     }
 
-
     protected static SelenideElement selectAndClear(String cssSelector) {
         return selectAndClear(By.cssSelector(cssSelector));
     }
 
     public static SelenideElement selectAndClear(By selector) {
-
         $(selector).should(exist).sendKeys(Keys.CONTROL, Keys.COMMAND, "a"); //Select the text (Ctrl + a)
         $(selector).sendKeys(Keys.DELETE); //Delete the selected text
         return $(selector).shouldBe(empty);
