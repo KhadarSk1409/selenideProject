@@ -34,11 +34,6 @@ public class CreateFormWithoutAdditionalOptionsTest extends BaseTest {
         $(elementLocators("FormTitleInputField")).should(exist, focused); //Title field
         $(elementLocators("DescriptionInputField")).should(exist); //Description field
         $(elementLocators("IdInputField")).should(exist); //ID field
-        $(elementLocators("Icon")).should(have(attribute("data-src", "/images/noun/visualOrbit.svg")));
-        $(elementLocators("IconSelection")).doubleClick();
-        $(elementLocators("IconsWindow")).should(appear, Duration.ofSeconds(5)); //Verify ICON PICKER pop up is available
-        $(elementLocators("VisualOrbitIcon")).should(exist).click();
-        $$(elementLocators("IconSelection")).contains(attribute("data-src", "/images/noun/noun_Business Man_919296.svg"));
         $(elementLocators("FormUrl")).should(exist); //Direct link to form Dashboard field
         $(elementLocators("AdditionalOptionsButton")).should(exist).shouldBe(disabled); //Additional options button
         $(elementLocators("CancelButton")).should(exist).shouldBe(enabled); //Cancel button should be enabled
@@ -80,7 +75,7 @@ public class CreateFormWithoutAdditionalOptionsTest extends BaseTest {
     public void verifyMandatoryFieldsInFormWizard() {
         $(elementLocators("CreateNewFormButton")).should(exist).click(); //Click on Create form button on Dashboard page
         $(elementLocators("DescriptionInputField")).should(exist).setValue("xyz1"); //Enter text in description field
-        $(elementLocators("TitleHelperText")).should(exist).shouldHave(text("Provide a title for the new form, you can always change this")); //Verify the Error shown below Title field - "Please insert the form title"
+        $(elementLocators("TitleHelperText")).should(exist).shouldHave(text("Please insert the form title")); //Verify the Error shown below Title field - "Please insert the form title"
         $(elementLocators("CreateFormButton")).shouldBe(disabled); //Create Form button should be disabled since Title field is blank
         selectAndClear(elementLocators("DescriptionInputField"));
         selectAndClear(elementLocators("FormTitleInputField")).setValue("This is the form Title"); //Enter value in Title field

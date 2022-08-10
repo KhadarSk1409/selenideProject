@@ -31,7 +31,6 @@ public class FormComparisonTest extends BaseTest {
     @Order(2)
     public void verifyTheFormComparison() {
 
-        $(elementLocators("FormIcon")).should(exist);
         $(elementLocators("FormComponents")).should(exist);
         $(elementLocators("FormComparisonGrid")).should(exist);
         $(elementLocators("SourceFormInputField")).shouldHave(value("Compare Test Forms 9.0"));

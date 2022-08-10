@@ -180,7 +180,6 @@ public class SelectTest extends BaseTest {
         //Allow Multiple:
         if (StringUtils.isNotEmpty(checkbox_allow_multiple)) {
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String checkBoxId = "#" + SelectTest.SelectIds.checkbox_multiple.name();
             $(checkBoxId).shouldBe(visible).click();
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased

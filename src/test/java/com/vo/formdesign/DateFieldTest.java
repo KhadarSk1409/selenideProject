@@ -86,7 +86,7 @@ public class DateFieldTest extends BaseTest {
                              String checkbox_disableFuture,
                              String checkbox_disablePast
 
-    ) throws ParseException {
+    ) throws ParseException, InterruptedException {
 
         String blockId = "#block-loc_en-GB-r_" + row + "-c_" + col;
 
@@ -172,7 +172,6 @@ public class DateFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(text_timeField_defaultValueTime)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             selectAndClear(By.id(DateFieldTest.DateFieldOptionsIds.date_defaultValueDate.name()))
                     .setValue(text_timeField_defaultValueTime).sendKeys(Keys.TAB);
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
@@ -184,7 +183,6 @@ public class DateFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_readOnly)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String checkBoxId = "#" + DateFieldTest.DateFieldOptionsIds.checkbox_readOnly.name();
             $(checkBoxId).shouldBe(visible).click();
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
@@ -192,7 +190,7 @@ public class DateFieldTest extends BaseTest {
 
             if (StringUtils.isEmpty(text_timeField_defaultValueTime)) {
                 $(elementLocators("DefaultDateHelperText")).should(exist).shouldHave(text("Must be set, if read only")); //Verify the error shown when read only checkbox is checked wihtout any value in default value field
-
+                Thread.sleep(2000);
                 //Uncheck the readonly checkbox
                 String initialVerNumStr2 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
                 $(checkBoxId).shouldBe(visible).click();
@@ -202,8 +200,8 @@ public class DateFieldTest extends BaseTest {
                 //Set the value in the Default value:
                 selectAndClear(By.id(DateFieldOptionsIds.date_defaultValueDate.name()))
                         .setValue("01/01/2020").sendKeys(Keys.TAB);
+                Thread.sleep(2000);
                 $(By.id(DateFieldOptionsIds.date_defaultValueDate.name())).shouldHave(value("01/01/2020"));
-
                 $(checkBoxId).shouldBe(visible).click();
                 $(checkBoxId + " input").shouldBe(selected);
             }
@@ -213,7 +211,6 @@ public class DateFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_disableFuture)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String checkBoxId = "#" + DateFieldTest.DateFieldOptionsIds.checkbox_disableFuture.name();
             $(checkBoxId).shouldBe(visible).click();
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
@@ -224,7 +221,6 @@ public class DateFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_disablePast)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String checkBoxId = "#" + DateFieldTest.DateFieldOptionsIds.checkbox_disablePast.name();
             $(checkBoxId).shouldBe(visible).click();
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
@@ -234,12 +230,10 @@ public class DateFieldTest extends BaseTest {
         //Enter Minimum Value
         if (StringUtils.isNotEmpty(date_minValue)) {
             String initialVerNumStr2 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             selectAndClear(By.id(DateFieldTest.DateFieldOptionsIds.date_minDate.name()))
                     .setValue(date_minValue).sendKeys(Keys.TAB);
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased
             $(elementLocators("MinDate")).shouldHave(value(date_minValue)).should(appear, Duration.ofSeconds(5));
-            //#panel2a-content div:nth-child(7) input
 
             //Verification of error
             //Convert min value string to date
@@ -272,7 +266,6 @@ public class DateFieldTest extends BaseTest {
         //Enter Maximum Value
         if (StringUtils.isNotEmpty(date_maxValue)) {
             String initialVerNumStr2 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             selectAndClear(By.id(DateFieldTest.DateFieldOptionsIds.date_maxDate.name()))
                     .setValue(date_maxValue).sendKeys(Keys.TAB);
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr2)); //Verify that version has increased

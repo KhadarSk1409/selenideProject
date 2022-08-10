@@ -38,7 +38,6 @@ public class FormComparisionExtensionTest extends BaseTest {
         SelenideElement extendedSourceBlock = $(elementLocators("SourceBlockR1C2"));
         SelenideElement secondTargetBlock = $(elementLocators("TargetBlockR3C2"));
 
-        $(elementLocators("FormIcon")).should(exist);
         $(elementLocators("FormComponents")).should(exist);
         $(elementLocators("FormComparisonGrid")).should(exist);
         $(elementLocators("SourceFormInputField")).shouldHave(value("Compare Test Forms 9.0"));

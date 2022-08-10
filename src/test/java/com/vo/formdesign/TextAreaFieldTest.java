@@ -11,6 +11,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 
 import java.io.IOException;
+import java.security.Key;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.stream.IntStream;
@@ -102,7 +103,7 @@ public class TextAreaFieldTest extends BaseTest {
 
         //Help
         if (StringUtils.isNotEmpty(textfield_help)) {
-            helpVerificationOnFormDesign(blockId, textfield_label);
+            helpVerificationOnFormDesign(blockId, textfield_help);
         }
 
         //required
@@ -114,7 +115,6 @@ public class TextAreaFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(textfield_defaultValue)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             selectAndClear(By.id(TextAreaFieldOptionsIds.textfield_defaultValue.name()))
                     .setValue(textfield_defaultValue).sendKeys(Keys.TAB);
             //TODO check appearance on designer
@@ -126,7 +126,6 @@ public class TextAreaFieldTest extends BaseTest {
         //only Alphabets
         if (StringUtils.isNotEmpty(property_onlyAlphabets)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String radioBtnId = "#" + TextAreaFieldTest.TextAreaFieldOptionsIds.prop_onlyAlphabets_onlyAlphabets.name();
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             $(radioBtnId).shouldBe(visible).click();
@@ -137,7 +136,6 @@ public class TextAreaFieldTest extends BaseTest {
         //Alphabets and numerics
         if (StringUtils.isNotEmpty(property_alphabetsAndNumerics)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String radioBtnId = "#" + TextAreaFieldTest.TextAreaFieldOptionsIds.prop_alphabetsAndNumerics_alphabetsAndNumerics.name();
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             $(radioBtnId).shouldBe(visible).click();
@@ -162,7 +160,6 @@ public class TextAreaFieldTest extends BaseTest {
             String sliderId = "#prop_minMaxLength_formcontrol";
             String minInputSel = sliderId + " .hidden_slider_inputs .minValue input";
             String initialVerNumStr1 = $("#formMinorversion").should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             executeJavaScript("document.querySelector('#prop_minMaxLength_formcontrol .hidden_slider_inputs').hidden = false;");
             selectAndClear(By.cssSelector(minInputSel)).setValue(minLength.toString()).sendKeys(Keys.TAB);
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased

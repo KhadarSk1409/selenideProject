@@ -77,6 +77,7 @@ public class RadioGroupTest extends BaseTest {
         }
         String initialVerNumStr = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
         $(blockId).shouldBe(visible).click();
+        $(elementLocators("TemplateList")).find(byText("Show More")).should(exist).click();
         $(elementLocators("RadioGroupFIeld")).should(appear).click();
         $(elementLocators("FormPropertiesCard")).should(appear);
         $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version has increased

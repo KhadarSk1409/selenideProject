@@ -112,7 +112,6 @@ public class EmailFieldTest extends BaseTest {
         //Default Value
         if (StringUtils.isNotEmpty(textfield_defaultValue)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(EmailFieldTest.EmailFielsIds.textfield_defaultValueEmail.name()))
                     .setValue(textfield_defaultValue).sendKeys(Keys.TAB);
@@ -149,7 +148,6 @@ public class EmailFieldTest extends BaseTest {
         //Allow Multiple:
         if (StringUtils.isNotEmpty(checkbox_allow_multiple)) {
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String checkBoxId = "#" + EmailFieldTest.EmailFielsIds.checkbox_multiple.name();
             $(checkBoxId).shouldBe(visible).click();
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased

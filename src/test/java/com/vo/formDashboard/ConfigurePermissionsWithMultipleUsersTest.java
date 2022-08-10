@@ -1,6 +1,5 @@
 package com.vo.formDashboard;
 
-import com.codeborne.selenide.Condition;
 import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
 
@@ -23,7 +22,7 @@ public class ConfigurePermissionsWithMultipleUsersTest extends BaseTest {
         open("/dashboard/PERMISSIONS_TEST");
         $(elementLocators("SubMenu")).should(exist).click(); //Click on SubMenu button on Form Dashboard
         $(elementLocators("EditFormPermissionsInSubMenu")).should(exist).shouldHave(text("Edit Form Permissions")).click(); //Edit permissions submenu
-        $(elementLocators("FormAuthorizationTitle")).should(exist);
+        $(elementLocators("LeftFormDashboardHeader")).should(appear);
         $(elementLocators("PlusIconToAddUser")).should(exist).click();
         $(elementLocators("AddCreateUserTitle")).should(appear);
         $(elementLocators("SelectUserInput")).should(exist).click();

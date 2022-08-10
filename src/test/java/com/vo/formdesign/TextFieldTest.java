@@ -114,7 +114,7 @@ public class TextFieldTest extends BaseTest {
 
         //Help
         if (StringUtils.isNotEmpty(textfield_help)) {
-            helpVerificationOnFormDesign(blockId, textfield_label);
+            helpVerificationOnFormDesign(blockId, textfield_help);
         }
 
         //required
@@ -124,9 +124,7 @@ public class TextFieldTest extends BaseTest {
 
         //Prefix
         if (StringUtils.isNotEmpty(textfield_prefix)) {
-            //   $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             selectAndClear(By.id(TextFieldOptionsIds.textfield_prefix.name()))
                     .setValue(textfield_prefix).sendKeys(Keys.TAB);
             //TODO check appearance on designer
@@ -136,9 +134,7 @@ public class TextFieldTest extends BaseTest {
 
         //Suffix
         if (StringUtils.isNotEmpty(textfield_suffix)) {
-            //     $(blockId).$(".fa-pen").closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             selectAndClear(By.id(TextFieldOptionsIds.textfield_suffix.name()))
                     .setValue(textfield_suffix).sendKeys(Keys.TAB);
             //TODO check appearance on designer
@@ -150,7 +146,6 @@ public class TextFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(textfield_defaultValue)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             selectAndClear(By.id(TextFieldOptionsIds.textfield_defaultValue.name()))
                     .setValue(textfield_defaultValue).sendKeys(Keys.TAB);
             //TODO check appearance on designer
@@ -162,7 +157,6 @@ public class TextFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(property_toggle_button_normal)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             $(By.id(TextFieldOptionsIds.prop_toggle_button_normal.name())).shouldBe(visible).click();
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(By.id(TextFieldOptionsIds.prop_toggle_button_normal.name())).shouldHave(attribute("aria-pressed", "true"));
@@ -172,30 +166,26 @@ public class TextFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(property_toggle_button_uppercase)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             $(By.id(TextFieldOptionsIds.prop_toggle_button_uppercase.name())).shouldBe(visible).click();
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(By.id(TextFieldOptionsIds.prop_toggle_button_uppercase.name())).shouldHave(attribute("aria-pressed", "true"));
+            $(By.id(TextFieldOptionsIds.prop_toggle_button_uppercase.name())).shouldHave(attribute("value", "uppercase"));
         }
 
         //chars small/lowercase
         if (StringUtils.isNotEmpty(property_toggle_button_lowercase)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             $(By.id(TextFieldOptionsIds.prop_toggle_button_lowercase.name())).shouldBe(visible).click();
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(By.id(TextFieldOptionsIds.prop_toggle_button_lowercase.name())).shouldHave(attribute("aria-pressed", "true"));
+            $(By.id(TextFieldOptionsIds.prop_toggle_button_lowercase.name())).shouldHave(attribute("value", "lowercase"));
         }
 
         //only Alphabets
         if (StringUtils.isNotEmpty(property_onlyAlphabets)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String radioBtnId = "#" + TextFieldOptionsIds.prop_onlyAlphabets_onlyAlphabets.name();
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             $(radioBtnId).shouldBe(visible).click();
-            //$(checkBoxId + " input").shouldHave(value("true"));
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
             $(radioBtnId + " input").shouldBe(selected);
         }
@@ -203,7 +193,6 @@ public class TextFieldTest extends BaseTest {
         //Alphabets and numerics
         if (StringUtils.isNotEmpty(property_alphabetsAndNumerics)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String radioBtnId = "#" + TextFieldOptionsIds.prop_alphabetsAndNumerics_alphabetsAndNumerics.name();
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             $(radioBtnId).shouldBe(visible).click();
@@ -214,11 +203,9 @@ public class TextFieldTest extends BaseTest {
         //All chars
         if (StringUtils.isNotEmpty(property_allCharacters)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String radioBtnId = "#" + TextFieldOptionsIds.prop_allCharacters_allCharacters.name();
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             $(radioBtnId).shouldBe(visible).click();
-            //$(checkBoxId + " input").shouldHave(value("true"));
             $(radioBtnId + " input").shouldBe(selected);
             $(elementLocators("InitialVersion")).shouldHave(text(initialVerNumStr1)); //Verify that version has increased
         }
@@ -227,7 +214,6 @@ public class TextFieldTest extends BaseTest {
             String sliderId = "#prop_minMaxLength_formcontrol";
             String minInputSel = sliderId + " .hidden_slider_inputs .minValue input";
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             executeJavaScript("document.querySelector('#prop_minMaxLength_formcontrol .hidden_slider_inputs').hidden = false;");
             selectAndClear(By.cssSelector(minInputSel)).setValue(minLength.toString()).sendKeys(Keys.TAB);
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
@@ -242,7 +228,6 @@ public class TextFieldTest extends BaseTest {
             String sliderId = "#prop_minMaxLength_formcontrol";
             String minInputSel = sliderId + " .hidden_slider_inputs .maxValue input";
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             executeJavaScript("document.querySelector('#prop_minMaxLength_formcontrol .hidden_slider_inputs').hidden = false;");
 
             selectAndClear(By.cssSelector(minInputSel)).setValue(maxLength.toString()).sendKeys(Keys.TAB);

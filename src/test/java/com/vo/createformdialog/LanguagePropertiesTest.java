@@ -9,6 +9,7 @@ import java.util.List;
 import static com.codeborne.selenide.CollectionCondition.size;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byAttribute;
+import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static reusables.ReuseActions.*;
@@ -29,7 +30,6 @@ public class LanguagePropertiesTest extends BaseTest {
         String formDesc = formTitleDesc.getRight();
 
         $(elementLocators("AdditionalOptionsButton")).shouldBe(enabled).click(); //Click on Additional Options
-
         SelenideElement lC = $(elementLocators("LanguagePropertiesContainer")).should(appear);
         lC.$(elementLocators("AddLanguageButton")).should(exist); //+ button in Add Language - confirmation that user has navigated
 
@@ -40,51 +40,36 @@ public class LanguagePropertiesTest extends BaseTest {
         $(elementLocators("NextButton")).shouldBe(enabled); //Next button
 
         //Define the table rows
-        SelenideElement firstRow = lC.$("tbody tr:nth-of-type(1)");
-        List<SelenideElement> cellsInFirstRow = firstRow.$$("td"); //Cells in the first row
-        cellsInFirstRow.get(0).shouldHave(text("English - Great Britain"));
-        cellsInFirstRow.get(1).shouldHave(text(formTitle)); //Form Title should have the same text as Title in Create Form
-        cellsInFirstRow.get(2).shouldHave(text(formDesc)); //Form Description text should be same as Description in Create form
-        cellsInFirstRow.get(3).shouldHave(value("true")); //Default button is checked for first row - English - German
+        SelenideElement firstRow = lC.$(elementLocators("FirstRow")).should(exist);
+        firstRow.$(elementLocators("LanguageField")).shouldHave(text("English - Great Britain")); // Row for English - Great Britain
+        firstRow.$(elementLocators("TitleField")).shouldHave(text(formTitle)); //Form Title should have the same text as Title in Create Form
+        firstRow.$(elementLocators("DescriptionField")).shouldHave(text(formDesc)); //Form Description text should be same as Description in Create form
+        firstRow.$(elementLocators("DefaultField")).shouldHave(attribute("data-testid","CheckIcon")); //Default button is checked for first row - English - German
 
-        SelenideElement secondRow = lC.$("tbody tr:nth-of-type(2)");
-        List<SelenideElement> cellsInSecondRow = secondRow.$$("td"); //Cells in the second row
-        cellsInSecondRow.get(0).shouldHave(text("German - Germany"));
-        cellsInSecondRow.get(1).shouldHave(text(formTitle)); //Form Title should have the same text as Title in Create Form
-        cellsInSecondRow.get(2).shouldHave(text(formDesc)); //Form Description text should be same as Description in Create form
-        cellsInSecondRow.get(3).shouldHave(value("false")); //Default button is unchecked for secondary language
+        SelenideElement secondRow = lC.$(elementLocators("SecondRow"));
+        secondRow.$(elementLocators("LanguageField")).shouldHave(text("German - Germany")); //Row for German - Germany
+        secondRow.$(elementLocators("TitleField")).shouldHave(text(formTitle)); //Form Title should have the same text as Title in Create Form
+        secondRow.$(elementLocators("DescriptionField")).shouldHave(text(formDesc)); //Form Description text should be same as Description in Create form
+        secondRow.$(elementLocators("DefaultField")).shouldHave(attribute("data-testid","CloseIcon")); //Default button is unchecked for secondary language
     }
-
 
     @Test
     @DisplayName("Verify Delete Language in Additional Language screen")
     @Order(2)
     public void verifyDeleteLanguage() {
         SelenideElement lC = $(elementLocators("LanguagePropertiesContainer")).shouldBe(visible);
-        SelenideElement secondRow = lC.$("tbody tr:nth-of-type(2)"); //Row for German - German
+        SelenideElement secondRow = lC.$(elementLocators("SecondRow")); //Row for German - German
 
-        secondRow.$(byAttribute("title", "Edit")).should(exist).click(); //Click on edit button for German - German
-        secondRow = lC.$("tbody tr:nth-of-type(2)[mode=\"update\"]").should(appear);
-        secondRow.$(byAttribute("title", "Cancel")).should(exist).click(); //Cancel the Edit
-        secondRow = lC.$("tbody tr:nth-of-type(2)[mode=\"update\"]").should(disappear);
-        secondRow = lC.$("tbody tr:nth-of-type(2)").should(appear);
-        secondRow.$(byAttribute("title", "Edit")).should(appear); //User is back on the previous page
-        secondRow.$("button [iconname=\"far fa-trash-alt\"]").should(appear).click(); //Delete button for German - German
-
-        secondRow = lC.$("tbody tr:nth-of-type(2)[mode=\"delete\"]").should(appear);
-        secondRow.shouldHave(text("Are you sure you want to delete this row?")); //Confirmation shown for deletion of secondary langauge
-
-        secondRow.$("button:nth-of-type(2)").should(exist).click(); //Cancel is the second button, cancel the Deletion
-        secondRow = lC.$("tbody tr:nth-of-type(2)[mode=\"delete\"]").should(disappear);
-        secondRow = lC.$("tbody tr:nth-of-type(2)").should(appear);
-        secondRow.$(byAttribute("title", "Edit")).should(exist); //User is back on the previous page
-        secondRow.$("button [iconname=\"far fa-trash-alt\"]").should(appear).click(); //Delete button for German - German
-        secondRow = lC.$("tbody tr:nth-of-type(2)[mode=\"delete\"]").should(appear);
-        secondRow.shouldHave(text("Are you sure you want to delete this row?")); //Confirmation shown for deletion of secondary langauge
-        secondRow.$(byAttribute("title", "Save")).click(); //Confirm the Deletion
+        secondRow.$(elementLocators("EditButton")).should(exist).click(); //Click on edit button for German - German
+        secondRow.$(elementLocators("SaveIcon")).should(appear);
+        $(byText("Language properties")).should(exist).hover();
+        secondRow.$(elementLocators("CancelIcon")).should(exist).click(); //Cancel the Edit
+        secondRow.$(elementLocators("SaveIcon")).should(disappear);
+        secondRow.should(appear);
+        secondRow.$(elementLocators("EditButton")).should(appear); //User is back on the previous page
+        secondRow.$(elementLocators("ButtonDelete")).should(appear).click(); //Delete button for German - German
         secondRow.should(disappear);
-        lC.$$("tbody tr").shouldHave(size(1));
-
+        lC.$$(elementLocators("TableRows")).shouldHave(size(1));
     }
 
     @Test
@@ -95,30 +80,22 @@ public class LanguagePropertiesTest extends BaseTest {
         lC.$(elementLocators("AddLanguageButton")).shouldBe(visible, enabled).click(); //Click on + button
 
         //Define the table rows
-        SelenideElement secondRow = lC.$("tbody tr:nth-of-type(2)[mode=\"add\"]").should(appear);
-        List<SelenideElement> cellsInSecondRow = secondRow.$$("td"); //Cells in the first row
-        cellsInSecondRow.get(3).should(exist).shouldNotBe(checked); //The checkbox for newly added Germany-Germany
+        SelenideElement secondRow = lC.$(elementLocators("SecondRow")).should(appear);
+        SelenideElement firstRow = lC.$(elementLocators("FirstRow")).should(exist);
 
-        cellsInSecondRow.get(0).click(); //Click on Language Dropdown
-        $("#menu- li").should(appear).shouldHave(text("German - Germany")).click();
-        cellsInSecondRow.get(1).$(byAttribute("placeholder", "Form Title")).should(exist); //Column with Form Title should be enabled
-        cellsInSecondRow.get(2).$(byAttribute("placeholder", "Form Description")).should(exist); //Column with Form Title should be enabled
-        cellsInSecondRow.get(4).shouldBe(enabled); //Save button/Check is enabled
-        cellsInSecondRow.get(3).shouldNotBe(checked); //Default checkbox is originally unchecked
-        cellsInSecondRow.get(3).click(); //Check the checkbox for setting as Default language
-        // Note: After selecting German as Default language and saving, only English - Great Britain is shown-> ??
-        cellsInSecondRow.get(4).shouldBe(enabled).click(); //Click on Save tick
-
-        SelenideElement firstRow = lC.$("tbody tr:nth-of-type(1)");
-        List<SelenideElement> cellsInFirstRow = firstRow.$$("td"); //Cells in the first row
-        cellsInFirstRow.get(0).click(); //Click on screen
-        cellsInFirstRow.get(4).$(byAttribute("title", "Edit")).should(exist);
-        cellsInFirstRow.get(4).$(byAttribute("title", "Edit")).click(); //Click on the Edit button
-        cellsInFirstRow.get(1).shouldBe(enabled); //Form Title is now enabled
-        cellsInFirstRow.get(1).shouldBe(enabled); //Form Description is now enabled
-        $(elementLocators("CancelButton")).click(); //Click on Cancel button
-        $(elementLocators("CancelConfirmationDialog")).should(exist); //Confirmation for Cancellation is shown
-        $(elementLocators("ConfirmCancel")).should(exist).click(); //Click on Confirm button
+        secondRow.$(byAttribute("data-field", "title")).should(exist); //Column with Form Title should be enabled
+        secondRow.$(byAttribute("data-field", "description")).should(exist); //Column with Form Title should be enabled
+        secondRow.$(elementLocators("DefaultField"))
+                .shouldHave(attribute("data-testid","CloseIcon")); //Added language should not be marked as Default
+        secondRow.$(elementLocators("EditButton")).should(exist).click();
+        secondRow.$(elementLocators("SaveIcon")).should(appear);
+        secondRow.$(elementLocators("EmptyCheckBox")).click(); //checkbox should be checked to set German - Germany as Default
+        secondRow.$(elementLocators("SaveIcon")).should(exist).click();
+        secondRow.$(elementLocators("SaveIcon")).should(disappear);
+        secondRow.$(elementLocators("DefaultField"))
+                .shouldHave(attribute("data-testid","CheckIcon")); //Now German language in second row should be marked as default
+        firstRow.$(elementLocators("DefaultField"))
+                .shouldHave(attribute("data-testid","CloseIcon")); // And English in the first row should have 'X' icon
 
     }
 }

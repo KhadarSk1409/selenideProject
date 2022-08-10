@@ -61,7 +61,6 @@ public class ReuseActionsFormCreation {
                 $("#" + formField.fieldId).should(appear).click();
                 $(blockId1).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
                 $(elementLocators("ElementProperties")).should(appear);
-                $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
                 //options for text field should exist:
                 Arrays.asList(NumberFieldTest.NumberFieldOptionsIds.values()).forEach(NumberFieldId -> $(By.id(NumberFieldId.name())).shouldBe(visible));
                 $(elementLocators("DeleteBlockBtn")).shouldBe(visible).click();
@@ -72,8 +71,6 @@ public class ReuseActionsFormCreation {
                 $("#" + formField.fieldId).should(appear).click(); //li-template-CurrencyField-05
                 $(blockId1).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
                 $(elementLocators("ElementProperties")).should(appear);
-
-                $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
 
                 //options for Currency field should exist:
                 Arrays.asList(CurrencyFieldTest.CurrencyFieldOptionsIds.values()).forEach(CurrencyFieldOptionsIds -> $(By.id(CurrencyFieldOptionsIds.name())).shouldBe(visible));
@@ -87,7 +84,6 @@ public class ReuseActionsFormCreation {
                 $(blockId1).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
                 $(elementLocators("ElementProperties")).should(appear);
 
-                $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
                 //options for Email field should exist:
                 Arrays.asList(EmailFieldTest.EmailFielsIds.values()).forEach(textFieldId -> $(By.id(textFieldId.name())).shouldBe(visible));
                 $(elementLocators("DeleteBlockBtn")).shouldBe(visible).click();
@@ -98,8 +94,6 @@ public class ReuseActionsFormCreation {
                 $("#" + formField.fieldId).should(appear).click(); //li-template-DateField-04
                 $(blockId1).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
                 $(elementLocators("ElementProperties")).should(appear);
-
-                $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
 
                 //options for Date field should exist:
                 Arrays.asList(DateFieldTest.DateFieldOptionsIds.values()).forEach(textFieldId -> $(By.id(textFieldId.name())).shouldBe(visible));
@@ -112,8 +106,6 @@ public class ReuseActionsFormCreation {
                 $(blockId1).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
                 $(elementLocators("ElementProperties")).should(appear);
                 $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
-
-                $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
 
                 //options for Checkbox Group field should exist:
                 Arrays.asList(CheckboxgroupTest.CheckboxgroupIds.values()).forEach(textFieldId -> $(By.id(textFieldId.name())).shouldBe(visible));
@@ -133,8 +125,6 @@ public class ReuseActionsFormCreation {
                 //Verify that default value in Label field is "File Upload Field"
                 $(By.id(FileUploadFieldTest.FileUploadFieldIds.textfield_label.name())).shouldHave(text("File Upload Field"));
 
-                $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
-
                 //options for File Upload field should exist:
                 Arrays.asList(FileUploadFieldTest.FileUploadFieldIds.values()).forEach(fileUploadFieldId -> $(By.id(fileUploadFieldId.name())).shouldBe(visible));
 
@@ -147,8 +137,6 @@ public class ReuseActionsFormCreation {
                 $(blockId1).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
                 $(elementLocators("ElementProperties")).should(appear);
                 $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
-
-                $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
 
                 //options for Formatted Text field should exist:
                 Arrays.asList(FormattedTextTest.FormattedTextIds.values()).forEach(textFieldId -> $(By.id(textFieldId.name())).shouldBe(visible));
@@ -176,9 +164,7 @@ public class ReuseActionsFormCreation {
                 $("#" + formField.fieldId).should(appear).click();
                 $(blockId1).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
                 $(elementLocators("ElementProperties")).should(appear);
-
-                $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
-
+                
                 //options for Radio Group field should exist:
                 Arrays.asList(RadioGroupTest.RadiogroupIds.values()).forEach(textFieldId -> $(By.id(textFieldId.name())).shouldBe(visible));
 
@@ -194,8 +180,6 @@ public class ReuseActionsFormCreation {
                 $(blockId1).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
                 $(elementLocators("ElementProperties")).should(appear);
 
-                $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
-
                 //options for Select field should exist:
                 Arrays.asList(SelectTest.SelectIds.values()).forEach(textFieldId -> $(By.id(textFieldId.name())).shouldBe(visible));
 
@@ -207,7 +191,6 @@ public class ReuseActionsFormCreation {
                 $("#" + formField.fieldId).should(exist).click();
                 $(blockId1).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
                 $(elementLocators("ElementProperties")).should(exist);
-                $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
 
                 //options for text area field should exist:
                 Arrays.asList(TextAreaFieldTest.TextAreaFieldOptionsIds.values()).forEach(textAreaFieldId -> $(By.id(textAreaFieldId.name())).shouldBe(visible));
@@ -227,8 +210,6 @@ public class ReuseActionsFormCreation {
                 $(blockId1).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
                 $(elementLocators("ElementProperties")).should(appear);
 
-                $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
-
                 //options for text field should exist:
                 Arrays.asList(TextFieldTest.TextFieldOptionsIds.values()).forEach(textFieldId -> $(By.id(textFieldId.name())).shouldBe(visible));
 
@@ -241,7 +222,6 @@ public class ReuseActionsFormCreation {
                 $(blockId1).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
                 $(elementLocators("ElementProperties")).should(appear);
                 $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version is increased
-                $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
 
                 //options for time field should exist:
                 Arrays.asList(TimeFieldTest.TimeFieldOptionsIds.values()).forEach(textFieldId -> $(By.id(textFieldId.name())).shouldBe(visible));
@@ -281,6 +261,7 @@ public class ReuseActionsFormCreation {
                 .setValue(str_value).sendKeys(Keys.TAB);
         $(StrBlockId).shouldHave(text(str_value));
         $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
+        $(StrBlockId).shouldHave(text(str_value));
     }
 
     //Required
@@ -297,7 +278,6 @@ public class ReuseActionsFormCreation {
     //Read only
     public static void readOnlyCheckboxOnFormDesign(String StrBlockId) {
         $(StrBlockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
-        $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
         String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
         String checkBoxId = "#" + DesignFormFieldIds.checkbox_readOnly.name();
         $(checkBoxId).shouldBe(visible).click();

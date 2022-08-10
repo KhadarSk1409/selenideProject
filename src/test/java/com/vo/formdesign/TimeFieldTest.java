@@ -123,7 +123,6 @@ public class TimeFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(radioBtn_hrMinSec)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String radioBtnId = "#" + TimeFieldTest.TimeFieldOptionsIds.prop_hourMinuteSecond_hourMinuteSecond.name();
             $(radioBtnId).shouldBe(visible).click();
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
@@ -133,7 +132,6 @@ public class TimeFieldTest extends BaseTest {
         //Hour Minute radioBtn
         if (StringUtils.isNotEmpty(radio_hrMin)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String radioBtnId = "#" + TimeFieldTest.TimeFieldOptionsIds.prop_hourMinute_hourMinute.name();
             $(radioBtnId).shouldBe(visible).click();
             $(radioBtnId + " input").shouldBe(selected);
@@ -143,7 +141,6 @@ public class TimeFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(radio_minSec)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String radioBtnId = "#" + TimeFieldTest.TimeFieldOptionsIds.prop_minuteSecond_minuteSecond.name();
             $(radioBtnId).shouldBe(visible).click();
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
@@ -155,7 +152,6 @@ public class TimeFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(radio_hour)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String radioBtnId = "#" + TimeFieldTest.TimeFieldOptionsIds.prop_hour_hour.name();
             $(radioBtnId).shouldBe(visible).click();
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
@@ -166,7 +162,6 @@ public class TimeFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(time_defaultValueTime)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             selectAndClear(By.id(TimeFieldTest.TimeFieldOptionsIds.time_defaultValueTime.name()))
                     .setValue(time_defaultValueTime).sendKeys(Keys.TAB);
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
@@ -179,7 +174,6 @@ public class TimeFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_readOnly)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String checkBoxId = "#" + TimeFieldTest.TimeFieldOptionsIds.checkbox_readOnly.name();
             $(checkBoxId).shouldBe(visible).click();
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
@@ -192,10 +186,11 @@ public class TimeFieldTest extends BaseTest {
                 $(elementLocators("DefaultTime")).shouldHave(value(time_defaultValueTime));
             } else {
                 $(elementLocators("DefaultTimeHelperText")).should(exist).shouldHave(text("Must be set, if read only")); //Verify the error shown when read only checkbox is checked wihtout any value in default value field
-
+                Thread.sleep(2000);
                 //Set some value in Default value
                 selectAndClear(By.id(TimeFieldTest.TimeFieldOptionsIds.time_defaultValueTime.name()))
                         .setValue("01:00").sendKeys(Keys.TAB);
+                Thread.sleep(2000);
                 $(elementLocators("DefaultTime")).shouldHave(value("01:00"));
             }
             $(checkBoxId).shouldBe(visible).click();
@@ -206,7 +201,6 @@ public class TimeFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_24hr)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
             String initialVerNumStr1 =$(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String checkBoxId = "#" + TimeFieldTest.TimeFieldOptionsIds.checkbox_ampm.name();
             $(checkBoxId).shouldBe(visible).click();
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
@@ -281,7 +275,7 @@ public class TimeFieldTest extends BaseTest {
         //Default value
         if (StringUtils.isNotEmpty(time_defaultValueTime)) {
             System.out.println("Verifying default value: " + time_defaultValueTime);
-            $(inputField).shouldHave(value(time_defaultValueTime));
+             $(inputField).shouldHave(value(time_defaultValueTime));
         }
 
 

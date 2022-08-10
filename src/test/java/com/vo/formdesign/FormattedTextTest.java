@@ -53,7 +53,7 @@ public class FormattedTextTest extends BaseTest {
                              String fraction_edit_value
 
 
-    ) {
+    ) throws InterruptedException {
 
         String blockId = "#block-loc_en-GB-r_" + row + "-c_" + col;
         //create new block, if not exist
@@ -103,7 +103,6 @@ public class FormattedTextTest extends BaseTest {
         //Read only checkbox
         if (StringUtils.isNotEmpty(checkbox_readonly)) {
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String checkBoxId = "#" + FormattedTextTest.FormattedTextIds.checkbox_readOnly.name();
             $(checkBoxId).shouldBe(visible).click();
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
@@ -113,18 +112,16 @@ public class FormattedTextTest extends BaseTest {
                 //When you don't have any value in Default value edit box and click on Read only checkbox it should show error
                 $(elementLocators("FormattedTextErrorHelperText")).should(exist).shouldHave(text("Must be set, if read only"));
             }
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
-
         }
 
         //Value edit
         if (StringUtils.isNotEmpty(edit_values)) {
             String checkBoxId = "#richTextField_areaValueHtml .fa-pen";
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             $(checkBoxId).shouldBe(visible).click();
             $(elementLocators("TextEditor")).should(appear); //Text Editor should appear
 
             $(elementLocators("TextInputField")).should(exist).setValue(edit_values); //Set the value
+            Thread.sleep(2000);
             $(elementLocators("CloseTextEditorBtn")).should(exist).click(); //Close button
 
             //Verify that Text Area Value has text fraction
