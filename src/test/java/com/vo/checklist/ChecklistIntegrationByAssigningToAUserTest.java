@@ -52,12 +52,10 @@ public class ChecklistIntegrationByAssigningToAUserTest extends BaseTest {
         $(byText(elementLocators("ChooseFromLibrary"))).click();
         $(elementLocators("FormsGridContainer")).should(appear); //Forms available in Library will appear
         $(elementLocators("FormsAvailableInTable")).should(exist).getSize();
-        String selectedFormName1 = $(elementLocators("FirstFormNameInTheTable")).getText();
-        String formDataID1 = $(elementLocators("FormsAvailableInTable")).should(exist).shouldHave(text("IbanTestForm")).getAttribute("data-id");
-        $(elementLocators("FormsAvailableInTable")).shouldHave(text("IbanTestForm")).click(); //Select the first form available in the list
-        $(elementLocators("TargetListInChecklistFlow")).shouldHave(text(selectedFormName1)); //Verify whether the selected form is available in the Checklist flow or not
-        assert formDataID1 != null;
-        $(elementLocators("TargetListInChecklistFlow")).find(byAttribute("id", formDataID1)).should(exist);
+        String formToBeSelected = "IbanTestForm";
+        $(elementLocators("SearchInputField")).should(exist).setValue(formToBeSelected);
+        $(elementLocators("FormsAvailableInTable")).find(byAttribute("data-form-name",formToBeSelected)).should(appear).click();
+        $(elementLocators("TargetListInChecklistFlow")).shouldHave(text(formToBeSelected)); //Verify whether the selected form is available in the Checklist flow or not
 
         //Drag n Drop Event Trigger to checklist flow
         actions().clickAndHold(sourceEventTrigger).moveToElement(targetChecklistFlow).build().perform();
@@ -84,7 +82,6 @@ public class ChecklistIntegrationByAssigningToAUserTest extends BaseTest {
         $(elementLocators("AttachFileIcon")).should(appear);
         $(elementLocators("FileUploadedMessage")).should(appear);
         $(elementLocators("SubmitButton")).click(); //Click on Submit Button
-        // $(elementLocators("CancelBtn")).should(exist).click(); //Click on Cancel Button
 
         SelenideElement Iban = $("#IBAN");
         SelenideElement Bic = $("#BIC");
@@ -113,9 +110,9 @@ public class ChecklistIntegrationByAssigningToAUserTest extends BaseTest {
         $(elementLocators("StartChecklistButton")).should(appear).shouldBe(enabled).click();
 
         $(byText("CheckList")).should(appear);
-        $(elementLocators("ChecklistComponentList")).should(exist).shouldHave(text(selectedFormName1)).click();
-        $(elementLocators("ChecklistData")).should(exist).shouldHave(text(selectedFormName1));
-        $(elementLocators("ChecklistComponentList")).should(exist).shouldHave(text(selectedFormName1)).$(byText("Assign to")).click();
+        $(elementLocators("ChecklistComponentList")).should(exist).shouldHave(text(formToBeSelected)).click();
+        $(elementLocators("ChecklistData")).should(exist).shouldHave(text(formToBeSelected));
+        $(elementLocators("ChecklistComponentList")).should(exist).shouldHave(text(formToBeSelected)).$(byText("Assign to")).click();
         $(elementLocators("UserSelectionInput")).should(appear);
         $(elementLocators("DropDownButton")).should(exist).click();
         $(elementLocators("Popover")).should(appear, Duration.ofSeconds(30));
@@ -135,7 +132,7 @@ public class ChecklistIntegrationByAssigningToAUserTest extends BaseTest {
         Selenide.switchTo().window(1);
         open("https://visualorbit.fireo.net");
         $(elementLocators("TasksCardInDashboard")).should(exist);
-        $(elementLocators("TasksCardInDashboard")).find(byAttribute("data-form-name", selectedFormName1 )).should(exist).
+        $(elementLocators("TasksCardInDashboard")).find(byAttribute("data-form-name", formToBeSelected )).should(exist).
                 $(elementLocators("FillForm")).click();
         $(elementLocators("DataFillForm")).should(appear);
         String validIban = "DE88 5005 0000 0001 0002 31";
@@ -149,7 +146,8 @@ public class ChecklistIntegrationByAssigningToAUserTest extends BaseTest {
         Thread.sleep(2000);
         $(elementLocators("SubmitDataButton")).should(exist).click();
         $(elementLocators("ConfirmButton")).should(appear).click();
-        $(elementLocators("TasksCardInDashboard")).find(byAttribute("data-form-name", selectedFormName1 )).should(disappear);
+         $(elementLocators("TasksCardInDashboard")).find(byAttribute("data-form-name", formToBeSelected )).should(disappear);
+        closeWindow();
 
         //Switch to default tab and verify the form state and do start workflow
         Selenide.switchTo().window(0);
