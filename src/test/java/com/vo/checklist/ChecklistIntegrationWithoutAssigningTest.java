@@ -38,8 +38,12 @@ public class ChecklistIntegrationWithoutAssigningTest extends BaseTest {
         $(elementLocators("FormsAvailableInTable")).should(exist).getSize();
         String formToBeSelected = "IbanTestForm";
         $(elementLocators("SearchInputField")).should(exist).setValue(formToBeSelected);
+        String formDataID1 = $(elementLocators("FormsAvailableInTable")).find(byAttribute("data-form-name",formToBeSelected))
+                .should(exist).getAttribute("data-form-uuid");
         $(elementLocators("FormsAvailableInTable")).find(byAttribute("data-form-name",formToBeSelected)).should(appear).click();
         $(elementLocators("TargetListInChecklistFlow")).shouldHave(text(formToBeSelected)); //Verify whether the selected form is available in the Checklist flow or not
+        assert formDataID1 != null;
+        $(elementLocators("TargetListInChecklistFlow")).find(byAttribute("id",formDataID1)).should(exist);
 
         //Drag n Drop Event Trigger to checklist flow
         actions().clickAndHold(sourceEventTrigger).moveToElement(targetChecklistFlow).build().perform();

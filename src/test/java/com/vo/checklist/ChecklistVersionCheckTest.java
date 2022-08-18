@@ -83,8 +83,9 @@ public class ChecklistVersionCheckTest extends BaseTest {
         $(elementLocators("CloseChecklistButton")).should(exist).click();
         $(elementLocators("GridContainer")).should(exist);
         Thread.sleep(3000);
+        $(elementLocators("TaskStatus/Overview")).should(appear).shouldHave(text("0/2"));
         String versionID2 = $(elementLocators("FirstRowInTheGridContainer")).should(appear).getAttribute("data-id");
-        $(elementLocators("TaskStatus/Overview")).should(appear,Duration.ofSeconds(3)).shouldHave(text("0/2"));
+        $(elementLocators("TaskStatus/Overview")).should(appear).shouldHave(text("0/2"));
         assert versionID2 != null;
         $(elementLocators("GridContainer")).find(byAttribute("data-id", versionID2))
                 .$(elementLocators("ShowChecklistButton")).should(exist).click();
