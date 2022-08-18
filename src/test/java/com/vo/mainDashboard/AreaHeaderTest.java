@@ -77,7 +77,7 @@ public class AreaHeaderTest extends BaseTest {
         $(elementLocators("UsageOverview")).should(exist); //Data card is displayed
         String expectedUrl = url(); //Get the url of the browser
         $(elementLocators("FormLinkCopyIcon")).should(exist).click(); //Click on copy url button in the Data card
-        $("#notistack-snackbar").should(appear).shouldHave(text("Copied"));
+        $(elementLocators("ConfirmationText")).should(appear).shouldHave(text("Copied"));
         String clipBoardUrl = Selenide.clipboard().getText();
         assertEquals(clipBoardUrl, expectedUrl, "Expected: " + expectedUrl + " Received: " + clipBoardUrl);
     }
@@ -104,7 +104,7 @@ public class AreaHeaderTest extends BaseTest {
         $(elementLocators("CloseEditFormButton")).shouldBe(enabled).click(); //Click on x on Edit Form design
         $(elementLocators("SubMenu")).should(exist, Duration.ofSeconds(10)).click();
         $(elementLocators("EditFormDesignInSubMenu")).should(exist).click(); //Edit Form Design
-        $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr)); //Verify that version has increased
+        $(elementLocators("InitialVersion")).shouldHave(text(initialVerNumStr)); //Verify that version has increased
         $(elementLocators("CloseEditFormButton")).shouldBe(enabled).click(); //Click on x on Edit Form design
         $(elementLocators("InitialVersion")).shouldNot(exist);
         $(elementLocators("CloseEditFormButton")).shouldNot(exist);

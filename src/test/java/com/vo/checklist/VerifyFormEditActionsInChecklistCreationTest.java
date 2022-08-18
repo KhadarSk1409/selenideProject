@@ -65,7 +65,7 @@ public class VerifyFormEditActionsInChecklistCreationTest extends BaseTest {
         $(elementLocators("TextFieldLabel")).setValue(" Added");
         $(elementLocators("PublishButton")).should(exist).click();
         $(elementLocators("ConfirmPublish")).should(exist).click(); //Click on Confirm button
-        $(elementLocators("ConfirmationMessage")).should(appear).shouldHave(Condition.text("The form was published successfully"), Duration.ofSeconds(5));
+        $(elementLocators("ConfirmationMessage")).should(appear).shouldHave(Condition.text("The form was published successfully"));
 
         //Switch back to Checklist window to verify whether the form state is changed to published or not
         switchTo().window(0);
@@ -87,7 +87,7 @@ public class VerifyFormEditActionsInChecklistCreationTest extends BaseTest {
         $(elementLocators("TextFieldLabel")).setValue(" 2 Added");
         $(elementLocators("PublishButton")).should(exist).click();
         $(elementLocators("ConfirmPublish")).should(exist).click(); //Click on Confirm button
-        $(elementLocators("ConfirmationMessage")).should(appear).shouldHave(Condition.text("The form was published successfully"), Duration.ofSeconds(5));
+        $(elementLocators("ConfirmationMessage")).should(appear).shouldHave(Condition.text("The form was published successfully"));
         closeWindow();
 
         //Switch back to Checklist window to verify whether the second field added is reflecting or not in the designer form
@@ -128,7 +128,7 @@ public class VerifyFormEditActionsInChecklistCreationTest extends BaseTest {
         $(elementLocators("TextFieldLabel")).setValue(" Added");
         $(elementLocators("PublishButton")).should(exist).click();
         $(elementLocators("ConfirmPublish")).should(exist).click(); //Click on Confirm button
-        $(elementLocators("ConfirmationMessage")).should(appear).shouldHave(Condition.text("The form was published successfully"), Duration.ofSeconds(5));
+        $(elementLocators("ConfirmationMessage")).should(appear).shouldHave(Condition.text("The form was published successfully"));
         closeWindow();
 
         //Switch back to Checklist window to verify whether the form state is changed to published or not

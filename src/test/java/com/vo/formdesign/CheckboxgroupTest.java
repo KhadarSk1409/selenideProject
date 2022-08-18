@@ -56,7 +56,7 @@ public class CheckboxgroupTest extends BaseTest {
                              String dropdown_direction
 
 
-    ) {
+    ) throws InterruptedException {
         String blockId = "#block-loc_en-GB-r_" + row + "-c_" + col;
 
         //create new block, if not exist
@@ -138,7 +138,8 @@ public class CheckboxgroupTest extends BaseTest {
                 currentVersion = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
                 $(labelSelector).should(exist).doubleClick();
                 String labelValue = values[i - 1];
-                $(elementLocators("LabelInputInEditor")).sendKeys(Keys.CONTROL, Keys.COMMAND, "a", Keys.CLEAR); //Clear the default value in label field
+                selectAndClear(elementLocators("LabelInputInEditor")); //Clear the default value in label field
+                Thread.sleep(1000);
                 $(elementLocators("LabelInputInEditor")).setValue(labelValue).sendKeys(Keys.ENTER);
                 $(elementLocators("InitialVersion")).shouldNotHave(text(currentVersion));
                 $(labelSelector).shouldHave(text(labelValue));
@@ -146,6 +147,7 @@ public class CheckboxgroupTest extends BaseTest {
                 if (preselected.contains(labelValue)) {
                     String checkboxSelector = "#myGrid .MuiDataGrid-row:nth-child("+i+") div:nth-child(1) span input";
                     $(checkboxSelector).should(exist).click();
+                    Thread.sleep(1000);
                     $(checkboxSelector).shouldBe(checked);
                 }
             }
@@ -171,7 +173,6 @@ public class CheckboxgroupTest extends BaseTest {
         //Allow select:
         if (StringUtils.isNotEmpty(checkbox_globalSelection)) {
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String checkBoxId = "#" + CheckboxgroupTest.CheckboxgroupIds.checkbox_globalSelection.name();
             $(checkBoxId).shouldBe(visible).click();
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
@@ -189,7 +190,6 @@ public class CheckboxgroupTest extends BaseTest {
 
             //Click on close button
             $(elementLocators("CloseValuesEditorBtn")).should(exist).click();
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             $(By.id(CheckboxgroupTest.CheckboxgroupIds.numberField_minCount.name())).should(exist); //Verify that Minimum count field exists
 
             //Error verification if the Min count is more than rowCount, then error should be shown
@@ -276,7 +276,6 @@ public class CheckboxgroupTest extends BaseTest {
 
         //Other values:
         if (StringUtils.isNotEmpty(checkbox_other_values)) {
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + CheckboxgroupTest.CheckboxgroupIds.checkbox_other.name();
             $(checkBoxId).shouldBe(visible).click();
@@ -287,7 +286,6 @@ public class CheckboxgroupTest extends BaseTest {
         //Direction
         //Click on Direction. Select Vertical
         if (StringUtils.isNotEmpty(dropdown_direction)) {
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             $(By.id(CheckboxgroupTest.CheckboxgroupIds.property_select_direction.name())).should(exist).click();
             $(By.id(CheckboxgroupTest.CheckboxgroupIds.property_select_direction.name())).selectOptionByValue(dropdown_direction);
             $(By.id(CheckboxgroupTest.CheckboxgroupIds.property_select_direction.name())).shouldHave(value(dropdown_direction));

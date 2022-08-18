@@ -156,7 +156,7 @@ public class CurrencyFieldTest extends BaseTest {
             //  if (StringUtils.isEmpty(text_currencyField_defaultValueCurrency)) {
             //When you don't have any value in Default value edit box and click on Read only checkbox it should show error
             $(elementLocators("DefaultNumberHelperText")).should(exist).shouldHave(text("Must be set, if read only"));
-
+            Thread.sleep(2000);
             $(elementLocators("DesignerMenu")).should(exist);
 
             //Uncheck the readonly checkbox
@@ -171,6 +171,7 @@ public class CurrencyFieldTest extends BaseTest {
             //Set the value in the Default value:
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name()))
                     .setValue("1").sendKeys(Keys.TAB);
+            Thread.sleep(2000);
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name())).shouldHave(value("1"));
 
             $(checkBoxId).shouldBe(visible).click();
@@ -208,7 +209,6 @@ public class CurrencyFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_thousandSeparator)) {
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name()))
                     .setValue(text_currencyField_defaultValueCurrency).sendKeys(Keys.TAB); //Enter value in Default chekbox
 
@@ -229,7 +229,6 @@ public class CurrencyFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_allowNegative)) {
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + CurrencyFieldTest.CurrencyFieldOptionsIds.checkbox_allowNegative.name();
             $(checkBoxId).shouldBe(visible).click();
@@ -242,7 +241,6 @@ public class CurrencyFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_allowLeadingZeros)) {
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + CurrencyFieldTest.CurrencyFieldOptionsIds.checkbox_allowLeadingZeros.name();
             $(checkBoxId).shouldBe(visible).click();
@@ -254,7 +252,6 @@ public class CurrencyFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_onlyInteger)) {
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + CurrencyFieldTest.CurrencyFieldOptionsIds.checkbox_onlyInteger.name();
             $(checkBoxId).shouldBe(visible).click();
@@ -272,7 +269,6 @@ public class CurrencyFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(textfield_decimalScale)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String initialVerNumStr2 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_decimalScale.name()))
                     .setValue(textfield_decimalScale).sendKeys(Keys.TAB);
@@ -284,7 +280,6 @@ public class CurrencyFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(text_currencyField_defaultValueCurrency)) {
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
             $(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name())).should(exist);
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             selectAndClear(By.id(CurrencyFieldTest.CurrencyFieldOptionsIds.numberField_defaultValueNumber.name()))
                     .setValue(text_currencyField_defaultValueCurrency).sendKeys(Keys.TAB);
             if (StringUtils.isNotEmpty(textfield_decimalScale)) {

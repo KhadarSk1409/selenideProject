@@ -39,7 +39,6 @@ public class FormComponentTreeTest extends BaseTest{
         SelenideElement targetSecondBlock= $(elementLocators("TargetBlockR3C2"));
         SelenideElement targetThirdBlock= $(elementLocators("TargetBlockR4C1"));
 
-        $(elementLocators("FormIcon")).should(exist);
         $(elementLocators("FormComponents")).should(exist);
         $(elementLocators("FormComparisonGrid")).should(exist);
         $(elementLocators("SourceFormInputField")).shouldHave(value("Compare Test Forms 9.0"));

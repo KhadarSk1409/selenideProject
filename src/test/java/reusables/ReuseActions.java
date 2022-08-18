@@ -57,8 +57,8 @@ public class ReuseActions extends BaseTest {
         $(elementLocators("UserSelectionInput")).should(exist); //Select approver dropdown is enabled
         $(elementLocators("BackButton")).shouldBe(enabled);
         $(elementLocators("CancelButton")).shouldBe(enabled);
-        $(elementLocators("CreateFormButton")).shouldBe(disabled); //Create Form button is disabled
-        $(elementLocators("NextButton")).shouldBe(disabled); //Next button is disabled
+        //$(elementLocators("CreateFormButton")).shouldBe(disabled); //Create Form button is disabled
+        //$(elementLocators("NextButton")).shouldBe(disabled); //Next button is disabled
         $(elementLocators("UserSelectionInput")).click();
         $(elementLocators("Popover")).should(appear);
         String optionDropdown1 = $(elementLocators("FirstOptionFromTheList")).shouldBe(visible).getText();
@@ -71,8 +71,8 @@ public class ReuseActions extends BaseTest {
         $(elementLocators("MembersOfVOGroup")).should(exist).click(); //Members of VisualOrbit Group checkbox
         $(elementLocators("BackButton")).shouldBe(enabled);
         $(elementLocators("CancelButton")).shouldBe(enabled);
-        $(elementLocators("CreateFormButton")).should(exist).shouldBe(disabled); //Create Form button is diabled
-        $(elementLocators("NextButton")).should(exist).shouldBe(disabled); //Next button is disabled
+        /*$(elementLocators("CreateFormButton")).should(exist).shouldBe(disabled); //Create Form button is diabled
+        $(elementLocators("NextButton")).should(exist).shouldBe(disabled); //Next button is disabled*/
         $(elementLocators("UserSelectionInput")).click();
         $(elementLocators("Popover")).should(appear);
         $(elementLocators("OptionAvailable")).click();
@@ -86,9 +86,9 @@ public class ReuseActions extends BaseTest {
         $(elementLocators("UserSelectionInput")).should(exist); //Select approver dropdown is enabled
         $(elementLocators("BackButton")).shouldBe(enabled);
         $(elementLocators("CancelButton")).shouldBe(enabled);
-        $(elementLocators("CreateFormButton")).shouldBe(disabled); //Create Form button is diabled
+       /* $(elementLocators("CreateFormButton")).shouldBe(disabled); //Create Form button is diabled
         $(elementLocators("NextButton")).shouldBe(disabled); //Next button is disabled
-
+*/
         $(elementLocators("UserSelectionInput")).click(); //Click on Candidate approver dropdown
         $(elementLocators("OptionAvailable")).should(exist).click(); //User selects first option from the dropdown
         $(elementLocators("CreateFormButton")).should(exist).shouldBe(enabled); //Create Form button is enabled

@@ -74,7 +74,7 @@ public class NumberFieldTest extends BaseTest {
                                String checkbox_allowLeadingZeros,
                                String checkbox_onlyInteger,
                                String numberField_defaultValueNumber
-    ) {
+    ) throws InterruptedException {
 
          String blockId = "#block-loc_en-GB-r_" + row + "-c_" + col;
 
@@ -134,7 +134,7 @@ public class NumberFieldTest extends BaseTest {
 
                 //When you don't have any value in Default value edit box and click on Read only checkbox it should show error
                 $(elementLocators("DefaultNumberHelperText")).should(exist).shouldHave(text("Must be set, if read only"));
-
+                Thread.sleep(2000);
             $(elementLocators("DesignerMenu")).should(exist);
 
                 //Uncheck the readonly checkbox
@@ -149,6 +149,7 @@ public class NumberFieldTest extends BaseTest {
             //Set the value in the Default value:
                 selectAndClear(By.id(NumberFieldTest.NumberFieldOptionsIds.numberField_defaultValueNumber.name()))
                         .setValue("1").sendKeys(Keys.TAB);
+                Thread.sleep(2000);
                 $(By.id(NumberFieldTest.NumberFieldOptionsIds.numberField_defaultValueNumber.name())).shouldHave(value("1"));
 
             $(checkBoxId).shouldBe(visible).click();
@@ -159,7 +160,6 @@ public class NumberFieldTest extends BaseTest {
         //Apply user format checkbox check
         if (StringUtils.isNotEmpty(checkbox_applyFormatter)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_applyFormatter.name();
             $(checkBoxId).shouldBe(visible).click();
@@ -186,7 +186,6 @@ public class NumberFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_thousandSeparator)) {
             $(By.id(NumberFieldTest.NumberFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             selectAndClear(By.id(NumberFieldTest.NumberFieldOptionsIds.numberField_defaultValueNumber.name()))
                     .setValue(numberField_defaultValueNumber).sendKeys(Keys.TAB); //Enter value in Default chekbox
 
@@ -207,7 +206,6 @@ public class NumberFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_allowNegative)) {
             $(By.id(NumberFieldTest.NumberFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_allowNegative.name();
             $(checkBoxId).shouldBe(visible).click();
@@ -218,7 +216,6 @@ public class NumberFieldTest extends BaseTest {
         //Allow leading zeros
         if (StringUtils.isNotEmpty(checkbox_allowLeadingZeros)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             String checkBoxId = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_allowLeadingZeros.name();
             $(checkBoxId).shouldBe(visible).click();
@@ -230,7 +227,6 @@ public class NumberFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(checkbox_onlyInteger)) {
             if (StringUtils.isNotEmpty(checkbox_onlyInteger)) {
                 $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
-                $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
                 String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
                 String checkBoxId = "#" + NumberFieldTest.NumberFieldOptionsIds.checkbox_onlyInteger.name();
                 $(checkBoxId).shouldBe(visible).click();
@@ -245,7 +241,6 @@ public class NumberFieldTest extends BaseTest {
         //Enter Decimal Places
         if (StringUtils.isNotEmpty(numberfield_decimalScale)) {
             $(blockId).$(elementLocators("PenIcon")).closest("button").shouldBe(visible).click(); //Click on Edit
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             String initialVerNumStr2 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             selectAndClear(By.id(NumberFieldOptionsIds.numberField_decimalScale.name()))
                     .setValue(numberfield_decimalScale).sendKeys(Keys.TAB);
@@ -258,7 +253,6 @@ public class NumberFieldTest extends BaseTest {
         if (StringUtils.isNotEmpty(numberField_defaultValueNumber)) {
             $(By.id(NumberFieldTest.NumberFieldOptionsIds.textfield_label.name())).shouldHave(text(label_text));
             $(By.id(NumberFieldTest.NumberFieldOptionsIds.numberField_defaultValueNumber.name())).should(exist);
-            $(elementLocators("AdvancedSection")).should(exist).click(); //Advanced section dropdown
             selectAndClear(By.id(NumberFieldTest.NumberFieldOptionsIds.numberField_defaultValueNumber.name()))
                     .setValue(numberField_defaultValueNumber).sendKeys(Keys.TAB);
             if (StringUtils.isNotEmpty(numberfield_decimalScale)) {
@@ -376,7 +370,7 @@ public class NumberFieldTest extends BaseTest {
         String requiredFieldInFillForm = blockStr + " .MuiFormLabel-asterisk";
         String inputField = blockStr + " input";
 
-        DecimalFormat df = getDecimalFormat(numberfield_decimalScale, checkbox_thousandSeparator);
+        DecimalFormat  df = getDecimalFormat(numberfield_decimalScale, checkbox_thousandSeparator);
 
 
         //Label
