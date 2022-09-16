@@ -84,7 +84,7 @@ public abstract class BaseTest {
         try {
             String browserConfig = BROWSER_CONFIG.get();
             System.out.println("init webdriver with browserConfig " + browserConfig);
-            Configuration.startMaximized = true;
+            Configuration.browserSize = "1920x1080";
 
             String buildId = Optional.ofNullable(System.getenv("BUILD_ID")).orElse("NO_BUILD_ID");
 

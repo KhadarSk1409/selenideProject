@@ -27,13 +27,20 @@ public class ChecklistsOverviewActionsTest extends BaseTest {
         Thread.sleep(5000); //Waiting for 5 seconds so that table gets loaded
         SelenideElement table = $(elementLocators("ChecklistTable")).shouldBe(visible);
         ElementsCollection rows = table.$$(elementLocators("FormsAvailableInTable"));
+
+        int rowsSize = rows.size();
         System.out.println("Checklist Count is " + rows.size());
 
-        if (rows.size() == 0) {
+        if (rowsSize == 0) {
             System.out.println("No checklists available");
             return;
         }
-        rows.forEach(rowEl -> {
+
+        IntFunction<SelenideElement> getRow = (int idx) -> $(".MuiDataGrid-row:nth-of-type(" + idx + ")");
+
+        for (int i = 1; i <= rowsSize; i++) {
+            SelenideElement rowEl = getRow.apply(i);
+
             String checklistState = rowEl.$(elementLocators("FormsStateInTable")).getText();
             String createdBy = rowEl.$(elementLocators("FormCreatedBy")).getText();
 
@@ -49,7 +56,7 @@ public class ChecklistsOverviewActionsTest extends BaseTest {
                 rowEl.$(elementLocators("EditChecklistButton")).shouldBe(enabled);
                 rowEl.$(elementLocators("openChecklistDashboardButton")).shouldBe(disabled);
             }
-        });
+        }
     }
 
     @Test

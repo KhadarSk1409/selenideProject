@@ -24,14 +24,19 @@ public class FormsOverviewActionsTest extends BaseTest {
         Thread.sleep(5000); //Waiting for 5 seconds so that table gets loaded
         SelenideElement table = $(elementLocators("FormsList")).shouldBe(visible);
         ElementsCollection rows = table.$$(elementLocators("FormsAvailableInTable"));
-        System.out.println(" Form Count is " + rows.size());
+        int rowsSize = rows.size();
+        System.out.println(" Form Count is " + rowsSize);
 
-        if (rows.size() == 0) {
+        if (rowsSize == 0) {
             System.out.println("No Forms available");
             return;
         }
 
-        rows.forEach(rowEl -> {
+        IntFunction<SelenideElement> getRow = (int idx) -> $("#formListTable .MuiDataGrid-row:nth-of-type(" + idx + ")");
+
+        for (int i = 1; i <= rowsSize; i++) {
+            SelenideElement rowEl = getRow.apply(i);
+
             String formState = null;
             formState = rowEl.$(elementLocators("FormsStateInTable")).getText();
             String createdBy = rowEl.$(elementLocators("FormCreatedBy")).getText();
@@ -56,7 +61,7 @@ public class FormsOverviewActionsTest extends BaseTest {
                 rowEl.$(elementLocators("OpenFormInFormDashboard")).shouldBe(disabled);
                 rowEl.$(elementLocators("AddFormToFavoritesButton")).shouldNotBe(visible);
             }
-        });
+        }
     }
 
     @Test

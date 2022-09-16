@@ -47,7 +47,7 @@ public class VerifyChecklistCreationWithNewFormAndVerifyEditActionsTest extends 
         //Verify newly created form is available in checklist flow or not
         $(elementLocators("TargetListInChecklistFlow")).shouldHave(text("DemoForm")).$(elementLocators("EditFormButton")).click();
 
-        new WebDriverWait(getWebDriver(), 20).until(v -> {
+        new WebDriverWait(getWebDriver(), Duration.ofSeconds(20)).until(v -> {
             Set<String> handles = getWebDriver().getWindowHandles();
             return handles.size() > 1;
         });

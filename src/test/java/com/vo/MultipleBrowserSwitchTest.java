@@ -29,9 +29,13 @@ public class MultipleBrowserSwitchTest {
         Configuration.baseUrl = Optional.ofNullable(TEST_BASE_URL).orElse("https://visualorbit.fireo.net");
         //Configuration.baseUrl = "http://localhost:3000";
         Configuration.timeout = 30000;
+
+        ChromeOptions handlingSSL = new ChromeOptions();
+        handlingSSL.setAcceptInsecureCerts(true); //Handles the insecure certificate issues during opening the browser
+
         WebDriverManager.chromedriver().setup();
-        WebDriver browser1 = new ChromeDriver(new ChromeOptions());
-        WebDriver browser2 = new ChromeDriver(new ChromeOptions());
+        WebDriver browser1 = new ChromeDriver(handlingSSL);
+        WebDriver browser2 = new ChromeDriver(handlingSSL);
 
         using(browser1, () -> {
             open("/");

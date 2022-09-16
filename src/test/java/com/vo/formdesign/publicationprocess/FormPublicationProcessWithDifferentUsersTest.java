@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import java.time.Duration;
+import java.util.function.IntFunction;
 
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
@@ -61,7 +62,7 @@ public class FormPublicationProcessWithDifferentUsersTest extends BaseTest {
         $(elementLocators("TasksCardInDashboard")).should(exist);
         $(elementLocators("TasksCardInDashboard")).find(byAttribute("data-form-name", actualFormName )).should(exist)
                 .$(elementLocators("QuickApprove")).should(exist).click(); //Click on quick approve
-        $(elementLocators("TasksCardInDashboard")).find(byAttribute("data-form-name", actualFormName )).should(disappear,Duration.ofSeconds(15));
+        $(elementLocators("TasksCardInDashboard")).find(byAttribute("data-form-name", actualFormName )).should(disappear);
         $(elementLocators("ConfirmationMessage")).should(appear).shouldHave(Condition.text("New form version was successfully published."));
 
         //Verify the form approved by GUI Tester 01 is Published or not
@@ -70,17 +71,24 @@ public class FormPublicationProcessWithDifferentUsersTest extends BaseTest {
         $(elementLocators("DataCapture")).should(exist).hover();
         SelenideElement formsListTable = $(elementLocators("FormsList")).shouldBe(visible);
         ElementsCollection formRows = formsListTable.$$(elementLocators("FormsAvailableInTable"));
-        System.out.println(" Form Count is " + formRows.size());
 
-        if (formRows.size() == 0) {
+        int rowsSize = formRows.size();
+        System.out.println(" Form Count is " + rowsSize);
+
+        if (rowsSize == 0) {
             System.out.println("No Forms available");
             return;
         }
-        formRows.forEach(rowEl -> {
+
+        IntFunction<SelenideElement> getRow = (int idx) -> $(".MuiDataGrid-row:nth-of-type(" + idx + ")");
+
+        for (int i = 1; i <= rowsSize; i++) {
+            SelenideElement rowEl = getRow.apply(i);
+
             String finalFormName = rowEl.$(elementLocators("FinalFormName")).getText();
             if (finalFormName.equals(actualFormName)) {
                 rowEl.$(elementLocators("FormsStateInTable")).shouldHave(Condition.text("Published"));
             }
-        });
+        }
     }
 }
