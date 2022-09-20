@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import java.time.Duration;
+import java.util.function.IntFunction;
 
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
@@ -27,7 +28,7 @@ public class FormPublicationProcessWithTwoApprovalAndDifferentUsersIncludingReje
 
     @Test
     @DisplayName("Create a from and publish with two approval and verify reject process with different users")
-    public void formPublicationWithOneApproverIncludingReject()  {
+    public void formPublicationWithOneApproverIncludingReject() throws InterruptedException {
 
         Pair<String, String> formName = createNewForm();
         String actualFormName = formName.getKey();
@@ -71,6 +72,7 @@ public class FormPublicationProcessWithTwoApprovalAndDifferentUsersIncludingReje
         $(elementLocators("DataFillForm")).should(appear);
         $(elementLocators("ReviewChangesButton")).should(exist).click(); //Click on Review Changes
         $(elementLocators("acceptButton")).should(exist).shouldBe(enabled).click(); //Click on Accept
+        Thread.sleep(5000);
         $(elementLocators("ConfirmButton")).should(exist).shouldBe(enabled).click(); //Click on confirm
         $(elementLocators("ConfirmationMessage")).should(appear)
                 .shouldHave(Condition.text("Approval saved. Process requires additional approval and is therefore not yet complete. Form will be published as soon as all approvals are available."));
@@ -96,15 +98,23 @@ public class FormPublicationProcessWithTwoApprovalAndDifferentUsersIncludingReje
         ElementsCollection formRows = formListTable.$$(elementLocators("FormsAvailableInTable"));
         System.out.println(" Form Count is " + formRows.size());
 
-        if (formRows.size() == 0) {
+        int rowsSize = formRows.size();
+        System.out.println(" Form Count is " + rowsSize);
+
+        if (rowsSize == 0) {
             System.out.println("No Forms available");
             return;
         }
-        formRows.forEach(rowEl -> {
+
+        IntFunction<SelenideElement> getRow = (int idx) -> $(".MuiDataGrid-row:nth-of-type(" + idx + ")");
+
+        for (int i = 1; i <= rowsSize; i++) {
+            SelenideElement rowEl = getRow.apply(i);
+
             String finalFormName = rowEl.$(elementLocators("FinalFormName")).getText();
             if (finalFormName.equals(actualFormName)) {
                 rowEl.$(elementLocators("FormsStateInTable")).shouldHave(Condition.text("in draft"));
             }
-        });
+        }
     }
 }
