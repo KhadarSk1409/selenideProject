@@ -17,12 +17,12 @@ import static reusables.ReuseActions.elementLocators;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @DisplayName("Verify the form versions")
-public class FormComparisionExtensionTest extends BaseTest {
+public class FormComparisonExtensionTest extends BaseTest {
 
     @Test
     @DisplayName("Open the Compare Test Forms form")
     @Order(1)
-    public void openFromComparisionform(){
+    public void openFromComparisonform(){
 
         open("/compareForms/comparision-test/9/0");
 

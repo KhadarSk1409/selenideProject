@@ -23,7 +23,7 @@ public class FormComponentTreeTest extends BaseTest{
     @Test
     @DisplayName("Open the from to be compared")
     @Order(1)
-    public void openFormComparisionForm(){
+    public void openFormComparisonForm(){
 
         open("/compareForms/comparision-test/9/0");
 
