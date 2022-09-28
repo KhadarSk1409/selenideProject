@@ -5,6 +5,7 @@ import com.vo.BaseTest;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.Set;
 
 import static com.codeborne.selenide.Condition.appear;
@@ -30,7 +31,7 @@ public class MenuActionsTest extends BaseTest {
     public void verifyClickPDFOpensTabWithJspdfBtn() {
         $(elementLocators("SubMenu")).should(exist).click(); //SubMenu button on Form Dashboard
         $(elementLocators("PdfInSubMenu")).should(exist).shouldHave(Condition.text("PDF")).click();
-        new WebDriverWait(getWebDriver(), 20).until(v -> {
+        new WebDriverWait(getWebDriver(), Duration.ofSeconds(20)).until(v -> {
             Set<String> handles = getWebDriver().getWindowHandles();
             return handles.size() > 1;
         });

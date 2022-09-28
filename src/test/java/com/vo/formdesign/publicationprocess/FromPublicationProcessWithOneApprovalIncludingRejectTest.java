@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
 import java.time.Duration;
+import java.util.function.IntFunction;
 
 import static com.codeborne.selenide.CollectionCondition.itemWithText;
 import static com.codeborne.selenide.Condition.*;
@@ -64,16 +65,24 @@ public class FromPublicationProcessWithOneApprovalIncludingRejectTest extends Ba
         ElementsCollection formRows = formListTable.$$(elementLocators("FormsAvailableInTable"));
         System.out.println(" Form Count is " + formRows.size());
 
-        if (formRows.size() == 0) {
+        int rowsSize = formRows.size();
+        System.out.println(" Form Count is " + rowsSize);
+
+        if (rowsSize == 0) {
             System.out.println("No Forms available");
             return;
         }
-        formRows.forEach(rowEl -> {
+
+        IntFunction<SelenideElement> getRow = (int idx) -> $(".MuiDataGrid-row:nth-of-type(" + idx + ")");
+
+        for (int i = 1; i <= rowsSize; i++) {
+            SelenideElement rowEl = getRow.apply(i);
+
             String finalFormName = rowEl.$(elementLocators("FinalFormName")).getText();
             if (finalFormName.equals(actualFormName)) {
                 rowEl.$(elementLocators("FormsStateInTable")).shouldHave(Condition.text("in draft"));
             }
-        });
+        }
 
         //Reviewing the task assigned before approve or reject
         $(elementLocators("Launchpad")).should(exist).click();
@@ -95,15 +104,23 @@ public class FromPublicationProcessWithOneApprovalIncludingRejectTest extends Ba
         ElementsCollection formListRows = formsListTable.$$(elementLocators("FormsAvailableInTable"));
         System.out.println(" Form Count is " + formListRows.size());
 
-        if (formListRows.size() == 0) {
+        int rowSize = formListRows.size();
+        System.out.println(" Form Count is " + rowsSize);
+
+        if (rowSize == 0) {
             System.out.println("No Forms available");
             return;
         }
-        formListRows.forEach(rowEl -> {
+
+        IntFunction<SelenideElement> getRows = (int idx) -> $(".MuiDataGrid-row:nth-of-type(" + idx + ")");
+
+        for (int i = 1; i <= rowSize; i++) {
+            SelenideElement rowEl = getRows.apply(i);
+
             String finalFormName = rowEl.$(elementLocators("FinalFormName")).getText();
             if (finalFormName.equals(actualFormName)) {
                 rowEl.$(elementLocators("FormsStateInTable")).shouldHave(Condition.text("in draft"));
             }
-        });
+        }
     }
 }

@@ -159,7 +159,7 @@ public class TextFieldTest extends BaseTest {
             String initialVerNumStr1 = $(elementLocators("InitialVersion")).should(exist).getText(); //Fetch initial version
             $(By.id(TextFieldOptionsIds.prop_toggle_button_normal.name())).shouldBe(visible).click();
             $(elementLocators("InitialVersion")).shouldNotHave(text(initialVerNumStr1)); //Verify that version has increased
-            $(By.id(TextFieldOptionsIds.prop_toggle_button_normal.name())).shouldHave(attribute("aria-pressed", "true"));
+            $(By.id(TextFieldOptionsIds.prop_toggle_button_normal.name())).shouldHave(attribute("value", "normal"));
         }
 
         //chars caps/uppercase

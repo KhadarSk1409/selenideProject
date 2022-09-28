@@ -49,8 +49,8 @@ public abstract class BaseTest {
     public static ThreadLocal<String> BROWSER_CONFIG = ThreadLocal.withInitial(() -> "local");
     public static ThreadLocal<String> SAUCE_SESSION_ID = new ThreadLocal<>();
     public static ThreadLocal<RemoteWebDriver> WEB_DRIVER = new ThreadLocal<>();
-    public static ThreadLocal<Map<String, Boolean>> ALREADY_LOGGED_IN = ThreadLocal.withInitial(() -> new HashMap<>());
-    public static ThreadLocal<Map<String, UserType>> CURRENT_USER = ThreadLocal.withInitial(() -> new HashMap<>());
+    public static ThreadLocal<Map<String, Boolean>> ALREADY_LOGGED_IN = ThreadLocal.withInitial(HashMap::new);
+    public static ThreadLocal<Map<String, UserType>> CURRENT_USER = ThreadLocal.withInitial(HashMap::new);
     public static ThreadLocal<Boolean> IGNORE_BEFORE_AND_AFTER_LIFECYCLE = ThreadLocal.withInitial(() -> Boolean.FALSE);
 
     public enum UserType {
@@ -84,7 +84,7 @@ public abstract class BaseTest {
         try {
             String browserConfig = BROWSER_CONFIG.get();
             System.out.println("init webdriver with browserConfig " + browserConfig);
-            Configuration.startMaximized = true;
+            Configuration.browserSize = "1920x1080";
 
             String buildId = Optional.ofNullable(System.getenv("BUILD_ID")).orElse("NO_BUILD_ID");
 

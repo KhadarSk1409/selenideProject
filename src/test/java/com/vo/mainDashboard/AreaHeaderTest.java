@@ -7,6 +7,8 @@ import org.junit.jupiter.api.*;
 import java.lang.*;
 import java.time.Duration;
 
+import static com.codeborne.selenide.CollectionCondition.size;
+import static com.codeborne.selenide.CollectionCondition.texts;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selectors.byCssSelector;
 import static com.codeborne.selenide.Selenide.*;
@@ -118,7 +120,7 @@ public class AreaHeaderTest extends BaseTest {
         $(elementLocators("NotificationPopover")).should(exist).click(); //Notifications icon
         $(elementLocators("MyNotifications")).should(appear).click(); //Notifications card and click on it
         $(elementLocators("MyNotifications")).should(appear); //Notifications card still exists
-        $(elementLocators("Body")).click(); //?? Not wokring - user needs to click on the Form Dashboard page and come back
+        $(elementLocators("Body")).click(); //?? Not working - user needs to click on the Form Dashboard page and come back
         $(elementLocators("MyNotifications")).should(disappear);
         $(elementLocators("LeftFormDashboardHeader")).should(appear); //Menu button to ensure that user has navigated back to Form Dashboard
     }
@@ -129,8 +131,8 @@ public class AreaHeaderTest extends BaseTest {
     public void verifyMenuItemsForFormDashboard() {
         open("/dashboard/Sample_Form");
         $(elementLocators("SubMenu")).should(exist).click();
-        $$(elementLocators("SubMenuList")).shouldHaveSize(6)
-                .shouldHave(CollectionCondition.texts("Edit Form Design", "PDF", "Edit Form Permissions", "Data Capture", "Visualize form design changes in data tables", "Copy Form Dataset URL to Clipboard" ));
+        $$(elementLocators("SubMenuList")).shouldHave(size(6))
+                .shouldHave(texts("Edit Form Design", "PDF", "Edit Form Permissions", "Data Capture", "Visualize form design changes in data tables", "Copy Form Dataset URL to Clipboard" ));
 
     }
 

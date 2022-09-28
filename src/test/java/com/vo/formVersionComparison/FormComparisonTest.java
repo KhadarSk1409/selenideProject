@@ -20,7 +20,7 @@ public class FormComparisonTest extends BaseTest {
     @Test
     @DisplayName("Open the Compare Test Forms form")
     @Order(1)
-    public void openFromComparisionform(){
+    public void openFromComparisonform(){
 
         open("/compareForms/comparision-test/9/0");
 
