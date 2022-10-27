@@ -57,10 +57,11 @@ public class DataCaptureOverviewTableActionsInLibraryTest extends BaseTest {
         actions().click().build().perform();//Click on started
         if(!formLabels.isEmpty()) {
             $$(elementLocators("FormsStateInTable")).
-                    should(allMatch("All filtered forms should have same label: Completed", el -> (el.getText().equals("Completed") || el.getText().isEmpty())));
+                    asDynamicIterable().stream().filter(el -> (el.getText().equals("Completed") && el.getText().isEmpty() || el.getText().equals("In Progress") ||
+                            el.getText().equals("In Approval") || el.getText().equals("In Overdue")));
         }
         else {
-            $(".MuiDataGrid-virtualScroller").shouldBe(empty);
+            $(elementLocators("FormGrid")).shouldBe(empty);
         }
 
         //CLick on In Progress over the graph and verify all the forms which were in overdue are getting filtered or not
@@ -88,7 +89,7 @@ public class DataCaptureOverviewTableActionsInLibraryTest extends BaseTest {
         //CLick on In Overdue over the graph and verify all the forms which were in overdue are getting filtered or not
         SelenideElement targetElement2 = $("#tabChecklists");
         actions().moveToElement( targetElement2, 120, 220).build().perform();
-        actions().click().build().perform();
+        actions().click().build().perform();//Click on In Overdue
         if(!formLabels.isEmpty()) {
             $$(elementLocators("FormsStateInTable")).
                     should(allMatch("All filtered forms should have same label: In Overdue", el->(el.getText().equals("In Overdue") || el.getText().isEmpty())));
@@ -99,7 +100,7 @@ public class DataCaptureOverviewTableActionsInLibraryTest extends BaseTest {
 
         //Click on Completed over the graph and verify all the completed forms are getting filtered or not
         actions().moveToElement( targetElement2, 150, 220).build().perform();
-        actions().click().build().perform();
+        actions().click().build().perform();//Click on Completed
         if(!formLabels.isEmpty()) {
             $$(elementLocators("FormsStateInTable")).
                     should(allMatch("All filtered forms should have same label: Completed", el->(el.getText().equals("Completed") || el.getText().isEmpty())));
@@ -107,7 +108,6 @@ public class DataCaptureOverviewTableActionsInLibraryTest extends BaseTest {
         else {
             $(elementLocators("FormGrid")).shouldBe(empty);
         }
-        System.out.println($$("Filtered forms are: "+ ".MuiChip-label")); 
-
+        System.out.println("Filtered forms with labels Completed or Empty are: "+ $$(elementLocators("FormsStateInTable")));
     }
 }
