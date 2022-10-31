@@ -8,6 +8,7 @@ import org.junit.jupiter.api.*;
 import static com.codeborne.selenide.CollectionCondition.allMatch;
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
+import static java.lang.String.format;
 import static reusables.ReuseActions.elementLocators;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -40,8 +41,12 @@ public class DataCaptureOverviewTableActionsInLibraryTest extends BaseTest {
         String formToBeSelectedFirst = "DATA-CAPTURE-WO-PROCESS";
         $$(elementLocators("DataCaptureFormNames")).findBy(text(formToBeSelectedFirst)).click();
         ElementsCollection filteredRows = $$(elementLocators("FormNamesInTheFilteredTable"));
-        filteredRows.asDynamicIterable().stream().
-                filter(el -> (el.getText().equals(formToBeSelectedFirst) && el.getText().isEmpty() || el.getText().equals("displayed:false></div>,")));
+        filteredRows.should(allMatch(format("All elements should be for form '%s'", formToBeSelectedFirst), el ->
+                el.getText().equals(formToBeSelectedFirst) || el.getText().isEmpty() || el.getText().equals("displayed:false></div>,")));
+
+        //filteredRows.asDynamicIterable().stream().
+        //        filter(el -> (el.getText().equals(formToBeSelectedFirst) && el.getText().isEmpty() || el.getText().equals("displayed:false></div>,")));
+
 
         $$(elementLocators("DataCaptureFormNames")).findBy(text(formToBeSelectedFirst)).click();
 
