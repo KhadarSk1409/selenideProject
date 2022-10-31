@@ -87,7 +87,7 @@ public class DataCaptureOverviewTableActionsInLibraryTest extends BaseTest {
         }
 
         //CLick on In Overdue over the graph and verify all the forms which were in overdue are getting filtered or not
-        SelenideElement targetElement2 = $("#tabChecklists");
+        SelenideElement targetElement2 = $(elementLocators("ChecklistsTab"));
         actions().moveToElement( targetElement2, 120, 220).build().perform();
         actions().click().build().perform();//Click on In Overdue
         if(!formLabels.isEmpty()) {
