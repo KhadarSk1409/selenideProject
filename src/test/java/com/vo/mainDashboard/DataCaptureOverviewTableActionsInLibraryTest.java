@@ -41,18 +41,15 @@ public class DataCaptureOverviewTableActionsInLibraryTest extends BaseTest {
         String formToBeSelectedFirst = "DATA-CAPTURE-WO-PROCESS";
         $$(elementLocators("DataCaptureFormNames")).findBy(text(formToBeSelectedFirst)).click();
         ElementsCollection filteredRows = $$(elementLocators("FormNamesInTheFilteredTable"));
-        filteredRows.should(allMatch(format("All elements should be for form '%s'", formToBeSelectedFirst), el ->
-                el.getText().equals(formToBeSelectedFirst) || el.getText().isEmpty() || el.getText().equals("displayed:false></div>,")));
-
-        //filteredRows.asDynamicIterable().stream().
-        //        filter(el -> (el.getText().equals(formToBeSelectedFirst) && el.getText().isEmpty() || el.getText().equals("displayed:false></div>,")));
-
+        filteredRows.should(allMatch(format("All elements should be for form '%s'", formToBeSelectedFirst),
+                el -> el.getText().equals(formToBeSelectedFirst) || el.getText().isEmpty() || el.getText().equals("displayed:false></div>,")));
 
         $$(elementLocators("DataCaptureFormNames")).findBy(text(formToBeSelectedFirst)).click();
 
         String formToBeSelectedSecond = "TA-TWO-APPROVAL-DIFF-USERS";
         $$(elementLocators("DataCaptureFormNames")).findBy(text(formToBeSelectedSecond)).click();
-        filteredRows.asDynamicIterable().stream().filter(el -> (el.getText().equals(formToBeSelectedSecond) && el.getText().isEmpty() || el.getText().equals("displayed:false></div>,")));
+        filteredRows.should(allMatch(format("All elements should be for form '%s'", formToBeSelectedSecond),
+                el -> el.getText().equals(formToBeSelectedSecond) || el.getText().isEmpty() || el.getText().equals("displayed:false></div>,")));
 
         ElementsCollection formLabels = $$(elementLocators("FormsStateInTable"));
         SelenideElement targetElement1 = $(elementLocators("FormsTab"));
@@ -62,8 +59,9 @@ public class DataCaptureOverviewTableActionsInLibraryTest extends BaseTest {
         actions().click().build().perform();//Click on started
         if(!formLabels.isEmpty()) {
             $$(elementLocators("FormsStateInTable")).
-                    asDynamicIterable().stream().filter(el -> (el.getText().equals("Completed") && el.getText().isEmpty() || el.getText().equals("In Progress") ||
-                            el.getText().equals("In Approval") || el.getText().equals("In Overdue")));
+                    should(allMatch("Forms should have any of the labels or empty",
+                            el -> (el.getText().equals("Completed") || el.getText().isEmpty() || el.getText().equals("In Progress") ||
+                            el.getText().equals("In Approval") || el.getText().equals("In Overdue"))));
         }
         else {
             $(elementLocators("FormGrid")).shouldBe(empty);
@@ -74,7 +72,7 @@ public class DataCaptureOverviewTableActionsInLibraryTest extends BaseTest {
         actions().click().build().perform();//Click on In Progress
         if(!formLabels.isEmpty()) {
             $$(elementLocators("FormsStateInTable")).
-                    should(allMatch("All filtered forms should have same label: In Progress", el -> (el.getText().equals("In Progress") || el.getText().isEmpty())));
+                    should(allMatch("All filtered forms should have same label: In Progress or empty", el -> (el.getText().equals("In Progress") || el.getText().isEmpty())));
         }
         else {
             $(elementLocators("FormGrid")).shouldBe(empty);
@@ -85,7 +83,7 @@ public class DataCaptureOverviewTableActionsInLibraryTest extends BaseTest {
         actions().click().build().perform();//Click on In Approval
         if(!formLabels.isEmpty()) {
             $$(elementLocators("FormsStateInTable")).
-                    should(allMatch("All filtered forms should have same label: In Approval", el->(el.getText().equals("In Approval") || el.getText().isEmpty())));
+                    should(allMatch("All filtered forms should have same label: In Approval or empty", el->(el.getText().equals("In Approval") || el.getText().isEmpty())));
         }
         else {
             $(elementLocators("FormGrid")).shouldBe(empty);
@@ -97,7 +95,7 @@ public class DataCaptureOverviewTableActionsInLibraryTest extends BaseTest {
         actions().click().build().perform();//Click on In Overdue
         if(!formLabels.isEmpty()) {
             $$(elementLocators("FormsStateInTable")).
-                    should(allMatch("All filtered forms should have same label: In Overdue", el->(el.getText().equals("In Overdue") || el.getText().isEmpty())));
+                    should(allMatch("All filtered forms should have same label: In Overdue or empty", el->(el.getText().equals("In Overdue") || el.getText().isEmpty())));
         }
         else {
             $(elementLocators("FormGrid")).shouldBe(empty);
@@ -108,7 +106,7 @@ public class DataCaptureOverviewTableActionsInLibraryTest extends BaseTest {
         actions().click().build().perform();//Click on Completed
         if(!formLabels.isEmpty()) {
             $$(elementLocators("FormsStateInTable")).
-                    should(allMatch("All filtered forms should have same label: Completed", el->(el.getText().equals("Completed") || el.getText().isEmpty())));
+                    should(allMatch("All filtered forms should have same label: Completed or empty", el->(el.getText().equals("Completed") || el.getText().isEmpty())));
         }
         else {
             $(elementLocators("FormGrid")).shouldBe(empty);
