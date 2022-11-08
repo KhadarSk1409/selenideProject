@@ -38,8 +38,8 @@ public class ChecklistVersionCheckTest extends BaseTest {
         $(elementLocators("TargetListInChecklistFlow")).find(byAttribute("id",formDataID1)).should(exist);
         $(elementLocators("PublishChecklistTemplateButton")).should(exist).shouldBe(enabled).click();
         $(elementLocators("ConfirmPublish")).should(appear).click();
-        Thread.sleep(5000);
         $(byText("Loading Checklists")).should(disappear);
+        $(byText("No rows")).should(appear);
         $(elementLocators("StartChecklistButton")).should(appear).shouldBe(enabled).click();
 
         $(byText("CheckList")).should(appear);
@@ -73,8 +73,9 @@ public class ChecklistVersionCheckTest extends BaseTest {
         $(elementLocators("TargetListInChecklistFlow")).find(byAttribute("id",formDataID2)).should(exist);
         $(elementLocators("PublishChecklistTemplateButton")).should(exist).shouldBe(enabled).click();
         $(elementLocators("ConfirmPublish")).should(appear).click();
-        Thread.sleep(5000);
         $(byText("Loading Checklists")).should(disappear);
+        $(elementLocators("GridContainer")).should(exist);
+        $(elementLocators("TaskStatus/Overview")).should(appear,Duration.ofSeconds(3)).shouldHave(text("0/1"));
         $(elementLocators("StartChecklistButton")).should(appear).shouldBe(enabled).click();
 
         $(byText("CheckList")).should(appear);
